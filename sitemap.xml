@@ -2,9 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/</loc>
+    
+    <lastmod>2019-12-20T06:54:02.520Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/</loc>
+    
+    <lastmod>2019-12-20T06:53:48.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
+    
+    <lastmod>2019-12-16T10:06:24.487Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/</loc>
     
-    <lastmod>2019-12-10T12:47:42.497Z</lastmod>
+    <lastmod>2019-12-11T02:01:31.977Z</lastmod>
     
   </url>
   
@@ -54,13 +75,6 @@
     <loc>http://yoursite.com/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/</loc>
     
     <lastmod>2019-11-02T03:18:15.572Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/</loc>
-    
-    <lastmod>2019-10-19T08:30:17.674Z</lastmod>
     
   </url>
   
