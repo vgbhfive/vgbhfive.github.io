@@ -6,13 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019 | Vgbhfive&#39;s Blog</title>
+  <title>构建你自己的日志系统 | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Vgbhfive&#39;s Blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;page&#x2F;4&#x2F;index.html">
+  <meta name="description" content="引入在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。 控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建你自己的日志系统">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="引入在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。 控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是">
+<meta property="article:published_time" content="2019-12-24T08:40:14.000Z">
+<meta property="article:modified_time" content="2019-12-24T10:46:51.584Z">
 <meta property="article:author" content="Vgbh">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="TODO">
+<meta property="article:tag" content="Spring Boot">
+<meta property="article:tag" content="Utils">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Vgbhfive&#39;s Blog" type="application/atom+xml">
@@ -145,36 +153,153 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-构建你自己的日志系统" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/Java-ThreadLocal%E4%B9%8B%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" class="archive-article-date">
-  	<time datetime="2019-06-02T03:35:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-02</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/Java-ThreadLocal%E4%B9%8B%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Java-ThreadLocal之工作原理</a>
+    <h1 class="article-title" itemprop="name">
+      构建你自己的日志系统
     </h1>
   
 
-        <div class="article-info info-on-right">
+        
+        <a href="/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" class="archive-article-date">
+  	<time datetime="2019-12-24T08:40:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-24</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">1.6k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">5分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+            <span class="archive-article-date">
+                阅读量 <span id="busuanzi_value_page_pv"></span>
+            </span>
           
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。</p>
+<p>控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是分布式的系统，界面上还会输出关于RPC 相关的信息，那个日子真的是不能看。</p>
+<p>所以在我完成任务后，我找了这个时间来总结一把我的辛酸泪。</p>
+<p>主要的目的：</p>
+<ul>
+<li>了解日志的作用</li>
+<li>学习在什么时候为什么要打印日志</li>
+<li>日志的展示内容</li>
+<li>如何定位并说明日志所要表达的意义</li>
+</ul>
+<a id="more"></a>
+
+<hr>
+
+<h2 id="日志的基础知识"><a href="#日志的基础知识" class="headerlink" title="日志的基础知识"></a>日志的基础知识</h2><h3 id="日志的作用"><a href="#日志的作用" class="headerlink" title="日志的作用"></a>日志的作用</h3><p>日志本身是没有价值的，只有对日志进行分析加以利用的时候才会有价值，日志中包含非常多的有用的信息，不光包括运维层面，还包括业务层面、安全层面。<br>很多时候运维系统最需要的是一个统一告警平台，但是告警的依据绝大多数是对日志等进行自动化分析所得出的结论，所以说日志是非常重要的。</p>
+<h3 id="日志级别"><a href="#日志级别" class="headerlink" title="日志级别"></a>日志级别</h3><p>日志的级别通常有以下几种：</p>
+<ul>
+<li>all 最低等级，打开所有的日志输出。</li>
+<li>debug 指出细粒度信息事件，主要用于开发过程中打印一些运行信息。</li>
+<li>trace 很少使用。</li>
+<li>info 在粗粒度上强调应用程序的运行过程，可以用于在生产环境中打印出一些重要信息，但是不要滥用。</li>
+<li>warn 表明一些潜在的错误内容，有时候不是错误信息，但也是给程序员一些提示。 </li>
+<li>error 指出发生错误事件，但是不影响系统的继续运行。</li>
+<li>fatal 指出严重的错误事件，可能会导致应用程序的崩溃。</li>
+<li>off 最高等级，用于关闭所有的日志输出。</li>
+</ul>
+<p>日志输出采用的调用链控制的思路，高等级的输出低等级可以控制，但是低等级的输出高等级不能控制。</p>
+<h3 id="日志文件命名"><a href="#日志文件命名" class="headerlink" title="日志文件命名"></a>日志文件命名</h3><p>通常来说，日志文件的命名必须包含以下信息：</p>
+<ul>
+<li>类型标识 用于标明日志的用途或者功能。</li>
+<li>日志级别 区分不同级别的运行缺陷。</li>
+<li>日志生成时间 方便查询进行排查。</li>
+<li>日志备份编号 在进行日志切割时，可以加上编号进行区分。</li>
+</ul>
+<h3 id="日志滚动"><a href="#日志滚动" class="headerlink" title="日志滚动"></a>日志滚动</h3><p>通常情况下，项目都会在每天打一次日志，并且存库，那么就有了日志滚动，通常情况下有以下模式:</p>
+<ul>
+<li>时间滚动 即按照每天或者每12 小时滚动一次。</li>
+<li>单个日志文件大小滚动 即当日志文件的大小进行滚动。</li>
+<li>同时按照时间和文件大小进行滚动 同时按照时间和文件大小进行滚动日志。</li>
+</ul>
+<p>对于日志滚动策略来说，有2个比较关键的参数：<strong>最大保留日志数量</strong>和<strong>最大磁盘占用空间</strong>。 这2个参数切记一定要设置，如果没有设置，则很有可能会出现把线上机器磁盘打满的情况。</p>
+<h3 id="日志的打印时机"><a href="#日志的打印时机" class="headerlink" title="日志的打印时机"></a>日志的打印时机</h3><p>日志是为了开发人员在遇到开发问题可以快速地定位问题，并且根据输出的信息，判断如何快速修复的主要内容。所以日志的输出时机就很重要了，日志输出的少了，开发人员很难找到关键的问题，输出日志太多，就容易需要花费大量的时间筛选需要的日志信息。</p>
+<p>下面就是常见日志的打印时机：</p>
+<ul>
+<li>http、rpc 调用 在程序调用其他服务或者系统的时候，需要打印接口调用参数和调用结果(成功/失败)。</li>
+<li>程序异常 在程序出现exception的时候，要么选择向上抛出异常，要么必须在catch块中打印异常堆栈信息。</li>
+<li>特殊的条件分支 程序进入到一些特殊的条件分支时，观察输出内容。</li>
+<li>关键执行路径及中间状态 在一些关键的执行路径以及中间状态也需要记录下关键日志信息，方便后续定位跟踪执行状态。</li>
+<li>请求入口和出口 方便后续进行日志统计，同时也更加方便进行系统运行状态的监控。</li>
+</ul>
+<h3 id="日志的内容与格式"><a href="#日志的内容与格式" class="headerlink" title="日志的内容与格式"></a>日志的内容与格式</h3><p>日志打印时机决定了能够根据日志去进行问题定位，而日志的内容决定了是否能够根据日志快速找出问题原因，因此日志内容也是至关重要的。</p>
+<p>通常来说，一行日志应该至少包括以下几个组成部分：</p>
+<ul>
+<li>RequestId</li>
+<li>date</li>
+<li>thread</li>
+<li>level</li>
+<li>logTag</li>
+<li>param</li>
+<li>exceptionStacktrace</li>
+</ul>
+<hr>
+
+<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><p>在应用程序运行过程中，就会产生日志，那么开发人员通过这些日志就可以判断出对应的问题点了，然后就可以解决。<br>在日志回滚之后，就会得到许多的日志文件了，那么对于运维人员来说，如何解析这些日志文件就是比较头疼的问题了，现在的做法都是通过自动化的解析来显示应用程序运行期间的日志输出信息。</p>
+<p><strong>良好的日志书写使用将为开发和运维提供便利；良好的日志级别定义和配置，在为快速定位问题的前提上，将可以有效地提升性能。</strong></p>
+<h3 id="Web-日志挖掘分析"><a href="#Web-日志挖掘分析" class="headerlink" title="Web 日志挖掘分析"></a>Web 日志挖掘分析</h3><p>这是一个比较深的东西，我需要研究一下再写。</p>
+<p>可以看看这些，我觉得比较好：<br><a href="https://www.kancloud.cn/alicloud/log_management/574513" target="_blank" rel="noopener">https://www.kancloud.cn/alicloud/log_management/574513</a><br><a href="https://cloud.tencent.com/developer/article/1066751" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1066751</a></p>
+<hr>
+
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><p>我会自己搭建一个项目，跑出来真正的线上运行日志文件，然后进行日志分析，结果会在后期展示出来。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -182,368 +307,121 @@
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/Java-transient%E7%9E%AC%E6%80%81%E5%85%B3%E9%94%AE%E5%AD%97/" class="archive-article-date">
-  	<time datetime="2019-05-20T15:11:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/Java-transient%E7%9E%AC%E6%80%81%E5%85%B3%E9%94%AE%E5%AD%97/">Java-transient瞬态关键字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
+      		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">TODO</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring Boot</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Utils</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2019-05-11T12:35:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-11</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Jib构建Java镜像</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Dubbo-快速入门</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Dubbo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/Zookeeper-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2019-04-28T13:54:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/Zookeeper-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Zookeeper-快速入门</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/GraphQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2019-04-27T15:57:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/GraphQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">GraphQL-快速入门</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GraphQL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/JS%20%E4%B8%AD%E7%9A%84var%E3%80%81let%E5%92%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%9B%B8%E5%90%8C/" class="archive-article-date">
-  	<time datetime="2019-04-22T08:50:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/JS%20%E4%B8%AD%E7%9A%84var%E3%80%81let%E5%92%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%9B%B8%E5%90%8C/">JS 中的var、let和const的区别和相同</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/for%E5%BE%AA%E7%8E%AF%E4%B8%BA%E5%A4%9A%E4%B8%AA%E5%AF%B9%E8%B1%A1%E6%B7%BB%E5%8A%A0%E6%97%B6%E9%97%B4%E4%BE%A6%E5%90%AC%E5%99%A8-%E9%97%AD%E5%8C%85%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-04-22T08:46:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/for%E5%BE%AA%E7%8E%AF%E4%B8%BA%E5%A4%9A%E4%B8%AA%E5%AF%B9%E8%B1%A1%E6%B7%BB%E5%8A%A0%E6%97%B6%E9%97%B4%E4%BE%A6%E5%90%AC%E5%99%A8-%E9%97%AD%E5%8C%85%E9%97%AE%E9%A2%98/">for循环为多个对象添加时间侦听器-闭包问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/ECharts-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2019-04-20T12:46:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/ECharts-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">ECharts  快速入门</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">ECharts</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/" class="archive-article-date">
-  	<time datetime="2019-04-19T00:56:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/">No serializer found for class org.hibernate.proxy.pojo.javassist.Javassist?</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/APlusB-Solution/" class="archive-article-date">
-  	<time datetime="2019-03-20T06:59:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/APlusB-Solution/">APlusB Solution</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Algorithm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2019/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/archives/2019/">1</a><a class="page-number" href="/archives/2019/page/2/">2</a><a class="page-number" href="/archives/2019/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/archives/2019/page/5/">5</a><a class="page-number" href="/archives/2019/page/6/">6</a><a class="extend next" rel="next" href="/archives/2019/page/5/">Next &amp;raquo;</a>
-    </nav>
   
 
 
@@ -578,8 +456,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

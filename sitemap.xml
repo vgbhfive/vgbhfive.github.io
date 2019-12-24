@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/</loc>
+    <loc>http://yoursite.com/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/</loc>
     
-    <lastmod>2019-12-20T06:54:02.520Z</lastmod>
+    <lastmod>2019-12-24T10:46:51.584Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://yoursite.com/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/</loc>
     
-    <lastmod>2019-12-20T06:53:48.236Z</lastmod>
+    <lastmod>2019-12-20T10:11:54.011Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/</loc>
+    
+    <lastmod>2019-12-20T06:54:02.520Z</lastmod>
     
   </url>
   

@@ -8,14 +8,14 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Jib构建Java镜像 | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Jib 简介官方Github 库：https:&#x2F;&#x2F;github.com&#x2F;GoogleContainerTools&#x2F;jib 示例Demo:  如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。 构建Jib 镜像引入Jibjib的引入非常简单，已maven plugin的方式集成到项目中，只需要在你的项目中引入下面代码即可。 1&lt;plugin&amp;gt">
+  <meta name="description" content="Jib 简介官方Github 库：https:&#x2F;&#x2F;github.com&#x2F;GoogleContainerTools&#x2F;jib 示例Demo: https:&#x2F;&#x2F;github.com&#x2F;vgbhfive&#x2F;SpringBootDemo&#x2F;tree&#x2F;master&#x2F;jibtest 如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。 构建Jib 镜像引入Jibjib的引">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jib构建Java镜像">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="Jib 简介官方Github 库：https:&#x2F;&#x2F;github.com&#x2F;GoogleContainerTools&#x2F;jib 示例Demo:  如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。 构建Jib 镜像引入Jibjib的引入非常简单，已maven plugin的方式集成到项目中，只需要在你的项目中引入下面代码即可。 1&lt;plugin&amp;gt">
+<meta property="og:description" content="Jib 简介官方Github 库：https:&#x2F;&#x2F;github.com&#x2F;GoogleContainerTools&#x2F;jib 示例Demo: https:&#x2F;&#x2F;github.com&#x2F;vgbhfive&#x2F;SpringBootDemo&#x2F;tree&#x2F;master&#x2F;jibtest 如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。 构建Jib 镜像引入Jibjib的引">
 <meta property="article:published_time" content="2019-12-20T02:39:21.000Z">
-<meta property="article:modified_time" content="2019-12-20T06:53:48.236Z">
+<meta property="article:modified_time" content="2019-12-20T10:11:54.011Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Spring Boot">
@@ -173,7 +173,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">461字</span>
+        <span class="post-count">469字</span>
       </span>
     </span>
 
@@ -200,7 +200,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="Jib-简介"><a href="#Jib-简介" class="headerlink" title="Jib 简介"></a>Jib 简介</h2><p>官方Github 库：<a href="https://github.com/GoogleContainerTools/jib" target="_blank" rel="noopener">https://github.com/GoogleContainerTools/jib</a></p>
-<p>示例Demo: </p>
+<p>示例Demo: <a href="https://github.com/vgbhfive/SpringBootDemo/tree/master/jibtest" target="_blank" rel="noopener">https://github.com/vgbhfive/SpringBootDemo/tree/master/jibtest</a></p>
 <p>如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。</p>
 <h2 id="构建Jib-镜像"><a href="#构建Jib-镜像" class="headerlink" title="构建Jib 镜像"></a>构建Jib 镜像</h2><h3 id="引入Jib"><a href="#引入Jib" class="headerlink" title="引入Jib"></a>引入Jib</h3><p>jib的引入非常简单，已maven plugin的方式集成到项目中，只需要在你的项目中引入下面代码即可。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.cloud.tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jib-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">from</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">&lt;!--base image--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>openjdk:alpine<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;/<span class="name">from</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">to</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">&lt;!--目标镜像registry地址，为了方便测试，你需要换成自己的地址，如果你的网络不好，可以选用国内加速器，比如阿里云的--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>registry.hub.docker.com/vgbhfive/jibtest<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;/<span class="name">to</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span></pre></td></tr></table></figure>
@@ -328,6 +328,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          构建你自己的日志系统
+        
+      </div>
+    </a>
   
   
     <a href="/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/" id="article-nav-older" class="article-nav-link-wrap">
