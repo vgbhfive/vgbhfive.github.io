@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
 <meta property="og:description" content="闭包问题今天要说的是JavaScript的闭包问题，先来看代码： 1&lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;2for (var i &#x3D; 0; i &lt; json[&quot;length&quot;]; i++) &amp;#123;3    x +&#x3D; &quot;&lt;td&gt;&quot; + jso">
 <meta property="article:published_time" content="2019-04-22T08:46:19.000Z">
-<meta property="article:modified_time" content="2019-04-27T15:20:18.952Z">
+<meta property="article:modified_time" content="2020-02-05T06:27:13.636Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Day">
 <meta name="twitter:card" content="summary">
@@ -201,6 +201,8 @@
         <h3 id="闭包问题"><a href="#闭包问题" class="headerlink" title="闭包问题"></a>闭包问题</h3><p>今天要说的是JavaScript的闭包问题，先来看代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">for (var i &#x3D; 0; i &lt; json[&quot;length&quot;]; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    x +&#x3D; &quot;&lt;td&gt;&quot; + json[i][&quot;contents&quot;] + &quot;&lt;&#x2F;td&gt;&quot;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    var row &#x3D; document.createElement(&#39;tr&#39;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    row.innerHTML &#x3D; x;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    var op &#x3D; document.createElement(&#39;button&#39;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    op.innerText &#x3D; &quot;购买&quot;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    op.setAttribute(&#39;style&#39;, &#39;height: 35px; width: 70px; padding-right: 10px; margin: 0 auto;&#39;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    op.addEventListener(&#39;click&#39;, function () &#123; buyLoan(json[i]); &#125;, false);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    row.appendChild(op);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    tbody.appendChild(row);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    x &#x3D; &quot;&quot;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;script&gt;</span></pre></td></tr></table></figure>
 
+<a id="more"></a>
+
 <p>上边的代码中”json”是获取的数据信息，遍历数据信息，添加购买按钮。</p>
 <p>这是一个很典型的闭包问题，因为JavaScript没有块级作用域(for, if, while)，var定义的变量会变为全局变量。<br>这种情况发生之下就是，当代码运行时，每运行一次i都会被覆盖，始终是最后的一个元素。</p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><h4 id="使用let定义变量"><a href="#使用let定义变量" class="headerlink" title="使用let定义变量"></a>使用let定义变量</h4><p>从ES6开始，就可以使用let来定义块级作用域的变量了。</p>
@@ -368,7 +370,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -539,6 +541,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>

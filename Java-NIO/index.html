@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
 <meta property="og:description" content="基础java NIO 主要由以下几个核心部分组成：Channels、Buffers、Selectors，这些构成了核心的API。其他组件，如Pipe、FileLock等，不过是其他三个组件的工具类。 所有的IO在NIO中都是从Channel开始的。Channel有点像流，数据可以从Channel读到Buffer，也可以从Buffer写到Channel。 Channel、BufferChannel的">
 <meta property="article:published_time" content="2019-11-02T03:39:12.000Z">
-<meta property="article:modified_time" content="2019-11-02T07:03:28.546Z">
+<meta property="article:modified_time" content="2020-02-05T06:22:19.366Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="TODO">
@@ -202,6 +202,8 @@
         <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>java NIO 主要由以下几个核心部分组成：Channels、Buffers、Selectors，这些构成了核心的API。<br>其他组件，如Pipe、FileLock等，不过是其他三个组件的工具类。</p>
 <p>所有的IO在NIO中都是从Channel开始的。Channel有点像流，数据可以从Channel读到Buffer，也可以从Buffer写到Channel。</p>
 <h3 id="Channel、Buffer"><a href="#Channel、Buffer" class="headerlink" title="Channel、Buffer"></a>Channel、Buffer</h3><p>Channel的实现：FileChannel、DatagramChannel、SocketChannel、ServerSocketChannel，这些通道涵盖了UDP、TCP网络IO和文件IO，还有一些其他的接口。<br>Buffer的实现：ByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer、ShortBuffer，这些Buffer涵盖了你能通过IO所能传送的所有数据类型：short、int、long、byte、char、float、double，还有一个MappedByteBuffer，这个用于表示内存映射文件。</p>
+<a id="more"></a>
+
 <h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><p>Selector允许单线程处理多个Channel。<br>要使用Selector，必须向Selector注册Channel，然后调用它的select()方法！<br>这个方法会一直阻塞到某个注册的通道有事件就绪，，线程可以处理这些事，如数据连接，数据接收等。</p>
 <hr>
 
@@ -524,7 +526,7 @@ SelectionKey key = channel.register(selector, SelectionKey.OP_READ);
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -695,6 +697,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>

@@ -147,6 +147,216 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-给go-get设置代理解决被墙问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/%E7%BB%99go-get%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%E8%A7%A3%E5%86%B3%E8%A2%AB%E5%A2%99%E9%97%AE%E9%A2%98/">给go get设置代理解决被墙问题</a>
+    </h1>
+  
+
+        
+        <a href="/%E7%BB%99go-get%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%E8%A7%A3%E5%86%B3%E8%A2%AB%E5%A2%99%E9%97%AE%E9%A2%98/" class="archive-article-date">
+  	<time datetime="2020-02-13T12:49:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-13</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">426字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">2分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>最近几天开始脑子发热准备学习Go 语言了，所以就准备开始写一点东西，所以就下载了GoLand 来写代码了，结果就遇到了问题。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在引包的过程中出现了下载失败的问题，所以就把错误信息拿出来，查了一下，结果就是被墙了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">C:\Users\Vgbh&gt;go get -v gopkg.in&#x2F;fatih&#x2F;pool.v2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Fetching https:&#x2F;&#x2F;gopkg.in&#x2F;fatih&#x2F;pool.v2?go-get&#x3D;1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">https fetch failed.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">Fetching http:&#x2F;&#x2F;gopkg.in&#x2F;fatih&#x2F;pool.v2?go-get&#x3D;1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">import &quot;gopkg.in&#x2F;fatih&#x2F;pool.v2&quot;: http&#x2F;https fetch: Get http:&#x2F;&#x2F;gopkg.in&#x2F;fatih&#x2F;poo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">l.v2?go-get&#x3D;1: dial tcp 107.178.216.236:80: ConnectEx tcp: A connection attempt</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">failed because the connected party did not properly respond after a period of ti</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">me, or established connection failed because connected host has failed to respon</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">d.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">package gopkg.in&#x2F;fatih&#x2F;pool.v2: unrecognized import path &quot;gopkg.in&#x2F;fatih&#x2F;pool.v2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">&quot;</span></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/%E7%BB%99go-get%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%E8%A7%A3%E5%86%B3%E8%A2%AB%E5%A2%99%E9%97%AE%E9%A2%98/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/%E7%BB%99go-get%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%E8%A7%A3%E5%86%B3%E8%A2%AB%E5%A2%99%E9%97%AE%E9%A2%98/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-安装-vue-cli-遇到的问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/%E5%AE%89%E8%A3%85-vue-cli-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">安装@vue/cli 遇到的问题</a>
+    </h1>
+  
+
+        
+        <a href="/%E5%AE%89%E8%A3%85-vue-cli-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="archive-article-date">
+  	<time datetime="2020-02-04T00:05:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-04</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">148字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">1分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="问题复述"><a href="#问题复述" class="headerlink" title="问题复述"></a>问题复述</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install -g @vue&#x2F;cli</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">-&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">npm WARN deprecated core-js@2.6.11: core-js@&lt;3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.</span></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/%E5%AE%89%E8%A3%85-vue-cli-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Vue.js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/%E5%AE%89%E8%A3%85-vue-cli-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-构建你自己的日志系统" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -399,7 +609,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">2.3k字</span>
+        <span class="post-count">6.2k字</span>
       </span>
     </span>
 
@@ -408,7 +618,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">10分</span>
+        <span class="post-count">26分</span>
       </span>
     </span>
 </div>
@@ -506,7 +716,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">720字</span>
+        <span class="post-count">727字</span>
       </span>
     </span>
 
@@ -537,23 +747,6 @@
 <li>负载均衡</li>
 <li>断路器</li>
 <li>分布式消息传递</li>
-</ul>
-<h3 id="Spring-Cloud-Netflix"><a href="#Spring-Cloud-Netflix" class="headerlink" title="Spring Cloud Netflix"></a>Spring Cloud Netflix</h3><p>该项目通过自动配置为Spring Boot 应用程序提供Netflix OSS 集成，并绑定到Spring 环境和其他Spring 编程模型成语。<br>通过几个简单的注释，可以快速启用和配置应用程序中的常见模式，并通过经过测试的Netflix 组件构建大型分布式系统。<br>提供的模式包括:</p>
-<ul>
-<li>服务发现（Eureka）</li>
-<li>断路器（Hystrix）</li>
-<li>智能路由（Zuul）</li>
-<li>客户端负载平衡（Ribbon）</li>
-</ul>
-<h3 id="Spring-Cloud-Stream"><a href="#Spring-Cloud-Stream" class="headerlink" title="Spring Cloud Stream"></a>Spring Cloud Stream</h3><p>Spring Cloud Stream 是构建消息驱动的微服务应用程序的框架。<br>Spring Cloud Stream 基于Spring Boot 建立独立的生产级Spring 应用程序，并使用Spring Integration 提供与消息代理的连接。</p>
-<p>Spring Cloud Stream 提供了一些简化消息驱动的微服务应用程序编写的抽象和原语。</p>
-<ul>
-<li>Spring Cloud Stream的应用模型</li>
-<li>Binder抽象</li>
-<li>持续的发布 - 订阅支持</li>
-<li>消费者群体支持</li>
-<li>分区支持</li>
-<li>一个可插拔的Binder API</li>
 </ul>
         
           <a class="article-more-a" href="/Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/#more">more >></a>
@@ -636,7 +829,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">732字</span>
+        <span class="post-count">771字</span>
       </span>
     </span>
 
@@ -682,7 +875,6 @@
 
 </li>
 </ol>
-<p>8.</p>
         
           <a class="article-more-a" href="/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/#more">more >></a>
         
@@ -709,151 +901,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Git-命令大全" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/">Git 命令大全</a>
-    </h1>
-  
-
-        
-        <a href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/" class="archive-article-date">
-  	<time datetime="2019-12-10T06:32:34.181Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-10</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">760字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">3分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Git-基础全流程"><a href="#Git-基础全流程" class="headerlink" title="Git 基础全流程"></a>Git 基础全流程</h2><p>git clone : 克隆远程仓库到本地。<br>git status : 查看当前版本状态（本地已修改的内容和暂存区的内容）<br>git add &lt;/file&gt; : 添加已修改文件到暂存区<br>git commit -m “test” : 添加本次提交注释<br>git push origin bracnh : 提交本地branch 分支推送到远端。</p>
-<h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><p>git add . : 提交本地修改和新增的文件，但不包括删除的文件。<br>git add -A : 添加本地所有变化的文件，但是不包括新增的文件。<br>git add -u : 添加本地被修改和被删除的文件，但是不包括新增的文件。<br>git add &lt;/file&gt; : 添加本地特定文件进暂存区。<br>git add * : 添加本地所有的文件，包括.gitignore 忽略的文件。 </p>
-<h3 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a>git log</h3><p>git log : 显示提交日志<br>样例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">commit 09315b84b8ba056875c2fcc814f40f69e742dbca		# 本次提交CommitID</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Author : vgbhfive &lt;vgbhfive@foxmail.com&gt;   		# 提交作者和提交作者邮箱</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Date :   Thu Oct 17 13 :56 :49 2019 +0800   		# 提交时间</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">							# 提交注释</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    test</span></pre></td></tr></table></figure>
-
-<p>git log -p -m : 显示提交日子及修改内容</p>
-<h3 id="git-show"><a href="#git-show" class="headerlink" title="git show"></a>git show</h3><p>git show CommitID : 查看本次CommitID 提交的所有内容</p>
-<h3 id="git-revert"><a href="#git-revert" class="headerlink" title="git revert"></a>git revert</h3><p>git revert CommitID : 撤销本次CommitID 提交的所有内容</p>
-<h3 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h3><p>git stash : 暂存当前修改内容</p>
-<h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><p>git reset : 撤销本次提交到暂存区的全部内容</p>
-<hr>
-
-<h2 id="远程仓库操作"><a href="#远程仓库操作" class="headerlink" title="远程仓库操作"></a>远程仓库操作</h2><p>git remote -v : 查看远程仓库。<br>git push [remoteName] [localBranchName] : 推送远程仓库<br>git remote rm [name] : 删除远程仓库<br>git remote add [namee] [url] : 添加远程仓库</p>
-<hr>
-
-<h2 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h2><p>git branch : 查看本地分支<br>git branch -r : 查看远程分支<br>git pull [remoteName] [localBranchName] : 更新对应的分支，不输入则默认更新本分支<br>git fetch : 更新远程分支到本地<br>git branch [name] : 新建分支但不会切换分支<br>git checkout [name] : 切换分支<br>git checkout -b [name] :新建分支并切换到新分支<br>git branch -d [name] : 删除name 分支（只能删除已经合并的分支）<br>git merge [name] : 合并name 分支到当前分支<br>git push origin [name] : 创建远程分支（本地分支推送内容产生）</p>
-<p style="color : red;">此命令请谨慎操作！</p>
-git push origin  :heads/[name] : 删除远程name 分支
-
-<hr>
-
-<h2 id="回滚操作"><a href="#回滚操作" class="headerlink" title="回滚操作"></a>回滚操作</h2><p>git reset –hard HEAD^ : 回退到上一个版本<br>git reset –hard CommitId : 回滚到指定的版本</p>
-<hr>
-
-<h2 id="版本操作"><a href="#版本操作" class="headerlink" title="版本操作"></a>版本操作</h2><p>git tag : 查看本地版本<br>git tag [name] : 创建name 版本<br>git tag -d [name] : 删除本地name 版本<br>git tag -r : 查看远程版本<br>git push origin [name] : 创建远程版本（有本地推送而得）</p>
-<hr>
-
-<h2 id="Error-Question"><a href="#Error-Question" class="headerlink" title="Error Question"></a>Error Question</h2><h3 id="推送图解"><a href="#推送图解" class="headerlink" title="推送图解"></a>推送图解</h3><p><img src="https://i.loli.net/2019/10/17/YAVrzcESJhFkMbP.png" alt="11.png"></p>
-<h3 id="Already-up-to-date"><a href="#Already-up-to-date" class="headerlink" title="Already up-to-date"></a>Already up-to-date</h3><p>原因：<br>执行git merge 前，主干的代码没有更新。</p>
-<p>步骤：</p>
-<ul>
-<li>切换到主干<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ git checkout master</span></pre></td></tr></table></figure></li>
-<li>更新主干代码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ git pull origin master</span></pre></td></tr></table></figure></li>
-<li>切换回分支<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ git checkout feature&#x2F;test</span></pre></td></tr></table></figure></li>
-<li>执行合并操作<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ git merge master</span></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="分支合并后出现MERGEING"><a href="#分支合并后出现MERGEING" class="headerlink" title="分支合并后出现MERGEING"></a>分支合并后出现MERGEING</h3><ol>
-<li>查看代码解决现有的冲突。</li>
-<li>git add … 冲突代码。</li>
-<li>查看分支MERGEING 标志消失。</li>
-</ol>
-<hr>
-
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><hr>
-
-<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Utils</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/">展开全文 >></a>
         </p>
       
 
@@ -982,6 +1029,106 @@ git push origin  :heads/[name] : 删除远程name 分支
 
 
   
+    <article id="post-Git-命令大全" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/">Git 命令大全</a>
+    </h1>
+  
+
+        
+        <a href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/" class="archive-article-date">
+  	<time datetime="2019-12-04T09:35:02.544Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-04</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">760字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">3分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Git-基础全流程"><a href="#Git-基础全流程" class="headerlink" title="Git 基础全流程"></a>Git 基础全流程</h2><p>git clone : 克隆远程仓库到本地。<br>git status : 查看当前版本状态（本地已修改的内容和暂存区的内容）<br>git add &lt;/file&gt; : 添加已修改文件到暂存区<br>git commit -m “test” : 添加本次提交注释<br>git push origin bracnh : 提交本地branch 分支推送到远端。</p>
+        
+          <a class="article-more-a" href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Utils</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java-网络编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1030,127 +1177,9 @@ git push origin  :heads/[name] : 删除远程name 分支
 <p>此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。</p>
 <h3 id="Java-TCP网络基础"><a href="#Java-TCP网络基础" class="headerlink" title="Java TCP网络基础"></a>Java TCP网络基础</h3><p>通常情况下，客户端打开一个连接到服务器端的TCP/IP 连接，然后客户端开始与服务器之间通信，当通信结束后客户端关闭连接。</p>
 <p>​客户端通过一个已打开的连接可以发送不止一个请求。事实上在服务器处于接收状态下，客户端可以发送尽可能多的数据，服务器也可以主动关闭连接。</p>
-<h3 id="Java中Socket类和ServerSocket类"><a href="#Java中Socket类和ServerSocket类" class="headerlink" title="Java中Socket类和ServerSocket类"></a>Java中Socket类和ServerSocket类</h3><p>当客户端想要打开一个连接到服务器的TCP/IP连接时，就要使用到Java Socket类。socket类只需要被告知连接的IP地址和TCP端口，其余的都有Java实现。</p>
-<p>假如我们想要打开一个监听服务，来监听客户端连接某些指定TCP端口的连接，那就需要使用Java ServerSocket类。当客户端通过Socket连接服务器端的ServerSocket监听时，服务器端会指定这个连接的一个Socket，此时客户端与服务器端间的通信就变成Socket与Socket之间的通信。</p>
-<p>关于Socket类和ServerSocket类会在后面的文章中有详细的介绍。</p>
-<h3 id="Java-UDP网络基础"><a href="#Java-UDP网络基础" class="headerlink" title="Java UDP网络基础"></a>Java UDP网络基础</h3><p>UDP的工作方式与TCP相比略有不同。使用UDP通信时，在客户端与服务器之间并没有建立连接的概念，客户端发送到服务器的数据，服务器可能（也可能并没有）收到这些数据，而且客户端也并不知道这些数据是否被服务器成功接收。当服务器向客户端发送数据时也是如此。</p>
-<p>正因为是不可靠的数据传输，UDP相比与TCP来说少了很多的协议开销。</p>
-<p>在某些场景中，使用无连接的UDP要优于TCP，这些在文章Java UDP DatagramSocket类介绍中会有更多介绍。</p>
-<hr>
-
-<h2 id="Socket、ServerSocket"><a href="#Socket、ServerSocket" class="headerlink" title="Socket、ServerSocket"></a>Socket、ServerSocket</h2><p>当我们想要在Java中使用TCP/IP通过网络连接到服务器时，就需要创建java.net.Socket对象并连接到服务器。假如希望使用Java NIO，也可以创建Java NIO中的SocketChannel对象。</p>
-<h3 id="创建Socket"><a href="#创建Socket" class="headerlink" title="创建Socket"></a>创建Socket</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">"78.46.84.171"</span>, <span class="number">80</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 我们也可以像如下示例中使用域名代替IP地址：</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">"vgbhfive.cn"</span>, <span class="number">80</span>);</span></pre></td></tr></table></figure>
-
-<h3 id="Socket发送数据"><a href="#Socket发送数据" class="headerlink" title="Socket发送数据"></a>Socket发送数据</h3><p>要通过Socket发送数据，我们需要获取Socket的输出流（OutputStream），示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">"jenkov.com"</span>, <span class="number">80</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">OutputStream out = socket.getOutputStream(); </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">out.write(<span class="string">"some data"</span>.getBytes());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">out.flush();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">out.close(); </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">socket.close();</span></pre></td></tr></table></figure>
-<p> 代码非常简单，但是想要通过网络将数据发送到服务器端，一定不要忘记调用flush()方法。操作系统底层的TCP/IP实现会先将数据放入一个更大的数据缓存块中，而缓存块的大小是与TCP/IP的数据包大小相适应的。（译者注：调用flush()方法只是将数据写入操作系统缓存中，并不保证数据会立即发送）</p>
-<h3 id="Socket读取数据"><a href="#Socket读取数据" class="headerlink" title="Socket读取数据"></a>Socket读取数据</h3><p>从Socket中读取数据，我们就需要获取Socket的输入流（InputStream），代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">"jenkov.com"</span>, <span class="number">80</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">InputStream in = socket.getInputStream(); </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> data = in.read();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//... read more data... </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">in.close();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">socket.close();</span></pre></td></tr></table></figure>
-<p> 代码也并不复杂，但需要注意的是，从Socket的输入流中读取数据并不能读取文件那样，一直调用read()方法直到返回-1为止，因为对Socket而言，只有当服务端关闭连接时，Socket的输入流才会返回-1，而是事实上服务器并不会不停地关闭连接。假设我们想要通过一个连接发送多个请求，那么在这种情况下关闭连接就显得非常愚蠢。</p>
-<p>因此，从Socket的输入流中读取数据时我们必须要知道需要读取的字节数，这可以通过让服务器在数据中告知发送了多少字节来实现，也可以采用在数据末尾设置特殊字符标记的方式连实现。</p>
-<h3 id="关闭Socket"><a href="#关闭Socket" class="headerlink" title="关闭Socket"></a>关闭Socket</h3><p>当使用完Socket后我们必须将Socket关闭，断开与服务器之间的连接。关闭Socket只需要调用Socket.close()方法即可，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">"vgbhfive.cn"</span>, <span class="number">80</span>); </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">socket.close();</span></pre></td></tr></table></figure>
-
-<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p><a href="https://github.com/vgbhfive/VChatDemo" target="_blank" rel="noopener">https://github.com/vgbhfive/VChatDemo</a></p>
-<hr>
-
-<h2 id="UDP-DatagramSocket"><a href="#UDP-DatagramSocket" class="headerlink" title="UDP DatagramSocket"></a>UDP DatagramSocket</h2><p>DatagramSocket 是Java 通过UDP（而非TCP）进行网络通信的机制。UDP 位于IP 之上。<br>使用Java 的DatagramSocket 来发送和接收UPD 数据包（数据报）。</p>
-<h3 id="UDP、TCP"><a href="#UDP、TCP" class="headerlink" title="UDP、TCP"></a>UDP、TCP</h3><p>UDP 的工作方式与TCP 有所不同。<br>通过TCP 发送数据时，首先要创建一个连接，建立TCP 连接后，TCP 会确保您的数据到达另一端，否则它将另一端告诉发生了错误。</p>
-<p>使用UDP，只需将数据包（数据报）发送到网络上的某个IP 地址。但是不能保证数据会到达，并且也无法保证UDP 数据包到达接收方的顺序。<br>这意味着UDP 比TCP 具有更少的协议开销（无流完整性检查）。</p>
-<p>UDP 适用于数据传输，在传输过程中是否丢失数据包并不重要。<br>例如，想象一下通过互联网传输实况电视信号。您希望信号尽可能接近现场。因此，如果丢失了一两帧，则不必担心，最实际的是不希望延迟直播，只是确保所有帧都在客户端显示。宁愿跳过错过的帧，并始终直接移至最新的帧。</p>
-<h3 id="DatagramSocket"><a href="#DatagramSocket" class="headerlink" title="DatagramSocket"></a>DatagramSocket</h3><p>通过DatagramSocket 发送数据，要通过Java DatagramSocket 发送数据则必须先创建一个DatagramPacket 。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">65508</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">InetAddress address= InetAddress.getByName（<span class="string">"test.com"</span>）;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">DatagramPacket packet = <span class="keyword">new</span> DatagramPacket（buffer, buffer.length, address, <span class="number">9000</span>）;</span></pre></td></tr></table></figure>
-
-<p> 字节缓冲区（字节数组）是在UDP 数据报中发送的数据。<br>在DatagramPacket 构造函数的长度是要发送的缓冲区中数据的长度。在该数据量之后，缓冲区中的所有数据将被忽略。<br>在InetAddress 实例中包含要向其发送UDP 数据包的节点（例如服务器）的地址。这个InetAddress 类代表一个IP地址（Internet地址）。<br>这个getByName() 方法返回一个InetAddress 实例，该实例的IP 地址与给定的主机名匹配。<br>port 参数是服务器接收数据的UDP 端口。</p>
-<p><small>UDP和TCP端口不相同。一台计算机可以具有不同的进程，例如同时侦听UDP和TCP中的端口80。</small><br><small>缓冲区的长度为65508字节，是您可以在单个UDP数据包中发送的最大数据量。</small></p>
-<h3 id="DatagramSocket-send"><a href="#DatagramSocket-send" class="headerlink" title="DatagramSocket.send()"></a>DatagramSocket.send()</h3><p>发送数据，DatagramPacket 必须创建一个DatagramSocket 针对发送数据的目标。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">DatagramSocket datagramSocket = <span class="keyword">new</span> DatagramSocket();</span></pre></td></tr></table></figure>
-<p> 要发送数据，请调用send()方法，如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">datagramSocket.send(packet);</span></pre></td></tr></table></figure>
-
-<p>Demo: </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">DatagramSocket datagramSocket = <span class="keyword">new</span> DatagramSocket();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buffer = <span class="string">"0123456789"</span>.getBytes();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">InetAddress address = InetAddress.getLocalHost();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">DatagramPacket packet = <span class="keyword">new</span> DatagramPacket(buffer, buffer.length, address, <span class="number">80</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">datagramSocket.send(packet);</span></pre></td></tr></table></figure>
-
-<h3 id="DatagramSocket-receive"><a href="#DatagramSocket-receive" class="headerlink" title="DatagramSocket.receive()"></a>DatagramSocket.receive()</h3><p>接收数据是通过DatagramSocket 建立一个完成DatagramPacket ，然后通过将数据接收到它DatagramSocket 的receive() 方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">DatagramSocket datagramSocket = <span class="keyword">new</span> DatagramSocket(<span class="number">80</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">DatagramPacket packet = <span class="keyword">new</span> DatagramPacket(buffer, buffer.length);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">datagramSocket.receive(packet);</span></pre></td></tr></table></figure>
-
-<ul>
-<li>首先，80 是DatagramSocket 用于接收UDP 数据包的UDP 端口。如前所述，TCP 和UDP 端口不相同，因此不会重叠。因此可以有两个不同的进程在TCP 和UDP 端口80 侦听，而不会发生任何冲突。</li>
-<li>其次，DatagramPacket 创建一个字节缓冲区和一个DatagramPacket。<br>DatagramPacket 与用于发送数据的节点一样，该节点没有关于要向其发送数据的节点的信息。这是因为我们将使用DatagramPacket来接收数据，而不是发送数据。因此，不需要目的地地址。</li>
-<li>最后，调用DatagramSocket 的receive() 方法。此方法会阻塞直到DatagramPacket 收到数据为止。收到的数据位于DatagramPacket 的字节缓冲区中。<br>通过调用以下方法获得此缓冲区：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buffer = packet.getData();</span></pre></td></tr></table></figure>
-如果需要确定缓冲区中接收了多少数据。那么就需要在使用的协议中指定每个UDP数据包发送多少数据，或者指定数据的结束标记。</li>
-</ul>
-<p>真正的服务器程序可能会receive() 在循环中调用该方法，并将所有接收到的DatagramPacket 传递给工作线程池，就像TCP 服务器处理传入连接一样。</p>
-<hr>
-
-<h2 id="URL-URLConnection"><a href="#URL-URLConnection" class="headerlink" title="URL + URLConnection"></a>URL + URLConnection</h2><p>在java.net包中包含两个有趣的类：URL类和URLConnection类。这两个类可以用来创建客户端到web服务器（HTTP服务器）的连接。<br>下面是一个简单的代码例子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"https://vgbhfive.cn"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">URLConnection urlConnection = url.openConnection();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">InputStream input = urlConnection.getInputStream();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> data = input.read();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	System.out.print((<span class="keyword">char</span>) data);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	data = input.read();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">input.close();</span></pre></td></tr></table></figure>
-
-<h3 id="HTTP-GET和POST"><a href="#HTTP-GET和POST" class="headerlink" title="HTTP GET和POST"></a>HTTP GET和POST</h3><p>默认情况下URLConnection发送一个HTTP GET请求到web服务器。如果你想发送一个HTTP POST请求，要调用URLConnection.setDoOutput(true)方法，<br>如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"https://vgbhfive.cn"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">URLConnection urlConnection = url.openConnection();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">urlConnection.setDoOutput(<span class="keyword">true</span>);</span></pre></td></tr></table></figure>
-<p>一旦你调用了setDoOutput(true)，你就可以打开URLConnection的OutputStream，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">OutputStream output = urlConnection.getOutputStream();</span></pre></td></tr></table></figure>
-<p>你可以使用这个OutputStream向相应的HTTP请求中写任何数据，但你要记得将其转换成URL编码（关于URL编码的解释，自行Google）（译者注：具体名字是：application/x-www-form-urlencoded MIME 格式编码）。<br>当你写完数据的时候要记得关闭OutputStream。</p>
-<h3 id="从URLs到本地文件"><a href="#从URLs到本地文件" class="headerlink" title="从URLs到本地文件"></a>从URLs到本地文件</h3><p>URL也被叫做统一资源定位符。如果你的代码不关心文件是来自网络还是来自本地文件系统，URL类是另外一种打开文件的方式。<br>下面是一个如何使用URL类打开一个本地文件系统文件的例子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"file:/c:/data/test.txt"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">URLConnection urlConnection = url.openConnection();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">InputStream input = urlConnection.getInputStream();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> data = input.read();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	System.out.print((<span class="keyword">char</span>) data);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	data = input.read();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">input.close();</span></pre></td></tr></table></figure>
-<p>注意：这和通过HTTP访问一个web服务器上的文件的唯一不同处就是URL：”file:/c:/data/test.txt”。</p>
-<hr>
-
-<h2 id="JarURLConnection"><a href="#JarURLConnection" class="headerlink" title="JarURLConnection"></a>JarURLConnection</h2><p>Java的JarURLConnection类用来连接Java Jar文件。一旦连接上，你可以获取Jar文件的信息。<br>一个简单的例子如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">String urlString = <span class="string">"http://butterfly.jenkov.com/"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">                 + <span class="string">"container/download/"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">                 + <span class="string">"jenkov-butterfly-container-2.9.9-beta.jar"</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">URL jarUrl = <span class="keyword">new</span> URL(urlString);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">JarURLConnection connection = <span class="keyword">new</span> JarURLConnection(jarUrl);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">Manifest manifest = connection.getManifest();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">JarFile jarFile = connection.getJarFile();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//do something with Jar file...</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h2 id="InetAddress"><a href="#InetAddress" class="headerlink" title="InetAddress"></a>InetAddress</h2><ul>
-<li>创建一个 InetAddress 实例</li>
-<li>InetAddress 的内部方法<br>InetAddress 是 Java 对 IP 地址的封装。这个类的实例经常和 UDP DatagramSockets 和 Socket，ServerSocket 类一起使用。</li>
-</ul>
-<h3 id="创建一个-InetAddress-实例"><a href="#创建一个-InetAddress-实例" class="headerlink" title="创建一个 InetAddress 实例"></a>创建一个 InetAddress 实例</h3><p>InetAddress 没有公开的构造方法，因此你必须通过一系列静态方法中的某一个来获取它的实例。</p>
-<p>下面是为一个域名实例化 InetAddres 类的例子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">InetAddress address = InetAddress.getByName(<span class="string">"jenkov.com"</span>);</span></pre></td></tr></table></figure>
-<p> 当然也会有为匹配某个 IP 地址来实例化一个 InetAddress:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">InetAddress address = InetAddress.getByName(<span class="string">"78.46.84.171"</span>);</span></pre></td></tr></table></figure>
-<p> 另外，它还有通过获取本地 IP 地址的来获取 InetAddress 的方法（正在运行程序的那台机器）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">InetAddress address = InetAddress.getLocalHost();</span></pre></td></tr></table></figure>
-
-<h3 id="InetAddress-内部方法"><a href="#InetAddress-内部方法" class="headerlink" title="InetAddress 内部方法"></a>InetAddress 内部方法</h3><p>InetAddress 类还拥有大量你可以调用的其它方法。例如：你可以通过调用getAddress()方法来获取 IP 地址的 byte 数组。如果要了解更多的方法，最简单的方式就是读 JavaDoc 文档中关于 InetAddress 类的部分。</p>
-<hr>
-
-<h2 id="Protocol-Design"><a href="#Protocol-Design" class="headerlink" title="Protocol Design"></a>Protocol Design</h2><p>如果设计一个客户端到服务器的系统，那么同时也需要设计客户端和服务器之间的通信协议。当然，有时候协议已经为你决定好了，比如HTTP、XML_RPC（http response 的 body 使用xml）、或者SOAP(也是http response 的 body 使用xml)。设计客户端到服务端协议的时候，一旦协议决定开启一会儿，来看一些你必须考虑的地方：</p>
-<ol>
-<li>客户端到服务端的往返通讯</li>
-<li>区分请求结束和响应结束。</li>
-<li>防火墙穿透</li>
-</ol>
-<h3 id="客户端-服务端往返"><a href="#客户端-服务端往返" class="headerlink" title="客户端-服务端往返"></a>客户端-服务端往返</h3><p>当客户端和服务端通信，执行操作时，他们在交换信息。比如，客户端执行一个服务请求，服务端尝试完成这个请求，发回响应告诉客户端结果。这种客户端和服务端的信息交换就叫做往返。<br>示意图如下：<br><img src="https://i.loli.net/2019/11/02/LSWtzOejyGIU2is.jpg" alt="xxx.jpeg"></p>
-<p>当一个计算机（客户端或者服务端）在网络中发送数据到另一个计算机时，从数据发送到另一端接收数据完会花费一定时间。这就是数据在网络间的传送的时间花费。这个时间叫做延迟。<br>协议中含有越多的往返，协议变得越慢，延迟特别高。HTTP协议只包含一个单独的响应来执行服务。换句话说就是一个单独的往返。另一方面，在一封邮件发送前，SMTP协议包含了几个客户端和服务端的往返。<br>在协议中有多个往返的原因是：有大量的数据从客户端发送到服务端。</p>
-<p>这种情况下你有2个选择：</p>
-<ol>
-<li>在分开往返中发送头信息；</li>
-<li>将消息分成更小的数据块。</li>
-</ol>
-<p>如果服务端能完成头信息的一些初始验证 ，那么分开发送头信息是很明智的。如果头信息是空白的，发送大量数据本身就是浪费资源。<br>在传输大量数据时，如果网络连接失败了，得从头开始重新发送数据。数据分割发送时，只需要在网络连接失败处重新发送数据块。已经发送成功的数据块不需要重新发送。</p>
-<h3 id="区分请求结束和响应结束"><a href="#区分请求结束和响应结束" class="headerlink" title="区分请求结束和响应结束"></a>区分请求结束和响应结束</h3><p>如果协议容许在同一个连接中发送多个请求，需要一个让服务端知道当前请求何时结束、下一个请求何时开始。客户端也需要知道一个响应何时结束了，下一个响应何时开始。</p>
-<p>对于请求有2个方法区分结束：</p>
-<ol>
-<li>在请求的开始处发送请求的字长</li>
-<li>在请求数据的最后发送一个结束标记。</li>
-</ol>
-<p>HTTP用第一个机制。在请求头中 发送了“Content-Length”。请求头会告诉服务端在头文件后有多少字节是属于请求的。<br>这个模型的优势在于没有请求结束标志的开销。为了避免数据看上去像请求结束标志，也不需要对数据体进行编码。<br>第一个方法的劣势：在数据传输前，发送者必须知道多少字节数将被传输。如果数据时动态生成的，在发送前，首先你得缓存所有的数据，这样才能计算出数据的字节数。<br>运用请求结束标志时，不需要知道发送了多少字节数。只需要知道请求结束标志在数据的末尾。当然，必须确认已发送的数据中不包含会导致请求结束标志错误的数据。可以这样做：<br>可以说请求结束标志是字节值255。当然数据可能包含值255。因此，对数据中包含值255的每一个字节添加一个额外的字节，还有值255。结束请求标志被从字节值255到255之后的值为0。</p>
-<p>如下编码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">255 in data –&gt;255， 255</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">end-of-request –&gt; 255, 0</span></pre></td></tr></table></figure>
-
-<p>这种255，0的序列永远不会出现在数据中，因为你把所有的值255变成了255,255。同时，255,255,0也不会被错认为255,0。255,255被理解成在一起的，0是单独的。</p>
-<h3 id="防火墙穿透"><a href="#防火墙穿透" class="headerlink" title="防火墙穿透"></a>防火墙穿透</h3><p>比起HTTP协议，大多数防火墙会拦截所有的其他通信。因此把协议放在HTTP的上层是个好方法，像XML-RPC,SOAP和REST也可以这样做。</p>
-<p>协议置于HTTP的上层，在客户端和服务端的HTTP请求和响应中可以来回发送数据。记住，HTTP请求和响应不止包含text或者HTML。也可以在里面发送二进制数据。</p>
-<p>将请求放置在HTTP协议上，唯一有点奇怪的是：HTTP请求必须包含一个“主机”头字段。如果你在HTTP协议上设计P2P协议，同样的人最可能不会运行多个“主机”。在这种情况下需要头字段是不必要的开销（但是个小开销）。</p>
-<hr>
-
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="http://tutorials.jenkov.com/java-networking/udp-datagram-sockets.html" target="_blank" rel="noopener">http://tutorials.jenkov.com/java-networking/udp-datagram-sockets.html</a><br><a href="http://ifeve.com/" target="_blank" rel="noopener">http://ifeve.com/</a></p>
-<hr>
-
-<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
-
+        
+          <a class="article-more-a" href="/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/#more">more >></a>
+        
       
 
       
@@ -1203,422 +1232,6 @@ git push origin  :heads/[name] : 删除远程name 分支
 
 
   
-    <article id="post-Java-NIO" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-NIO/">Java-NIO</a>
-    </h1>
-  
-
-        
-        <a href="/Java-NIO/" class="archive-article-date">
-  	<time datetime="2019-11-02T03:39:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-02</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">3.1k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">11分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>java NIO 主要由以下几个核心部分组成：Channels、Buffers、Selectors，这些构成了核心的API。<br>其他组件，如Pipe、FileLock等，不过是其他三个组件的工具类。</p>
-<p>所有的IO在NIO中都是从Channel开始的。Channel有点像流，数据可以从Channel读到Buffer，也可以从Buffer写到Channel。</p>
-<h3 id="Channel、Buffer"><a href="#Channel、Buffer" class="headerlink" title="Channel、Buffer"></a>Channel、Buffer</h3><p>Channel的实现：FileChannel、DatagramChannel、SocketChannel、ServerSocketChannel，这些通道涵盖了UDP、TCP网络IO和文件IO，还有一些其他的接口。<br>Buffer的实现：ByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer、ShortBuffer，这些Buffer涵盖了你能通过IO所能传送的所有数据类型：short、int、long、byte、char、float、double，还有一个MappedByteBuffer，这个用于表示内存映射文件。</p>
-<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><p>Selector允许单线程处理多个Channel。<br>要使用Selector，必须向Selector注册Channel，然后调用它的select()方法！<br>这个方法会一直阻塞到某个注册的通道有事件就绪，，线程可以处理这些事，如数据连接，数据接收等。</p>
-<hr>
-
-<h2 id="Channel的实现"><a href="#Channel的实现" class="headerlink" title="Channel的实现"></a>Channel的实现</h2><p>java NIO的通道类似于流，但又与流不同：</p>
-<ul>
-<li>通道即可以读取数据，也可以写入数据，但流的读写通常是分开的。</li>
-<li>通道可以异步的读写。</li>
-<li>通道中的数据总是先读到一个Buffer，或者从一个Buffer中写入。</li>
-</ul>
-<p>实现：</p>
-<ul>
-<li>FileChannel：从文件中读写数据。</li>
-<li>DatagramChannel：通过UDP读写网络中的数据</li>
-<li>SocketChannel：通过TCP读写网络中的数据</li>
-<li>ServerSocketChannel：可以监听新进来的TCP连接，像Web服务器那样。</li>
-</ul>
-<hr>
-
-<h2 id="Buffer的实现"><a href="#Buffer的实现" class="headerlink" title="Buffer的实现"></a>Buffer的实现</h2><p>JAVA NIO中的Buffer用于和NIO通道进行交互，数据从通道读入缓存区，从缓存区写入通道。<br>缓冲区本质上是一块可以写入数据，也可以读出数据的内存，这块内存被包装成NIO Buffer对象，并提供了一组方法，用来方便的调用该块内存。</p>
-<ol>
-<li><p>Buffer的基本用法<br>使用Buffer读写数据一般有四种个步骤：</p>
-<ul>
-<li>写入数据到Buffer，Buffer会记录写入了多少数据。</li>
-<li>调用flip()方法，将Buffer从写模式转换为读模式。</li>
-<li>从Buffer中读取数据</li>
-<li>调用clear()方法或compact()方法，clear()方法会清空缓存区所有的数据，compact()方法只会清除已经读取的数据。<br>任何未读的数据都会被放到缓存区的起始处，新写入的数据放到缓存区未读取数据的后面。</li>
-</ul>
-</li>
-<li><p>buffer的capacity、position和limit<br>缓存区本质上是一块可以读写的内存，被包装成NIO Buffer对象。<br>理解Buffer的工作原理，需要熟悉它的三个属性：capacity、position、limit。<br>position和limit的含义取决于Buffer处于读模式还是写模式，但capacity的含义一直不变。<br>capacity：作为一个内存块，Buffer有一个固定的大小，”capacity”<br>limit：Buffer在不同的模式下，可以写入或读取数据的多少。但一般情况下，limit都会被设置为之前position的值。<br>position：当你写入或读取Buffer时，position表示当前的位置，每一次Buffer转换模式时，position都会被初始化为0，position的最大值为capacity-1。</p>
-</li>
-<li><p>Buffer的类型<br>ByteBuffer、MappedByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer、ShortBuffer<br>这里包含了常见的数据类型，也有map类型的数据。</p>
-</li>
-<li><p>Buffer的分配<br>要想获得一个Buffef对象，首先要对对象进行分配，每一个Buffer类都有一个allocate()方法，用于分配不同的字节给Buffer。</p>
-</li>
-<li><p>向Buffer中写入数据,写入数据共有两种方式：</p>
-<ul>
-<li>从Channel中写到Buffer<br>int byteRead = inChannel.read(buf);</li>
-<li>通过Buffer的put()方法写入到Buffef中<br>buf.put(124);</li>
-</ul>
-</li>
-<li><p>flip()方法<br>flip()方法将Buffer从写模式转换为读模式。调用flip()方法会将position设置为0，并将limit设置为之前position的值。<br>换句话说就是position现在用于标记读的位置，limit之前写入了多少个byte、char等，现在就能读取多少个char、byte。</p>
-</li>
-<li><p>从Buffer中读取数据,读取数据有两种方式：</p>
-<ul>
-<li>从Buffer中读取数据到Channel<br>int byteWrite = inChannel.write(buf);</li>
-<li>使用get()方法从Buffer中读取数据<br>byte aByte = buf.get();</li>
-<li>rewind()方法：<br>rewind()方法将position设置为0，所以可以重读Buffer中的所有数据。</li>
-</ul>
-</li>
-<li><p>clear()和compact()方法<br>当读取完Buffer中的数据，需要让Buffer准备好再次被写入，可以调用clear()和compact()方法实现。</p>
-<ul>
-<li>clear()：<br>position被设置为0，limit被设置为capacity的值。Buffer被清空，Buffer中的数据并未清除，只是告诉我们该从哪里写入数据。</li>
-<li>compact()：<br>compact()方法会将所有未读的数据拷贝到Buffer起始处，然后将position设到最后一个未读元素的后面，limit依旧被设置为capacity，现在Buffer写入数据就不会覆盖未读的数据了。</li>
-</ul>
-</li>
-<li><p>mark()和reset()方法<br>调用mark()方法可以标记一个特定的position，之后可以通过reset()方法恢复到这个position。</p>
-</li>
-<li><p>equals()和compareTo()方法<br>使用equals()和conoareTo()比较两个Buffer对象</p>
-<ul>
-<li>equals()：当满足下列条件时，两个Buffer相等,相同的类型。Buffer中剩余的byte、char等的个数相等。Buffer中所有的剩余的byte、char等都相同。equals()只比较Buffer的一部分，不是每一个在它的元素都比较，实际上，它只比较Buffer中剩余的元素。</li>
-<li>compareTo()：<br>compareTo()只比较Buffer的剩余元素byte、char，如果满足下列条件，认为一个Buffer小于另一个Buffer：<br>第一个不相等的元素小于另外一个Buffer中对应的元素。2.&gt;所有的元素都相等，但是第一个Buffer先耗尽（元素数量小于比第二个Buffer少）。</li>
-</ul>
-</li>
-</ol>
-<p><small><strong>注：剩余元素是从position到limit之间的元素。</strong></small></p>
-<hr>
-
-<h2 id="Scatter（分散）-Gather（聚集）"><a href="#Scatter（分散）-Gather（聚集）" class="headerlink" title="Scatter（分散）/Gather（聚集）"></a>Scatter（分散）/Gather（聚集）</h2><p>scatter/gather用于描述从Channel中读取或者写入到Channel的操作。<br>Scatter从Channel中读取是指在读操作时将读取的数据写入多个Buffer中。<br>Gather写入Channel是指在写操作时将多个Buffer的数据写入同一个Channel。<br>scatter/gather通常使用在需要将数据分开处理的场合，例如传输一个由消息头和消息体组成的消息，会将消息头和消息体分散到不同的Buffer中，这样可以方便处理消息头和消息体。</p>
-<ol>
-<li><p>Scatter Reads<br>是指数据从一个Channel读取到多个Buffer中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ByteBuffer header = ByteBuffer.allocate(<span class="number">128</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">ByteBuffer body = ByteBuffer.allocate(<span class="number">1024</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ByteBuffer[] bufferArr = &#123;header, body&#125;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">channel.read(bufferArr);</span></pre></td></tr></table></figure>
-<p>首先Buffer被写入数组，然后将数组作为参数传入channel.read()，read()方法按照在数组中的顺序将channel中的数据写入到Buffer中，当一个Buffer写满后，才会向另外一个Buffer中写入。<br>Reads在移动前必须写满Buffer，这意味着不适用于动态消息。</p>
-</li>
-<li><p>Gather Writes<br>是指将数据从多个Buffer写入到同一个channel。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ByteBuffer header = ByteBuffer.allocate(<span class="number">128</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">ByteBuffer body = ByteBuffer.allocate(<span class="number">1024</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ByteBuffer[] bufferArr = &#123;header, body&#125;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">channel.write(bufferArr);</span></pre></td></tr></table></figure>
-<p>bufferArr数组是write()的参数，write()方法会按照在数组中的顺序，将数据写入到channel中，注意只有position和limit之间的数据才会被写入。 因此与Scatter read()相反，Gather write()能较好的处理动态消息。</p>
-</li>
-</ol>
-<h3 id="通道之间的数据传输"><a href="#通道之间的数据传输" class="headerlink" title="通道之间的数据传输"></a>通道之间的数据传输</h3><p>在JAVA NIO中，如果两个通道中有一个是FileChannel，那你可以直接从一个Channel传入到另一个Channel。</p>
-<ol>
-<li>transferForm()<br>FileChannel的transForm()方法可以将数据从源通道传输到FileChannel中。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">RandomAccessFile fromFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"fromFile.txt"</span>, <span class="string">"rw"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">FileChannel fromChannel = fromFile.getChannel();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">RandomAccessFile toFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"toFile.txt"</span>, <span class="string">"rw"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">FileChannel toChannel = toFile.getChannel();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> position = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> count = fromChannel.size();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">toChannel.transferFrom(position, count, fromChannel);</span></pre></td></tr></table></figure>
-传入的参数position表示从position处开始向目标文件写入数据，count表示最多传输的字节数。如果源通道的剩余空间小于count字节，则所传输的字节数要小于请求的字节数。<br>另外SocketChannel的实现中，SocketChannel只会传输准备好的数据，因此不会传输所有的数据。</li>
-<li>transderTo()<br>FileChannel的transForm()方法可以将数据从源通道传输到FileChannel中。<br>示例：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">RandomAccessFile fromFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"fromFile.txt"</span>, <span class="string">"rw"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">FileChannel fromChannel = fromFile.getChannel();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">RandomAccessFile toFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"toFile.txt"</span>, <span class="string">"rw"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">FileChannel toChannel = toFile.getChannel();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> position = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> count = fromChannel.size();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">fronChannel.transferTo(position, count, toChannel);</span></pre></td></tr></table></figure>
-除了调用方法的Channel对象不同，其他的都一样。<br>SocketChannel的问题同样存在，SocketChannel会一直传输数据知道目标Buffer被填满。</li>
-</ol>
-<h2 id="Selector（选择器）"><a href="#Selector（选择器）" class="headerlink" title="Selector（选择器）"></a>Selector（选择器）</h2><p>Selector是Java NIO中能够检测一到多个NIO通道，并能够知道通道是否为读写事件做好准备，这样，一个单独的线程可以管理多个Channel，从而管理多个网络连接。</p>
-<ol>
-<li><p>为什么使用Selector<br>仅用单个线程就能处理多个Channel。</p>
-</li>
-<li><p>Selector的创建<br>通过调用Selector.open()方法创建一个Selector。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Selector selector = Selector.open();</span></pre></td></tr></table></figure>
-</li>
-<li><p>向Selector注册通道<br>为了将Channel和Selector配合使用，必，须将channel注册到selector上，通过SelectorChannel.register()方法实现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">channel.configureBlocking(<span class="keyword">false</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">SelectionKey key = channel.register(selector, Selectionkey.OP_READ);</span></pre></td></tr></table></figure>
-</li>
-<li><p>与Selector一起使用，Channel必须处于非阻塞状态。(FileChannel与Selector不能一起使用，因为FileChannel不能切换到非阻塞状态，而套接字通道可以。)</p>
-</li>
-<li><p>注意register()方法的第二个参数，这是一个”interest集合”，意思是在通过Selector监听Channel时对什么感兴趣，可以监听四种不同类型的事件：Connect、Accept、Read、Write。<br>通道触发了一个事件意思是该事件已就绪，所以，某个channel连接成功到另一个服务器称为“链接就绪”，还有ServerSocketChannel的“接收就绪”，以及其他的“读就绪”，“写就绪”。<br>这四种事件用SlectionKey的四个常量表示：SlectionKey.OP_CONNECT、SelectionKey.OP_ACCEPT、SlectionKey.OP_READ、SelectorKey.OP_WRITE、<br>如果想对多种事件添加监听，可以使用“位或”操作符将常量连接。<br>示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> intereSet = SelectionKey.OP_READ | SelectionKey.OP_WRITE;</span></pre></td></tr></table></figure>
-</li>
-<li><p>SelectionKey<br>当向Selector注册Channel时，register()方法会返回一个SelectionKey对象，这个对象包含了许多的属性：</p>
-<ul>
-<li>interest集合<br>interest集合主要包含了你选择的监听事件的集合。可以使用“位与”操作interest集合和给定的SelectionKey常量，确定那些事件在interest集合中。</li>
-<li>ready集合<br>ready集合是指已经就绪的操作的集合。</li>
-<li>Channel + Selector<br>从SelectionKey访问Channel和Selector。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Channel channel = selectionKey.channel();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Selector selector = selectionKey.selector();</span></pre></td></tr></table></figure></li>
-<li>附加的对象<br>可以将一个对象或更多信息附加到SelectionKey上，这样能方便的识别给定的通道。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">selectionKey.attch(theObject);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Object attachObj = selectionKey.attachment();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 或者</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">SelectionKey key = channel.register(selector, SelectionKey.OP_READ, theObject);</span></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>通过Selector选择通道<br>一旦向Selector注册通道成功，就可以调用重载的select()方法，这些方法回返回那些已经就绪的通道。</p>
-<ul>
-<li>select()<br>int select()<br>会阻塞到至少一个通道上，等到事件就绪后才返回值。返回值表示有多少通道就绪。<br>int select(long timeout)<br>和select()一样，但除了最长会阻塞timeout时间。<br>int selectNow()<br>不会阻塞，但会不管什么通道都会立即返回。</li>
-<li>selectedKeys()<br>一旦调用select()方法就表示有一个或多个通道就绪，然后通过selector的selectedKey()方法访问“已选择就绪键集”中的就绪通道。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Set selectedKeys = selector.selectedKeys();</span></pre></td></tr></table></figure>
-当Selector注册Channel时，Channel.register()方法会返回一个SelectionKeys对象，这个对象代表了注册到Selector的通道，可以通过SelectionKey的selectedKeySet()方法访问这些对象。<br>可以遍历这个已选择的键集合来访问就绪的通道。<br>注意在每次使用完SelectionKey实例时，都要在处理完通道时自己移除，下次通道就绪时，Selector会再次将其放入已选择键集中。</li>
-</ul>
-</li>
-<li><p>wakeUp()<br>某个线程调用select()方法后被阻塞，那要让其从select()返回，需要让其他线程在第一线程调用select()方法的那个对象上调用wakeup()方法即可，阻塞在select()方法上的线程会立刻返回。<br>如果有其他线程调用了wakeup()方法，但当前线程没有阻塞在select()方法上，下个调用select()方法的线程会立即“醒来”（wakeup）。</p>
-</li>
-<li><p>close()<br>用完Selector后调用close()方法关闭该Selector，且注册到该Selector上的SelectionKey实例无效，但通道本身不会关闭。</p>
-</li>
-<li><p>完整的示例</p>
-<pre><code class="java">Selector selector = Selector.open();
-channel.configureBlocking(<span class="keyword">false</span>);
-SelectionKey key = channel.register(selector, SelectionKey.OP_READ);
-<span class="keyword">while</span> (<span class="keyword">true</span>) {
-    <span class="keyword">int</span> readyChannel = selector.select();
-    <span class="keyword">if</span> (readyChannel == <span class="number">0</span>) <span class="keyword">continue</span>;
-    Set selectedKeys = selector.selectedKeys();
-    Iterator keyIterator = selectedKeys.iterator();
-    <span class="keyword">while</span> (keyIterator.hasNext()) {
-        SelectionKey key = keyIterator.next();
-        <span class="keyword">if</span> (key.isAccept()){
-        <span class="comment">//a accept</span>
-        } <span class="keyword">else</span> <span class="keyword">if</span> (key.isConnected()) {
-        <span class="comment">//a connected</span>
-        } <span class="keyword">else</span> <span class="keyword">if</span> (key.isReadable()) {
-        <span class="comment">//a read</span>
-        } <span class="keyword">else</span> <span class="keyword">if</span> (key.isWritable()) {
-        <span class="comment">//a write</span>
-        }
-        keyIterator.remove();
-    }
-}</code></pre>
-</li>
-</ol>
-<hr>
-
-<h2 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h2><hr>
-
-<h2 id="SocketChannel"><a href="#SocketChannel" class="headerlink" title="SocketChannel"></a>SocketChannel</h2><hr>
-
-<h2 id="ServerSocketChannel"><a href="#ServerSocketChannel" class="headerlink" title="ServerSocketChannel"></a>ServerSocketChannel</h2><hr>
-
-<h2 id="DatagranChannel"><a href="#DatagranChannel" class="headerlink" title="DatagranChannel"></a>DatagranChannel</h2><hr>
-
-<h2 id="Pipe"><a href="#Pipe" class="headerlink" title="Pipe"></a>Pipe</h2><hr>
-
-<h2 id="JAVA-NIO与IO"><a href="#JAVA-NIO与IO" class="headerlink" title="JAVA NIO与IO"></a>JAVA NIO与IO</h2><hr>
-
-<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">TODO</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-NIO/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JS-中的神操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/">JS 中的神操作</a>
-    </h1>
-  
-
-        
-        <a href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2019-10-16T06:59:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-16</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">675字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">3分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="https://i.loli.net/2019/10/17/1u24lYLEMfdesAQ.png" alt="xxx.png"></p>
-<h3 id="加号的操作"><a href="#加号的操作" class="headerlink" title="加号的操作"></a>加号的操作</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>+<span class="string">'32'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 132</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>+ +<span class="string">'32'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 33</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">+[]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 0</span></span></pre></td></tr></table></figure>
-
-<p><small>加号的操作有很多的妙用，等待你的探索。</small></p>
-<hr>
-
-<h3 id="swap-交换"><a href="#swap-交换" class="headerlink" title="swap 交换"></a>swap 交换</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> y = <span class="number">2</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[x, y] = [y, x]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(x + <span class="string">' '</span> + y)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2 1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">x ^= y;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">y ^= x;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">x ^= y;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(x + <span class="string">' '</span> + y)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1 2</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="Console-输出"><a href="#Console-输出" class="headerlink" title="Console 输出"></a>Console 输出</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.info(<span class="string">"%cHello World!"</span>, <span class="string">"color: #3190e8; font-size: 30px; font-family: sans-serif"</span>);</span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="特殊字符"><a href="#特殊字符" class="headerlink" title="特殊字符"></a>特殊字符</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log((!(~+[])+&#123;&#125;)[--[~+<span class="string">""</span>][+[]]*[~+[]]+~~!+[]]+(&#123;&#125;+[])[[~!+[]]*~+[]])</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// sb</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(([][[]] + [])[+!![]] + ([] + &#123;&#125;)[!+[] + !![]])</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// nb</span></span></pre></td></tr></table></figure>
-
-<p><small>运算符能输出字符，这其中跟JS 中的运算符优先级和字符强转类型有关！</small></p>
-<hr>
-
-<h3 id="取整"><a href="#取整" class="headerlink" title="取整"></a>取整</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">43.210</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 43.210</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(~~x)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 43</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(X | <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 43 </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(x &gt;&gt; <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 43</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="True-Flase"><a href="#True-Flase" class="headerlink" title="True/Flase"></a>True/Flase</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(!<span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(!<span class="number">1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// false</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="数组去重"><a href="#数组去重" class="headerlink" title="数组去重"></a>数组去重</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">6</span>]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[...new <span class="built_in">Set</span>(arr)]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// [1, 2, 3, 4, 5, 6]</span></span></pre></td></tr></table></figure>
-
-<p><small>JS中的 … 你可以把它理解为<strong>解构</strong>或者<strong>展开</strong>。</small></p>
-<hr>
-
-<h3 id="键盘"><a href="#键盘" class="headerlink" title="键盘"></a>键盘</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="params">_</span>=&gt;</span>[...<span class="string">"`1234567890-=~~QWERTYUIOP[]\\~ASDFGHJKL;'~~ZXCVBNM,./~"</span>].map(<span class="function"><span class="params">x</span>=&gt;</span>(o+=<span class="string">`/<span class="subst">$&#123;b=<span class="string">'_'</span>.repeat(w=x&lt;y?<span class="number">2</span>:<span class="string">' 667699'</span>[x=[<span class="string">"BS"</span>,<span class="string">"TAB"</span>,<span class="string">"CAPS"</span>,<span class="string">"ENTER"</span>][p++]||<span class="string">'SHIFT'</span>,p])&#125;</span>\\|`</span>,m+=y+(x+<span class="string">' '</span>).slice(<span class="number">0</span>,w)+y+y,n+=y+b+y+y,l+=<span class="string">' __'</span>+b)[<span class="number">73</span>]&amp;&amp;(k.push(l,m,n,o),l=<span class="string">''</span>,m=n=o=y),m=n=o=y=<span class="string">'|'</span>,p=l=k=[])&amp;&amp;k.join<span class="string">``</span>)()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">  ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ________</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||  |||1 |||2 |||3 |||4 |||5 |||6 |||7 |||8 |||9 |||0 |||- |||= |||BS    ||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||______|| </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/______\|</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment">  ________ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||TAB   |||Q |||W |||E |||R |||T |||Y |||U |||I |||O |||P |||[ |||] |||\ ||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||______|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> |/______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="comment">  _________ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ________</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||CAPS   |||A |||S |||D |||F |||G |||H |||J |||K |||L |||; |||' |||ENTER ||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||_______|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||______||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> |/_______\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/______\|</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="comment">  ___________ ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ___________</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||SHIFT    |||Z |||X |||C |||V |||B |||N |||M |||, |||. |||/ |||SHIFT    ||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> ||_________|||__|||__|||__|||__|||__|||__|||__|||__|||__|||__|||_________||</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> |/_________\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_________\| </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="数组最大值-最小值"><a href="#数组最大值-最小值" class="headerlink" title="数组最大值/最小值"></a>数组最大值/最小值</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">Math</span>.max(...arr)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 5</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">Math</span>.min(...arr)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="字符串的长度"><a href="#字符串的长度" class="headerlink" title="字符串的长度"></a>字符串的长度</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="string">"𠮷祥"</span>.length</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="string">"\u&#123;20BB7&#125;"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 𠮷 -&gt; 这种表示法只限于码点在\u0000~\uFFFF之间的字符。超出这个范围的字符，必须用两个双字节的形式表示。</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="string">"\uD842\uDFB7"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 𠮷</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 由于\u20BB是一个不可打印字符，所以只会显示一个空格，后面跟着一个7。</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="遍历数组返回布尔值"><a href="#遍历数组返回布尔值" class="headerlink" title="遍历数组返回布尔值"></a>遍历数组返回布尔值</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">2</span>).every(<span class="function"><span class="params">e</span> =&gt;</span> e) <span class="comment">// true</span></span></pre></td></tr></table></figure>
-<p><img src="https://i.loli.net/2019/12/17/C1idKAWXBf4QjpR.png" alt="1.png"></p>
-<hr>
-
-<h3 id="很大数字的简便写法"><a href="#很大数字的简便写法" class="headerlink" title="很大数字的简便写法"></a>很大数字的简便写法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">123</span>_456_7</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">x <span class="comment">// 1234567</span></span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
-
-<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1633,7 +1246,7 @@ SelectionKey key = channel.register(selector, SelectionKey.OP_READ);
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1804,6 +1417,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>

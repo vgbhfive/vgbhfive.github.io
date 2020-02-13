@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
 <meta property="og:description" content="简介java.lang.instrument 包是Java 中来增强JVM 上的应用的一种方式，机制是在JVM 启动前或启动后attach 上去进行修改方法字节码的方式。instrument 包的用途很多，主要体现在对代码侵入低的优点上。例如一些监控不方便修改业务代码，但是可以使用这种方式在方法中植入特定逻辑，这种方式能够直接修改JVM 中加载的字节码的内容，而不需要在像Spring AOP 实现">
 <meta property="article:published_time" content="2019-08-07T02:21:31.000Z">
-<meta property="article:modified_time" content="2019-08-07T07:38:36.052Z">
+<meta property="article:modified_time" content="2020-02-05T06:24:53.791Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -201,6 +201,8 @@
         <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>java.lang.instrument 包是Java 中来增强JVM 上的应用的一种方式，机制是在JVM 启动前或启动后attach 上去进行修改方法字节码的方式。<br>instrument 包的用途很多，主要体现在对代码侵入低的优点上。<br>例如一些监控不方便修改业务代码，但是可以使用这种方式在方法中植入特定逻辑，这种方式能够直接修改JVM 中加载的字节码的内容，而不需要在像Spring AOP 实现中创建新的代理类，所以在底层侵入更高，但是对开发者更透明。</p>
 <p>使用方式是通过在启动命令上添加参数的方式添加一个称为agent 的jar 包。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">java -javaagent:xxx.jar xx.jar</span></pre></td></tr></table></figure>
+
+<a id="more"></a>
 
 <hr>
 
@@ -407,7 +409,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -578,6 +580,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>

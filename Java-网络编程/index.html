@@ -16,7 +16,7 @@
 <meta property="og:description" content="基础概念Java 网络API 允许我们通过套接字（Socket）打开或关闭网络连接，但所有的网络通信均是基于Java IO 类 InputStream 和OutputStream 实现的。 此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。 Java T">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;11&#x2F;02&#x2F;LSWtzOejyGIU2is.jpg">
 <meta property="article:published_time" content="2019-11-02T05:41:42.000Z">
-<meta property="article:modified_time" content="2019-11-02T07:03:17.378Z">
+<meta property="article:modified_time" content="2020-02-05T06:22:28.279Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -204,6 +204,8 @@
 <p>此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。</p>
 <h3 id="Java-TCP网络基础"><a href="#Java-TCP网络基础" class="headerlink" title="Java TCP网络基础"></a>Java TCP网络基础</h3><p>通常情况下，客户端打开一个连接到服务器端的TCP/IP 连接，然后客户端开始与服务器之间通信，当通信结束后客户端关闭连接。</p>
 <p>​客户端通过一个已打开的连接可以发送不止一个请求。事实上在服务器处于接收状态下，客户端可以发送尽可能多的数据，服务器也可以主动关闭连接。</p>
+<a id="more"></a>
+
 <h3 id="Java中Socket类和ServerSocket类"><a href="#Java中Socket类和ServerSocket类" class="headerlink" title="Java中Socket类和ServerSocket类"></a>Java中Socket类和ServerSocket类</h3><p>当客户端想要打开一个连接到服务器的TCP/IP连接时，就要使用到Java Socket类。socket类只需要被告知连接的IP地址和TCP端口，其余的都有Java实现。</p>
 <p>假如我们想要打开一个监听服务，来监听客户端连接某些指定TCP端口的连接，那就需要使用Java ServerSocket类。当客户端通过Socket连接服务器端的ServerSocket监听时，服务器端会指定这个连接的一个Socket，此时客户端与服务器端间的通信就变成Socket与Socket之间的通信。</p>
 <p>关于Socket类和ServerSocket类会在后面的文章中有详细的介绍。</p>
@@ -428,11 +430,11 @@
   
 <nav id="article-nav">
   
-    <a href="/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/Git-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Hello World
+          Git 命令大全
         
       </div>
     </a>
@@ -482,7 +484,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -653,6 +655,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>

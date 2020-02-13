@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>JVM问题诊断-快速入门 | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="基础简述JVM 全称Java Virtual Machine，翻译为中文”Java 虚拟机”。本文中的JVM 主要指的是Oracle 公司的HotSpotVM，版本是Java 8。Java虚拟机主要分为五大模块：  类装载器子系统。 运行时数据区。 执行引擎。 本地方法接口。 垃圾收集模块。  其中垃圾收集模块在Java 虚拟机规范中并没有要求Java 虚拟机垃圾收集，但是在没有发明无限的内存之前">
+  <meta name="description" content="基础简述JVM 全称Java Virtual Machine，翻译为中文”Java 虚拟机”。本文中的JVM 主要指的是Oracle 公司的HotSpotVM，版本是Java 8。Java虚拟机主要分为五大模块：  类装载器子系统。 运行时数据区。 执行引擎。 本地方法接口。 垃圾收集模块。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM问题诊断-快速入门">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;JVM%E9%97%AE%E9%A2%98%E8%AF%8A%E6%96%AD-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="基础简述JVM 全称Java Virtual Machine，翻译为中文”Java 虚拟机”。本文中的JVM 主要指的是Oracle 公司的HotSpotVM，版本是Java 8。Java虚拟机主要分为五大模块：  类装载器子系统。 运行时数据区。 执行引擎。 本地方法接口。 垃圾收集模块。  其中垃圾收集模块在Java 虚拟机规范中并没有要求Java 虚拟机垃圾收集，但是在没有发明无限的内存之前">
+<meta property="og:description" content="基础简述JVM 全称Java Virtual Machine，翻译为中文”Java 虚拟机”。本文中的JVM 主要指的是Oracle 公司的HotSpotVM，版本是Java 8。Java虚拟机主要分为五大模块：  类装载器子系统。 运行时数据区。 执行引擎。 本地方法接口。 垃圾收集模块。">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;07&#x2F;29&#x2F;5d3ed8528deef44935.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2019&#x2F;07&#x2F;25&#x2F;eeb2KP.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2019&#x2F;07&#x2F;25&#x2F;eebRDf.jpg">
@@ -26,7 +26,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;08&#x2F;09&#x2F;rNkgGYMh5CfFvdj.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;08&#x2F;09&#x2F;2CiKTaUoDtqNH4V.jpg">
 <meta property="article:published_time" content="2019-07-25T11:15:51.000Z">
-<meta property="article:modified_time" content="2019-08-09T08:33:18.752Z">
+<meta property="article:modified_time" content="2020-02-05T06:24:33.367Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -218,6 +218,8 @@
 <li>本地方法接口。</li>
 <li>垃圾收集模块。</li>
 </ul>
+<a id="more"></a>
+
 <p>其中垃圾收集模块在Java 虚拟机规范中并没有要求Java 虚拟机垃圾收集，但是在没有发明无限的内存之前，大多数JVM实现都是有垃圾收集的。而运行时数据区都会以某种形式存在于每一个Java 虚拟机实例中，但是Java 虚拟机规范对它的描述却是相当抽象。这些运行时数据结构上的细节，大多数都由具体实现的设计者决定。</p>
 <p>Java 虚拟机不是真实的物理机，它没有寄存器，所以指令集是使用Java 栈来存储中间数据，这样做的目的就是为了保持Java 虚拟机的指令集尽量的紧凑，同时也便于Java 虚拟机在那些只有很少通用寄存器的平台上实现。<br>另外，Java虚拟机的这种基于栈的体系结构，有助于运行时某些虚拟机实现的动态编译器和即时编译器的代码优化。</p>
 <h4 id="环境准备和相关设置"><a href="#环境准备和相关设置" class="headerlink" title="环境准备和相关设置"></a>环境准备和相关设置</h4><h5 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h5><p>JDK 可以从Oracle 官网下载，下载自己所需的版本即可。<br>安装完成后，还需要设置系统变量JAVA_HOME 和PATH，之后验证一下Java 是否安装完成：</p>
@@ -643,7 +645,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -814,6 +816,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>

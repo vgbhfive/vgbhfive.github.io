@@ -147,6 +147,210 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Armstrong-Number-阿姆斯特朗数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/">Armstrong Number - 阿姆斯特朗数</a>
+    </h1>
+  
+
+        
+        <a href="/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/" class="archive-article-date">
+  	<time datetime="2019-02-17T05:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-17</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">618字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">3分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-第一个版本"><a href="#1-第一个版本" class="headerlink" title="1. 第一个版本"></a>1. 第一个版本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">import java.util.*;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">import java.math.*;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;寻找阿姆斯特朗数</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">public class LookforNumber</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&#123;   </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    public Scanner scanner &#x3D; new Scanner(System.in);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    public static void main(String[] args)&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        LookforNumber ln &#x3D; new LookforNumber();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        ln.number();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    public void number()&#123;&#x2F;&#x2F;计算三位，四位，五位的阿姆斯特朗数</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        System.out.println(&quot;这是在求阿姆斯特朗数(n&#x3D;3时，为水仙花数):&quot;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        System.out.println(&quot;请输入要求数的位数:&quot;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        int n &#x3D; scanner.nextInt();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        int a&#x3D;0,b&#x3D;0,c&#x3D;0,d&#x3D;0,e&#x3D;0;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        int x &#x3D; (int)Math.pow(10,n-1);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        int y &#x3D; (int)Math.pow(10,n);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        for(;x&lt;y;x++)&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">            for(int z&#x3D;1;z&lt;&#x3D;n;z++)&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">                switch(z)&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">                    case 1 : a &#x3D; x&#x2F;(int)Math.pow(10,n-z);break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">                    case 2 : b &#x3D; x&#x2F;(int)Math.pow(10,n-z)%10;break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">                    case 3 : c &#x3D; x&#x2F;(int)Math.pow(10,n-z)%10;break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">                    case 4 : d &#x3D; x&#x2F;(int)Math.pow(10,n-z)%10;break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">                    case 5 : e &#x3D; x&#x2F;(int)Math.pow(10,n-z)%10;break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">                    default : break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">                &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">            if(x &#x3D;&#x3D; (int)Math.pow(a,n)+(int)Math.pow(b,n)+(int)Math.pow(c,n)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">                +(int)Math.pow(d,n)+(int)Math.pow(e,n))&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">                System.out.print(x + &quot; &quot;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">        System.out.println();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">        System.out.println(&quot;上述都是阿姆斯特朗数。&quot;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Algorithm</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SpringBoot相关组件详细配置信息" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/">SpringBoot相关组件详细配置信息</a>
+    </h1>
+  
+
+        
+        <a href="/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/" class="archive-article-date">
+  	<time datetime="2019-02-16T07:13:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-16</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">7k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">35分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Hibernate"><a href="#Hibernate" class="headerlink" title="Hibernate"></a>Hibernate</h3><p>使用HibernateORM需要引入以下的包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">spring-boot-starter-data-jpa</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">mysql-connector-java</span></pre></td></tr></table></figure>
+<p>下面是Hibernate的详细配置信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">#数据库使用的驱动类</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">hibernate.connection.driver_class&#x3D;com.mysql.jdbc.Driver</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">#数据库连接地址</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">hibernate.connection.url&#x3D;jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;db</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">#数据库连接的用户名</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">hibernate.connection.username&#x3D;user</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">#数据库连接的密码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">hibernate.connection.password&#x3D;password</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">#使用JNDI数据源连接数据库 -&gt; 请看下一个JNDI配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">hibernate.connection.datasource&#x3D;java:comp&#x2F;env&#x2F;jdbc&#x2F;TestDb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">#数据库使用的方言，将操作转为对应的SQL语句</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">hibernate.dialect&#x3D;net.sf.hibernate.dialect.MySQLDialect</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">#是否打印SQL语句</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">hibernate.show_sql&#x3D;true</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">javax.persistence.validation.mode&#x3D;none</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">#在 log 和 console 中打印出更漂亮的 SQL语句</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">hibernate.format_sql&#x3D;true</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">#设置在Hibernate数据库连接池中的连接数量，这里我们一般使用c3p0连接池</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">hibernate.connection.pool_size&#x3D;3</span></pre></td></tr></table></figure>
+<hr>
+        
+          <a class="article-more-a" href="/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring Boot</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-关系模式与范式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -197,71 +401,10 @@
 <pre><code>1.数据冗余
 2.更新异常
 3.插入异常
-4.删除异常</code></pre><p>举ppt中例子说明四种问题，如下表中描述了老师信息（一个老师一个地址，可以教多门课，一门课只有一名老师）：</p>
-<pre><code>Tname             Addr               C#(PK)          Cname
-T1               A1                C1              N1
-T1               A1                C2                   N2
-T1               A1                C3                N3
-T2               A2               C4                N4
-T2                A2               C5                N5
-T3               A3                C6                N6</code></pre><ul>
-<li>数据冗余：T1老师的地址A1记录了三次，冗余 </li>
-<li>更新异常：更新了某个元组中T1老师的地址A1，其余两个没有更新，DBMS不会检测到不一致，这是逻辑上的不一致而非数据库不一致 </li>
-<li>插入异常：无法插入一个还未带课的新老师，因为无C#违反主键约束 </li>
-<li>删除异常：T3老师不带C6这门课了，删除元组时却把T3老师的个人信息如地址等删去</li>
-</ul>
-<h4 id="解决上述问题最简单的方法是模式分解，将教师信息和课程信息独立出来，"><a href="#解决上述问题最简单的方法是模式分解，将教师信息和课程信息独立出来，" class="headerlink" title="解决上述问题最简单的方法是模式分解，将教师信息和课程信息独立出来，"></a>解决上述问题最简单的方法是模式分解，将教师信息和课程信息独立出来，</h4><p>下面是一种分解方式：</p>
-<pre><code>R(Tname,Addr,C#(PK),Cname) 
-    =&gt; 
-    R1(Tname(CK), Addr)
-    R2(C#(PK), Cname, Tname(FK))</code></pre><p>模式分解有一套规范化的分解标准，称为范式（本章重点，见后续小节）</p>
-<h3 id="11-2-函数依赖"><a href="#11-2-函数依赖" class="headerlink" title="11.2 函数依赖"></a>11.2 函数依赖</h3><p>函数依赖（Functional Dependency，FD）是指一个关系模式中一个属性集和另一个属性集间的多对一关系，如选课关系SC(S#, C#, Score)，给定(S#,C#)只有一个Score对应，不同(S#,C#)对应的Score值允许相等</p>
-<p>（1）形式化定义<br>X、Y是关系模式R(U)属性集U的子集，R(U)的实例r中的两个元组t1、t2，若t1[X]==t2[X]可以导出t1[Y]==t2[Y]，则称Y函数依赖于X，记作X→Y.<br>同一个关系模式可以有不同的FD，FD和应用相关；FD是对现实世界的断言，检测FD正确性只能通过考察属性的含义形式化定义关系模式为R(U, D, dom, F)：</p>
-<ul>
-<li>R为关系模式名</li>
-<li>U是一个属性集</li>
-<li>D是U中属性的值所来自的域</li>
-<li>Dom是属性向域的映射集合</li>
-<li>F是属性间的依赖关系</li>
-<li>关系模式设计就是寻求一个最小FD集T，一旦实现T则可以实现所有FD</li>
-</ul>
-<p>（2）函数依赖的平凡性<br>若X→Y且Y是X的子集，则X→Y是平凡FD（子集必然依赖），否则是称FD不平凡；平凡FD无实际意义，可以通过消除平凡FD来缩小FD集</p>
-<p>（3）函数依赖闭包<br>函数依赖有以下推理规则，称为Armstrong公理:<br>自反律：若B是A的子集，则A→B<br>增广律：若A→B，则AC→BC<br>传递律：若A→B且B→C，则A→C<br>自含律：A→A<br>分解律：若A→BC，则A→B且A→C<br>合并律：若A→B且A→C，则A→BC<br>复合律：若A→B且C→D，则AC→BD<br>函数依赖集F逻辑蕴含的函数依赖的全体构成的集合称为函数依赖F的闭包，记做F+，通过一系列推理规则可以求得F的闭包并判断某一函数依赖X→Y是否能够由F推出（即判断X→Y是否属于F+）</p>
-<p>（4）属性闭包<br>判断X→Y是否能够由F推出就去构造F+计算量比较大，其实只需构造<strong>属性X的闭包</strong>X+即可，X+是所有能够用A推出的属性集合（即函数依赖于A的属性集合）</p>
-<p>（5）最小函数依赖集<br>最小函数依赖集F必须满足以下性质：</p>
-<ul>
-<li>F的每个FD的右边只有一个属性</li>
-<li>F不可约，即F中的每个X→Y,F-{X→Y}与F不等价</li>
-<li>F的每个FD的左部不可约，即删除任意FD左边的任何一个属性后的F’不等价于F</li>
-<li>求某个函数依赖集的最小函数依赖集的步骤如下：</li>
-</ul>
-<p>分解律让右边无多属性，消除冗余属性<br>用推理规则消去左边多属性冗余<br>消除剩余冗余FD</p>
-<h3 id="11-3-关系模式的分解"><a href="#11-3-关系模式的分解" class="headerlink" title="11.3 关系模式的分解"></a>11.3 关系模式的分解</h3><p>关系模式R(U)的一个分解p={Ri(Ui)}满足U=∪{Ui}，模式分解必须是无损连接并且需要保持函数依赖</p>
-<p>（1）无损连接<br>无损连接是指：某关系模式的事例r按照关系模式分解成多个关系r1,…,rk，若r1,…,rk的自然连接（Join操作）等于r，则称该模式分解是无损的</p>
-<p>（2）测试无损连接<br>Chase方法能够检测完全的无损连接，设有n个属性的模式R分解为k个模式Ri，有如下Chase过程：</p>
-<p>构造一个k行n列的表格，每行对应一个模式Ri，每列对应一个属性Aj，若Aj在模式Ri中则表格[i][j]中填入aj，否则填入bij<br>扫描F中的每个FD X→Y<br>若表格中有两行在X分量上相等，在Y分量上不相等则修改Y：若Y的分量中是个是aj，则另一个也修改为aj<br>如果没有aj，则用其中一个bij替换另一个符号（i是所有b中最小的行数）<br>重复2、3、4一直到表格不能修改为止<br>若此时表格中有一行全是a，则该分解是无损连接的分解<br>当模式分解是简单的二元分解时（即p={R1,R2}），p是无损连接的分解当且仅当下面FD之一成立：</p>
-<p>R1和R2两模式属性的交集 → R1与R2两模式属性的差集<br>R1和R2两模式属性的交集 → R2与R1两模式属性的差集<br>（3）保持函数依赖<br>保持函数依赖是指关系模式R的FD集F在分解后仍在数据库模式中保持不变，这是模式分解的第二个条件</p>
-<p>形式化的定义分解后F在模式Ri上的投影为：</p>
-<p>πRi(F)={X→Y|X→Y∈F+⋂X、Y⊂Ri}<br>若分解p满足如下条件则称p<strong>保持函数依赖</strong>：</p>
-<p>(⋃i=1kπRi(F))+=F+<br>11.4 关系模式的范式<br>范式xNF即是满足特定要求的模式，将低一级范式的关系模式通过模式分解转换为高一级范式的关系模式集合的过程叫做规范化</p>
-<p>范式从低级到高级依次为：1NF、2NF、3NF、BCNF、4NF、5NF，高一级的范式总是低一级范式的真子集</p>
-<p>根据关系模式R的不可约FD集F，可以画出节点是属性或属性集，边是由被依赖节点指向依赖节点的有向图来辅助分析关系模式，叫做函数依赖图</p>
-<p>注：复习时间关系ppt中范式的例子来不及整理了</p>
-<p>（1）1NF<br>1NF要求关系模式R的每一个实例r均满足：r中的每一个元组t的每一个属性中只有一个值，这是关系模式的基本要求</p>
-<p>不满足1NF的关系模式有二义性！</p>
-<p>（2）2NF<br>假定：R只有一个候选码，且该候选码为主码</p>
-<p>R∈1NF且R的每一个非主属性（非候选码的其他属性）都完全函数依赖于主码时，R∈2NF<br>A完全依赖于W是指：W→A且A不依赖于任何一个W的真子集X，W是主键也可能包括多个属性{X、Y}，非主属性A不能局部函数依赖于X或Y</p>
-<p>不满足2NF的关系模式可能存在［插入异常、删除异常、更新异常和数据冗余］，通过画出函数依赖图无损分解非2NF得到2NF，但2NF也不能完全消除上述问题</p>
-<p>（3）3NF<br>假定：R只有一个候选码，且该候选码为主码</p>
-<p>R∈2NF且R的每一个非主属性都不传递依赖于主码时，R∈3NF<br>称A传递依赖于Y则有：Y→X，X→A，并且Y不依赖于X（即Y不等于X）、A不是X的子集</p>
-<p>不满足3NF的关系模式也可能存在［插入异常、删除异常、更新异常和数据冗余］，通过打破传递依赖链条，把关系模式分解成多个子关系模式</p>
-<p>（4）BCNF<br>BCNF是3NF处理R有多个候选码的扩展，当R有多个候选码时即使R∈3NF，也可能出现［插入异常、删除异常、更新异常和数据冗余］，这时需要分解为BCNF范式</p>
-<p>如果关系模式R的所有不平凡的、完全的函数依赖的决定因素（左边的属性集）都是候选码，则R∈BCNF<br>若要求保持函数依赖和无损联接，则总可以达到3NF，但不一定满足BCNF；因为BCNF可以达到无损连接，但不一定保持函数依赖</p>
-<p>11.5 关系模式分解为范式的分解算法<br>（1）保持函数依赖地分解R到3NF<br>算法步骤：</p>
-<p>求出R的最小函数依赖集F<br>把所有不在F中出现的属性组成一个关系模式R’，并在U中去掉这些属性<br>若F中存在X→A且XA=U，则算法结束输出{R’,R(U)}，否则继续下一步<br>对F中的FD按相同的左部分组构成一个关系模式Ri(Ui)，Ui包括了该组FD涉及的所有属性<br>去掉{Ri(Ui)}中属性集Ui是其他某个关系模式属性集Uj子集的关系模式Ri，得到最终的分解p={R1,R2,…,Rk,R’}，p能够保持函数依赖地把R分解到3NF<br>（2）无损连接且保持函数依赖地分解R到3NF<br>算法步骤：</p>
-<p>按算法(1)中步骤求出保持函数依赖的3NF分解，设q={R1,R2,…,Rk}<br>设X是R的主码，p={R1,R2,…,Rk,R(X)}<br>若X是q中某个Ri(Ui)属性集Ui的子集，则删除p中的R(X)<br>输出p，p能够无损连接且保持函数依赖地把R分解到3NF<br>（3）无损联接地分解R到BCNF<br>算法步骤：</p>
-<p>p={R}<br>检查p中各关系模式是否满足BCNF，是则终止输出p<br>设p中S(Us)非BCNF，则必存在X→A且X不是S的候选码：S分解为S1(XA)和S2(Us-A)，把p中的S替换为S1、S2，跳转至第二步</p>
-
+4.删除异常</code></pre>
+        
+          <a class="article-more-a" href="/%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F/#more">more >></a>
+        
       
 
       
@@ -317,7 +460,7 @@ T3               A3                C6                N6</code></pre><ul>
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Vgbh
+    		&copy; 2020 Vgbh
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -488,6 +631,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GraphQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
             
             <div class="clearfix"></div>
