@@ -6,13 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Vgbhfive&#39;s Blog</title>
+  <title>Go的前世今生 | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Vgbhfive&#39;s Blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;page&#x2F;2&#x2F;index.html">
+  <meta name="description" content="前言最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。 在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！ 这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。 Go Modules历">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go的前世今生">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Go%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="前言最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。 在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！ 这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。 Go Modules历">
+<meta property="article:published_time" content="2020-02-21T02:16:07.000Z">
+<meta property="article:modified_time" content="2020-02-21T03:22:12.606Z">
 <meta property="article:author" content="Vgbh">
+<meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Vgbhfive&#39;s Blog" type="application/atom+xml">
@@ -145,22 +150,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Java-网络编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Go的前世今生" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">Java-网络编程</a>
+    <h1 class="article-title" itemprop="name">
+      Go的前世今生
     </h1>
   
 
         
-        <a href="/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2019-11-02T05:41:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-02</time>
+        <a href="/Go%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/" class="archive-article-date">
+  	<time datetime="2020-02-21T02:16:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-21</time>
 </a>
 
         
@@ -169,7 +172,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">4.2k字</span>
+        <span class="post-count">2.8k字</span>
       </span>
     </span>
 
@@ -178,879 +181,140 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">15分</span>
+        <span class="post-count">10分</span>
       </span>
     </span>
 </div>
         
 
         
+            <span class="archive-article-date">
+                阅读量 <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
 
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>Java 网络API 允许我们通过套接字（Socket）打开或关闭网络连接，但所有的网络通信均是基于Java IO 类 InputStream 和OutputStream 实现的。</p>
-<p>此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。</p>
-<h3 id="Java-TCP网络基础"><a href="#Java-TCP网络基础" class="headerlink" title="Java TCP网络基础"></a>Java TCP网络基础</h3><p>通常情况下，客户端打开一个连接到服务器端的TCP/IP 连接，然后客户端开始与服务器之间通信，当通信结束后客户端关闭连接。</p>
-<p>​客户端通过一个已打开的连接可以发送不止一个请求。事实上在服务器处于接收状态下，客户端可以发送尽可能多的数据，服务器也可以主动关闭连接。</p>
-        
-          <a class="article-more-a" href="/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/#more">more >></a>
-        
-      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。</p>
+<p>在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！</p>
+<p>这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。</p>
+<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><h3 id="历史前言"><a href="#历史前言" class="headerlink" title="历史前言"></a>历史前言</h3><p>Go 1.11 推出的模块（Modules）为 Go 语言开发者打开了一扇新的大门，理想化的依赖管理解决方案使得 Go 语言朝着计算机编程史上的第一个依赖乌托邦（Deptopia）迈进。随着模块一起推出的还有模块代理协议（Module proxy protocol），通过这个协议我们可以实现 Go 模块代理（Go module proxy），也就是依赖镜像。</p>
+<p>Go 1.13 的发布为模块带来了大量的改进，所以模块的扶正就是这次 Go 1.13 发布中开发者能直接感觉到的最大变化。而问题在于，Go 1.13 中的 GOPROXY 环境变量拥有了一个在中国大陆无法访问到的默认值 proxy.golang.org，经过大家在 golang/go#31755 中激烈的讨论（有些人甚至将话提上升到了“自由世界”的层次），最终 Go 核心团队仍然无法为中国开发者提供一个可在中国大陆访问的官方模块代理。</p>
+<p>为了今后中国的 Go 语言开发者能更好地进行开发，七牛云推出了非营利性项目 goproxy.cn，其目标是为中国和世界上其他地方的 Gopher 们提供一个免费的、可靠的、持续在线的且经过 CDN 加速的模块代理。可以预见未来是属于模块化的，所以 Go 语言开发者能越早切入模块就能越早进入未来。</p>
+<p>如果说 Go 1.11 和 Go 1.12 时由于模块的不完善你不愿意切入，那么 Go 1.13 你则可以大胆地开始放心使用。本次分享将讨论如何使用模块和模块代理，以及在它们的使用中会常遇见的坑，还会讲解如何快速搭建自己的私有模块代理，并简单地介绍一下七牛云推出的 goproxy.cn 以及它的出现对于中国 Go 语言开发者来说重要在何处。</p>
+<h3 id="Go-Modules-简介"><a href="#Go-Modules-简介" class="headerlink" title="Go Modules 简介"></a>Go Modules 简介</h3><p>Go modules (前身 vgo) 是 Go team (Russ Cox) <strong>强推</strong>的一个<strong>理想化</strong>的<strong>类语言级</strong>依赖管理解决方案，它是和 Go1.11 一同发布的，在 Go1.13 做了大量的优化和调整，目前已经变得比较不错，如果你想用 Go modules，但还停留在 1.11/1.12 版本的话，强烈建议升级。</p>
+<h4 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h4><p>Go modules 出现的目的之一就是为了解决 GOPATH 的问题，也就相当于是抛弃 GOPATH 了。</p>
+<h4 id="Opt-in"><a href="#Opt-in" class="headerlink" title="Opt-in"></a>Opt-in</h4><p>Go modules 还处于 Opt-in 阶段，就是你想用就用，不用就不用，不强制你。但是未来很有可能 Go2 就强制使用了。</p>
+<p><strong>“module” != “package”</strong><br>有一点需要纠正，就是“模块”和“包”，也就是 “module” 和 “package” 这两个术语并不是等价的，是 “集合” 跟 “元素” 的关系，“模块” 包含 “包”，“包” 属于 “模块”，一个 “模块” 是零个、一个或多个 “包” 的集合。</p>
+<h3 id="Go-Modules-相关属性"><a href="#Go-Modules-相关属性" class="headerlink" title="Go Modules 相关属性"></a>Go Modules 相关属性</h3><ul>
+<li>开关环境变量： GO111MODULE</li>
+<li>辅助环境变量： GOPROXY、GONOPROXY、GOSUMDB、GONOSUMDB、GOPRIVATE</li>
+<li>辅助概念： Go module proxy 和Go checksum database</li>
+<li>主要文件： go.mod 和 go.sum</li>
+<li>主要管理子命令： go mod</li>
+<li>缓存： GLOBAL CACHING(不同项目的相同模块会在电脑上缓存一份)</li>
+</ul>
+<h4 id="go-mod"><a href="#go-mod" class="headerlink" title="go.mod"></a>go.mod</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">module example.com&#x2F;foobar</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">go 1.13</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">require (</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    github.com&#x2F;go-redis&#x2F;redis v7.2.0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">exclude example.com&#x2F;banana v1.2.4</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">replace example.com&#x2F;apple v0.1.2 &#x3D;&gt; example.com&#x2F;rda v0.1.0 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">replace example.com&#x2F;banana &#x3D;&gt; example.com&#x2F;hugebanana</span></pre></td></tr></table></figure>
 
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java-NIO" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-NIO/">Java-NIO</a>
-    </h1>
-  
-
-        
-        <a href="/Java-NIO/" class="archive-article-date">
-  	<time datetime="2019-11-02T03:39:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-02</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">3.1k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">11分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>java NIO 主要由以下几个核心部分组成：Channels、Buffers、Selectors，这些构成了核心的API。<br>其他组件，如Pipe、FileLock等，不过是其他三个组件的工具类。</p>
-<p>所有的IO在NIO中都是从Channel开始的。Channel有点像流，数据可以从Channel读到Buffer，也可以从Buffer写到Channel。</p>
-<h3 id="Channel、Buffer"><a href="#Channel、Buffer" class="headerlink" title="Channel、Buffer"></a>Channel、Buffer</h3><p>Channel的实现：FileChannel、DatagramChannel、SocketChannel、ServerSocketChannel，这些通道涵盖了UDP、TCP网络IO和文件IO，还有一些其他的接口。<br>Buffer的实现：ByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer、ShortBuffer，这些Buffer涵盖了你能通过IO所能传送的所有数据类型：short、int、long、byte、char、float、double，还有一个MappedByteBuffer，这个用于表示内存映射文件。</p>
-        
-          <a class="article-more-a" href="/Java-NIO/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">TODO</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-NIO/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JS-中的神操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/">JS 中的神操作</a>
-    </h1>
-  
-
-        
-        <a href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2019-10-16T06:59:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-16</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">675字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">3分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="https://i.loli.net/2019/10/17/1u24lYLEMfdesAQ.png" alt="xxx.png"></p>
-<h3 id="加号的操作"><a href="#加号的操作" class="headerlink" title="加号的操作"></a>加号的操作</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>+<span class="string">'32'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 132</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>+ +<span class="string">'32'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 33</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">+[]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">// 0</span></span></pre></td></tr></table></figure>
-
-<p><small>加号的操作有很多的妙用，等待你的探索。</small></p>
-        
-          <a class="article-more-a" href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/JS-%E4%B8%AD%E7%9A%84%E7%A5%9E%E6%93%8D%E4%BD%9C/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java-报表导出" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-%E6%8A%A5%E8%A1%A8%E5%AF%BC%E5%87%BA/">Java-报表导出</a>
-    </h1>
-  
-
-        
-        <a href="/Java-%E6%8A%A5%E8%A1%A8%E5%AF%BC%E5%87%BA/" class="archive-article-date">
-  	<time datetime="2019-09-25T08:00:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">660字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">3分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="原生Java-导出"><a href="#原生Java-导出" class="headerlink" title="原生Java 导出"></a>原生Java 导出</h3><h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><p>Apache POI 是用Java 编写的免费开源的跨平台的Java API ，Apache POI 提供API 给Java 程序对Microsoft Office（Excel、WORD、PowerPoint、Visio 等）格式档案读和写的功能。<br>POI 为”Poor Obfuscation Implementation” 的首字母缩写，意为“可怜的模糊实现”。</p>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p><a href="https://github.com/vgbhfive/SpringBootDemo" target="_blank" rel="noopener">https://github.com/vgbhfive/SpringBootDemo</a> -&gt; poidemo</p>
-        
-          <a class="article-more-a" href="/Java-%E6%8A%A5%E8%A1%A8%E5%AF%BC%E5%87%BA/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-%E6%8A%A5%E8%A1%A8%E5%AF%BC%E5%87%BA/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MongoDB-快速入门和提高" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/MongoDB-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/">MongoDB-快速入门和提高</a>
-    </h1>
-  
-
-        
-        <a href="/MongoDB-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/" class="archive-article-date">
-  	<time datetime="2019-09-20T07:02:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-20</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">7.1k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">32分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h4><p>NoSQL 是一项全新的数据库革命性运动，早期就有人提出，发展至2009 年趋势越发高涨。<br>NoSQL 的拥护者们提倡运用非关系型的数据存储，相对于铺天盖地的关系型数据库运用，这一概念无疑是一种全新的思维的注入。</p>
-<p>NoSQL 指的是非关系型的数据库。NoSQL有时也称作Not Only SQL 的缩写，是对不同于传统的关系型数据库的数据库管理系统的统称。</p>
-<p>NoSQL 用于超大规模数据的存储。这些类型的数据存储不需要固定的模式，无需多余操作就可以横向扩展。</p>
-<h5 id="CAP-定理-CAP-theorem"><a href="#CAP-定理-CAP-theorem" class="headerlink" title="CAP 定理(CAP theorem)"></a>CAP 定理(CAP theorem)</h5><p>在计算机科学中，CAP 定理又被称为布鲁尔定律，他指出对于一个分布式计算系统来说，不可能同时满足以下三点：</p>
+<p>go.mod 是启用了 Go moduels 的项目所必须的最重要的文件，它描述了当前项目（也就是当前模块）的元信息，每一行都以一个动词开头，目前有以下 5 个动词:</p>
 <ul>
-<li>一致性： 所有节点在同一时间具有相同的数据。</li>
-<li>可用性： 保证每个请求不管成功或者失败都有响应。</li>
-<li>分隔容忍： 系统中任意信息的丢失或失败不会影响系统的继续运行。</li>
+<li>module：用于定义当前项目的模块路径。</li>
+<li>go：用于设置预期的 Go 版本。</li>
+<li>require：用于设置一个特定的模块版本。</li>
+<li>exclude：用于从使用中排除一个特定的模块版本。</li>
+<li>replace：用于将一个模块版本替换为另外一个模块版本。<br>这里的填写格式基本为包引用路径+版本号，另外比较特殊的是 go $version，目前从 Go 1.13 的代码里来看，还只是个标识作用，暂时未知未来是否有更大的作用。</li>
 </ul>
-<p>CAP理论的核心是：一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求，最多只能同时较好的满足两个。<br>因此，根据CAP 原理将NoSQL 数据库分成了满足CA 原则、满足CP 原则和满足AP 原则三大类。</p>
+<h4 id="go-sum"><a href="#go-sum" class="headerlink" title="go.sum"></a>go.sum</h4><p>go.sum 是类似于比如 dep 的 Gopkg.lock 的一类文件，它详细罗列了当前项目直接或间接依赖的所有模块版本，并写明了那些模块版本的 SHA-256 哈希值以备 Go 在今后的操作中保证项目所依赖的那些模块版本不会被篡改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">example.com&#x2F;apple v0.1.2 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ&#x3D; </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">example.com&#x2F;apple v0.1.2&#x2F;go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU&#x3D;</span></pre></td></tr></table></figure>
+
+<p>我们可以看到一个模块路径可能有如下两种:</p>
+<p>前者为 Go modules 打包整个模块包文件 zip 后再进行 hash 值，而后者为针对 go.mod 的 hash 值。他们两者，要不就是同时存在，要不就是只存在 go.mod hash。</p>
+<p>那什么情况下会不存在 zip hash 呢，就是当 Go 认为肯定用不到某个模块版本的时候就会省略它的 zip hash，就会出现不存在 zip hash，只存在 go.mod hash 的情况。</p>
+<h4 id="GO111MODULE"><a href="#GO111MODULE" class="headerlink" title="GO111MODULE"></a>GO111MODULE</h4><p>这个环境变量主要是 Go modules 的开关，主要有以下参数：</p>
 <ul>
-<li>CA - 单点集群，满足一致性，可用性的系统，通常在可扩展上不太强大。</li>
-<li>CP - 满足一致性，分区容忍性的系统，通常性能不是特别高。</li>
-<li>AP - 满足可用性，分区容忍性的系统，通常可能对一致性要求比较低一点。</li>
+<li>auto: 只在项目包含了 go.mod 文件时启用 Go modules，在 Go 1.13 中仍然是默认值，详见: golang.org/issue/31857</li>
+<li>on: 无脑启用 Go modules，推荐设置，未来版本中的默认值，让 GOPATH 从此成为历史。</li>
+<li>off: 禁用 Go modules。</li>
 </ul>
-        
-          <a class="article-more-a" href="/MongoDB-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Mongo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/MongoDB-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java-并发编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">Java-并发编程</a>
-    </h1>
-  
-
-        
-        <a href="/Java-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2019-08-16T00:53:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-16</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">53字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">1分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h3><p><a href="https://vgbhfive.cn/Java-NIO/" target="_blank" rel="noopener">https://vgbhfive.cn/Java-NIO/</a></p>
-<hr>
-        
-          <a class="article-more-a" href="/Java-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">TODO</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SpringBoot-服务器Tomcat" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/">SpringBoot-服务器Tomcat</a>
-    </h1>
-  
-
-        
-        <a href="/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/" class="archive-article-date">
-  	<time datetime="2019-08-15T02:56:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-15</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">1.6k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">8分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Java Web 目前最常用的三款服务器：</p>
+<h4 id="GOPROXY"><a href="#GOPROXY" class="headerlink" title="GOPROXY"></a>GOPROXY</h4><p>这个环境变量主要是用于设置 Go 模块代理，主要如下：</p>
 <ul>
-<li>Undettow</li>
-<li>Jetty</li>
-<li>Tomcat</li>
+<li>用于使 Go 在后续拉取模块版本时能够脱离传统的 VCS 方式从镜像站点快速拉取。它拥有一个默认：<a href="https://proxy.golang.org,direct" target="_blank" rel="noopener">https://proxy.golang.org,direct</a> ，但很可惜 proxy.golang.org 在中国无法访问，故而建议使用 goproxy.cn 作为替代，<br>可以执行语句：go env -w GOPROXY=<a href="https://goproxy.cn,direct" target="_blank" rel="noopener">https://goproxy.cn,direct</a> 。</li>
+<li>设置为 “off” : 禁止 Go 在后续操作中使用任 何 Go module proxy。</li>
 </ul>
-<p>Tomcat 是Apache下的一款重量级的服务器，不用多说历史悠久，经得起实践的考验。<br>然而，现在当下微服务兴起，Spring boot、Spring cloud 越来越热的情况下，选择一款轻量级而性能优越的服务器是必要的选择。</p>
-<p>Jetty 和Undertow 都是基于NIO 实现的高并发轻量级的服务器，支持servlet3.1 和websocket 。</p>
-        
-          <a class="article-more-a" href="/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SpringBoot-自定义Starter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">SpringBoot-自定义Starter</a>
-    </h1>
-  
-
-        
-        <a href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/" class="archive-article-date">
-  	<time datetime="2019-08-13T08:11:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-13</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">1.3k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">7分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
-<li>创建Stater 项目</li>
-<li>定义Starter 需要的配置类</li>
-<li>编写自动配置类</li>
-<li>编写spring.factories 文件加载自动配置类</li>
-<li>编写配置提示文件spring-configuration-metadata.json (非必需)</li>
-</ul>
-        
-          <a class="article-more-a" href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java-JMX框架探究" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-JMX%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%A9%B6/">Java-JMX框架探究</a>
-    </h1>
-  
-
-        
-        <a href="/Java-JMX%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%A9%B6/" class="archive-article-date">
-  	<time datetime="2019-08-08T09:27:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">1.5k字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">5分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>JMX(Java Management Extensions) 是一个为应用程序植入<strong>管理功能</strong>的框架。<br>JMX 也是一套标准的代理和服务，实际上，用户可以在任何Java应用程序中使用这些<strong>代理和服务</strong>实现管理资源。</p>
-<h4 id="API"><a href="#API" class="headerlink" title="API"></a>API</h4><p>JMX 的API 主要在这两个地方：</p>
+<h4 id="GOSUMDB"><a href="#GOSUMDB" class="headerlink" title="GOSUMDB"></a>GOSUMDB</h4><p>它的值是一个 Go checksum database，用于使 Go 在拉取模块版本时(无论是从源站拉取还是通过 Go module proxy 拉取)保证拉取到的模块版本数据未经篡改，也可以是“off”即禁止 Go 在后续操作中校验模块版本。</p>
+<p>拥有默认值：sum.golang.org (之所以没有按照上面的格式是因为 Go 对默认值做了特殊处理)。可被 Go module proxy 代理。sum.golang.org 在中国无法访问，故而更加建议将 GOPROXY 设置为 goproxy.cn，因为 goproxy.cn 支持代理 sum.golang.org。</p>
+<h4 id="Go-Checksum-Database"><a href="#Go-Checksum-Database" class="headerlink" title="Go Checksum Database"></a>Go Checksum Database</h4><p>Go checksum database 主要用于保护 Go 不会从任何源头拉到被篡改过的非法 Go 模块版本。</p>
+<h4 id="GONOPROXY-GONOSUMDB-GOPRIVATE"><a href="#GONOPROXY-GONOSUMDB-GOPRIVATE" class="headerlink" title="GONOPROXY/GONOSUMDB/GOPRIVATE"></a>GONOPROXY/GONOSUMDB/GOPRIVATE</h4><p>这三个环境变量都是用在当前项目依赖了私有模块，也就是依赖了由 GOPROXY 指定的 Go module proxy 或由 GOSUMDB 指定 Go checksum database 无法访问到的模块时的场景。</p>
+<p>在使用上来讲，比如 GOPRIVATE=*.corp.example.com 表示所有模块路径以 corp.example.com 的下一级域名 (如 team1.corp.example.com) 为前缀的模块版本都将不经过 Go module proxy 和 Go checksum database，需要注意的是不包括 corp.example.com 本身。</p>
+<h4 id="Global-Caching"><a href="#Global-Caching" class="headerlink" title="Global Caching"></a>Global Caching</h4><p>这个主要是针对 Go modules 的全局缓存数据说明，如下：</p>
 <ul>
-<li>java.lang.management</li>
-<li>javax.management.*</li>
+<li>同一个模块版本的数据只缓存一份，所有其他模块共享使用。</li>
+<li>目前所有模块版本数据均缓存在 $GOPATH/pkg/mod和 ​$GOPATH/pkg/sum 下，未来或将移至 $GOCACHE/mod 和$GOCACHE/sum 下( 可能会在当 $GOPATH 被淘汰后)。</li>
+<li>可以使用 go clean -modcache 清理所有已缓存的模块版本数据</li>
 </ul>
-        
-          <a class="article-more-a" href="/Java-JMX%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%A9%B6/#more">more >></a>
-        
+<h3 id="快速迁移项目至-Go-Modules"><a href="#快速迁移项目至-Go-Modules" class="headerlink" title="快速迁移项目至 Go Modules"></a>快速迁移项目至 Go Modules</h3><ul>
+<li>第一步: 升级到 Go 1.13。</li>
+<li>第二步: 让 GOPATH 从你的脑海中完全消失，早一步踏入未来。<br>修改 GOBIN 路径（可选）：go env -w GOBIN=$HOME/bin。<br>打开 Go modules：go env -w GO111MODULE=on。<br>设置 GOPROXY：go env -w GOPROXY=<a href="https://goproxy.cn,direct" target="_blank" rel="noopener">https://goproxy.cn,direct</a> # 在中国是必须的，因为它的默认值被墙了。</li>
+<li>第三步(可选): 按照你喜欢的目录结构重新组织你的所有项目。</li>
+<li>第四步: 在你项目的根目录下执行 go mod init <OPTIONAL_MODULE_PATH> 以生成 go.mod 文件。 </li>
+<li>第五步: 想办法说服你身边所有的人都去走一下前四步。</li>
+</ul>
+<h3 id="使用Go-Modules-时遇到的坑"><a href="#使用Go-Modules-时遇到的坑" class="headerlink" title="使用Go Modules 时遇到的坑"></a>使用Go Modules 时遇到的坑</h3><h4 id="判断项目是否使用了Go-Modules"><a href="#判断项目是否使用了Go-Modules" class="headerlink" title="判断项目是否使用了Go Modules"></a>判断项目是否使用了Go Modules</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">go env</span></pre></td></tr></table></figure>
+
+<p>满足两个条件即可：</p>
+<ul>
+<li>项目中包含go.mod 文件。</li>
+<li>查看环境变量GO111MODULE 不为off 。</li>
+</ul>
+<h4 id="管理Go-的环境变量"><a href="#管理Go-的环境变量" class="headerlink" title="管理Go 的环境变量"></a>管理Go 的环境变量</h4><p>提到 Go1.13 新增了 go env -w 用于写入环境变量，而写入的地方是 os.UserConfigDir 所返回的路径，需要注意的是 go env -w 不会覆写。</p>
+<h4 id="从-dep、glide-等迁移至-Go-Modules"><a href="#从-dep、glide-等迁移至-Go-Modules" class="headerlink" title="从 dep、glide 等迁移至 Go Modules"></a>从 dep、glide 等迁移至 Go Modules</h4><p>原因是因为BUG 的原因导致不经过GOPROXY ，解决办法有两种：</p>
+<ul>
+<li>手动创建一个 go.mod 文件，再执行 go mod tidy 进行补充。</li>
+<li>上代理，相当于不使用 GOPROXY 了。</li>
+</ul>
+<h4 id="拉取私有模块"><a href="#拉取私有模块" class="headerlink" title="拉取私有模块"></a>拉取私有模块</h4><ul>
+<li>GOPROXY 是无权访问到任何人的私有模块的，所以你放心，安全性没问题。</li>
+<li>GOPROXY 除了设置模块代理的地址以外，还需要增加 “direct” 特殊标识才可以成功拉取私有库。</li>
+</ul>
+<h4 id="更新现有模块"><a href="#更新现有模块" class="headerlink" title="更新现有模块"></a>更新现有模块</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">go get -u</span></pre></td></tr></table></figure>
+
+<h2 id="goproxy-cn"><a href="#goproxy-cn" class="headerlink" title="goproxy.cn"></a>goproxy.cn</h2><ul>
+<li>Goproxy 中国 (goproxy.cn) 是目前中国最可靠的 Go module proxy 。</li>
+<li>为中国 Go 语言开发者量身打􏰁，支持代理 GOSUMDB 的默认值，经过全球 CDN 加速，高可用，可 应用进公司复杂的开发环境中，亦可用作上游代理。</li>
+<li>由中国倍受信赖的云服务提供商七牛云无偿提供基础设施支持的开源的非营利性项目。</li>
+<li>目标是为中国乃至全世界的 Go 语言开发者提供一个免 费的、可靠的、持 续在线的且经过 CDN 加􏰀的 Go module proxy。</li>
+<li>域名已由七牛云进行了备案。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这好像是我第一次在博客写到结尾进行总结，这篇文章其实大部分都是官方的话，我只是照搬了过来，但是这也让我能了解了Go 关于包管理这部分的内容了，这样也满足了。</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://segmentfault.com/a/1190000020522261" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020522261</a></p>
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习与官方文档所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -1061,7 +325,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
         		</li>
       		
 		</ul>
@@ -1070,117 +334,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-JMX%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%A9%B6/">展开全文 >></a>
-        </p>
-      
 
       
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
         
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java-JDWP协议探究" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/">Java-JDWP协议探究</a>
-    </h1>
-  
-
-        
-        <a href="/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/" class="archive-article-date">
-  	<time datetime="2019-08-08T03:04:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">3.9k字</span>
-      </span>
+      </div>
     </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">15分</span>
-      </span>
-    </span>
+  </div>
 </div>
-        
 
-        
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>JDWP 与其他许多协议不同，它仅仅定义了数据传输的格式，但并没有指定具体的传输方式。这就意味着一个JDWP 的实现可以不需要做任何修改就正常工作在不同的传输方式上。<br>JDWP 是语言无关的。理论上我们可以选用任意语言实现JDWP 。然而我们注意到，在JDWP 的两端分别是<strong>target vm</strong> 和<strong>debugger</strong>。<br>Target vm 端，JDWP 模块必须以<strong>Agent library</strong> 的形式在Java 虚拟机启动时加载，并且它必须通过Java 虚拟机提供的<strong>JVMTI</strong> 接口实现各种debug 的功能，所以必须使用C/C++ 语言编写。而debugger 端就没有这样的限制，可以使用任意语言编写，只要遵守JDWP 规范即可。<br><strong>JDI（Java Debug Interface）</strong>就包含了一个Java 的JDWP debugger 端的实现，JDK 中调试工具jdb 也是使用JDI 完成其调试功能的。</p>
-<hr>
-        
-          <a class="article-more-a" href="/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/#more">more >></a>
-        
-      
-
-      
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/Go%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/" alt="微信分享二维码">
     </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
+</div>
 
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/">展开全文 >></a>
-        </p>
-      
-
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/%E7%BB%99go-get%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%E8%A7%A3%E5%86%B3%E8%A2%AB%E5%A2%99%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">给go get设置代理解决被墙问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -1200,12 +422,14 @@
 
 
 
+  
+  
+  
 
   
+
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
-    </nav>
+
   
 
 
@@ -1239,8 +463,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
