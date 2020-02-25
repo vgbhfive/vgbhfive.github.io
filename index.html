@@ -191,7 +191,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近已经过完了年，我也结束了我年前的前端工作，转向了我本来说在项目的工作，还是那个将近60w 行代码的系统，这次就比较难受，需要再加一个支付的渠道。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近已经过完了年，我也结束了我年前的前端工作，转向了我本来就在项目的工作，还是那个将近60w 行代码的系统，这次就比较难受，需要再加一个支付的渠道、修改商户的进件流程。</p>
 <p>所以啊，各种各样的问题就有出现了，这个问题真的搞得我头很大，问题来了。</p>
 <h2 id="问题简介"><a href="#问题简介" class="headerlink" title="问题简介"></a>问题简介</h2><p>Tomcat、 Hibernate、 Spring MVC、 slf4j</p>
 <p>这些东西相互交织产生的一个莫名其妙的问题。</p>
@@ -301,10 +301,7 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。</p>
 <p>在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！</p>
 <p>这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。</p>
-<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><h3 id="历史前言"><a href="#历史前言" class="headerlink" title="历史前言"></a>历史前言</h3><p>Go 1.11 推出的模块（Modules）为 Go 语言开发者打开了一扇新的大门，理想化的依赖管理解决方案使得 Go 语言朝着计算机编程史上的第一个依赖乌托邦（Deptopia）迈进。随着模块一起推出的还有模块代理协议（Module proxy protocol），通过这个协议我们可以实现 Go 模块代理（Go module proxy），也就是依赖镜像。</p>
-<p>Go 1.13 的发布为模块带来了大量的改进，所以模块的扶正就是这次 Go 1.13 发布中开发者能直接感觉到的最大变化。而问题在于，Go 1.13 中的 GOPROXY 环境变量拥有了一个在中国大陆无法访问到的默认值 proxy.golang.org，经过大家在 golang/go#31755 中激烈的讨论（有些人甚至将话提上升到了“自由世界”的层次），最终 Go 核心团队仍然无法为中国开发者提供一个可在中国大陆访问的官方模块代理。</p>
-<p>为了今后中国的 Go 语言开发者能更好地进行开发，七牛云推出了非营利性项目 goproxy.cn，其目标是为中国和世界上其他地方的 Gopher 们提供一个免费的、可靠的、持续在线的且经过 CDN 加速的模块代理。可以预见未来是属于模块化的，所以 Go 语言开发者能越早切入模块就能越早进入未来。</p>
-<p>如果说 Go 1.11 和 Go 1.12 时由于模块的不完善你不愿意切入，那么 Go 1.13 你则可以大胆地开始放心使用。本次分享将讨论如何使用模块和模块代理，以及在它们的使用中会常遇见的坑，还会讲解如何快速搭建自己的私有模块代理，并简单地介绍一下七牛云推出的 goproxy.cn 以及它的出现对于中国 Go 语言开发者来说重要在何处。</p>
+<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2>
         
           <a class="article-more-a" href="/Go%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/#more">more >></a>
         

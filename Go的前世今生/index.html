@@ -8,14 +8,14 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Go的前世今生 | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。 在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！ 这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。 Go Modules历">
+  <meta name="description" content="前言最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。 在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！ 这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。 Go Modules">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go的前世今生">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Go%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="前言最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。 在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！ 这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。 Go Modules历">
+<meta property="og:description" content="前言最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。 在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！ 这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。 Go Modules">
 <meta property="article:published_time" content="2020-02-21T02:16:07.000Z">
-<meta property="article:modified_time" content="2020-02-21T07:56:48.910Z">
+<meta property="article:modified_time" content="2020-02-25T02:50:40.349Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -201,11 +201,13 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在家办公，忙完了工作的东西之后，总觉得这样太过于无聊了，所以就想学点啥东西充实一下自己，这不就开始上手Go 语言了。</p>
 <p>在网上找了几个视频，看了一遍，开始动手写，这个时候问题就来了，导入不了包！</p>
 <p>这就很莫名其妙了，查了一通，修改http 代理、加go.mod、设置GOPATH…等等，一通折腾，项目最后可以运行了，但是我觉得还是需要再补补知识，这部这篇博客就出来了。</p>
-<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><h3 id="历史前言"><a href="#历史前言" class="headerlink" title="历史前言"></a>历史前言</h3><p>Go 1.11 推出的模块（Modules）为 Go 语言开发者打开了一扇新的大门，理想化的依赖管理解决方案使得 Go 语言朝着计算机编程史上的第一个依赖乌托邦（Deptopia）迈进。随着模块一起推出的还有模块代理协议（Module proxy protocol），通过这个协议我们可以实现 Go 模块代理（Go module proxy），也就是依赖镜像。</p>
+<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><a id="more"></a>
+
+<h3 id="历史前言"><a href="#历史前言" class="headerlink" title="历史前言"></a>历史前言</h3><p>Go 1.11 推出的模块（Modules）为 Go 语言开发者打开了一扇新的大门，理想化的依赖管理解决方案使得 Go 语言朝着计算机编程史上的第一个依赖乌托邦（Deptopia）迈进。随着模块一起推出的还有模块代理协议（Module proxy protocol），通过这个协议我们可以实现 Go 模块代理（Go module proxy），也就是依赖镜像。</p>
 <p>Go 1.13 的发布为模块带来了大量的改进，所以模块的扶正就是这次 Go 1.13 发布中开发者能直接感觉到的最大变化。而问题在于，Go 1.13 中的 GOPROXY 环境变量拥有了一个在中国大陆无法访问到的默认值 proxy.golang.org，经过大家在 golang/go#31755 中激烈的讨论（有些人甚至将话提上升到了“自由世界”的层次），最终 Go 核心团队仍然无法为中国开发者提供一个可在中国大陆访问的官方模块代理。</p>
 <p>为了今后中国的 Go 语言开发者能更好地进行开发，七牛云推出了非营利性项目 goproxy.cn，其目标是为中国和世界上其他地方的 Gopher 们提供一个免费的、可靠的、持续在线的且经过 CDN 加速的模块代理。可以预见未来是属于模块化的，所以 Go 语言开发者能越早切入模块就能越早进入未来。</p>
 <p>如果说 Go 1.11 和 Go 1.12 时由于模块的不完善你不愿意切入，那么 Go 1.13 你则可以大胆地开始放心使用。本次分享将讨论如何使用模块和模块代理，以及在它们的使用中会常遇见的坑，还会讲解如何快速搭建自己的私有模块代理，并简单地介绍一下七牛云推出的 goproxy.cn 以及它的出现对于中国 Go 语言开发者来说重要在何处。</p>
-<a id="more"></a>
+<!-- more -->
 
 <h3 id="Go-Modules-简介"><a href="#Go-Modules-简介" class="headerlink" title="Go Modules 简介"></a>Go Modules 简介</h3><p>Go modules (前身 vgo) 是 Go team (Russ Cox) <strong>强推</strong>的一个<strong>理想化</strong>的<strong>类语言级</strong>依赖管理解决方案，它是和 Go1.11 一同发布的，在 Go1.13 做了大量的优化和调整，目前已经变得比较不错，如果你想用 Go modules，但还停留在 1.11/1.12 版本的话，强烈建议升级。</p>
 <h4 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h4><p>Go modules 出现的目的之一就是为了解决 GOPATH 的问题，也就相当于是抛弃 GOPATH 了。</p>
