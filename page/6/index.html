@@ -147,6 +147,108 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-SpringBoot结合Dobbo出现Error" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/">SpringBoot结合Dobbo出现Error</a>
+    </h1>
+  
+
+        
+        <a href="/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/" class="archive-article-date">
+  	<time datetime="2019-02-17T06:18:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-17</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">222字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">1分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如题目所属，这是我遇到的问题，以此记录一下，不说上异常：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">org.springframework.beans.factory.BeanCreationException: </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Error creating bean with name &#39;persistenceExceptionTranslationPostProcessor&#39; defined in class path resource [org&#x2F;springframework&#x2F;boot&#x2F;autoconfigure&#x2F;dao&#x2F;PersistenceExceptionTranslationAutoConfiguration.class]: Initialization of bean failed; </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">nested exception is java.lang.IllegalStateException: </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">No persistence exception translators found in bean factory. </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">Cannot perform exception translation.</span></pre></td></tr></table></figure>
+<p>这个是在我写练习Demo时遇到的错误，经过反复的琢磨之后，才发现，是在引入Dubbo时，由Dubbo引入的Spring包与SpringBoot引入的Spring包发生了冲突，所以修改pom.xml文件，</p>
+        
+          <a class="article-more-a" href="/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-排序算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -836,6 +938,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WeChat</a>
               </li>
             
             <div class="clearfix"></div>
