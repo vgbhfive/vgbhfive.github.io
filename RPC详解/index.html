@@ -6,19 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>位运算的奇思妙想 | Vgbhfive&#39;s Blog</title>
+  <title>RPC详解 | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="位操作实现乘除法数 a 向右移一位，相当于将 a 除以 2；数 a 向左移一位，相当于将 a 乘以 2 1int a &#x3D; 2;2a &gt;&gt; 1; &#x2F;&#x2F; 13a &lt;&lt; 1; &#x2F;&#x2F; 4">
+  <meta name="description" content="RPC 前言一个阳光明媚的早晨，老婆在翻看我订阅的技术杂志。“老公，什么是RPC 呀，为什么你们程序员有那么多的黑话！”，老婆还是一如既往的好奇。“RPC，就是Remote Proceduce Call 的简称呀，翻译成中文就是远程过程调用嘛”，我一边看着书，一边漫不经心的回答着。“啥，你在说啥》谁不知道翻译成中文是什么意思？你个废柴，快给我去洗碗！”“我去。。。”，我入门初醒，我对面坐着的可不是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="位运算的奇思妙想">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3&#x2F;index.html">
+<meta property="og:title" content="RPC详解">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;RPC%E8%AF%A6%E8%A7%A3&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="位操作实现乘除法数 a 向右移一位，相当于将 a 除以 2；数 a 向左移一位，相当于将 a 乘以 2 1int a &#x3D; 2;2a &gt;&gt; 1; &#x2F;&#x2F; 13a &lt;&lt; 1; &#x2F;&#x2F; 4">
-<meta property="article:published_time" content="2019-07-20T04:19:16.000Z">
-<meta property="article:modified_time" content="2020-02-05T06:25:04.231Z">
+<meta property="og:description" content="RPC 前言一个阳光明媚的早晨，老婆在翻看我订阅的技术杂志。“老公，什么是RPC 呀，为什么你们程序员有那么多的黑话！”，老婆还是一如既往的好奇。“RPC，就是Remote Proceduce Call 的简称呀，翻译成中文就是远程过程调用嘛”，我一边看着书，一边漫不经心的回答着。“啥，你在说啥》谁不知道翻译成中文是什么意思？你个废柴，快给我去洗碗！”“我去。。。”，我入门初醒，我对面坐着的可不是">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2020&#x2F;03&#x2F;11&#x2F;8kOemR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2020&#x2F;03&#x2F;11&#x2F;8kOm01.png">
+<meta property="article:published_time" content="2020-03-10T01:12:44.000Z">
+<meta property="article:modified_time" content="2020-03-16T03:05:21.320Z">
 <meta property="article:author" content="Vgbh">
-<meta property="article:tag" content="Day">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="TODO">
+<meta property="article:tag" content="RPC">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2020&#x2F;03&#x2F;11&#x2F;8kOemR.png">
   
     <link rel="alternative" href="/atom.xml" title="Vgbhfive&#39;s Blog" type="application/atom+xml">
   
@@ -150,20 +155,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-位运算的奇思妙想" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-RPC详解" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      位运算的奇思妙想
+      RPC详解
     </h1>
   
 
         
-        <a href="/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3/" class="archive-article-date">
-  	<time datetime="2019-07-20T04:19:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-20</time>
+        <a href="/RPC%E8%AF%A6%E8%A7%A3/" class="archive-article-date">
+  	<time datetime="2020-03-10T01:12:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
 </a>
 
         
@@ -172,7 +177,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">635字</span>
+        <span class="post-count">901字</span>
       </span>
     </span>
 
@@ -181,7 +186,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">2分</span>
+        <span class="post-count">3分</span>
       </span>
     </span>
 </div>
@@ -198,60 +203,84 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="位操作实现乘除法"><a href="#位操作实现乘除法" class="headerlink" title="位操作实现乘除法"></a>位操作实现乘除法</h3><p>数 a 向右移一位，相当于将 a 除以 2；<br>数 a 向左移一位，相当于将 a 乘以 2</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">a &gt;&gt; <span class="number">1</span>; <span class="comment">// 1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">a &lt;&lt; <span class="number">1</span>; <span class="comment">// 4</span></span></pre></td></tr></table></figure>
-
+        <h2 id="RPC-前言"><a href="#RPC-前言" class="headerlink" title="RPC 前言"></a>RPC 前言</h2><p>一个阳光明媚的早晨，老婆在翻看我订阅的技术杂志。<br>“老公，什么是RPC 呀，为什么你们程序员有那么多的黑话！”，老婆还是一如既往的好奇。<br>“RPC，就是Remote Proceduce Call 的简称呀，翻译成中文就是远程过程调用嘛”，我一边看着书，一边漫不经心的回答着。<br>“啥，你在说啥》谁不知道翻译成中文是什么意思？你个废柴，快给我去洗碗！”<br>“我去。。。”，我入门初醒，我对面坐着的可不是一个程序员，为了不去洗碗，我瞬间调动起全部脑细胞，星辰大海在我脑中汇聚，灵感涌现。。。</p>
+<p>“是这样，远程过程调用，自然是相对于本地过程调用来说嘛。”<br>“嗯哼，那先给老娘讲讲，本地调用过程是啥子？”<br>“本地过程调用，就好比你现在在家里，你想要洗碗，那你直接把碗放进洗碗机，打开洗碗机开关就可以洗了。这就叫本地过程调用。”</p>
+<p>“哎呦，我可不干，那啥是远程过程调用？”<br>“远程嘛，那就是你现在不在家，跟姐妹们浪去了，突然发现碗还没洗，打了个电话过来，叫我去洗碗，这就是远程过程调用”，多么通俗易懂的解释，我真是天才。</p>
+<p>“哦！我明白了”，说着，老婆开始收拾包包。<br>“你这是干啥去哦”<br>“我？我要出门浪去呀，待会记得接收我得远程调用哦，哦不，咱们要专业点，应该说记得接收我得RPC 哦！”</p>
+<p>……</p>
 <a id="more"></a>
 
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p><a href="https://vgbhfive.cn/APlusB-Solution/" target="_blank" rel="noopener">Lintcode 1</a></p>
 <hr>
 
-<h3 id="位操作交换两数"><a href="#位操作交换两数" class="headerlink" title="位操作交换两数"></a>位操作交换两数</h3><p>位操作交换两数可以不需要第三个临时变量，虽然普通操作也可以做到，但是没有其效率高</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//位与操作</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  a ^= b;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  b ^= a;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  a ^= b;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h4 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h4><p>第一步：a ^= b –&gt; a = (a^b);<br>第二步：b ^= a –&gt; b = b^(a^b) —&gt; b = (b^b)^a = a<br>第三步：a ^= b –&gt; a = (a^b)^a = (a^a)^b = b</p>
+<h2 id="RPC-简介"><a href="#RPC-简介" class="headerlink" title="RPC 简介"></a>RPC 简介</h2><p>RPC (Remote Procedure Call)，即远程过程调用。</p>
+<p>RPC 的主要功能目标是让构建<strong>分布式计算（应用）</strong>更容易，在提供强大的远程调用能力时不损失本地调用的语义简洁性。</p>
+<p>RPC 调用分类：</p>
+<ul>
+<li>同步调用：<br>客户方等待调用执行完成并返回结果。</li>
+<li>异步调用：<br>客户方调用后不用等待执行结果返回，但依然可以通过回调通知等方式获取返回结果。<br>若客户方不关心调用返回结果，则变成单向异步调用，单向调用不用返回结果。</li>
+</ul>
 <hr>
 
-<h3 id="位操作判断奇偶"><a href="#位操作判断奇偶" class="headerlink" title="位操作判断奇偶"></a>位操作判断奇偶</h3><p>只要根据数的最后一位是 0 还是 1 来决定即可，为 0 就是偶数，为 1 就是奇数。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="number">0</span> == (a &amp; <span class="number">1</span>)) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">//偶数</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
+<h2 id="RPC-调用过程"><a href="#RPC-调用过程" class="headerlink" title="RPC 调用过程"></a>RPC 调用过程</h2><p>RPC 具体的调用过程：<br><img src="https://s2.ax1x.com/2020/03/11/8kOemR.png" alt="8kOemR.png"></p>
+<p>即客户端在本地通过访问远程的注册中心获取对应方法的实例，通过实例调用对应的方法获取返回值，这个整体的流程就是远程过程调用。</p>
+<p>RPC 中具体的模块：<br><img src="https://s2.ax1x.com/2020/03/11/8kOm01.png" alt="8kOm01.png"></p>
+<p>主要包含客户端模块、服务端模块、协议模块、网络模块、序列化模块。<br>其中主要涉及到的有序列化、反序列化、网络传输、传输协议、编码、解码、异常处理等内容。</p>
 <hr>
 
-<h3 id="位操作交换符号"><a href="#位操作交换符号" class="headerlink" title="位操作交换符号"></a>位操作交换符号</h3><p>交换符号将正数变成负数，负数变成正数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">reversal</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="keyword">return</span> ~a + <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-<p>整数取反加1，正好变成其对应的负数(补码表示)。<br>负数取反加一，则变为其原码，即正数。</p>
+<h2 id="RPC-与REST-API-对比"><a href="#RPC-与REST-API-对比" class="headerlink" title="RPC 与REST API 对比"></a>RPC 与REST API 对比</h2><p>说到RPC 和REST 之间的对比，那你脑子里肯定第一个念头就是<strong>API设计风格</strong>的不同。</p>
+<p>RPC 主要用于面向过程，倾向于描述动作本身。<br>REST 主要用于面向资源，倾向于动作要操作的对象。</p>
+<p>具体的不同可以看看这个链接：<a href="https://zhuanlan.zhihu.com/p/66311537" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66311537</a></p>
 <hr>
 
-<h3 id="位操作求绝对值"><a href="#位操作求绝对值" class="headerlink" title="位操作求绝对值"></a>位操作求绝对值</h3><p>整数的绝对值是其本身，负数的绝对值正好可以对其进行取反加一求得。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">abs</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="keyword">int</span> i = a &gt;&gt; <span class="number">31</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  <span class="keyword">return</span> ((a^i) - i); <span class="comment">// return i == 0 ? a : (~a + 1);</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><ol>
-<li>判断符号位。整数右移31位为0，负数右移31位为-1。</li>
-<li>根据符号位进行对应的处理。</li>
-</ol>
+<h2 id="常见的RPC-框架"><a href="#常见的RPC-框架" class="headerlink" title="常见的RPC 框架"></a>常见的RPC 框架</h2><table>
+<thead>
+<tr>
+<th></th>
+<th align="center">thirft</th>
+<th align="center">gRPC</th>
+<th align="center">Dubbo</th>
+<th align="center">RMI</th>
+<th align="center">Hessian</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="center">香蕉</td>
+<td align="center">$1</td>
+<td align="center">5</td>
+<td align="center">2</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="center">苹果</td>
+<td align="center">$1</td>
+<td align="center">6</td>
+<td align="center">3</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="center">草莓</td>
+<td align="center">$1</td>
+<td align="center">7</td>
+<td align="center">3</td>
+<td align="center">5</td>
+</tr>
+</tbody></table>
 <hr>
 
-<h3 id="位操作进行高低位交换"><a href="#位操作进行高低位交换" class="headerlink" title="位操作进行高低位交换"></a>位操作进行高低位交换</h3><p>给定一个 16 的无符号整数，将其高 8 位与低 8 位进行交换，求出交换后的值。如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">34520的二进制表示：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10000110 11011000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">将其高8位与低8位进行交换，得到一个新的二进制数：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">11011000 10000110</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">其十进制为55430</span></pre></td></tr></table></figure>
-<p> 做法如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">short</span> a = <span class="number">34520</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">a = (a &gt;&gt; <span class="number">8</span>) | (a &lt;&lt; <span class="number">8</span>);</span></pre></td></tr></table></figure>
+<h2 id="Dubbo-框架概述"><a href="#Dubbo-框架概述" class="headerlink" title="Dubbo 框架概述"></a>Dubbo 框架概述</h2><hr>
 
-<h4 id="解释-1"><a href="#解释-1" class="headerlink" title="解释"></a>解释</h4><ol>
-<li>将其高 8 位移到低 8 位，高位补0 。</li>
-<li>再将其低 8 位移到高 8 位，低位补0 。</li>
-<li>最后再将上述的结果进行或操作即可。</li>
-</ol>
-<hr>
+<h2 id="实现RPC-框架"><a href="#实现RPC-框架" class="headerlink" title="实现RPC 框架"></a>实现RPC 框架</h2><h3 id="原理概述"><a href="#原理概述" class="headerlink" title="原理概述"></a>原理概述</h3><h3 id="框架运行流程"><a href="#框架运行流程" class="headerlink" title="框架运行流程"></a>框架运行流程</h3><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><hr>
 
-<h3 id="位操作统计二进制中1-的个数"><a href="#位操作统计二进制中1-的个数" class="headerlink" title="位操作统计二进制中1 的个数"></a>位操作统计二进制中1 的个数</h3><p>统计二进制1的个数可以分别获取每个二进制位数，然后再统计其1的个数，此方法效率比较低。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">count = <span class="number">0</span>  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(a)&#123;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  a = a &amp; (a - <span class="number">1</span>);  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  count++;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<h2 id="问题答疑"><a href="#问题答疑" class="headerlink" title="问题答疑"></a>问题答疑</h2><hr>
 
-<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><hr>
 
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.zhihu.com/question/38206659/answer/736472332" target="_blank" rel="noopener">https://www.zhihu.com/question/38206659/answer/736472332</a></p>
-<hr>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><hr>
 
-<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
 
       
 
@@ -286,7 +315,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">TODO</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RPC</a>
         		</li>
       		
 		</ul>
@@ -342,7 +379,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/RPC%E8%AF%A6%E8%A7%A3/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -356,18 +393,9 @@
   
 <nav id="article-nav">
   
-    <a href="/B-Tree%E5%92%8CB-Tree%E7%9A%84%E6%8E%A2%E7%A7%98%E4%B9%8B%E6%97%85/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          B-Tree和B+Tree的探秘之旅
-        
-      </div>
-    </a>
   
-  
-    <a href="/Nginx-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Nginx-快速入门和提高</div>
+    <a href="/redirect-uri%E5%9F%9F%E5%90%8D%E4%B8%8E%E5%90%8E%E5%8F%B0%E9%85%8D%E7%BD%AE%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%8C%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81-10003/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">redirect_uri域名与后台配置不一致，错误代码:10003</div>
       <i class="icon-circle-right"></i>
     </a>
   

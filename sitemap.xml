@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/RPC%E8%AF%A6%E8%A7%A3/</loc>
+    
+    <lastmod>2020-03-16T03:05:21.320Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/</loc>
+    
+    <lastmod>2020-03-11T06:41:05.850Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/redirect-uri%E5%9F%9F%E5%90%8D%E4%B8%8E%E5%90%8E%E5%8F%B0%E9%85%8D%E7%BD%AE%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%8C%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81-10003/</loc>
     
     <lastmod>2020-03-04T03:19:52.019Z</lastmod>
@@ -40,13 +54,6 @@
     <loc>http://yoursite.com/Go%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/</loc>
     
     <lastmod>2020-02-25T02:50:40.349Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/</loc>
-    
-    <lastmod>2020-02-21T07:26:13.320Z</lastmod>
     
   </url>
   

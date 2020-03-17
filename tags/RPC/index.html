@@ -6,18 +6,13 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>位运算的奇思妙想 | Vgbhfive&#39;s Blog</title>
+  <title>Tag: RPC | Vgbhfive&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="位操作实现乘除法数 a 向右移一位，相当于将 a 除以 2；数 a 向左移一位，相当于将 a 乘以 2 1int a &#x3D; 2;2a &gt;&gt; 1; &#x2F;&#x2F; 13a &lt;&lt; 1; &#x2F;&#x2F; 4">
-<meta property="og:type" content="article">
-<meta property="og:title" content="位运算的奇思妙想">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3&#x2F;index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Vgbhfive&#39;s Blog">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;RPC&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="位操作实现乘除法数 a 向右移一位，相当于将 a 除以 2；数 a 向左移一位，相当于将 a 乘以 2 1int a &#x3D; 2;2a &gt;&gt; 1; &#x2F;&#x2F; 13a &lt;&lt; 1; &#x2F;&#x2F; 4">
-<meta property="article:published_time" content="2019-07-20T04:19:16.000Z">
-<meta property="article:modified_time" content="2020-02-05T06:25:04.231Z">
 <meta property="article:author" content="Vgbh">
-<meta property="article:tag" content="Day">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Vgbhfive&#39;s Blog" type="application/atom+xml">
@@ -150,257 +145,68 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-位运算的奇思妙想" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      位运算的奇思妙想
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2020" class="archive-year">2020</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/RPC%E8%AF%A6%E8%A7%A3/" class="archive-article-date">
+  	<time datetime="2020-03-10T01:12:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/RPC%E8%AF%A6%E8%A7%A3/">RPC详解</a>
     </h1>
   
 
-        
-        <a href="/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3/" class="archive-article-date">
-  	<time datetime="2019-07-20T04:19:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-20</time>
-</a>
-
-        
-        <div style="margin-top:10px;">
-    <span class="post-time">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-keyboard-o"></i>
-        <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">635字</span>
-      </span>
-    </span>
-
-    <span class="post-time">
-      &nbsp; | &nbsp;
-      <span class="post-meta-item-icon">
-        <i class="fa fa-hourglass-half"></i>
-        <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">2分</span>
-      </span>
-    </span>
-</div>
-        
-
-        
-            <span class="archive-article-date">
-                阅读量 <span id="busuanzi_value_page_pv"></span>
-            </span>
+        <div class="article-info info-on-right">
           
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="位操作实现乘除法"><a href="#位操作实现乘除法" class="headerlink" title="位操作实现乘除法"></a>位操作实现乘除法</h3><p>数 a 向右移一位，相当于将 a 除以 2；<br>数 a 向左移一位，相当于将 a 乘以 2</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">a &gt;&gt; <span class="number">1</span>; <span class="comment">// 1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">a &lt;&lt; <span class="number">1</span>; <span class="comment">// 4</span></span></pre></td></tr></table></figure>
-
-<a id="more"></a>
-
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p><a href="https://vgbhfive.cn/APlusB-Solution/" target="_blank" rel="noopener">Lintcode 1</a></p>
-<hr>
-
-<h3 id="位操作交换两数"><a href="#位操作交换两数" class="headerlink" title="位操作交换两数"></a>位操作交换两数</h3><p>位操作交换两数可以不需要第三个临时变量，虽然普通操作也可以做到，但是没有其效率高</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//位与操作</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  a ^= b;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  b ^= a;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  a ^= b;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h4 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h4><p>第一步：a ^= b –&gt; a = (a^b);<br>第二步：b ^= a –&gt; b = b^(a^b) —&gt; b = (b^b)^a = a<br>第三步：a ^= b –&gt; a = (a^b)^a = (a^a)^b = b</p>
-<hr>
-
-<h3 id="位操作判断奇偶"><a href="#位操作判断奇偶" class="headerlink" title="位操作判断奇偶"></a>位操作判断奇偶</h3><p>只要根据数的最后一位是 0 还是 1 来决定即可，为 0 就是偶数，为 1 就是奇数。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="number">0</span> == (a &amp; <span class="number">1</span>)) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">//偶数</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="位操作交换符号"><a href="#位操作交换符号" class="headerlink" title="位操作交换符号"></a>位操作交换符号</h3><p>交换符号将正数变成负数，负数变成正数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">reversal</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="keyword">return</span> ~a + <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-<p>整数取反加1，正好变成其对应的负数(补码表示)。<br>负数取反加一，则变为其原码，即正数。</p>
-<hr>
-
-<h3 id="位操作求绝对值"><a href="#位操作求绝对值" class="headerlink" title="位操作求绝对值"></a>位操作求绝对值</h3><p>整数的绝对值是其本身，负数的绝对值正好可以对其进行取反加一求得。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">abs</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="keyword">int</span> i = a &gt;&gt; <span class="number">31</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  <span class="keyword">return</span> ((a^i) - i); <span class="comment">// return i == 0 ? a : (~a + 1);</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><ol>
-<li>判断符号位。整数右移31位为0，负数右移31位为-1。</li>
-<li>根据符号位进行对应的处理。</li>
-</ol>
-<hr>
-
-<h3 id="位操作进行高低位交换"><a href="#位操作进行高低位交换" class="headerlink" title="位操作进行高低位交换"></a>位操作进行高低位交换</h3><p>给定一个 16 的无符号整数，将其高 8 位与低 8 位进行交换，求出交换后的值。如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">34520的二进制表示：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10000110 11011000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">将其高8位与低8位进行交换，得到一个新的二进制数：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">11011000 10000110</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">其十进制为55430</span></pre></td></tr></table></figure>
-<p> 做法如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">short</span> a = <span class="number">34520</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">a = (a &gt;&gt; <span class="number">8</span>) | (a &lt;&lt; <span class="number">8</span>);</span></pre></td></tr></table></figure>
-
-<h4 id="解释-1"><a href="#解释-1" class="headerlink" title="解释"></a>解释</h4><ol>
-<li>将其高 8 位移到低 8 位，高位补0 。</li>
-<li>再将其低 8 位移到高 8 位，低位补0 。</li>
-<li>最后再将上述的结果进行或操作即可。</li>
-</ol>
-<hr>
-
-<h3 id="位操作统计二进制中1-的个数"><a href="#位操作统计二进制中1-的个数" class="headerlink" title="位操作统计二进制中1 的个数"></a>位操作统计二进制中1 的个数</h3><p>统计二进制1的个数可以分别获取每个二进制位数，然后再统计其1的个数，此方法效率比较低。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">count = <span class="number">0</span>  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(a)&#123;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  a = a &amp; (a - <span class="number">1</span>);  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  count++;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<hr>
-
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.zhihu.com/question/38206659/answer/736472332" target="_blank" rel="noopener">https://www.zhihu.com/question/38206659/answer/736472332</a></p>
-<hr>
-
-<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">TODO</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RPC</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/B-Tree%E5%92%8CB-Tree%E7%9A%84%E6%8E%A2%E7%A7%98%E4%B9%8B%E6%97%85/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          B-Tree和B+Tree的探秘之旅
-        
-      </div>
-    </a>
   
   
-    <a href="/Nginx-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Nginx-快速入门和提高</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -438,9 +244,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

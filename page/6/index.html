@@ -147,6 +147,107 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-SQLException-时区区值无法识别" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/SQLException-%E6%97%B6%E5%8C%BA%E5%8C%BA%E5%80%BC%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB/">SQLException 时区区值无法识别</a>
+    </h1>
+  
+
+        
+        <a href="/SQLException-%E6%97%B6%E5%8C%BA%E5%8C%BA%E5%80%BC%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB/" class="archive-article-date">
+  	<time datetime="2019-03-02T12:52:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-02</time>
+</a>
+
+        
+        <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">171字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">1分</span>
+      </span>
+    </span>
+</div>
+        
+
+        
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="毕设错误2"><a href="#毕设错误2" class="headerlink" title="毕设错误2"></a>毕设错误2</h3><p>下面这个真的是让我一头雾水，翻译了之后才理解，原来是在新版的com.mysql.jdbc.Driver这个已经被替换了，现在开始使用com.mysql.cj.jdbc.Driver，因此就要给MySQL服务器设置时区。<br>所以才有了接下里的错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">java.sql.SQLException: The server time zone value &#39;ÖÐ¹ú±ê×¼Ê±¼ä&#39; is unrecognized or represents more than one time zone. </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">You must configure either the server or JDBC driver (via the serverTimezone configuration property) to use a more specifc time zone value if you want to utilize time zone support.</span></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/SQLException-%E6%97%B6%E5%8C%BA%E5%8C%BA%E5%80%BC%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Day</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/SQLException-%E6%97%B6%E5%8C%BA%E5%8C%BA%E5%80%BC%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-SpringBoot结合Dobbo出现Error" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -779,6 +880,10 @@
 
       	</div>
     </div>
+    <div>
+      <a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">陕ICP20002937号</a>
+    </div>
+    
   </div>
 </footer>
 <script type="text/javascript" src="/love.js"></script>
@@ -942,6 +1047,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">WeChat</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RPC</a>
               </li>
             
             <div class="clearfix"></div>
