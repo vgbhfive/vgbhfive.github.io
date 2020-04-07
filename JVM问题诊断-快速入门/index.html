@@ -26,7 +26,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;08&#x2F;09&#x2F;rNkgGYMh5CfFvdj.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;08&#x2F;09&#x2F;2CiKTaUoDtqNH4V.jpg">
 <meta property="article:published_time" content="2019-07-25T11:15:51.000Z">
-<meta property="article:modified_time" content="2020-02-05T06:24:33.367Z">
+<meta property="article:modified_time" content="2020-04-07T06:53:58.727Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -184,7 +184,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">7.2k字</span>
+        <span class="post-count">7.6k字</span>
       </span>
     </span>
 
@@ -193,7 +193,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">30分</span>
+        <span class="post-count">32分</span>
       </span>
     </span>
 </div>
@@ -481,7 +481,29 @@
 <h4 id="容器技术的发展历程简介"><a href="#容器技术的发展历程简介" class="headerlink" title="容器技术的发展历程简介"></a>容器技术的发展历程简介</h4><p><a href="https://www.infoq.cn/article/R1p3H3_29f4TYImExsyw" target="_blank" rel="noopener">https://www.infoq.cn/article/R1p3H3_29f4TYImExsyw</a></p>
 <hr>
 
-<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><h4 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h4><hr>
+<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><h4 id="OOM故障分析记录：HeapByteBuffer-byte-占用了大量内存"><a href="#OOM故障分析记录：HeapByteBuffer-byte-占用了大量内存" class="headerlink" title="OOM故障分析记录：HeapByteBuffer byte[] 占用了大量内存"></a>OOM故障分析记录：HeapByteBuffer byte[] 占用了大量内存</h4><h5 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h5><p>版本上测试环境测试，结果遇到服务启动一段时间就会OOM，并且运行会非常卡顿。</p>
+<h5 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h5><ol>
+<li>分析可能是内存不够使用，查看了该服务的内存使用情况和GC 使用，通过与生产环境比较，没有发现什么问题。</li>
+<li>分析本次上线测试代码，发现了几处容易内存泄漏的代码，修改后并上测试环境测试，还是会出现OOM 问题。</li>
+<li>保存OOM 是的dump文件，下载到本地查看OOM 源头问题。</li>
+</ol>
+<h5 id="尝试解决问题步骤"><a href="#尝试解决问题步骤" class="headerlink" title="尝试解决问题步骤"></a>尝试解决问题步骤</h5><ol>
+<li><p>获取测试环境OOM 的dump文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">jmap -dump:format&#x3D;b,file&#x3D;&lt;PID&gt;.bin &lt;PID&gt;</span></pre></td></tr></table></figure>
+</li>
+<li><p>用JDk 知道的jvisualVM 打开dump 文件。</p>
+</li>
+<li><p>查看堆使用情况，并找到使用堆最多的类。</p>
+</li>
+<li><p>进一步查看占用情况，获取到占用堆最大文件的内容保存到本地，通过Sublime 查看内容。</p>
+</li>
+<li><p>这时发现保存到本地的文件大小和max-http-header-size 一样大，因此判断出可能是Tomcat 的配置有问题。</p>
+</li>
+<li><p>查看Tomcat 配置文件，果不其然，并且在跟生产环境比对后，也是不一致的。至此，将属性值修改为跟生产一致的内容即可。 </p>
+</li>
+</ol>
+<h5 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h5><p>问了测试，可能是之前配置的测试其他功能未修改回来导致的问题。</p>
+<hr>
 
 <h3 id="引用-1"><a href="#引用-1" class="headerlink" title="引用"></a>引用</h3><p><a href="https://gitbook.cn/gitchat/activity/5d1c6a069c31912c0f9f9f0b" target="_blank" rel="noopener">https://gitbook.cn/gitchat/activity/5d1c6a069c31912c0f9f9f0b</a> <small>我没有打广告，真的很好！</small></p>
 <hr>

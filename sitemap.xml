@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/JVM%E9%97%AE%E9%A2%98%E8%AF%8A%E6%96%AD-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
+    
+    <lastmod>2020-04-07T06:53:58.727Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/RPC%E8%AF%A6%E8%A7%A3/</loc>
     
-    <lastmod>2020-03-16T03:05:21.320Z</lastmod>
+    <lastmod>2020-03-23T09:50:49.731Z</lastmod>
     
   </url>
   
@@ -250,13 +257,6 @@
     <loc>http://yoursite.com/Java-JMX%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%A9%B6/</loc>
     
     <lastmod>2020-02-05T06:24:39.452Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/JVM%E9%97%AE%E9%A2%98%E8%AF%8A%E6%96%AD-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
-    
-    <lastmod>2020-02-05T06:24:33.367Z</lastmod>
     
   </url>
   
