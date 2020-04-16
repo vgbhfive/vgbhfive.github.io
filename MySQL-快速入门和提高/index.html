@@ -18,7 +18,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;08&#x2F;09&#x2F;EtcuCBm9szT7L4I.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;07&#x2F;22&#x2F;5d358f50c02b135511.jpg">
 <meta property="article:published_time" content="2019-07-07T08:16:05.000Z">
-<meta property="article:modified_time" content="2020-02-05T06:23:51.527Z">
+<meta property="article:modified_time" content="2020-04-15T07:14:48.278Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
@@ -176,7 +176,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">16.3k字</span>
+        <span class="post-count">17.1k字</span>
       </span>
     </span>
 
@@ -185,7 +185,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">59分</span>
+        <span class="post-count">62分</span>
       </span>
     </span>
 </div>
@@ -494,6 +494,7 @@
 <li>从磁盘读取数据采用可预测性预读、自动在内存中创建hash 索引以加速读操作的自适应索引(adaptive hash index )，加速插入操作的插入缓冲区(insert buffer )。</li>
 <li>通过一些机制和工具支持真正的热备份。</li>
 </ul>
+<h5 id="MyISAM-与InnoDB-对比"><a href="#MyISAM-与InnoDB-对比" class="headerlink" title="MyISAM 与InnoDB 对比"></a>MyISAM 与InnoDB 对比</h5><p>MyISAM 更适合读密集的表，而InnoDB更适合写密集的表。<br>因此在数据库做到主从分离、读写分离之后，为了进一步的提高数据库的性能，可以考虑读取频率较高的库使用MyISAM 作为读取存储引擎，那么写入频率较高的库可以使用InnoDB 作为写入存储引擎。</p>
 <h5 id="其他引擎"><a href="#其他引擎" class="headerlink" title="其他引擎"></a>其他引擎</h5><ol>
 <li>Archive 引擎：非事务型对告诉插入和压缩做优化的引擎。支持INSERT、SELECT 和索引，每次SELECT 都需要全表扫描，并阻止其它SELECT 执行，以实现一致性读。支持行级锁和专用缓冲区，实现高并发插入。适合日志和数据采集类应用。</li>
 <li>Blackhole 引擎：没有实现任何的存储机制，因为它丢弃所有插入的数据，不做保存，但是服务器会记录Blackhole 表的日志，所以可以用于复制数据到备库，或者简单地记录到日志。适合特殊的复制架构和日志审核，但并不推荐。</li>
@@ -785,6 +786,30 @@
 </li>
 </ol>
 <h4 id="索引-1"><a href="#索引-1" class="headerlink" title="索引"></a>索引</h4><h5 id="B-Tree-索引"><a href="#B-Tree-索引" class="headerlink" title="B+Tree 索引"></a>B+Tree 索引</h5><h5 id="资料引用"><a href="#资料引用" class="headerlink" title="资料引用"></a>资料引用</h5><p>关于B-Tree 的资料简介：<br><a href="https://vgbhfive.cn/B-Tree%E5%92%8CB-Tree%E7%9A%84%E6%8E%A2%E7%A7%98%E4%B9%8B%E6%97%85/" target="_blank" rel="noopener">https://vgbhfive.cn/B-Tree%E5%92%8CB-Tree%E7%9A%84%E6%8E%A2%E7%A7%98%E4%B9%8B%E6%97%85/</a></p>
+<h4 id="主从分库"><a href="#主从分库" class="headerlink" title="主从分库"></a>主从分库</h4><p>在高并发环境下，如何保证数据库能抗住高并发的读和写操作，因此绝大部分都会基于MySQL 的主从复制（replication）来设计，包括常见的<strong>一主一从</strong>、<strong>双主模式</strong>、<strong>半同步复制（semi-sync replication）</strong>。</p>
+<h5 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h5><p>常见的数据主从同步可以说成是同步的，但是这个过程上确实异步的，大概流程是这样的：</p>
+<ul>
+<li>在master 上提交事务后，写入binlog，返回事务成功标记。</li>
+<li>将binlog 发送到slave ，转储成relay log。</li>
+<li>在slave 上再将relay log 读取出来应用。</li>
+</ul>
+<p>这其中的步骤1 和步骤3 之间是异步进行的，无需等待确认各自的状态，因此可以说MySQL 的主从复制是异步的。</p>
+<h5 id="半同步复制"><a href="#半同步复制" class="headerlink" title="半同步复制"></a>半同步复制</h5><p>MySQL semi-sync replication 在之前的基础上做了加强，整体流程变成了这样:</p>
+<ul>
+<li>首先，master 和slave 都需要启动semi-sync replication 模式。</li>
+<li>当某一个slave 连接上master 之后，会主动告知自己当前是否处于semi-sync replication 状态。</li>
+<li>在master 上提交事务，写入binlog，此时需要通知一个slave 来接收此事务，等待写入relay log成功并刷新到磁盘后，slave 向master 发送已完成此事务标记。</li>
+<li>master 收到slave 的完成事务通知后，此时再返回事务成功标记。</li>
+</ul>
+<p>所以，上述的流程就存在了一个关键点，<strong>rpl_semi_sync_master_timeout</strong>即salve 向master 发送通知时间限定值，如果超过此限定值，就会从半同步复制转化为主从复制。</p>
+<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><p>上面主要说了主从复制和半同步复制，那么在MySQL 中，一次事务的提交，需要写入undo、redo、binlog、写数据文件等等，那么在这个过程中，如果出现了crash，就有可能导致主从的数据不一致。</p>
+<p>master 配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">innodb_flush_log_at_trx_commit &#x3D; 1     # 每个事务提交时候，把事务日志从缓存区写到日志文件中，并且刷新日志文件的数据到磁盘上</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">sync_binlog &#x3D; 100                      # 将binlog 刷新到磁盘上</span></pre></td></tr></table></figure>
+
+<p>slave 配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">master_info_repository &#x3D; &quot;TABLE&quot;       # 确保在slave上和复制相关的元数据表也采用InnoDB引擎，受到InnoDB事务安全的保护</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">relay_log_info_repository &#x3D; &quot;TABLE&quot;    # 确保在slave上和复制相关的元数据表也采用InnoDB引擎，受到InnoDB事务安全的保护</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">relay_log_recovery &#x3D; 1                 # 开启relay log自动修复机制，发生crash时，会自动判断哪些relay log需要重新从master上抓取回来再次应用，以此避免部分数据丢失的可能性</span></pre></td></tr></table></figure>
+
+<p>经过上述的配置，就可以确保主从配置不会将数据丢失，但是这又不能保证主从数据库的数据一致性了。<br>但是，别灰心，毕竟有舍才有得嘛！</p>
 <hr>
 
 <h3 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h3><h4 id="SQL-攻击"><a href="#SQL-攻击" class="headerlink" title="SQL 攻击"></a>SQL 攻击</h4><p>由于浏览器的同源策略并不允许其他网站去访问别的网站的cookie，但并不限制&lt;/img&gt;标签去别的网站下载图片，所以此时可以创建一个不可见的img ，将用户cookie 利用img 发送到本机服务器。<br><img src="https://i.loli.net/2019/08/09/EtcuCBm9szT7L4I.jpg" alt="1.jpg"><br>应对方法，采用HttpOnly 拒绝使用JavaScript 读取即可防止。</p>
