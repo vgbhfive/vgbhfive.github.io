@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/404/index.html</loc>
+    
+    <lastmod>2020-04-17T10:08:24.435Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/about/index.html</loc>
+    
+    <lastmod>2020-04-17T10:08:16.082Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/tags/index.html</loc>
+    
+    <lastmod>2020-04-17T10:05:52.373Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/pictures/index.html</loc>
+    
+    <lastmod>2020-04-17T10:04:06.602Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
+    
+    <lastmod>2020-04-16T10:17:21.367Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/Nginx-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/</loc>
     
     <lastmod>2020-04-16T07:50:19.463Z</lastmod>
@@ -12,13 +47,6 @@
     <loc>http://yoursite.com/RPC%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2020-04-16T06:48:28.817Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
-    
-    <lastmod>2020-04-16T06:47:45.972Z</lastmod>
     
   </url>
   
