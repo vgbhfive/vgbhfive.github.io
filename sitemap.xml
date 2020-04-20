@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/pictures/index.html</loc>
+    
+    <lastmod>2020-04-20T08:52:39.170Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/about/index.html</loc>
+    
+    <lastmod>2020-04-20T08:51:11.499Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/</loc>
+    
+    <lastmod>2020-04-20T02:51:56.885Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/404/index.html</loc>
     
     <lastmod>2020-04-17T10:08:24.435Z</lastmod>
@@ -9,23 +30,9 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/about/index.html</loc>
-    
-    <lastmod>2020-04-17T10:08:16.082Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/tags/index.html</loc>
     
     <lastmod>2020-04-17T10:05:52.373Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/pictures/index.html</loc>
-    
-    <lastmod>2020-04-17T10:04:06.602Z</lastmod>
     
   </url>
   
@@ -61,13 +68,6 @@
     <loc>http://yoursite.com/Redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
     
     <lastmod>2020-04-15T03:18:30.548Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/</loc>
-    
-    <lastmod>2020-04-14T09:30:55.638Z</lastmod>
     
   </url>
   
