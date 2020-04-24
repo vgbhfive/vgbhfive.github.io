@@ -29,10 +29,9 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2020&#x2F;03&#x2F;11&#x2F;8kOemR.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2020&#x2F;03&#x2F;11&#x2F;8kOm01.png">
 <meta property="article:published_time" content="2020-03-10T01:12:44.000Z">
-<meta property="article:modified_time" content="2020-04-16T06:48:28.817Z">
+<meta property="article:modified_time" content="2020-04-21T02:17:26.969Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
-<meta property="article:tag" content="TODO">
 <meta property="article:tag" content="RPC">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;s2.ax1x.com&#x2F;2020&#x2F;03&#x2F;11&#x2F;8kOemR.png">
@@ -196,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-16 14:48:28" itemprop="dateModified" datetime="2020-04-16T14:48:28+08:00">2020-04-16</time>
+                <time title="Modified: 2020-04-21 10:17:26" itemprop="dateModified" datetime="2020-04-21T10:17:26+08:00">2020-04-21</time>
               </span>
 
           
@@ -239,40 +238,151 @@
 <p>具体的不同可以看看这个链接：<a href="https://zhuanlan.zhihu.com/p/66311537" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66311537</a></p>
 <hr>
 
-<h2 id="常见的RPC-框架"><a href="#常见的RPC-框架" class="headerlink" title="常见的RPC 框架"></a>常见的RPC 框架</h2><table>
+<h2 id="常见的RPC-框架"><a href="#常见的RPC-框架" class="headerlink" title="常见的RPC 框架"></a>常见的RPC 框架</h2><h3 id="thirft"><a href="#thirft" class="headerlink" title="thirft"></a>thirft</h3><p>Facebook开源的跨语言RPC框架。</p>
+<h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><p>由Google开发，高性能开源的通用RPC架构，面向移动和HTTP/2的设计。<br>支持C、 C++、 Node.js、 Python、 Ruby、 Objective-C、 PHP 和 C# 。<br>服务接口定义在.proto文件中，因为本身它不是分布式的，所以要实现上面的框架的功能需要进一步的开发。<br>跨语言，针对移动端：省电、省流量、高性能、双向流、支持DNS负载。<br>关于性能，肯定比HTTP/1好，比TCP差。<br>序列化：默认使用protocol buffer实现。也支持json等。<br>通讯：gRPC使用的http2.0</p>
+<h3 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h3><p>阿里巴巴公司开源的一个Java高性能优秀的服务框架，可以和Spring框架无缝集成，相关资料很丰富。</p>
+<h3 id="RMI"><a href="#RMI" class="headerlink" title="RMI"></a>RMI</h3><p>基于java的远程过程调用，是java特有的RPC实现。</p>
+<ul>
+<li>真正支持面向对象的多态</li>
+<li>不支持其他语言</li>
+<li>使用了java原生的序列化机制，所有序列化对象必须实现serializable接口</li>
+<li>基于BIO实现的socket通讯</li>
+</ul>
+<h3 id="Hessian"><a href="#Hessian" class="headerlink" title="Hessian"></a>Hessian</h3><p>采用的是二进制RPC协议，适用于发送二进制数据。但本身也是一个Web Service框架对RPC调用提供支持，功能简单，使用起来也方便。基于Http协议进行传输。通过Servlet提供远程服务。<br>通过Hessain本身提供的API来发起请求。响应端根据Hessian提供的API来接受请求。</p>
+<h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><table>
 <thead>
 <tr>
-<th></th>
-<th align="center">thirft</th>
-<th align="center">gRPC</th>
-<th align="center">Dubbo</th>
-<th align="center">RMI</th>
-<th align="center">Hessian</th>
+<th>功能</th>
+<th>Hessian</th>
+<th>Montan</th>
+<th>rpcx</th>
+<th>gRPC</th>
+<th>Thrift</th>
+<th>Dubbo</th>
+<th>Dubbox</th>
+<th>Spring Cloud</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>1</td>
-<td align="center">香蕉</td>
-<td align="center">$1</td>
-<td align="center">5</td>
-<td align="center">2</td>
-<td align="center">3</td>
+<td>开发语言</td>
+<td>跨语言</td>
+<td>Java</td>
+<td>Go</td>
+<td>跨语言</td>
+<td>跨语言</td>
+<td>Java</td>
+<td>Java</td>
+<td>Java</td>
 </tr>
 <tr>
-<td>2</td>
-<td align="center">苹果</td>
-<td align="center">$1</td>
-<td align="center">6</td>
-<td align="center">3</td>
-<td align="center">4</td>
+<td>分布式(服务治理)</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
 </tr>
 <tr>
-<td>3</td>
-<td align="center">草莓</td>
-<td align="center">$1</td>
-<td align="center">7</td>
-<td align="center">3</td>
-<td align="center">5</td>
+<td>多序列化框架支持</td>
+<td>hessian</td>
+<td>√(支持Hessian2、Json,可扩展)</td>
+<td>√</td>
+<td>×</td>
+<td>只支持(protobuf)</td>
+<td>×(thrift格式)</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>多种注册中心</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>管理中心</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>跨编程语言</td>
+<td>√</td>
+<td>×(支持php client和C server)</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>支持REST</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>关注度</td>
+<td>低</td>
+<td>中</td>
+<td>低</td>
+<td>中</td>
+<td>中</td>
+<td>中</td>
+<td>高</td>
+<td>中</td>
+</tr>
+<tr>
+<td>上手难度</td>
+<td>低</td>
+<td>低</td>
+<td>中</td>
+<td>中</td>
+<td>中</td>
+<td>低</td>
+<td>低</td>
+<td>中</td>
+</tr>
+<tr>
+<td>运维成本</td>
+<td>低</td>
+<td>中</td>
+<td>中</td>
+<td>中</td>
+<td>低</td>
+<td>中</td>
+<td>中</td>
+<td>中</td>
+</tr>
+<tr>
+<td>开源机构</td>
+<td>Caucho</td>
+<td>Weibo</td>
+<td>Apache</td>
+<td>Google</td>
+<td>Apache</td>
+<td>Alibaba</td>
+<td>Dangdang</td>
+<td>Apache</td>
 </tr>
 </tbody></table>
 <hr>
@@ -280,12 +390,16 @@
 <h2 id="Dubbo-框架概述"><a href="#Dubbo-框架概述" class="headerlink" title="Dubbo 框架概述"></a>Dubbo 框架概述</h2><p><a href="https://vgbhfive.cn/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" target="_blank" rel="noopener">https://vgbhfive.cn/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</a></p>
 <hr>
 
-<h2 id="实现RPC-框架"><a href="#实现RPC-框架" class="headerlink" title="实现RPC 框架"></a>实现RPC 框架</h2><h3 id="原理概述"><a href="#原理概述" class="headerlink" title="原理概述"></a>原理概述</h3><h3 id="框架运行流程"><a href="#框架运行流程" class="headerlink" title="框架运行流程"></a>框架运行流程</h3><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://github.com/vgbhfive/vgbh-rpc" target="_blank" rel="noopener">https://github.com/vgbhfive/vgbh-rpc</a></p>
+<h2 id="实现RPC-框架"><a href="#实现RPC-框架" class="headerlink" title="实现RPC 框架"></a>实现RPC 框架</h2><h3 id="原理概述"><a href="#原理概述" class="headerlink" title="原理概述"></a>原理概述</h3><p>vgbh-rpc 是以客户端和服务端为基础，通过手动在代码内部实现注册的方式来模拟远程调用来实现RPC 服务。详细的使用可以去看<a href="https://github.com/vgbhfive/vgbh-rpc/tree/master/vgbh-rpc/vgbh-rpc-example" target="_blank" rel="noopener">demo样例</a></p>
+<p>基于最基础的易用性来说，不是很友好，但是若对于理解RPC 的流程来说是一个很好的<strong>敲门砖</strong>。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://github.com/vgbhfive/vgbh-rpc" target="_blank" rel="noopener">https://github.com/vgbhfive/vgbh-rpc</a></p>
 <hr>
 
 <h2 id="问题答疑"><a href="#问题答疑" class="headerlink" title="问题答疑"></a>问题答疑</h2><hr>
 
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>自己动手写了一个小的rpc 框架实例，这对以后再去看Dubbo 的源码会有很大的帮助，知道了哪里是重点，知道了那里是难点。</p>
+<p>所以还是得天天学习啊。</p>
+<hr>
 
 <h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><hr>
 
@@ -300,7 +414,6 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/TODO/" rel="tag"># TODO</a>
               <a href="/tags/RPC/" rel="tag"># RPC</a>
           </div>
 
@@ -313,7 +426,10 @@
     <a href="/redirect-uri%E5%9F%9F%E5%90%8D%E4%B8%8E%E5%90%8E%E5%8F%B0%E9%85%8D%E7%BD%AE%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%8C%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81-10003/" rel="prev" title="redirect_uri域名与后台配置不一致，错误代码:10003">
       <i class="fa fa-chevron-left"></i> redirect_uri域名与后台配置不一致，错误代码:10003
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" rel="next" title="kafka快速入门">
+      kafka快速入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -372,7 +488,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-前言"><span class="nav-number">1.</span> <span class="nav-text">RPC 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-简介"><span class="nav-number">2.</span> <span class="nav-text">RPC 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-调用过程"><span class="nav-number">3.</span> <span class="nav-text">RPC 调用过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-与REST-API-对比"><span class="nav-number">4.</span> <span class="nav-text">RPC 与REST API 对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的RPC-框架"><span class="nav-number">5.</span> <span class="nav-text">常见的RPC 框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo-框架概述"><span class="nav-number">6.</span> <span class="nav-text">Dubbo 框架概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现RPC-框架"><span class="nav-number">7.</span> <span class="nav-text">实现RPC 框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理概述"><span class="nav-number">7.1.</span> <span class="nav-text">原理概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#框架运行流程"><span class="nav-number">7.2.</span> <span class="nav-text">框架运行流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">7.3.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题答疑"><span class="nav-number">8.</span> <span class="nav-text">问题答疑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">10.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">11.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-前言"><span class="nav-number">1.</span> <span class="nav-text">RPC 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-简介"><span class="nav-number">2.</span> <span class="nav-text">RPC 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-调用过程"><span class="nav-number">3.</span> <span class="nav-text">RPC 调用过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-与REST-API-对比"><span class="nav-number">4.</span> <span class="nav-text">RPC 与REST API 对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的RPC-框架"><span class="nav-number">5.</span> <span class="nav-text">常见的RPC 框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#thirft"><span class="nav-number">5.1.</span> <span class="nav-text">thirft</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gRPC"><span class="nav-number">5.2.</span> <span class="nav-text">gRPC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dubbo"><span class="nav-number">5.3.</span> <span class="nav-text">Dubbo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RMI"><span class="nav-number">5.4.</span> <span class="nav-text">RMI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hessian"><span class="nav-number">5.5.</span> <span class="nav-text">Hessian</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对比"><span class="nav-number">5.6.</span> <span class="nav-text">对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo-框架概述"><span class="nav-number">6.</span> <span class="nav-text">Dubbo 框架概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现RPC-框架"><span class="nav-number">7.</span> <span class="nav-text">实现RPC 框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理概述"><span class="nav-number">7.1.</span> <span class="nav-text">原理概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">7.2.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题答疑"><span class="nav-number">8.</span> <span class="nav-text">问题答疑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">10.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">11.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -388,12 +504,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-count">59</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
