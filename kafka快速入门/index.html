@@ -29,7 +29,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;s1.ax1x.com&#x2F;2020&#x2F;04&#x2F;22&#x2F;JYLBx1.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;s1.ax1x.com&#x2F;2020&#x2F;04&#x2F;22&#x2F;JNw2C9.jpg">
 <meta property="article:published_time" content="2020-04-21T08:55:08.000Z">
-<meta property="article:modified_time" content="2020-04-23T06:50:28.813Z">
+<meta property="article:modified_time" content="2020-04-27T02:13:29.002Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="TODO">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-23 14:50:28" itemprop="dateModified" datetime="2020-04-23T14:50:28+08:00">2020-04-23</time>
+                <time title="Modified: 2020-04-27 10:13:29" itemprop="dateModified" datetime="2020-04-27T10:13:29+08:00">2020-04-27</time>
               </span>
 
           
@@ -218,55 +218,55 @@
 
 <hr>
 
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Kafka是一个分布式发布 - 订阅消息系统和一个强大的队列，可以处理大量的数据，并使您能够将消息从一个端点传递到另一个端点。 </p>
-<p>Kafka适合离线和在线消息消费。 Kafka消息保留在磁盘上，并在群集内复制以防止数据丢失。 Kafka构建在ZooKeeper同步服务之上。 它与Apache Storm和Spark非常好地集成，用于实时流式数据分析。</p>
-<p>Apache Kafka起源于LinkedIn，后来于2011年成为开源Apache项目，然后于2012年成为First-class Apache项目。Kafka是用Scala和Java编写的。 Apache Kafka是基于发布订阅的容错消息系统。 它是快速，可扩展和设计分布。</p>
-<p>Kafka专为分布式高吞吐量系统而设计。 Kafka往往工作得很好，作为一个更传统的消息代理的替代品。 与其他消息传递系统相比，Kafka具有更好的吞吐量，内置分区，复制和固有的容错能力，这使得它非常适合大规模消息处理应用程序。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Kafka 是一个分布式发布 - 订阅消息系统和一个强大的队列，可以处理大量的数据，并使您能够将消息从一个端点传递到另一个端点。 </p>
+<p>Kafka 适合离线和在线消息消费。 Kafka 消息保留在磁盘上，并在群集内复制以防止数据丢失。 Kafka 构建在ZooKeeper 同步服务之上。 它与Apache Storm 和Spark 非常好地集成，用于实时流式数据分析。</p>
+<p>Apache Kafka 起源于LinkedIn，后来于2011年成为开源Apache 项目，然后于2012年成为First-class Apache 项目。Kafka 是用Scala 和Java 编写的。 Apache Kafka 是基于发布订阅的容错消息系统。 它是快速，可扩展和设计分布。</p>
+<p>Kafka专为分布式高吞吐量系统而设计。 Kafka 往往工作得很好，作为一个更传统的消息代理的替代品。 与其他消息传递系统相比，Kafka 具有更好的吞吐量，内置分区，复制和固有的容错能力，这使得它非常适合大规模消息处理应用程序。</p>
 <h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
-<li>高吞吐量、低延迟: kafka每秒可以处理几十万条消息，它的延迟最低只有几毫秒</li>
-<li>持久性、可靠性: Kafka是分布式、分区、复制和容错的。</li>
-<li>可扩展性: Kafka消息传递系统轻松缩放，无需停机。</li>
-<li>耐用性: Kafka使用分布式提交日志，这意味着消息会尽可能快地保留在磁盘上，因此它是持久的。</li>
-<li>性能: Kafka对于发布和订阅消息都具有高吞吐量。 即使存储了许多TB的消息，它也保持稳定的性能。Kafka非常快，并保证零停机和零数据丢失。</li>
+<li>高吞吐量、低延迟: kafka 每秒可以处理几十万条消息，它的延迟最低只有几毫秒</li>
+<li>持久性、可靠性: Kafka 是分布式、分区、复制和容错的。</li>
+<li>可扩展性: Kafka 消息传递系统轻松缩放，无需停机。</li>
+<li>耐用性: Kafka 使用分布式提交日志，这意味着消息会尽可能快地保留在磁盘上，因此它是持久的。</li>
+<li>性能: Kafka 对于发布和订阅消息都具有高吞吐量。 即使存储了许多TB的消息，它也保持稳定的性能。Kafka 非常快，并保证零停机和零数据丢失。</li>
 </ul>
 <h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
-<li>指标: Kafka通常用于操作监控数据。 这涉及聚合来自分布式应用程序的统计信息，以产生操作数据的集中馈送。</li>
-<li>日志聚合解决方案: Kafka可用于跨组织从多个服务收集日志，并使它们以标准格式提供给多个服务器。</li>
-<li>流处理: 流行的框架(如Storm和Spark Streaming)从主题中读取数据，对其进行处理，并将处理后的数据写入新主题，供用户和应用程序使用。 Kafka的强耐久性在流处理的上下文中也非常有用。</li>
+<li>指标: Kafka 通常用于操作监控数据。 这涉及聚合来自分布式应用程序的统计信息，以产生操作数据的集中馈送。</li>
+<li>日志聚合解决方案: Kafka 可用于跨组织从多个服务收集日志，并使它们以标准格式提供给多个服务器。</li>
+<li>流处理: 流行的框架(如Storm和Spark Streaming) 从主题中读取数据，对其进行处理，并将处理后的数据写入新主题，供用户和应用程序使用。 Kafka的强耐久性在流处理的上下文中也非常有用。</li>
 </ul>
 <h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><ul>
-<li>Topics（主题）: 属于特定类别的消息流称为主题。 数据存储在主题中。 主题被拆分成分区。 对于每个主题，Kafka保存一个分区的数据。 每个这样的分区包含不可变有序序列的消息。</li>
+<li>Topics（主题）: 属于特定类别的消息流称为主题。 数据存储在主题中。 主题被拆分成分区。 对于每个主题，Kafka 保存一个分区的数据。 每个这样的分区包含不可变有序序列的消息。</li>
 <li>Partition（分区）: 主题可能有许多分区，因此它可以处理任意数量的数据。</li>
 <li>Partition offset（分区偏移）: 每个分区消息具有称为 offset 的唯一序列标识。</li>
 <li>Replicas of partition（分区备份）: 副本只是一个分区的备份。 副本从不读取或写入数据。 它们用于防止数据丢失。</li>
 <li>Brokers（经纪人）: <ul>
-<li>代理是负责维护发布数据的简单系统。 每个代理中的每个主题可以具有零个或多个分区。 假设，如果在一个主题和N个代理中有N个分区，每个代理将有一个分区。<ul>
-<li>假设在一个主题中有N个分区并且多于N个代理(n + m)，则第一个N代理将具有一个分区，并且下一个M代理将不具有用于该特定主题的任何分区。</li>
-<li>假设在一个主题中有N个分区并且小于N个代理(n-m)，每个代理将在它们之间具有一个或多个分区共享。 由于代理之间的负载分布不相等，不推荐使用此方案。</li>
+<li>代理是负责维护发布数据的简单系统。 每个代理中的每个主题可以具有零个或多个分区。 假设，如果在一个主题和N 个代理中有N 个分区，每个代理将有一个分区。<ul>
+<li>假设在一个主题中有N个分区并且多于N 个代理(n + m) ，则第一个N 代理将具有一个分区，并且下一个M 代理将不具有用于该特定主题的任何分区。</li>
+<li>假设在一个主题中有N个分区并且小于N 个代理(n - m) ，每个代理将在它们之间具有一个或多个分区共享。 由于代理之间的负载分布不相等，不推荐使用此方案。</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Kafka Cluster（Kafka 集群）: Kafka有多个代理被称为Kafka集群。 可以扩展Kafka集群，无需停机。 这些集群用于管理消息数据的持久性和复制。</li>
-<li>Producers（生产者）: 生产者是发送给一个或多个Kafka主题的消息的发布者。</li>
+<li>Kafka Cluster（Kafka 集群）: Kafka 有多个代理被称为Kafka 集群。 可以扩展Kafka 集群，无需停机。 这些集群用于管理消息数据的持久性和复制。</li>
+<li>Producers（生产者）: 生产者是发送给一个或多个Kafka 主题的消息的发布者。</li>
 <li>Consumers（消费者）: 消费者订阅一个或多个主题，并通过从代理中提取数据来使用已发布的消息。</li>
-<li>Leader（领导者）: Leader 是负责给定分区的所有读取和写入的节点。 每个分区都有一个服务器充当Leader。 </li>
+<li>Leader（领导者）: Leader 是负责给定分区的所有读取和写入的节点。 每个分区都有一个服务器充当Leader 。 </li>
 <li>Follower（追随者）: 跟随领导者指令的节点被称为Follower。 如果领导失败，一个追随者将自动成为新的领导者。 跟随者作为正常消费者，拉取消息并更新其自己的数据存储。</li>
 </ul>
 <hr>
 
-<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p>Kafka 是分为一个或多个分区的主题的集合。 Kafka分区是消息的线性有序序列，其中每个消息由它们的索引(称为偏移)来标识。 Kafka集群中的所有数据都是不相连的分区联合。 传入消息写在分区的末尾，消息由消费者顺序读取。 通过将消息复制到不同的代理提供持久性。</p>
-<p>Kafka以快速，可靠，持久，容错和零停机的方式提供基于 pub-sub 和队列的消息系统。 在这两种情况下，生产者只需将消息发送到主题，消费者可以根据自己的需要选择任何一种类型的消息传递系统。 </p>
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p>Kafka 是分为一个或多个分区的主题的集合。 Kafka 分区是消息的线性有序序列，其中每个消息由它们的索引(称为偏移)来标识。 Kafka 集群中的所有数据都是不相连的分区联合。 传入消息写在分区的末尾，消息由消费者顺序读取。 通过将消息复制到不同的代理提供持久性。</p>
+<p>Kafka 以快速，可靠，持久，容错和零停机的方式提供基于 pub-sub 和队列的消息系统。 在这两种情况下，生产者只需将消息发送到主题，消费者可以根据自己的需要选择任何一种类型的消息传递系统。 </p>
 <p><img src="https://s1.ax1x.com/2020/04/22/JYLBx1.png" alt="JYLBx1.png"> </p>
 <h3 id="发布-订阅消息的工作流程"><a href="#发布-订阅消息的工作流程" class="headerlink" title="发布 - 订阅消息的工作流程"></a>发布 - 订阅消息的工作流程</h3><ul>
 <li>生产者定期向主题发送消息。</li>
 <li>Kafka 代理存储为该特定主题配置的分区中的所有消息。 它确保消息在分区之间平等共享。 如果生产者发送两个消息并且有两个分区，Kafka 将在第一分区中存储一个消息，在第二分区中存储第二消息。</li>
 <li>消费者订阅特定主题。</li>
-<li>一旦消费者订阅主题，Kafka 将向消费者提供主题的当前偏移，并且还将偏移保存在Zookeeper系综中。</li>
+<li>一旦消费者订阅主题，Kafka 将向消费者提供主题的当前偏移，并且还将偏移保存在Zookeeper 系综中。</li>
 <li>消费者将定期请求Kafka (如100 Ms)新消息。</li>
 <li>一旦Kafka 收到来自生产者的消息，它将这些消息转发给消费者。</li>
 <li>消费者将收到消息并进行处理。</li>
-<li>一旦消息被处理，消费者将向Kafka代理发送确认。</li>
+<li>一旦消息被处理，消费者将向Kafka 代理发送确认。</li>
 <li>一旦Kafka 收到确认，它将偏移更改为新值，并在Zookeeper 中更新它。 由于偏移在Zookeeper 中维护，消费者可以正确地读取下一封邮件，即使在服务器暴力期间。</li>
 <li>以上流程将重复，直到消费者停止请求。</li>
 <li>消费者可以随时回退/跳到所需的主题偏移量，并阅读所有后续消息。</li>
@@ -278,8 +278,8 @@
 <li>Kafka 存储在为该特定主题配置的分区中的所有消息，类似于前面的方案。</li>
 <li>单个消费者订阅特定主题，假设 Topic-01 为 Group ID 为 Group-1 。</li>
 <li>Kafka 以与发布 - 订阅消息相同的方式与消费者交互，直到新消费者以相同的组ID 订阅相同主题 Topic-01  1 。</li>
-<li>一旦新消费者到达，Kafka将其操作切换到共享模式，并在两个消费者之间共享数据。 此共享将继续，直到用户数达到为该特定主题配置的分区数。</li>
-<li>一旦消费者的数量超过分区的数量，新消费者将不会接收任何进一步的消息，直到现有消费者取消订阅任何一个消费者。 出现这种情况是因为Kafka中的每个消费者将被分配至少一个分区，并且一旦所有分区被分配给现有消费者，新消费者将必须等待。</li>
+<li>一旦新消费者到达，Kafka 将其操作切换到共享模式，并在两个消费者之间共享数据。 此共享将继续，直到用户数达到为该特定主题配置的分区数。</li>
+<li>一旦消费者的数量超过分区的数量，新消费者将不会接收任何进一步的消息，直到现有消费者取消订阅任何一个消费者。 出现这种情况是因为Kafka      中的每个消费者将被分配至少一个分区，并且一旦所有分区被分配给现有消费者，新消费者将必须等待。</li>
 <li>此功能也称为使用者组。 同样，Kafka 将以非常简单和高效的方式提供两个系统中最好的。</li>
 </ul>
 <h3 id="Zookeeper-的作用"><a href="#Zookeeper-的作用" class="headerlink" title="Zookeeper 的作用"></a>Zookeeper 的作用</h3><p>Apache Kafka 的一个关键依赖是Apache Zookeeper，它是一个分布式配置和同步服务。 Zookeeper 是Kafka 代理和消费者之间的协调接口。 Kafka 服务器通过Zookeeper 集群共享信息。 Kafka 在Zookeeper 中存储基本元数据。 例如关于主题，代理，消费者偏移(队列读取器)等的信息。</p>
@@ -495,7 +495,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
