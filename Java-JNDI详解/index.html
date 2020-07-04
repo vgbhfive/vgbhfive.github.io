@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="基础认知Spring Cloud ConfigSpring Cloud专注于提供良好的开箱即用经验的典型用例和可扩展性机制覆盖。  分布式&#x2F;版本化配置 服务注册和发现 路由 service - to - service调用 负载均衡 断路器 分布式消息传递">
+  <meta name="description" content="前记最近一直在看Spring 的官方文档，突然间发现自己平时用的很多东西都只是一知半解的，浏览器查询出来的解决办法也没有能表达出原作者的意思，并且用到了很多的Java 的基础内容。 要是现在突然再回去补习Java 的基础知识也不现实，所以现在都是根据看到的Spring 的原理所依赖的Java 基础再来进行弥补以前不会的Java 基础。 切记，学习一样东西，如果你没有深刻领悟作者的思路，那么你也仅仅">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring-Cloud开发操作手册">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C&#x2F;index.html">
+<meta property="og:title" content="Java-JNDI详解">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Java-JNDI%E8%AF%A6%E8%A7%A3&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="基础认知Spring Cloud ConfigSpring Cloud专注于提供良好的开箱即用经验的典型用例和可扩展性机制覆盖。  分布式&#x2F;版本化配置 服务注册和发现 路由 service - to - service调用 负载均衡 断路器 分布式消息传递">
-<meta property="article:published_time" content="2019-12-10T12:14:11.000Z">
-<meta property="article:modified_time" content="2020-05-07T09:55:32.433Z">
+<meta property="og:description" content="前记最近一直在看Spring 的官方文档，突然间发现自己平时用的很多东西都只是一知半解的，浏览器查询出来的解决办法也没有能表达出原作者的意思，并且用到了很多的Java 的基础内容。 要是现在突然再回去补习Java 的基础知识也不现实，所以现在都是根据看到的Spring 的原理所依赖的Java 基础再来进行弥补以前不会的Java 基础。 切记，学习一样东西，如果你没有深刻领悟作者的思路，那么你也仅仅">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;07&#x2F;04&#x2F;b79qITFjXdNf4Hi.png">
+<meta property="article:published_time" content="2020-07-03T13:12:45.000Z">
+<meta property="article:modified_time" content="2020-07-04T15:14:15.732Z">
 <meta property="article:author" content="Vgbh">
-<meta property="article:tag" content="TODO">
-<meta property="article:tag" content="Spring Cloud">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;07&#x2F;04&#x2F;b79qITFjXdNf4Hi.png">
 
-<link rel="canonical" href="http://yoursite.com/Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">
+<link rel="canonical" href="http://yoursite.com/Java-JNDI%E8%AF%A6%E8%A7%A3/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>Spring-Cloud开发操作手册 | Vgbhfive's Blog</title>
+  <title>Java-JNDI详解 | Vgbhfive's Blog</title>
   
 
 
@@ -173,7 +174,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Java-JNDI%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
@@ -186,7 +187,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Spring-Cloud开发操作手册
+          Java-JNDI详解
         </h1>
 
         <div class="post-meta">
@@ -196,14 +197,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-10 20:14:11" itemprop="dateCreated datePublished" datetime="2019-12-10T20:14:11+08:00">2019-12-10</time>
+              <time title="Created: 2020-07-03 21:12:45" itemprop="dateCreated datePublished" datetime="2020-07-03T21:12:45+08:00">2020-07-03</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-07 17:55:32" itemprop="dateModified" datetime="2020-05-07T17:55:32+08:00">2020-05-07</time>
+                <time title="Modified: 2020-07-04 23:14:15" itemprop="dateModified" datetime="2020-07-04T23:14:15+08:00">2020-07-04</time>
               </span>
 
           
@@ -217,50 +218,46 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="基础认知"><a href="#基础认知" class="headerlink" title="基础认知"></a>基础认知</h2><h3 id="Spring-Cloud-Config"><a href="#Spring-Cloud-Config" class="headerlink" title="Spring Cloud Config"></a>Spring Cloud Config</h3><p>Spring Cloud专注于提供良好的开箱即用经验的典型用例和可扩展性机制覆盖。</p>
-<ul>
-<li>分布式/版本化配置</li>
-<li>服务注册和发现</li>
-<li>路由</li>
-<li>service - to - service调用</li>
-<li>负载均衡</li>
-<li>断路器</li>
-<li>分布式消息传递</li>
-</ul>
-<a id="more"></a>
-
-<h3 id="Spring-Cloud-Netflix"><a href="#Spring-Cloud-Netflix" class="headerlink" title="Spring Cloud Netflix"></a>Spring Cloud Netflix</h3><p>该项目通过自动配置为Spring Boot 应用程序提供Netflix OSS 集成，并绑定到Spring 环境和其他Spring 编程模型成语。<br>通过几个简单的注释，可以快速启用和配置应用程序中的常见模式，并通过经过测试的Netflix 组件构建大型分布式系统。<br>提供的模式包括:</p>
-<ul>
-<li>服务发现（Eureka）</li>
-<li>断路器（Hystrix）</li>
-<li>智能路由（Zuul）</li>
-<li>客户端负载平衡（Ribbon）</li>
-</ul>
-<h3 id="Spring-Cloud-Stream"><a href="#Spring-Cloud-Stream" class="headerlink" title="Spring Cloud Stream"></a>Spring Cloud Stream</h3><p>Spring Cloud Stream 是构建消息驱动的微服务应用程序的框架。<br>Spring Cloud Stream 基于Spring Boot 建立独立的生产级Spring 应用程序，并使用Spring Integration 提供与消息代理的连接。</p>
-<p>Spring Cloud Stream 提供了一些简化消息驱动的微服务应用程序编写的抽象和原语。</p>
-<ul>
-<li>Spring Cloud Stream的应用模型</li>
-<li>Binder抽象</li>
-<li>持续的发布 - 订阅支持</li>
-<li>消费者群体支持</li>
-<li>分区支持</li>
-<li>一个可插拔的Binder API</li>
-</ul>
-<h3 id="Spring-Cloud-Bus"><a href="#Spring-Cloud-Bus" class="headerlink" title="Spring Cloud Bus"></a>Spring Cloud Bus</h3><p>Spring Cloud Bus 将分布式系统的节点与轻量级消息代理链接。<br>这可以用于广播状态更改（例如配置更改）或其他管理指令。一个关键的想法是，总线就像一个分布式执行器，用于扩展的Spring Boot 应用程序，但也可以用作应用程序之间的通信通道。</p>
-<h3 id="Spring-Cloud-Sleuth"><a href="#Spring-Cloud-Sleuth" class="headerlink" title="Spring Cloud Sleuth"></a>Spring Cloud Sleuth</h3><p>Spring Cloud Sleuth 为Spring Cloud 实现分布式跟踪解决方案。</p>
-<h3 id="Spring-Cloud-Consul"><a href="#Spring-Cloud-Consul" class="headerlink" title="Spring Cloud Consul"></a>Spring Cloud Consul</h3><p>该项目通过自动配置并绑定到Spring 环境和其他Spring 编程模型，为Spring Boot 应用程序提供Consul 集成。<br>通过几个简单的注释，可以快速启用和配置应用程序中的常见模式，并使用基于Consul 的组件构建大型分布式系统。</p>
-<h3 id="Spring-Cloud-Zookeeper"><a href="#Spring-Cloud-Zookeeper" class="headerlink" title="Spring Cloud Zookeeper"></a>Spring Cloud Zookeeper</h3><p>该项目通过自动配置并绑定到Spring 环境和其他Spring 编程模型，为Spring Boot 应用程序提供Zookeeper 集成。<br>通过几个简单的注释，可以快速启用和配置应用程序中的常见模式，并使用基于Zookeeper 的组件构建大型分布式系统。<br>提供的模式包括</p>
-<ul>
-<li>服务发现和配置</li>
-<li>智能路由（Zuul）</li>
-<li>客户端负载平衡（Ribbon）</li>
-<li>断路器（Hystrix）</li>
-<li>与Spring Cloud Netflix的集成提供。</li>
-</ul>
-<h3 id="Spring-Cloud-Security"><a href="#Spring-Cloud-Security" class="headerlink" title="Spring Cloud Security"></a>Spring Cloud Security</h3><p>Spring Cloud Security 提供了一组用于构建安全应用程序和服务的原语。<br>可以从外部（或集中）高度配置的声明式模型，适用于通常使用中央契约管理服务的大型合作远程组件系统的实现。</p>
+        <h2 id="前记"><a href="#前记" class="headerlink" title="前记"></a>前记</h2><p>最近一直在看Spring 的官方文档，突然间发现自己平时用的很多东西都只是一知半解的，浏览器查询出来的解决办法也没有能表达出原作者的意思，并且用到了很多的Java 的基础内容。</p>
+<p>要是现在突然再回去补习Java 的基础知识也不现实，所以现在都是根据看到的Spring 的原理所依赖的Java 基础再来进行弥补以前不会的Java 基础。</p>
+<p>切记，学习一样东西，如果你没有深刻领悟作者的思路，那么你也仅仅只是学会了使用工具，而没有学会造工具。</p>
 <hr>
 
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><h3 id="基础项目搭建"><a href="#基础项目搭建" class="headerlink" title="基础项目搭建"></a>基础项目搭建</h3><p><a href="https://github.com/vgbhfive/SpringCloudDemo/tree/master/base" target="_blank" rel="noopener">https://github.com/vgbhfive/SpringCloudDemo/tree/master/base</a></p>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>JNDI 即Java Naming and Directory Interface（JAVA 命名和目录接口），那么Java 命名的目的就是为了记录一些不方便记录的内容，就像DNS 中的域名与IP 的关系，存在一一对应的关系。</p>
+<p>JNDI 被定义为独立于任何特定的目录服务实现。因此，可以以通用方式访问各种目录。</p>
+<a id="more"></a>
+
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>在说优势的时候，我觉得那就要说说没有JNDI 之前的时候是如何进行开发的，还是在大部分的JNDI 介绍中都会出现的数据库连接的问题。</p>
+<ul>
+<li>数据库服务器名称MyDBServer、 username 和password 都可能需要改变，由此引发JDBC URL 需要修改。</li>
+<li>数据库可能改用别的产品，如改用DB2 或者Oracle ，引发JDBC 驱动程序包和类名需要修改。</li>
+<li>随着实际使用终端的增加，原配置的连接池参数可能需要调整。</li>
+<li>…</li>
+</ul>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>为了解决上述的问题，所以就有了Java JNDI，大部分有过开发经验的基本上都知道，在将代码和外部资源进行绑定之后是很容易出现问题的，比如写死的参数。这在后续的程序调试中会出现很麻烦的问题。</p>
+<p>因此，J2EE 规范要求所有J2EE 容器都要提供JNDI 规范的实现。JNDI 在J2EE 中的角色就是<strong>交换机</strong>，J2EE 组件在运行时间接地查找其他组件、资源或服务的通用机制。<br>在多数情况下，提供JNDI 供应者的容器可以充当有限的数据存储，这样管理员就可以设置应用程序的执行属性，并让其他应用程序引用这些属性（Java 管理扩展（Java Management Extensions，JMX）也可以用作这个目的）。<br>JNDI 在J2EE 应用程序中的主要角色就是提供间接层，这样组件就可以发现所需要的资源，而不用了解这些间接性。</p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>在使用JNDI 之后，现在在连接数据库时的配置方式：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">datasource:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">continue-on-error:</span> <span class="literal">false</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/test?useSSL=false</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">password:</span> <span class="string">***</span></span></pre></td></tr></table></figure>
+
+<p>Spring 还提供了profiles 机制，这样可以很方便的根据环境使用配置信息。</p>
+<hr>
+
+<h2 id="JNDI-架构"><a href="#JNDI-架构" class="headerlink" title="JNDI 架构"></a>JNDI 架构</h2><p><img src="https://i.loli.net/2020/07/04/b79qITFjXdNf4Hi.png" alt="x2Rll.png"></p>
+<p>至此要使用JNDI ，还必须具有JNDI 类和一个或多个服务提供程序。</p>
+<p>Java 2 SDK v1.3包括三个用于以下命名/目录服务的服务提供者：</p>
+<ul>
+<li>轻型目录访问协议（LDAP ）。</li>
+<li>通用对象请求代理体系结构（CORBA ）通用对象服务（COS ）名称服务。</li>
+<li>Java远程方法调用（RMI ）注册表。</li>
+</ul>
+<p>因此，基本上，您可以创建对象并将其注册到目录服务中，以供日后查找和执行操作。</p>
+<hr>
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a href="https://www.ibm.com/developerworks/cn/java/j-jndi/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/java/j-jndi/index.html</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>有一个古老的计算机科学笑话：每个编程问题都可以仅仅用一个抽象层（或间接的）来解决。在 J2EE 中，JNDI 是把 J2EE 应用程序合在一起的粘合剂，但还没有紧到无法让人很容易地把它们分开并重新装配。JNDI 提供的间接寻址允许跨企业交付可伸缩的、功能强大且很灵活的应用程序。这是 J2EE 的承诺，而且经过一些计划和预先考虑，这个承诺是完全可以实现的。实际上，它要比许多人想像的容易得多。</p>
+<hr>
+
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p>此博客内容均为作者学习所做笔记，侵删！<br>若转作其他用途，请注明来源！</p>
 
     </div>
 
@@ -270,8 +267,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/TODO/" rel="tag"># TODO</a>
-              <a href="/tags/Spring-Cloud/" rel="tag"># Spring Cloud</a>
+              <a href="/tags/Java/" rel="tag"># Java</a>
           </div>
 
         
@@ -280,13 +276,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Ubuntu-%E4%B8%AA%E4%BA%BA%E6%93%8D%E4%BD%9C%E9%94%A6%E9%9B%86/" rel="prev" title="Ubuntu-个人操作锦集">
-      <i class="fa fa-chevron-left"></i> Ubuntu-个人操作锦集
+    <a href="/Java-SPI%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3/" rel="prev" title="Java-SPI机制详解">
+      <i class="fa fa-chevron-left"></i> Java-SPI机制详解
     </a></div>
-      <div class="post-nav-item">
-    <a href="/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/" rel="next" title="ES6的那些事">
-      ES6的那些事 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -345,7 +338,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础认知"><span class="nav-number">1.</span> <span class="nav-text">基础认知</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Config"><span class="nav-number">1.1.</span> <span class="nav-text">Spring Cloud Config</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Netflix"><span class="nav-number">1.2.</span> <span class="nav-text">Spring Cloud Netflix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Stream"><span class="nav-number">1.3.</span> <span class="nav-text">Spring Cloud Stream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Bus"><span class="nav-number">1.4.</span> <span class="nav-text">Spring Cloud Bus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Sleuth"><span class="nav-number">1.5.</span> <span class="nav-text">Spring Cloud Sleuth</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Consul"><span class="nav-number">1.6.</span> <span class="nav-text">Spring Cloud Consul</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Zookeeper"><span class="nav-number">1.7.</span> <span class="nav-text">Spring Cloud Zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Security"><span class="nav-number">1.8.</span> <span class="nav-text">Spring Cloud Security</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo"><span class="nav-number">2.</span> <span class="nav-text">Demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础项目搭建"><span class="nav-number">2.1.</span> <span class="nav-text">基础项目搭建</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前记"><span class="nav-number">1.</span> <span class="nav-text">前记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">2.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优势"><span class="nav-number">2.1.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">2.2.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用"><span class="nav-number">2.3.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNDI-架构"><span class="nav-number">3.</span> <span class="nav-text">JNDI 架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">4.1.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
