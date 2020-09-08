@@ -27,8 +27,9 @@
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
 <meta property="og:description" content="基础AMQPAMQP，即Advanced Message Queuing Protocol，一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。 基于此协议的客户端与消息中间件可传递消息，并不受客户端&#x2F;中间件不同产品，不同的开发语言等条件的限制。 消息队列MQ 全称为Message Queue, 消息队列。是一种应用程序对应用程序的通信方法。应用程">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;09&#x2F;07&#x2F;qjJgchT7xZyYtiU.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;09&#x2F;08&#x2F;o8AVq2vyYJSuQ6U.jpg">
 <meta property="article:published_time" content="2020-09-07T12:53:23.000Z">
-<meta property="article:modified_time" content="2020-09-07T14:25:22.231Z">
+<meta property="article:modified_time" content="2020-09-08T13:04:59.512Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="MQ">
@@ -198,10 +199,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-09-07 20:53:23 / Modified: 22:25:22" itemprop="dateCreated datePublished" datetime="2020-09-07T20:53:23+08:00">2020-09-07</time>
+              <time title="Created: 2020-09-07 20:53:23" itemprop="dateCreated datePublished" datetime="2020-09-07T20:53:23+08:00">2020-09-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-08 21:04:59" itemprop="dateModified" datetime="2020-09-08T21:04:59+08:00">2020-09-08</time>
+              </span>
 
           
 
@@ -222,8 +229,8 @@
 <a id="more"></a>
 
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>在使用RabbitMQ 之前，你需要在你的本地安装RabbitMQ Server 端，但是在安装RabbitMQ Server 之前，你还需要安装erlang 。</p>
-<p>我的本地系统是Windows 10，同时我还使用了WSL ，所以我一般都是在Ubuntu 中安装一些额外的所需的环境。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">suodo apt-get install erlang</span></pre></td></tr></table></figure>
+<p>我的本地系统是Windows 10，所以你只需要去erlang 官方下载对应的安装包即可。<br>在安装完成后，还需要配置环境变量到PATH 中，验证安装成功命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">erl</span></pre></td></tr></table></figure>
 
 <hr>
 
@@ -254,6 +261,39 @@
 <hr>
 
 <h2 id="Demo-展示"><a href="#Demo-展示" class="headerlink" title="Demo 展示"></a>Demo 展示</h2><p><a href="https://github.com/vgbhfive/SpringBootDemo/tree/master/rabbitmqdemo" target="_blank" rel="noopener">https://github.com/vgbhfive/SpringBootDemo/tree/master/rabbitmqdemo</a></p>
+<hr>
+
+<h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><p>在我经历的大多数系统中，都不是很重视关于中间件的监控这块的内容，因此在生产出现问题时，很难及时、有效的找到问题。</p>
+<p>RabbitMQ 在3.8 版本之前，都是依赖自己的管理监控页面来实现的，这对于生产环境来说，有很大的不便行并且存在一定的安全隐患。<br>但是在RabbitMQ 3.8 版本之后，官方强烈推荐使用Prometheus 和 Grafana 来搭建一套监控系统。</p>
+<h3 id="基础架构和内核指标"><a href="#基础架构和内核指标" class="headerlink" title="基础架构和内核指标"></a>基础架构和内核指标</h3><p>运行在RabbitMQ 节点或应用的所有主机上应收集以下指标：</p>
+<ul>
+<li>CPU 统计信息</li>
+<li>内存使用情况</li>
+<li>虚拟内存统计信息</li>
+<li>磁盘I/O</li>
+<li>挂载上用于节点数据目录的可用磁盘空间</li>
+<li>beam.smp 中文件描述符和最大系统限制 </li>
+<li>TCP 连接状态</li>
+<li>网络吞吐量</li>
+<li>网络延迟 </li>
+</ul>
+<h3 id="监测频率"><a href="#监测频率" class="headerlink" title="监测频率"></a>监测频率</h3><p>许多监视系统会定期轮询其监视的服务。这样做的频率因工具而异，但通常是由管理员配置的。同时频繁的轮询可能会对受监视的系统产生负面影响。</p>
+<p>在开发、测试、UAT 环境中，建议的度量标准间隔为15 秒，如果需要接近实时的监测效果，也请不要将时间设置为小于5 秒，这样轮询监测条件的影响会小一点。<br>但是在生产环境下，建议将度量标准间隔为30 ~ 60 秒之间，其中Promethues 对于API 的设置有效时间为15 秒一次。</p>
+<h3 id="管理界面和外部监控软件"><a href="#管理界面和外部监控软件" class="headerlink" title="管理界面和外部监控软件"></a>管理界面和外部监控软件</h3><p>RabbitMQ 有自带的管理界面和HTTP API ，这些API 公开了许多的信息，主要是关于节点、连接、队列、消息速率等的指标信息。</p>
+<ol>
+<li><p>安装RabbitMQ Prometheus Plugin<br>将下载的插件拷贝到RabbitMQ的插件目录，rpm形式安装的RabbitMQ的插件目录位于/usr/lib/rabbitmq/plugins下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">accept-0.3.3.ez</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">prometheus-3.4.0.ez</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">prometheus_httpd-2.1.4.ez</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">prometheus_process_collector-1.1.0.ez</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">prometheus_rabbitmq_exporter-v3.6.12.1.ez</span></pre></td></tr></table></figure>
+<p>同时启用插件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable accept</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable prometheus</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable prometheus_httpd</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable prometheus_rabbitmq_exporter</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable prometheus_process_collector</span></pre></td></tr></table></figure>
+<p>重启RabbitMQ，访问 <a href="http://localhost:15672/api/metrics" target="_blank" rel="noopener">http://localhost:15672/api/metrics</a> 可以得到RabbitMQ Exporter 暴露的metrics 了。</p>
+</li>
+<li><p>配置Promethues</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">- job_name: &#39;rabbitmq&#39;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    metrics_path: &#x2F;api&#x2F;metrics</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    static_configs:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">     - targets:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        - 192.168.1.3:15672</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">       labels:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">         instance: s3</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">     - targets:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        - 192.168.1.4:15672</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">       labels:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">         instance: s4</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">     - targets:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        - 192.168.1.5:15672</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">       labels:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">         instance: s5</span></pre></td></tr></table></figure>
+</li>
+<li><p>Grafana配置<br>下载Grafana Dashboard<br><a href="https://raw.githubusercontent.com/deadtrickster/prometheus_rabbitmq_exporter/master/priv/dashboards/RabbitMQErlangVM.json。" target="_blank" rel="noopener">https://raw.githubusercontent.com/deadtrickster/prometheus_rabbitmq_exporter/master/priv/dashboards/RabbitMQErlangVM.json。</a><br>将上面的dashboar 导入后需要做一些修改，加入host 变量，并修改各个图表的PromQL 加入host 变量作为查询条件，通过下拉列表选择查看不同rabbitmq 节点的Dashboard 。</p>
+</li>
+</ol>
+<p><img src="https://i.loli.net/2020/09/08/o8AVq2vyYJSuQ6U.jpg" alt="rabbitmq-grafana.jpg"></p>
 <hr>
 
 <h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
@@ -339,7 +379,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AMQP"><span class="nav-number">1.1.</span> <span class="nav-text">AMQP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息队列"><span class="nav-number">1.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-介绍"><span class="nav-number">2.</span> <span class="nav-text">RabbitMQ 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础概念介绍"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息流程"><span class="nav-number">2.2.</span> <span class="nav-text">消息流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">2.3.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用户和权限设置"><span class="nav-number">2.3.1.</span> <span class="nav-text">用户和权限设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo-展示"><span class="nav-number">3.</span> <span class="nav-text">Demo 展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">4.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AMQP"><span class="nav-number">1.1.</span> <span class="nav-text">AMQP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息队列"><span class="nav-number">1.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-介绍"><span class="nav-number">2.</span> <span class="nav-text">RabbitMQ 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础概念介绍"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息流程"><span class="nav-number">2.2.</span> <span class="nav-text">消息流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">2.3.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用户和权限设置"><span class="nav-number">2.3.1.</span> <span class="nav-text">用户和权限设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo-展示"><span class="nav-number">3.</span> <span class="nav-text">Demo 展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控"><span class="nav-number">4.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础架构和内核指标"><span class="nav-number">4.1.</span> <span class="nav-text">基础架构和内核指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监测频率"><span class="nav-number">4.2.</span> <span class="nav-text">监测频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理界面和外部监控软件"><span class="nav-number">4.3.</span> <span class="nav-text">管理界面和外部监控软件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
