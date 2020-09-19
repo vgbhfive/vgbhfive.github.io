@@ -29,7 +29,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;09&#x2F;07&#x2F;qjJgchT7xZyYtiU.jpg">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;09&#x2F;08&#x2F;o8AVq2vyYJSuQ6U.jpg">
 <meta property="article:published_time" content="2020-09-07T12:53:23.000Z">
-<meta property="article:modified_time" content="2020-09-08T13:04:59.512Z">
+<meta property="article:modified_time" content="2020-09-19T04:43:57.025Z">
 <meta property="article:author" content="Vgbh">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="MQ">
@@ -207,7 +207,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-08 21:04:59" itemprop="dateModified" datetime="2020-09-08T21:04:59+08:00">2020-09-08</time>
+                <time title="Modified: 2020-09-19 12:43:57" itemprop="dateModified" datetime="2020-09-19T12:43:57+08:00">2020-09-19</time>
               </span>
 
           
@@ -232,6 +232,7 @@
 <p>我的本地系统是Windows 10，所以你只需要去erlang 官方下载对应的安装包即可。<br>在安装完成后，还需要配置环境变量到PATH 中，验证安装成功命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">erl</span></pre></td></tr></table></figure>
 
+<h3 id="版本简介"><a href="#版本简介" class="headerlink" title="版本简介"></a>版本简介</h3><p>RabbitMQ 3.8.8<br>Windows 10<br>erlang V11.0</p>
 <hr>
 
 <h2 id="RabbitMQ-介绍"><a href="#RabbitMQ-介绍" class="headerlink" title="RabbitMQ 介绍"></a>RabbitMQ 介绍</h2><h3 id="基础概念介绍"><a href="#基础概念介绍" class="headerlink" title="基础概念介绍"></a>基础概念介绍</h3><ul>
@@ -262,6 +263,10 @@
 
 <h2 id="Demo-展示"><a href="#Demo-展示" class="headerlink" title="Demo 展示"></a>Demo 展示</h2><p><a href="https://github.com/vgbhfive/SpringBootDemo/tree/master/rabbitmqdemo" target="_blank" rel="noopener">https://github.com/vgbhfive/SpringBootDemo/tree/master/rabbitmqdemo</a></p>
 <hr>
+
+<h2 id="基础组态"><a href="#基础组态" class="headerlink" title="基础组态"></a>基础组态</h2><h3 id="基础参数配置"><a href="#基础参数配置" class="headerlink" title="基础参数配置"></a>基础参数配置</h3><h3 id="文件位置"><a href="#文件位置" class="headerlink" title="文件位置"></a>文件位置</h3><h3 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h3><h3 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h3><h3 id=""><a href="#" class="headerlink" title=""></a></h3><hr>
+
+<h2 id="认证和授权"><a href="#认证和授权" class="headerlink" title="认证和授权"></a>认证和授权</h2><hr>
 
 <h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><p>在我经历的大多数系统中，都不是很重视关于中间件的监控这块的内容，因此在生产出现问题时，很难及时、有效的找到问题。</p>
 <p>RabbitMQ 在3.8 版本之前，都是依赖自己的管理监控页面来实现的，这对于生产环境来说，有很大的不便行并且存在一定的安全隐患。<br>但是在RabbitMQ 3.8 版本之后，官方强烈推荐使用Prometheus 和 Grafana 来搭建一套监控系统。</p>
@@ -294,7 +299,211 @@
 </li>
 </ol>
 <p><img src="https://i.loli.net/2020/09/08/o8AVq2vyYJSuQ6U.jpg" alt="rabbitmq-grafana.jpg"></p>
+<h3 id="Rabbitmqadmin-HTTP-API命令行工具"><a href="#Rabbitmqadmin-HTTP-API命令行工具" class="headerlink" title="Rabbitmqadmin HTTP API命令行工具"></a>Rabbitmqadmin HTTP API命令行工具</h3><p>这个命令行管理工具需要Rabbitmqadmin 插件的支持，使用这个可以执行一些基于WebUI 的相同操作，并且这个插件可能对于自动化任务比较方便。同时这只是一个专门的HTTP 客户端，尽量不要用自己从自己的程序中调用Rabbitmqadmin 。</p>
+<p><small><strong>Rabbitmqadmin 不能替代rabbitmqctl 或者rabbitmq-plugins 。</strong></small></p>
+<p><small><strong>rabbitmqadmin和RabbitMQ HTTP API 的兼容性一致，需要相同的版本才可以适配！</strong></small></p>
+<p>通过Rabbitmqadmin 可以获取的内容：</p>
+<ul>
+<li>列出交换，队列，绑定，虚拟主机，用户，权限，连接和通道</li>
+<li>显示概述信息</li>
+<li>声明和删除交换，队列，绑定，虚拟主机，用户和权限</li>
+<li>发布并获取消息</li>
+<li>关闭连接并清除队列</li>
+<li>导入和导出配置</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ol>
+<li><p>exchanges 列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqadmin -V test list exchanges</span></pre></td></tr></table></figure>
+</li>
+<li><p>获取队列列表，其中包含详细信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqadmin -f long -d 3 list queues</span></pre></td></tr></table></figure>
+</li>
+<li><p>用其他用户连接其他虚拟主机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqadmin -H myserver -u simon -p simon list vhosts</span></pre></td></tr></table></figure>
+</li>
+<li><p>定义一个交换exchange</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqadmin declare exchange name&#x3D;my-new-exchange type&#x3D;fanout</span></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p>渠道是RabbitMQ 中一个很重要的概念，所以这部分我们有必要了解一下。</p>
+<p>RabbitMQ支持多种协议：</p>
+<ul>
+<li>具有扩展功能的AMQP 0.9.1</li>
+<li>AMQP 1.0 （尽管和上面的协议名称一致，但是他两确实是不同的协议）</li>
+<li>MQTT 3.1.1</li>
+<li>STOMP 1.0 ~ 1.2</li>
+</ul>
+<h4 id="基础-1"><a href="#基础-1" class="headerlink" title="基础"></a>基础</h4><p>RabbitMQ支持的所有协议都是基于TCP的，并假定存在长期连接（每个协议操作不会打开新连接）以提高效率。一个客户端库连接使用单个TCP连接。为了使客户端成功连接，目标RabbitMQ节点必须允许在特定协议特定端口上的连接。</p>
+<p>客户端连接并成功通过RabbitMQ节点进行身份验证之后，它可以发布和使用消息，定义拓扑并执行协议中提供的，由客户端库和目标RabbitMQ节点支持的其他操作。</p>
+<p>由于连接本来就应该长期存在，所以客户端通常通过注册订阅并传递（推送）消息给他们而不是轮询来消耗消息。</p>
+<p>当不再需要连接时，应用程序必须关闭它们以节省资源。未能做到这一点的应用程序有最终耗尽其目标资源节点的风险。</p>
+<p><strong>操作系统对单个进程可以 同时打开多少个TCP连接（套接字）有一个限制。</strong>该限制对于开发和某些QA环境通常是足够的。 必须将生产环境配置为使用更高的限制，以支持更多的并发客户端连接。</p>
+<h4 id="协议的区别"><a href="#协议的区别" class="headerlink" title="协议的区别"></a>协议的区别</h4><ol>
+<li><p>具有扩展功能的AMQP 0.9.1<br>AMQP 0.9.1 提供了一种通过单个TCP 连接进行多路复用的方法，这意味可以在同一个连接之上打开多个“轻量级连接”的通道，通过这些通道就可以进行对应的协议操作。<br>一个具有相同ID（编号）的通道被多次打开，向客户端发送错误后，连接将关闭。</p>
+</li>
+<li><p>AMQP 1.0<br>AMQP 1.0 提供了一种通过单个TCP 连接进行多路复用的方法，这样应用程序可以在单个连接上打开多个称为会话的“轻量级连接”。然后，应用程序设置一个或多个链接来发布和使用消息。<br>在AMQP 1.0中，大多数错误属于会话错误或链接错误。会话错误是不可恢复的，导致检测到该错误的对等方接收的所有操作都将被丢弃，直到会话终止。链接错误仅限于特定链接。由于可以在不影响链接会话的情况下附加和重新附加链接，因此实际上，应用程序可以在更正根本原因后（如果可能）重试失败的操作。</p>
+</li>
+<li><p>MQTT 3.1.1<br>MQTT 3.1.1 连接遵循上述流程。MQTT 支持可选身份验证。使用它时，RabbitMQ 使用一组预配置的凭据。<br>在MQTT 3.1中，服务器使用有限的方式将错误传达给客户端。主要方法是关闭客户端的TCP连接。这为开发人员提供了很少的上下文和有限的可见性。这是MQTT 3.1设计的基本限制。</p>
+</li>
+<li><p>STOMP 1.0 ~ 1.2<br>STOMP连接遵循下面流程。<br>在STOMP中，服务器通过发送错误帧 并关闭TCP连接来传达错误。该框架将在消息字段中包含一条错误消息。</p>
+</li>
+</ol>
+<h4 id="连接生命周期"><a href="#连接生命周期" class="headerlink" title="连接生命周期"></a>连接生命周期</h4><p>客户端连接RabbitMQ，必须首先打开连接。此过程涉及多个步骤：</p>
+<ul>
+<li>应用程序配置它使用的客户端库以使用某个连接端点（例如主机名和端口）。</li>
+<li>该库将主机名解析为一个或多个IP 地址。</li>
+<li>该库将打开与目标IP地址和端口的TCP 连接。</li>
+<li>服务器接受TCP 连接后，执行特定于协议的协商过程。</li>
+<li>然后，服务器对客户端进行身份验证。</li>
+<li>客户端现在可以执行操作，每个操作都涉及服务器的授权检查。</li>
+</ul>
+<h4 id="监控-1"><a href="#监控-1" class="headerlink" title="监控"></a>监控</h4><p>当前打开的客户端连接数和连接打开/关闭率是应监视的系统的重要指标。常见的问题主要有：</p>
+<ul>
+<li>连接泄漏</li>
+<li>高连接率</li>
+</ul>
+<p>连接泄露是指应用程序反复打开连接而不关闭它们，或者至少仅关闭其中一些连接的情况。<br>连接泄漏最终会耗尽文件句柄的节点（或多个目标节点），这意味着任何新的入站客户端，同级或CLI 工具连接都将被拒绝。并发连接数量的增加也增加了节点的内存消耗。</p>
+<p>当一个系统的新打开连接率始终很高并且其关闭连接率始终很高时，据说该系统具有很高的连接交换率。这就说明应用程序使用的连接都是非常的短暂，连接交换率比较高的情况下，还是需要去检查一下TCP 堆栈，避免资源耗尽。</p>
+<h4 id="资源使用"><a href="#资源使用" class="headerlink" title="资源使用"></a>资源使用</h4><p>每个连接都会消耗目标RabbitMQ节点上的内存和一个文件句柄。</p>
+<p>连接的TCP 缓冲区使用了大部分内存。它们的大小可以随着减小，从而以显著降低连接吞吐量为代价，从而节省每个连接的内存消耗。</p>
+<p>RabbitMQ节点可以打开的最大文件句柄数受<strong>内核限制</strong>，并且必须提高以支持大量连接。</p>
+<h4 id="支持大量连接"><a href="#支持大量连接" class="headerlink" title="支持大量连接"></a>支持大量连接</h4><p>由于连接消耗资源，因此要维持大量并发连接，就需要减少资源消耗或提供更多的资源或节点。实际上，这两个选项可以结合使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">＃将间隔设置为60秒</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">collect_statistics_interval &#x3D; 60000</span></pre></td></tr></table></figure>
+
+<h4 id="TLS"><a href="#TLS" class="headerlink" title="TLS"></a>TLS</h4><p>客户端连接可以使用TLS加密。TLS也可以用作身份验证客户端的其他或主要方式。</p>
+<h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><p>发布消息的连接可能会超过系统的极限，这很可能是繁忙的队列和执行复制的队列。发生这种情况时，将流控制应用于发布连接。这样仅使用消息的连接不受应用于发布者的流控制的影响。</p>
+<p>对于使用自动确认消息的模式，很有可能在连接和通道写入TCP 连接时就会得到流量控制。</p>
+<h3 id="通道Channel"><a href="#通道Channel" class="headerlink" title="通道Channel"></a>通道Channel</h3><p>前面有写连接的部分，所以建议应该先学会连接的部分，再来学通道，毕竟没有连接就没有通道。</p>
+<p>某些程序需要与服务器进行多个连接，但是又不希望有多个TCP 连接，所以AMQP 0.9.1 协议可以在同一个TCP 连接上进行多通道复用。</p>
+<p>客户端执行的每个协议操作都在通道上发生。特定通道上的通信与另一通道上的通信完全分开，因此每种协议方法还带有一个通道ID（又称通道号），该整数是代理和客户端都使用该整数确定该方法用于哪个通道的。</p>
+<p>通道仅存在于连接的上下文中，而不是单独存在的。关闭连接后，其上的所有通道也将关闭。</p>
+<p>对于使用多个线程/进程进行处理的应用程序，很常见的是为每个线程/进程打开一个新通道，而不在它们之间共享通道。</p>
+<h4 id="渠道生命周期"><a href="#渠道生命周期" class="headerlink" title="渠道生命周期"></a>渠道生命周期</h4><p>应用程序在成功连接后会立即打开通道，然后会自动分配一个通道ID给新建的通道。<br>但通道不在需要使用时，应该及时关闭通道，并将资源回收。</p>
+<h4 id="通道异常"><a href="#通道异常" class="headerlink" title="通道异常"></a>通道异常</h4><p>常见错误示例：</p>
+<ul>
+<li>重新生命队列或者将不匹配的属性进行交换，将会抛出406 PRECONDITION_FAILED 异常。</li>
+<li>用户访问权限不足的资源，将会抛出403 ACCESS_REFUSED 异常。</li>
+<li>绑定不存在的队列或者不存在的交互，将会抛出404 NOT_FOUND 异常。</li>
+<li>使用不存在的队列或者使用不存在的交换，将会抛出404 NOT_FOUND 异常。</li>
+<li>从声明连接之外的连接使用独占队列，将会抛出405 RESOURCE_LOCKED 异常。</li>
+</ul>
+<p>通道监测常见问题：</p>
+<ul>
+<li>通道泄漏，通道泄漏是指应用程序重复打开通道而不关闭通道，或者至少关闭其中一些通道​​的情况。</li>
+<li>高渠道流失率，当一个系统的新打开通道的速率始终很高，而关闭通道的速率始终很高时，则据说该系统具有较高的通道流失率。这通常意味着应用程序使用寿命短的通道，或者由于通道级异常而经常关闭通道。</li>
+</ul>
+<h4 id="最大连接数"><a href="#最大连接数" class="headerlink" title="最大连接数"></a>最大连接数</h4><p>客户端和服务器在连接时协商可以同时在一个连接上打开的最大通道数。该值对于RabbitMQ和客户端库都是可配置的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">＃同一连接上不能再打开100个通道</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">channel_max &#x3D; 100</span></pre></td></tr></table></figure>
+
+<h4 id="CLI-Tools"><a href="#CLI-Tools" class="headerlink" title="CLI Tools"></a>CLI Tools</h4><ol>
+<li><p>消费者连接服务器的连接及通道数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqctl list_connections name channels -q</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; name    channels</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; 127.0.0.1:52956 -&gt; 127.0.0.1:5672    10</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; 127.0.0.1:52964 -&gt; 127.0.0.1:5672    33</span></pre></td></tr></table></figure>
+</li>
+<li><p>查看通道信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqctl list_channels -q</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; pid user    consumer_count  messages_unacknowledged</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.815.0&gt; guest   0   0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.820.0&gt; guest   0   0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.824.0&gt; guest   0   0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.828.0&gt; guest   0   0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.832.0&gt; guest   0   0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.839.0&gt; guest   0   0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"># &#x3D;&gt; &lt;rabbit@mercurio.3.840.0&gt; guest   0   0</span></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="事件交换插件（event-exchange-plugin）"><a href="#事件交换插件（event-exchange-plugin）" class="headerlink" title="事件交换插件（event exchange plugin）"></a>事件交换插件（event exchange plugin）</h3><p>客户端连接服务器、使用通道、使用队列等，使用者和系统的其他部分进行交互都会生成事件。而这些对于监控和监测来说，是一个很好的切入点。</p>
+<p>rabbitmq-event-exchange 是一个插件，使用内部事件并将其重新发布到主题交换，从而将事件公开给客户端（应用程序）。<br>激活rabbitmq-event-exchange ，不需要配置，直接激活即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_event_exchange</span></pre></td></tr></table></figure>
+
+<h4 id="事件Events"><a href="#事件Events" class="headerlink" title="事件Events"></a>事件Events</h4><ol>
+<li><p>队列、交换和绑定事件</p>
+<ul>
+<li>queue.deleted</li>
+<li>queue.created</li>
+<li>exchange.created</li>
+<li>exchange.deleted</li>
+<li>binding.created</li>
+<li>binding.deleted</li>
+</ul>
+</li>
+<li><p>连接和通道事件</p>
+<ul>
+<li>connection.created</li>
+<li>connection.closed</li>
+<li>channel.created</li>
+<li>channel.closed</li>
+</ul>
+</li>
+<li><p>消费者事件</p>
+<ul>
+<li>consumer.created</li>
+<li>consumer.deleted</li>
+</ul>
+</li>
+<li><p>策略、参数事件</p>
+<ul>
+<li>policy.set</li>
+<li>policy.cleared</li>
+<li>parameter.set</li>
+<li>parameter.cleared</li>
+</ul>
+</li>
+<li><p>虚拟主机事件</p>
+<ul>
+<li>vhost.created</li>
+<li>vhost.deleted</li>
+</ul>
+</li>
+<li><p>用户相关事件</p>
+<ul>
+<li>user.authentication.success</li>
+<li>user.authentication.failure</li>
+<li>user.created</li>
+<li>user.deleted</li>
+<li>user.password.changed</li>
+<li>user.password.cleared</li>
+<li>user.tags.set</li>
+</ul>
+</li>
+<li><p>权限事件</p>
+<ul>
+<li>permission.created</li>
+<li>permission.deleted</li>
+</ul>
+</li>
+<li><p>插件事件</p>
+<ul>
+<li>shovel.worker.status</li>
+<li>shovel.worker.removed</li>
+</ul>
+</li>
+<li><p>联盟事件</p>
+<ul>
+<li>federation.link.status</li>
+<li>federation.link.removed</li>
+</ul>
+</li>
+</ol>
+<h3 id="虚拟主机"><a href="#虚拟主机" class="headerlink" title="虚拟主机"></a>虚拟主机</h3><p>RabbitMQ 是一个多用户的系统，在你说知道的连接、交换、连接、绑定、用户权限、策略等一系列的东西都是属于虚拟主机，你可以将它理解为Nginx 中的服务模块。另外还有不同的一点在于RabbitMQ 的虚拟主机是通过Rabbitmqctl 或者HTTP API 创建或者删除的。</p>
+<h4 id="创建虚拟主机"><a href="#创建虚拟主机" class="headerlink" title="创建虚拟主机"></a>创建虚拟主机</h4><p>使用Rabbitmqctl 创建虚拟主机five1，示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqctl add_vhost five1</span></pre></td></tr></table></figure>
+
+<p>使用HTTP API 创建虚拟主机five2：（这里使用了curl 进行发送链接）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -u userename:pa$sw0rD -X PUT http:&#x2F;&#x2F;rabbitmq.local:15672&#x2F;api&#x2F;vhosts&#x2F;five2</span></pre></td></tr></table></figure>
+
+<h4 id="删除虚拟主机"><a href="#删除虚拟主机" class="headerlink" title="删除虚拟主机"></a>删除虚拟主机</h4><p>使用Rabbitmqctl 删除虚拟主机five1，示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqctl delete_vhost five1</span></pre></td></tr></table></figure>
+
+<p>使用HTTP API 删除虚拟主机five2：（这里使用了curl 进行发送链接）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -u userename:pa$sw0rD -X DELETE http:&#x2F;&#x2F;rabbitmq.local:15672&#x2F;api&#x2F;vhosts&#x2F;five2</span></pre></td></tr></table></figure>
+
+<h4 id="限制虚拟主机"><a href="#限制虚拟主机" class="headerlink" title="限制虚拟主机"></a>限制虚拟主机</h4><p>设置最大连接数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqctl set_vhost_limits -p vhost_name &#39;&#123;&quot;max-connections&quot;: 256&#125;&#39;</span></pre></td></tr></table></figure>
+<p><small>正值：限制次数。0: 无限制。 负值：取消限制。</small></p>
+<p>配置最大队列数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rabbitmqctl set_vhost_limits -p vhost_name &#39;&#123;“ max-queues”：1024&#125;&#39;</span></pre></td></tr></table></figure>
+<p><small>正值：限制次数。负值：取消限制。</small></p>
+<h3 id="使用Wireshark流量捕获"><a href="#使用Wireshark流量捕获" class="headerlink" title="使用Wireshark流量捕获"></a>使用Wireshark流量捕获</h3><p>Wireshark 2.0 包含对AMQP 流量检查和分析的增强支持。可以剖析（解析，可视化，过滤）AMQP 0-9-1 和AMQP 1.0 流量，包括AMQP 0-9-1 Errata 和RabbitMQ Extensions。</p>
+<p>Wireshark 2.0 与tcpdump、libpcap 具有相同的基础内容，可用于检查在服务器环境中获取的pcap 流量捕获文件。</p>
 <hr>
+
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><hr>
+
+<h2 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h2><hr>
 
 <h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
 
@@ -320,7 +529,10 @@
     <a href="/SpringBoot%E5%BC%95%E5%85%A5MP-%E6%8A%A5%E9%94%99ClassNotFoundException/" rel="prev" title="SpringBoot引入MP 报错ClassNotFoundException">
       <i class="fa fa-chevron-left"></i> SpringBoot引入MP 报错ClassNotFoundException
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/Linux-curl%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" rel="next" title="Linux_curl使用指南">
+      Linux_curl使用指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -379,7 +591,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AMQP"><span class="nav-number">1.1.</span> <span class="nav-text">AMQP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息队列"><span class="nav-number">1.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-介绍"><span class="nav-number">2.</span> <span class="nav-text">RabbitMQ 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础概念介绍"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息流程"><span class="nav-number">2.2.</span> <span class="nav-text">消息流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">2.3.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用户和权限设置"><span class="nav-number">2.3.1.</span> <span class="nav-text">用户和权限设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo-展示"><span class="nav-number">3.</span> <span class="nav-text">Demo 展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控"><span class="nav-number">4.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础架构和内核指标"><span class="nav-number">4.1.</span> <span class="nav-text">基础架构和内核指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监测频率"><span class="nav-number">4.2.</span> <span class="nav-text">监测频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理界面和外部监控软件"><span class="nav-number">4.3.</span> <span class="nav-text">管理界面和外部监控软件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AMQP"><span class="nav-number">1.1.</span> <span class="nav-text">AMQP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息队列"><span class="nav-number">1.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本简介"><span class="nav-number">1.4.</span> <span class="nav-text">版本简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-介绍"><span class="nav-number">2.</span> <span class="nav-text">RabbitMQ 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础概念介绍"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息流程"><span class="nav-number">2.2.</span> <span class="nav-text">消息流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">2.3.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用户和权限设置"><span class="nav-number">2.3.1.</span> <span class="nav-text">用户和权限设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo-展示"><span class="nav-number">3.</span> <span class="nav-text">Demo 展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础组态"><span class="nav-number">4.</span> <span class="nav-text">基础组态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础参数配置"><span class="nav-number">4.1.</span> <span class="nav-text">基础参数配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件位置"><span class="nav-number">4.2.</span> <span class="nav-text">文件位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志"><span class="nav-number">4.3.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#心跳机制"><span class="nav-number">4.4.</span> <span class="nav-text">心跳机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.5.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认证和授权"><span class="nav-number">5.</span> <span class="nav-text">认证和授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控"><span class="nav-number">6.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础架构和内核指标"><span class="nav-number">6.1.</span> <span class="nav-text">基础架构和内核指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监测频率"><span class="nav-number">6.2.</span> <span class="nav-text">监测频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理界面和外部监控软件"><span class="nav-number">6.3.</span> <span class="nav-text">管理界面和外部监控软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rabbitmqadmin-HTTP-API命令行工具"><span class="nav-number">6.4.</span> <span class="nav-text">Rabbitmqadmin HTTP API命令行工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#示例"><span class="nav-number">6.4.1.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连接"><span class="nav-number">6.5.</span> <span class="nav-text">连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础-1"><span class="nav-number">6.5.1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#协议的区别"><span class="nav-number">6.5.2.</span> <span class="nav-text">协议的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接生命周期"><span class="nav-number">6.5.3.</span> <span class="nav-text">连接生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控-1"><span class="nav-number">6.5.4.</span> <span class="nav-text">监控</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源使用"><span class="nav-number">6.5.5.</span> <span class="nav-text">资源使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#支持大量连接"><span class="nav-number">6.5.6.</span> <span class="nav-text">支持大量连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TLS"><span class="nav-number">6.5.7.</span> <span class="nav-text">TLS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量控制"><span class="nav-number">6.5.8.</span> <span class="nav-text">流量控制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通道Channel"><span class="nav-number">6.6.</span> <span class="nav-text">通道Channel</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#渠道生命周期"><span class="nav-number">6.6.1.</span> <span class="nav-text">渠道生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通道异常"><span class="nav-number">6.6.2.</span> <span class="nav-text">通道异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最大连接数"><span class="nav-number">6.6.3.</span> <span class="nav-text">最大连接数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CLI-Tools"><span class="nav-number">6.6.4.</span> <span class="nav-text">CLI Tools</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件交换插件（event-exchange-plugin）"><span class="nav-number">6.7.</span> <span class="nav-text">事件交换插件（event exchange plugin）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事件Events"><span class="nav-number">6.7.1.</span> <span class="nav-text">事件Events</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟主机"><span class="nav-number">6.8.</span> <span class="nav-text">虚拟主机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建虚拟主机"><span class="nav-number">6.8.1.</span> <span class="nav-text">创建虚拟主机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除虚拟主机"><span class="nav-number">6.8.2.</span> <span class="nav-text">删除虚拟主机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#限制虚拟主机"><span class="nav-number">6.8.3.</span> <span class="nav-text">限制虚拟主机</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Wireshark流量捕获"><span class="nav-number">6.9.</span> <span class="nav-text">使用Wireshark流量捕获</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">7.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式"><span class="nav-number">8.</span> <span class="nav-text">分布式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -395,7 +607,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">67</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
