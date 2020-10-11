@@ -509,9 +509,9 @@
     
     
     
-      <category term="Day" scheme="http://yoursite.com/tags/Day/"/>
-    
       <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
+    
+      <category term="Day" scheme="http://yoursite.com/tags/Day/"/>
     
   </entry>
   
@@ -532,9 +532,9 @@
     
     
     
-      <category term="Vue.js" scheme="http://yoursite.com/tags/Vue-js/"/>
-    
       <category term="Day" scheme="http://yoursite.com/tags/Day/"/>
+    
+      <category term="Vue.js" scheme="http://yoursite.com/tags/Vue-js/"/>
     
   </entry>
   
