@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-02-09T14:37:58.920Z</updated>
+  <updated>2021-02-09T14:49:48.526Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://yoursite.com/Envoy%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E6%80%BB%E7%BB%93/"/>
     <id>http://yoursite.com/Envoy%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E6%80%BB%E7%BB%93/</id>
     <published>2021-02-09T11:52:25.000Z</published>
-    <updated>2021-02-09T14:37:58.920Z</updated>
+    <updated>2021-02-09T14:49:48.526Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="起始"><a href="#起始" class="headerlink" title="起始"></a>起始</h3><p>从去年的十一月份开始学习云原生相关的内容，从基础的 Kubernetes 开始到 ServiceMesh，也是一路从 <a href="https://www.servicemesher.com/" target="_blank" rel="noopener">ServiceMesher 社区</a>到<a href="https://cloudnative.to/" target="_blank" rel="noopener">CloudNative 云原生社区</a>。</p><p>在云原生社区中也开始了自己的第一次的 PR 历程，这次主要是官方 Envoy 文档的汉化翻译工作以及处理 PR 的 Review 工作。</p><a id="more"></a><hr><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><ol><li>翻译官方 Envoy 文档共约25篇文章。</li><li>Review 大约15篇文章。</li><li>2020 年度优秀贡献者。<br><img src="https://i.loli.net/2021/02/09/FNWM2S3yfmLoRdJ.png" alt="C20200005.png"></li></ol><hr><h3 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h3><p>在新的 2021 年里我也将从更深层次的学习 Kubernetes 和 ServiceMesher 相关的内容，预计将来会更多地持续输出与 K8s 与 Go 语言相关的博客。</p><hr><h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>]]></content>
+    <content type="html"><![CDATA[<h3 id="起始"><a href="#起始" class="headerlink" title="起始"></a>起始</h3><p>从去年的十一月份开始学习云原生相关的内容，从基础的 Kubernetes 开始到 ServiceMesh，也是一路从 <a href="https://www.servicemesher.com/" target="_blank" rel="noopener">ServiceMesher 社区</a>到<a href="https://cloudnative.to/" target="_blank" rel="noopener">CloudNative 云原生社区</a>。</p><p>在云原生社区中也开始了自己的第一次的 PR 历程，这次主要是官方 Envoy 文档的汉化翻译工作以及处理 PR 的 Review 工作。</p><a id="more"></a><hr><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><ol><li>翻译官方 Envoy 文档共约25篇文章。</li><li>Review 大约15篇文章。</li><li>2020 年度优秀贡献者。<br><img src="https://i.loli.net/2021/02/09/FNWM2S3yfmLoRdJ.png" alt="C20200005.png"></li></ol><hr><h3 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h3><p>在新的 2021 年里我也将从更深层次的学习 Kubernetes 和 ServiceMesher 相关的内容，预计将来会更多地持续输出与 K8s 与 Go 语言相关的博客。</p><hr><h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p><a href="https://cloudnative.to/blog/community-summary-2020/" target="_blank" rel="noopener">官方总结链接</a></p><hr><h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>]]></content>
     
     <summary type="html">
     
