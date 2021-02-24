@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-02-09T14:49:48.526Z</updated>
+  <updated>2021-02-24T11:25:06.646Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux-hosts之坑</title>
+    <link href="http://yoursite.com/Linux-hosts%E4%B9%8B%E5%9D%91/"/>
+    <id>http://yoursite.com/Linux-hosts%E4%B9%8B%E5%9D%91/</id>
+    <published>2021-02-24T11:00:32.000Z</published>
+    <updated>2021-02-24T11:25:06.646Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>今天在生产上线时遇到了一个很奇怪的问题，前述就不讲了，直接开始重点吧。</p><p>需要在服务器上修改 <code>hosts</code> 文件，让配置的域名生效。</p><p>那么问题就来了，共有两台服务器，其中一台生效，另一台没有生效。（<small>放心，不会是什么粗心大意而导致的问题！</small>）</p><a id="more"></a><hr><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>系统： AIX<br>版本： 5.4<br>JDK： 1.6.0_54</p><p>Server-1:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">127.0.0.1local</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10.10.10.1testadmin.com</span></pre></td></tr></table></figure><p>Server-2:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">127.0.0.1local</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10.10.10.1testadmin.com</span></pre></td></tr></table></figure><hr><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>最后经过前置 F5 启停交易最后查出了是第一台服务器有问题，那么问题会在哪里呢？</p><h4>当出现问题时，那么往往都是最细节的地方才会出现问题！</h4><p>好家伙，试了一下结果交易就发通了！</p><h2>原来根本原因就是在 Server-2 hosts 文件的最后一个地址进行了换行，而 Server-1 hosts 文件的最后一行没有换行！</h2><p>最后希望我踩的这个坑会对你在最困难的有所帮助。</p><hr><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>关于 <code>hosts</code> 文件为何最后一行需要换行这个问题，我的想法如下：</p><ol><li><p>判断 <code>hosts</code> 文件最后一行是否为换行？<br>是，则继续添加解析。<br>否，则退出添加。</p></li><li><p>在使用 <code>shell</code> 脚本时，将文件作为参数时，如果缺少换行符，可能会导致 <code>shell</code> 脚本出错。</p></li></ol><hr><h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;引入&quot;&gt;&lt;a href=&quot;#引入&quot; class=&quot;headerlink&quot; title=&quot;引入&quot;&gt;&lt;/a&gt;引入&lt;/h2&gt;&lt;p&gt;今天在生产上线时遇到了一个很奇怪的问题，前述就不讲了，直接开始重点吧。&lt;/p&gt;
+&lt;p&gt;需要在服务器上修改 &lt;code&gt;hosts&lt;/code&gt; 文件，让配置的域名生效。&lt;/p&gt;
+&lt;p&gt;那么问题就来了，共有两台服务器，其中一台生效，另一台没有生效。（&lt;small&gt;放心，不会是什么粗心大意而导致的问题！&lt;/small&gt;）&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Day" scheme="http://yoursite.com/tags/Day/"/>
+    
+      <category term="Linux" scheme="http://yoursite.com/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Envoy文档翻译总结</title>
@@ -502,33 +527,6 @@
       <category term="MQ" scheme="http://yoursite.com/tags/MQ/"/>
     
       <category term="kafka" scheme="http://yoursite.com/tags/kafka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>RPC详解</title>
-    <link href="http://yoursite.com/RPC%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/RPC%E8%AF%A6%E8%A7%A3/</id>
-    <published>2020-03-10T01:12:44.000Z</published>
-    <updated>2020-04-21T02:17:26.969Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="RPC-前言"><a href="#RPC-前言" class="headerlink" title="RPC 前言"></a>RPC 前言</h2><p>一个阳光明媚的早晨，老婆在翻看我订阅的技术杂志。<br>“老公，什么是RPC 呀，为什么你们程序员有那么多的黑话！”，老婆还是一如既往的好奇。<br>“RPC，就是Remote Proceduce Call 的简称呀，翻译成中文就是远程过程调用嘛”，我一边看着书，一边漫不经心的回答着。<br>“啥，你在说啥》谁不知道翻译成中文是什么意思？你个废柴，快给我去洗碗！”<br>“我去。。。”，我入门初醒，我对面坐着的可不是一个程序员，为了不去洗碗，我瞬间调动起全部脑细胞，星辰大海在我脑中汇聚，灵感涌现。。。</p><p>“是这样，远程过程调用，自然是相对于本地过程调用来说嘛。”<br>“嗯哼，那先给老娘讲讲，本地调用过程是啥子？”<br>“本地过程调用，就好比你现在在家里，你想要洗碗，那你直接把碗放进洗碗机，打开洗碗机开关就可以洗了。这就叫本地过程调用。”</p><p>“哎呦，我可不干，那啥是远程过程调用？”<br>“远程嘛，那就是你现在不在家，跟姐妹们浪去了，突然发现碗还没洗，打了个电话过来，叫我去洗碗，这就是远程过程调用”，多么通俗易懂的解释，我真是天才。</p><p>“哦！我明白了”，说着，老婆开始收拾包包。<br>“你这是干啥去哦”<br>“我？我要出门浪去呀，待会记得接收我得远程调用哦，哦不，咱们要专业点，应该说记得接收我得RPC 哦！”</p><p>……</p><a id="more"></a><hr><h2 id="RPC-简介"><a href="#RPC-简介" class="headerlink" title="RPC 简介"></a>RPC 简介</h2><p>RPC (Remote Procedure Call)，即远程过程调用。</p><p>RPC 的主要功能目标是让构建<strong>分布式计算（应用）</strong>更容易，在提供强大的远程调用能力时不损失本地调用的语义简洁性。</p><p>RPC 调用分类：</p><ul><li>同步调用：<br>客户方等待调用执行完成并返回结果。</li><li>异步调用：<br>客户方调用后不用等待执行结果返回，但依然可以通过回调通知等方式获取返回结果。<br>若客户方不关心调用返回结果，则变成单向异步调用，单向调用不用返回结果。</li></ul><hr><h2 id="RPC-调用过程"><a href="#RPC-调用过程" class="headerlink" title="RPC 调用过程"></a>RPC 调用过程</h2><p>RPC 具体的调用过程：<br><img src="https://s2.ax1x.com/2020/03/11/8kOemR.png" alt="8kOemR.png"></p><p>即客户端在本地通过访问远程的注册中心获取对应方法的实例，通过实例调用对应的方法获取返回值，这个整体的流程就是远程过程调用。</p><p>RPC 中具体的模块：<br><img src="https://s2.ax1x.com/2020/03/11/8kOm01.png" alt="8kOm01.png"></p><p>主要包含客户端模块、服务端模块、协议模块、网络模块、序列化模块。<br>其中主要涉及到的有序列化、反序列化、网络传输、传输协议、编码、解码、异常处理等内容。</p><hr><h2 id="RPC-与REST-API-对比"><a href="#RPC-与REST-API-对比" class="headerlink" title="RPC 与REST API 对比"></a>RPC 与REST API 对比</h2><p>说到RPC 和REST 之间的对比，那你脑子里肯定第一个念头就是<strong>API设计风格</strong>的不同。</p><p>RPC 主要用于面向过程，倾向于描述动作本身。<br>REST 主要用于面向资源，倾向于动作要操作的对象。</p><p>具体的不同可以看看这个链接：<a href="https://zhuanlan.zhihu.com/p/66311537" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66311537</a></p><hr><h2 id="常见的RPC-框架"><a href="#常见的RPC-框架" class="headerlink" title="常见的RPC 框架"></a>常见的RPC 框架</h2><h3 id="thirft"><a href="#thirft" class="headerlink" title="thirft"></a>thirft</h3><p>Facebook开源的跨语言RPC框架。</p><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><p>由Google开发，高性能开源的通用RPC架构，面向移动和HTTP/2的设计。<br>支持C、 C++、 Node.js、 Python、 Ruby、 Objective-C、 PHP 和 C# 。<br>服务接口定义在.proto文件中，因为本身它不是分布式的，所以要实现上面的框架的功能需要进一步的开发。<br>跨语言，针对移动端：省电、省流量、高性能、双向流、支持DNS负载。<br>关于性能，肯定比HTTP/1好，比TCP差。<br>序列化：默认使用protocol buffer实现。也支持json等。<br>通讯：gRPC使用的http2.0</p><h3 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h3><p>阿里巴巴公司开源的一个Java高性能优秀的服务框架，可以和Spring框架无缝集成，相关资料很丰富。</p><h3 id="RMI"><a href="#RMI" class="headerlink" title="RMI"></a>RMI</h3><p>基于java的远程过程调用，是java特有的RPC实现。</p><ul><li>真正支持面向对象的多态</li><li>不支持其他语言</li><li>使用了java原生的序列化机制，所有序列化对象必须实现serializable接口</li><li>基于BIO实现的socket通讯</li></ul><h3 id="Hessian"><a href="#Hessian" class="headerlink" title="Hessian"></a>Hessian</h3><p>采用的是二进制RPC协议，适用于发送二进制数据。但本身也是一个Web Service框架对RPC调用提供支持，功能简单，使用起来也方便。基于Http协议进行传输。通过Servlet提供远程服务。<br>通过Hessain本身提供的API来发起请求。响应端根据Hessian提供的API来接受请求。</p><h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><table><thead><tr><th>功能</th><th>Hessian</th><th>Montan</th><th>rpcx</th><th>gRPC</th><th>Thrift</th><th>Dubbo</th><th>Dubbox</th><th>Spring Cloud</th></tr></thead><tbody><tr><td>开发语言</td><td>跨语言</td><td>Java</td><td>Go</td><td>跨语言</td><td>跨语言</td><td>Java</td><td>Java</td><td>Java</td></tr><tr><td>分布式(服务治理)</td><td>×</td><td>√</td><td>√</td><td>×</td><td>×</td><td>√</td><td>√</td><td>√</td></tr><tr><td>多序列化框架支持</td><td>hessian</td><td>√(支持Hessian2、Json,可扩展)</td><td>√</td><td>×</td><td>只支持(protobuf)</td><td>×(thrift格式)</td><td>√</td><td>√</td></tr><tr><td>多种注册中心</td><td>×</td><td>√</td><td>√</td><td>×</td><td>×</td><td>√</td><td>√</td><td>√</td></tr><tr><td>管理中心</td><td>×</td><td>√</td><td>√</td><td>×</td><td>×</td><td>√</td><td>√</td><td>√</td></tr><tr><td>跨编程语言</td><td>√</td><td>×(支持php client和C server)</td><td>×</td><td>√</td><td>√</td><td>×</td><td>×</td><td>×</td></tr><tr><td>支持REST</td><td>×</td><td>×</td><td>×</td><td>×</td><td>×</td><td>×</td><td>√</td><td>√</td></tr><tr><td>关注度</td><td>低</td><td>中</td><td>低</td><td>中</td><td>中</td><td>中</td><td>高</td><td>中</td></tr><tr><td>上手难度</td><td>低</td><td>低</td><td>中</td><td>中</td><td>中</td><td>低</td><td>低</td><td>中</td></tr><tr><td>运维成本</td><td>低</td><td>中</td><td>中</td><td>中</td><td>低</td><td>中</td><td>中</td><td>中</td></tr><tr><td>开源机构</td><td>Caucho</td><td>Weibo</td><td>Apache</td><td>Google</td><td>Apache</td><td>Alibaba</td><td>Dangdang</td><td>Apache</td></tr></tbody></table><hr><h2 id="Dubbo-框架概述"><a href="#Dubbo-框架概述" class="headerlink" title="Dubbo 框架概述"></a>Dubbo 框架概述</h2><p><a href="https://vgbhfive.cn/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" target="_blank" rel="noopener">https://vgbhfive.cn/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</a></p><hr><h2 id="实现RPC-框架"><a href="#实现RPC-框架" class="headerlink" title="实现RPC 框架"></a>实现RPC 框架</h2><h3 id="原理概述"><a href="#原理概述" class="headerlink" title="原理概述"></a>原理概述</h3><p>vgbh-rpc 是以客户端和服务端为基础，通过手动在代码内部实现注册的方式来模拟远程调用来实现RPC 服务。详细的使用可以去看<a href="https://github.com/vgbhfive/vgbh-rpc/tree/master/vgbh-rpc/vgbh-rpc-example" target="_blank" rel="noopener">demo样例</a></p><p>基于最基础的易用性来说，不是很友好，但是若对于理解RPC 的流程来说是一个很好的<strong>敲门砖</strong>。</p><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://github.com/vgbhfive/vgbh-rpc" target="_blank" rel="noopener">https://github.com/vgbhfive/vgbh-rpc</a></p><hr><h2 id="问题答疑"><a href="#问题答疑" class="headerlink" title="问题答疑"></a>问题答疑</h2><hr><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>自己动手写了一个小的rpc 框架实例，这对以后再去看Dubbo 的源码会有很大的帮助，知道了哪里是重点，知道了那里是难点。</p><p>所以还是得天天学习啊。</p><hr><h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><hr><h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;RPC-前言&quot;&gt;&lt;a href=&quot;#RPC-前言&quot; class=&quot;headerlink&quot; title=&quot;RPC 前言&quot;&gt;&lt;/a&gt;RPC 前言&lt;/h2&gt;&lt;p&gt;一个阳光明媚的早晨，老婆在翻看我订阅的技术杂志。&lt;br&gt;“老公，什么是RPC 呀，为什么你们程序员有那么多的黑话！”，老婆还是一如既往的好奇。&lt;br&gt;“RPC，就是Remote Proceduce Call 的简称呀，翻译成中文就是远程过程调用嘛”，我一边看着书，一边漫不经心的回答着。&lt;br&gt;“啥，你在说啥》谁不知道翻译成中文是什么意思？你个废柴，快给我去洗碗！”&lt;br&gt;“我去。。。”，我入门初醒，我对面坐着的可不是一个程序员，为了不去洗碗，我瞬间调动起全部脑细胞，星辰大海在我脑中汇聚，灵感涌现。。。&lt;/p&gt;
-&lt;p&gt;“是这样，远程过程调用，自然是相对于本地过程调用来说嘛。”&lt;br&gt;“嗯哼，那先给老娘讲讲，本地调用过程是啥子？”&lt;br&gt;“本地过程调用，就好比你现在在家里，你想要洗碗，那你直接把碗放进洗碗机，打开洗碗机开关就可以洗了。这就叫本地过程调用。”&lt;/p&gt;
-&lt;p&gt;“哎呦，我可不干，那啥是远程过程调用？”&lt;br&gt;“远程嘛，那就是你现在不在家，跟姐妹们浪去了，突然发现碗还没洗，打了个电话过来，叫我去洗碗，这就是远程过程调用”，多么通俗易懂的解释，我真是天才。&lt;/p&gt;
-&lt;p&gt;“哦！我明白了”，说着，老婆开始收拾包包。&lt;br&gt;“你这是干啥去哦”&lt;br&gt;“我？我要出门浪去呀，待会记得接收我得远程调用哦，哦不，咱们要专业点，应该说记得接收我得RPC 哦！”&lt;/p&gt;
-&lt;p&gt;……&lt;/p&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
-    
-      <category term="RPC" scheme="http://yoursite.com/tags/RPC/"/>
     
   </entry>
   

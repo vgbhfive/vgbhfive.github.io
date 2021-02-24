@@ -20,14 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Vgbhfive&#39;s Blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;page&#x2F;3&#x2F;index.html">
+  <meta name="description" content="引入今天在生产上线时遇到了一个很奇怪的问题，前述就不讲了，直接开始重点吧。 需要在服务器上修改 hosts 文件，让配置的域名生效。 那么问题就来了，共有两台服务器，其中一台生效，另一台没有生效。（放心，不会是什么粗心大意而导致的问题！）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-hosts之坑">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Linux-hosts%E4%B9%8B%E5%9D%91&#x2F;index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="引入今天在生产上线时遇到了一个很奇怪的问题，前述就不讲了，直接开始重点吧。 需要在服务器上修改 hosts 文件，让配置的域名生效。 那么问题就来了，共有两台服务器，其中一台生效，另一台没有生效。（放心，不会是什么粗心大意而导致的问题！）">
+<meta property="article:published_time" content="2021-02-24T11:00:32.000Z">
+<meta property="article:modified_time" content="2021-02-24T11:25:06.646Z">
 <meta property="article:author" content="Vgbh">
+<meta property="article:tag" content="Day">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/archives/2019/page/3/">
+<link rel="canonical" href="http://yoursite.com/Linux-hosts%E4%B9%8B%E5%9D%91/">
 
 
 <script id="page-configurations">
@@ -35,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Archive | Vgbhfive's Blog</title>
+  <title>Linux-hosts之坑 | Vgbhfive's Blog</title>
   
 
 
@@ -160,235 +166,116 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header">Nice! 77 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Linux-hosts%E4%B9%8B%E5%9D%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="Vgbh">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux-hosts之坑
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-02-24 19:00:32 / Modified: 19:25:06" itemprop="dateCreated datePublished" datetime="2021-02-24T19:00:32+08:00">2021-02-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2019</span>
-    </div>
+        <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>今天在生产上线时遇到了一个很奇怪的问题，前述就不讲了，直接开始重点吧。</p>
+<p>需要在服务器上修改 <code>hosts</code> 文件，让配置的域名生效。</p>
+<p>那么问题就来了，共有两台服务器，其中一台生效，另一台没有生效。（<small>放心，不会是什么粗心大意而导致的问题！</small>）</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<hr>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-23T16:40:19+08:00"
-              content="2019-07-23">
-          07-23
-        </time>
-      </div>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>系统： AIX<br>版本： 5.4<br>JDK： 1.6.0_54</p>
+<p>Server-1:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">127.0.0.1	local</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10.10.10.1	testadmin.com</span></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/B-Tree%E5%92%8CB-Tree%E7%9A%84%E6%8E%A2%E7%A7%98%E4%B9%8B%E6%97%85/" itemprop="url">
-            <span itemprop="name">B-Tree和B+Tree的探秘之旅</span>
-          </a>
-      </div>
+<p>Server-2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">127.0.0.1	local</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10.10.10.1	testadmin.com</span></pre></td></tr></table></figure>
 
-    </header>
-  </article>
+<hr>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>最后经过前置 F5 启停交易最后查出了是第一台服务器有问题，那么问题会在哪里呢？</p>
+<h4>当出现问题时，那么往往都是最细节的地方才会出现问题！</h4>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-20T12:19:16+08:00"
-              content="2019-07-20">
-          07-20
-        </time>
-      </div>
+<p>好家伙，试了一下结果交易就发通了！</p>
+<h2>原来根本原因就是在 Server-2 hosts 文件的最后一个地址进行了换行，而 Server-1 hosts 文件的最后一行没有换行！</h2>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3/" itemprop="url">
-            <span itemprop="name">位运算的奇思妙想</span>
-          </a>
-      </div>
+<p>最后希望我踩的这个坑会对你在最困难的有所帮助。</p>
+<hr>
 
-    </header>
-  </article>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>关于 <code>hosts</code> 文件为何最后一行需要换行这个问题，我的想法如下：</p>
+<ol>
+<li><p>判断 <code>hosts</code> 文件最后一行是否为换行？<br>是，则继续添加解析。<br>否，则退出添加。</p>
+</li>
+<li><p>在使用 <code>shell</code> 脚本时，将文件作为参数时，如果缺少换行符，可能会导致 <code>shell</code> 脚本出错。</p>
+</li>
+</ol>
+<hr>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-08T08:59:47+08:00"
-              content="2019-07-08">
-          07-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Nginx-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/" itemprop="url">
-            <span itemprop="name">Nginx-快速入门和提高</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-07T16:16:05+08:00"
-              content="2019-07-07">
-          07-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/MySQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%92%8C%E6%8F%90%E9%AB%98/" itemprop="url">
-            <span itemprop="name">MySQL-快速入门和提高</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-07T16:03:05+08:00"
-              content="2019-07-07">
-          07-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89favicon/" itemprop="url">
-            <span itemprop="name">SpringBoot-自定义favicon</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-06-29T14:33:15+08:00"
-              content="2019-06-29">
-          06-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/SpringBoot%E5%AE%9A%E5%88%B6banner/" itemprop="url">
-            <span itemprop="name">SpringBoot定制banner</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-06-26T14:53:39+08:00"
-              content="2019-06-26">
-          06-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" itemprop="url">
-            <span itemprop="name">Redis-快速入门</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-06-24T19:47:14+08:00"
-              content="2019-06-24">
-          06-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Python-%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/" itemprop="url">
-            <span itemprop="name">Python-编码问题</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-06-23T16:00:38+08:00"
-              content="2019-06-23">
-          06-23
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" itemprop="url">
-            <span itemprop="name">Zookeeper-分布式锁</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-06-16T17:08:10+08:00"
-              content="2019-06-16">
-          06-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/151-suggestions-for-improving-java/" itemprop="url">
-            <span itemprop="name">151-suggestions-for-improving-java</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Day/" rel="tag"># Day</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Envoy%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E6%80%BB%E7%BB%93/" rel="prev" title="Envoy文档翻译总结">
+      <i class="fa fa-chevron-left"></i> Envoy文档翻译总结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2019/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/archives/2019/">1</a><a class="page-number" href="/archives/2019/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/archives/2019/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2019/page/6/">6</a><a class="extend next" rel="next" href="/archives/2019/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
+  
+  
 
 
 
@@ -440,6 +327,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引入"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.0.1.</span> <span class="nav-text">当出现问题时，那么往往都是最细节的地方才会出现问题！</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">原来根本原因就是在 Server-2 hosts 文件的最后一个地址进行了换行，而 Server-1 hosts 文件的最后一行没有换行！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">5.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#个人备注"><span class="nav-number">6.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
