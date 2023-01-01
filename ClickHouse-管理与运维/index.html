@@ -18,7 +18,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="简介本文将对 ClickHouse 管理与运维相关的知识进行说明，主要包含用户、权限、熔断机制、数据备份和服务监控等知识。">
@@ -29,7 +29,7 @@
 <meta property="og:description" content="简介本文将对 ClickHouse 管理与运维相关的知识进行说明，主要包含用户、权限、熔断机制、数据备份和服务监控等知识。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-12T15:35:16.000Z">
-<meta property="article:modified_time" content="2022-09-13T13:58:21.530Z">
+<meta property="article:modified_time" content="2023-01-01T15:44:15.906Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="ClickHouse">
 <meta name="twitter:card" content="summary">
@@ -157,8 +157,6 @@
     
   <div class="reading-progress-bar"></div>
 
-  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
@@ -202,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-13 21:58:21" itemprop="dateModified" datetime="2022-09-13T21:58:21+08:00">2022-09-13</time>
+                <time title="Modified: 2023-01-01 23:44:15" itemprop="dateModified" datetime="2023-01-01T23:44:15+08:00">2023-01-01</time>
               </span>
 
           
@@ -265,15 +263,15 @@
 <h3 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h3><p>权限管理始终是一个的话题，<code>ClickHouse</code> 分别从访问、查询和数据等角度出发，层层递进提供了一个立体的权限体系。</p>
 <h4 id="访问权限"><a href="#访问权限" class="headerlink" title="访问权限"></a>访问权限</h4><p>访问层控制是整个权限体系的第一层防护，它又可一步细分为两类权限。</p>
 <ol>
-<li>网络访问权限<br>网络访问权限使用 <code>networks</code> 标签设置，用于限制某个用户登录的客户端地址，有 <code>IP</code> 地址、<code>host</code> 主机名称以及正则匹配三种形式，可以任选其中一种进行设置：</li>
-</ol>
+<li><p>网络访问权限<br>网络访问权限使用 <code>networks</code> 标签设置，用于限制某个用户登录的客户端地址，有 <code>IP</code> 地址、<code>host</code> 主机名称以及正则匹配三种形式，可以任选其中一种进行设置：</p>
 <ul>
 <li><code>IP</code> 地址：直接使用 <code>IP</code> 地址进行设置。</li>
 <li><code>host</code> 主机名称：通过 <code>host</code> 主机名称进行设置。</li>
 <li>正则匹配：通过表达式来匹配 <code>host</code> 名称。</li>
 </ul>
-<ol start="2">
-<li>数据库与字典访问权限<br>在客户端连入服务之后，可以进一步限制某个用户数据库和字典的访问权限，他们分别通过 <code>allow_databases</code> 和 <code>allow_dictionaries</code> 标签进行设置。如果不进行设置，则表示无任何限制。</li>
+</li>
+<li><p>数据库与字典访问权限<br>在客户端连入服务之后，可以进一步限制某个用户数据库和字典的访问权限，他们分别通过 <code>allow_databases</code> 和 <code>allow_dictionaries</code> 标签进行设置。如果不进行设置，则表示无任何限制。</p>
+</li>
 </ol>
 <h4 id="查询权限"><a href="#查询权限" class="headerlink" title="查询权限"></a>查询权限</h4><p>查询权限是整个权限体系中的第二层防护，它决定了一个用户能够执行的查询语句。查询权限可以分为以下四类：</p>
 <ul>
@@ -305,16 +303,14 @@
 <p><small>上述配置的 <code>0</code> 表示不做限制。</small></p>
 <h4 id="单次查询的用量熔断"><a href="#单次查询的用量熔断" class="headerlink" title="单次查询的用量熔断"></a>单次查询的用量熔断</h4><p>这种方式下系统资源的用量是按照单词查询统计的，而具体的熔断规则则是由许多不同配置项组成，这些配置项需要定义在用户 <code>profile</code> 中。</p>
 <ol>
-<li>针对普通查询的熔断配置</li>
-</ol>
+<li><p>针对普通查询的熔断配置</p>
 <ul>
 <li><code>max_memory_usage</code>：在单个 <code>ClickHouse</code> 服务进程中，运行一次查询限制使用的最大内存量，默认值为 <code>10GB</code>。</li>
 <li><code>max_memory_usage_for_user</code>：以用户为单位进行统计，单个用户在运行查询时限制使用的最大内存量，默认值为 <code>0</code>，即不做限制。</li>
 <li><code>max_memory_usage_for_all_queries</code>：所有运行的查询累加在一起所限制的最大内存量，默认值为 <code>0</code>，即不做限制。</li>
 </ul>
-<ol start="2">
-<li>针对数据写入和聚合查询相关的熔断配置</li>
-</ol>
+</li>
+<li><p>针对数据写入和聚合查询相关的熔断配置</p>
 <ul>
 <li><code>max_partitions_per_insert_block</code>：在单次写入时，限制创建的最大分区个数，默认值为 <code>100</code> 个。</li>
 <li><code>max_rows_to_group_by</code>：在执行 <code>GROUP BY</code> 聚合查询时限制去重后聚合 <code>KEY</code> 的最大个数，默认值为 <code>0</code>，即不做限制。当超过阈值时，处理方式由 <code>group_by_overflow_mode</code> 参数指定。</li>
@@ -326,6 +322,8 @@
 </li>
 <li><code>max_bytes_before_external_group_by</code>：在执行 <code>GROUP BY</code> 聚合查询时限制使用的最大内存量，默认值为 <code>0</code>，即不做限制。当超过阈值时，聚合查询将会进一步借用本地磁盘。</li>
 </ul>
+</li>
+</ol>
 <hr>
 
 <h3 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h3><p>前面我们学习了副本，那么还需要备份吗？当然是需要的，因为副本是不能解决误删除数据这类行为，因此 <code>ClickHouse</code> 提供如下几种方式。</p>

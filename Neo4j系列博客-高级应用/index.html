@@ -18,7 +18,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="引入在之前的学习中，大致明白了 Neo4j 的基本操作、程序开发、数据库管理等操作，对于一些基本的操作已经足够，而现在则是通过一些高级的使用来探索其他功能的启发。">
@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s2.loli.net/2022/05/08/KowAQnDE1r4s9xP.png">
 <meta property="article:published_time" content="2022-04-29T14:14:23.000Z">
-<meta property="article:modified_time" content="2022-05-10T14:49:05.912Z">
+<meta property="article:modified_time" content="2023-01-01T15:53:46.137Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="Neo4j">
 <meta name="twitter:card" content="summary">
@@ -159,8 +159,6 @@
     
   <div class="reading-progress-bar"></div>
 
-  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
@@ -204,7 +202,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-10 22:49:05" itemprop="dateModified" datetime="2022-05-10T22:49:05+08:00">2022-05-10</time>
+                <time title="Modified: 2023-01-01 23:53:46" itemprop="dateModified" datetime="2023-01-01T23:53:46+08:00">2023-01-01</time>
               </span>
 
           
@@ -316,8 +314,7 @@
 <li>构建新的镜像。</li>
 </ul>
 <ol>
-<li>环境变量</li>
-</ol>
+<li><p>环境变量</p>
 <ul>
 <li><code>NEO4J_AUTH</code>：控制身份验证。</li>
 <li><code>NEO4J_dbms_memory_pagecache_size</code>：本地内存缓存的大小。</li>
@@ -335,7 +332,7 @@
 <li><code>NEO4J_ha_host_data</code>：<code>HA</code> 模式下用于数据传输的地址。</li>
 <li><code>NEO4J_ha_initialHosts</code>：集群的其他成员的地址&#x2F;端口列表。</li>
 </ul>
-<ol start="2">
+</li>
 <li><p><code>/conf</code> 配置文件配置<br><code>/conf</code> 中的配置都会覆盖镜像中的配置文件，包括已经生效的、为容器提供环境变量。如果要修改文件中的一个值则必须保证其他部分都是正确的。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --detach --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/conf:/conf neo4j:3.1</span><br></pre></td></tr></table></figure>
 </li>

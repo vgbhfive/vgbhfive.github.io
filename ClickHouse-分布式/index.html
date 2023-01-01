@@ -18,7 +18,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="概述随着业务线数据量的突飞猛进、服务器的意外宕机，这些都是底层基础服务会遇到的问题，因此 ClickHouse 就设计了集群、副本和分片这三个帮手来帮忙。">
@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s2.loli.net/2022/09/10/xETJYlW2Ic4dft3.png">
 <meta property="article:published_time" content="2022-09-10T12:18:11.000Z">
-<meta property="article:modified_time" content="2022-10-04T12:53:27.745Z">
+<meta property="article:modified_time" content="2023-01-01T15:46:35.626Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="ClickHouse">
 <meta name="twitter:card" content="summary">
@@ -159,8 +159,6 @@
     
   <div class="reading-progress-bar"></div>
 
-  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
@@ -204,7 +202,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-10-04 20:53:27" itemprop="dateModified" datetime="2022-10-04T20:53:27+08:00">2022-10-04</time>
+                <time title="Modified: 2023-01-01 23:46:35" itemprop="dateModified" datetime="2023-01-01T23:46:35+08:00">2023-01-01</time>
               </span>
 
           
@@ -317,25 +315,25 @@
 </ul>
 <h5 id="副本协同流程"><a href="#副本协同流程" class="headerlink" title="副本协同流程"></a>副本协同流程</h5><h6 id="写入执行流程"><a href="#写入执行流程" class="headerlink" title="写入执行流程"></a>写入执行流程</h6><p>当需要在 <code>ReplicatedMergeTree</code> 中执行 <code>INSERT</code> 查询以写入数据时，即会进入 <code>INSERT</code> 核心流程，整体流程从上至下按照时间顺序进行，大致可以分为八个步骤。</p>
 <ol>
-<li>创建第一个副本实例<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> replica_sales_1 &#123;</span><br><span class="line">    id String,</span><br><span class="line">    price Float64,</span><br><span class="line">    create_time DateTime</span><br><span class="line">&#125; ENGINW <span class="operator">=</span> ReplicatedMergeTree(<span class="string">&#x27;/clickhouse/tables/01/replicated_sales_1&#x27;</span>, <span class="string">&#x27;ch5.vgbhfive.cn&#x27;</span>)</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> toYYYYMM(create_time)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id</span><br></pre></td></tr></table></figure>
-在创建的过程中 <code>ReplicatedMergeTree</code> 会进行一些初始化操作：</li>
-</ol>
+<li><p>创建第一个副本实例</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> replica_sales_1 &#123;</span><br><span class="line">    id String,</span><br><span class="line">    price Float64,</span><br><span class="line">    create_time DateTime</span><br><span class="line">&#125; ENGINW <span class="operator">=</span> ReplicatedMergeTree(<span class="string">&#x27;/clickhouse/tables/01/replicated_sales_1&#x27;</span>, <span class="string">&#x27;ch5.vgbhfive.cn&#x27;</span>)</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> toYYYYMM(create_time)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id</span><br></pre></td></tr></table></figure>
+<p>在创建的过程中 <code>ReplicatedMergeTree</code> 会进行一些初始化操作：</p>
 <ul>
 <li>根据 <code>zk_path</code> 初始化所有的 <code>ZooKeeper</code> 节点。</li>
 <li>在 <code>/replicas/</code> 节点下注册自己的副本实例 <code>ch5.vgbhfive.cn</code>。</li>
 <li>启动监听任务，监听 <code>/log</code> 日志节点。</li>
 <li>参与副本选举，选举出主副本，选举的方式是向 <code>/leader_election/</code> 插入子节点，第一个插入成功的副本就是主副本。</li>
 </ul>
-<ol start="2">
-<li>创建第二个副本实例<br>与上述第一个创建副本实例类似，不同之处在于实例名称。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> replica_sales_1 &#123;</span><br><span class="line">    id String,</span><br><span class="line">    price Float64,</span><br><span class="line">    create_time DateTime</span><br><span class="line">&#125; ENGINW <span class="operator">=</span> ReplicatedMergeTree(<span class="string">&#x27;/clickhouse/tables/01/replicated_sales_1&#x27;</span>, <span class="string">&#x27;ch6.vgbhfive.cn&#x27;</span>)</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> toYYYYMM(create_time)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id</span><br></pre></td></tr></table></figure>
-在创建过程中，第二个 <code>ReplicatedMergeTree</code> 同样会进行一些初始化操作：</li>
-</ol>
+</li>
+<li><p>创建第二个副本实例<br>与上述第一个创建副本实例类似，不同之处在于实例名称。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> replica_sales_1 &#123;</span><br><span class="line">    id String,</span><br><span class="line">    price Float64,</span><br><span class="line">    create_time DateTime</span><br><span class="line">&#125; ENGINW <span class="operator">=</span> ReplicatedMergeTree(<span class="string">&#x27;/clickhouse/tables/01/replicated_sales_1&#x27;</span>, <span class="string">&#x27;ch6.vgbhfive.cn&#x27;</span>)</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> toYYYYMM(create_time)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id</span><br></pre></td></tr></table></figure>
+<p>在创建过程中，第二个 <code>ReplicatedMergeTree</code> 同样会进行一些初始化操作：</p>
 <ul>
 <li>在 <code>/replicas/</code> 节点下注册自己的副本实例 <code>ch6.vgbhfive.cn</code>。</li>
 <li>启动监听任务，监听 <code>/log</code> 日志节点。</li>
 <li>参数副本选举，选举出主副本。</li>
 </ul>
-<ol start="3">
+</li>
 <li><p>向第一个实例中写入数据<br>现在尝试向第一个副本 <code>ch5</code> 写入数据：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO TABLE replicated_sales_1 VALUES(&#x27;A001&#x27;, 100, &#x27;2022-05-15 00:00:00&#x27;)</span><br></pre></td></tr></table></figure>
 <p>上述命令执行完毕后，首先会在本地完成分区目录的写入：</p>
@@ -355,14 +353,12 @@
 <p><small>上述 <code>LogEntry</code> 放入队列是因为在复杂的情况下，会连续收到许多个 <code>LogEntry  </code> ，所以使用队列消化任务也是一种合理的设计。</small></p>
 </li>
 <li><p>第二个副本实例向其他副本发起下载请求<br><code>ch6</code> 基于 <code>/queue</code> 队列开始执行任务，当看到 <code>type</code> 为 <code>get</code>    时，<code>ReplicatedMergeTree</code> 会明白此时在远端的其他副本已经成功写入数据分区，而自己需要同步这些数据。<br><code>ch6</code> 上的第二个副本实例会开始选择一个远端的其他副本作为数据的下载来源。远端副本的选择算法大致是这样的：</p>
-</li>
-</ol>
 <ul>
 <li>从 <code>/replicas</code> 节点拿到所有的副本节点。</li>
 <li>遍历这些副本选取其中一个。选取的副本需要拥有最大的 <code>log_pointer</code> 下标，并且 <code>/queue</code> 子节点数量最少。<code>log_pointer</code> 下标最大，则意味该副本执行的日志最多，数据应该更加完整；而 <code>/queue</code> 最小，则意味着该副本目前的任务执行负担最小。</li>
 </ul>
 <p> <small>在这个实例中，算法选择的副本实例是 <code>ch5</code>。</small></p>
-<ol start="7">
+</li>
 <li><p>第一个副本实例响应数据下载<br><code>ch5</code> 的 <code>DataPartsExchange</code> 端口服务接收到调用请求，在得知对方来意之后，根据参数做出响应，将本地分区 <code>202205_0_0_0</code> 基于 <code>DataPartsExchange</code> 的服务响应发送回 <code>ch6</code>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sending part 202205_0_0_0</span><br></pre></td></tr></table></figure>
 </li>
@@ -387,14 +383,12 @@
 <p>从日志内容可以看出操作类型为 <code>MERGE</code> 合并，而这次需要合并的分区目录是 <code>202205_0_0_0</code> 和 <code>202205_0_1_1</code>。与此同时主副本还会锁住执行线程，对日志的接收情况进行监听：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Waiting for queue-0000000002 to disapper from ch5.vgbhfive.cn queue</span><br></pre></td></tr></table></figure>
 <p>其监听行为由 <code>replication_alter_partitions_sync</code> 参数控制，默认值为 <code>1</code>。</p>
-</li>
-</ol>
 <ul>
 <li>参数为 <code>0</code> 时，不做任何等待。</li>
 <li>参数为 <code>1</code> 时，只等主副本自身完成。</li>
 <li>参数为 <code>0</code> 时，等待所有副本拉取完成。</li>
 </ul>
-<ol start="4">
+</li>
 <li><p>各个副本分别拉取 <code>Log</code> 日志<br><code>ch5</code> 和 <code>ch6</code> 两个副本实例将分别监听 <code>/log/log-00000002</code> 日志的推送，他们分别会拉取日志到本地，并推送到各自的 <code>/queue</code> 任务队列：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Pulling 1 entries to queue : log-00000002 - log-000000002</span><br></pre></td></tr></table></figure>
 </li>
@@ -462,29 +456,29 @@
 <p><small><code>cluster_name</code> 对应了配置文件中的集群名称，<code>ClickHouse</code> 会根据集群配置信息分别去各个节点执行 <code>DDL</code> 语句。</small></p>
 <h5 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h5><p>与 <code>ReplicatedMergeTree</code> 类似，分布式 <code>DDL</code> 语句在执行的过程中也需要借助 <code>ZooKeeper</code> 的协同能力，以实现日志分发。</p>
 <ol>
-<li><code>ZooKeeper</code> 内的节点结构<br>默认情况下分布式 <code>DDL</code> 在 <code>ZooKeeper</code> 内使用的根路径为：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/clickhouse/task_queue/ddl</span><br></pre></td></tr></table></figure>
-<small>该地址可以在 <code>config.xml</code> 中的 <code>distributed_ddl</code> 配置指定。</small><br>当然在此节点之下还有其他的监听节点，包含 <code>/query-[seq]</code>，其内包含 <code>DDL</code> 操作日志，每执行一次分布式 <code>DDL</code> 查询，在该节点下新增一条操作日志。<code>DDL</code> 操作日志使用 <code>ZooKeeper</code> 的持久顺序型节点，每条指令的名称以 <code>query-</code> 为前缀，后面的序号递增。在该操作日志下，还有两条状态节点：</li>
-</ol>
+<li><p><code>ZooKeeper</code> 内的节点结构<br>默认情况下分布式 <code>DDL</code> 在 <code>ZooKeeper</code> 内使用的根路径为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/clickhouse/task_queue/ddl</span><br></pre></td></tr></table></figure>
+<p><small>该地址可以在 <code>config.xml</code> 中的 <code>distributed_ddl</code> 配置指定。</small><br>当然在此节点之下还有其他的监听节点，包含 <code>/query-[seq]</code>，其内包含 <code>DDL</code> 操作日志，每执行一次分布式 <code>DDL</code> 查询，在该节点下新增一条操作日志。<code>DDL</code> 操作日志使用 <code>ZooKeeper</code> 的持久顺序型节点，每条指令的名称以 <code>query-</code> 为前缀，后面的序号递增。在该操作日志下，还有两条状态节点：</p>
 <ul>
 <li><code>/query-[seq]/active</code> 用于状态监控等用途，在任务的执行过程中，在该节点下会临时保存当前集群内状态为 <code>active</code> 的节点。</li>
 <li><code>/query-[seq]/finished</code> 用于检查任务完成情况，在任务的执行过程中，每当集群内的某个 <code>host</code> 执行完毕之后，就会在该节点下写入记录。</li>
 </ul>
-<ol start="2">
-<li><code>DDLLongEntry</code> 日志对象的数据结构<br>在 <code>/query-[seq]</code> 下记录的日志信息由 <code>DDLLogEntry</code> 承载，拥有以下几个核心属性：</li>
-</ol>
+</li>
+<li><p><code>DDLLongEntry</code> 日志对象的数据结构<br>在 <code>/query-[seq]</code> 下记录的日志信息由 <code>DDLLogEntry</code> 承载，拥有以下几个核心属性：</p>
 <ul>
-<li><code>query</code> 记录 <code>DDL</code> 查询的执行语句 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query: DROP TABLE default.test_1_local ON CLUSTER shard_2</span><br></pre></td></tr></table></figure></li>
-<li><code>hosts</code> 记录指定集群的主机列表，集群由分布式 <code>DDL</code> 语句中的 <code>ON CLUSTER</code> 指定 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hosts: [&#x27;ch5.vgbhfive.cn:9000&#x27;, &#x27;ch6.vgbhfive.cn:9000&#x27;]</span><br></pre></td></tr></table></figure></li>
-<li><code>initiator</code> 记录初始化 <code>host</code> 主机的名称，主机列表来源于初始化 <code>host</code> 节点上的集群 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">initiator: ch5.vgbhfive.cn</span><br></pre></td></tr></table></figure></li>
+<li><code>query</code> 记录 <code>DDL</code> 查询的执行语句  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query: DROP TABLE default.test_1_local ON CLUSTER shard_2</span><br></pre></td></tr></table></figure></li>
+<li><code>hosts</code> 记录指定集群的主机列表，集群由分布式 <code>DDL</code> 语句中的 <code>ON CLUSTER</code> 指定  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hosts: [&#x27;ch5.vgbhfive.cn:9000&#x27;, &#x27;ch6.vgbhfive.cn:9000&#x27;]</span><br></pre></td></tr></table></figure></li>
+<li><code>initiator</code> 记录初始化 <code>host</code> 主机的名称，主机列表来源于初始化 <code>host</code> 节点上的集群  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">initiator: ch5.vgbhfive.cn</span><br></pre></td></tr></table></figure></li>
 </ul>
-<ol start="3">
-<li>分布式 <code>DDL</code> 的核心执行流程<br><img src="https://s2.loli.net/2022/09/10/xETJYlW2Ic4dft3.png" alt="click-4-1.png"><br>整个流程从上到下按照时间顺序进行，其大致分为三个步骤：</li>
-</ol>
+</li>
+<li><p>分布式 <code>DDL</code> 的核心执行流程<br><img src="https://s2.loli.net/2022/09/10/xETJYlW2Ic4dft3.png" alt="click-4-1.png"><br>整个流程从上到下按照时间顺序进行，其大致分为三个步骤：</p>
 <ul>
 <li>推送 <code>DDL</code> 日志，在节点执行语句，本着谁执行谁负责原则，会由这个节点创建 <code>DDLLogEntry</code> 日志并将日志推送到 <code>ZooKeeper</code> ，同时也会由这个节点负责监控任务的执行进度。</li>
 <li>拉取日志并执行，其余节点监听到日志推送，于是拉取日志到本地。首先判断自身 <code>host</code> 是否被包含在 <code>DDLLogEntry</code> 的 <code>hosts</code> 列表中，如果包含在内则进入执行流程，执行完毕后将状态写入 <code>finished</code> 节点；如果不包含则忽略这次日子的推送。</li>
 <li>确认执行进度，在执行 <code>DDL</code> 语句之后，客户端会阻塞等待 <code>180</code> 秒后，以期望所有 <code>host</code> 执行完毕。如果等待时间超过 <code>180</code> 秒，则进入后台线程继续等待（等待时间由 <code>distributed_ddl_task_timeout</code> 参数执行，默认 <code>180</code> 秒）。</li>
 </ul>
+</li>
+</ol>
 <h4 id="Distributed-原理解析"><a href="#Distributed-原理解析" class="headerlink" title="Distributed 原理解析"></a><code>Distributed</code> 原理解析</h4><p><code>Distributed</code> 表引擎是分布式表的代名词，它自身不存储任何数据，而是作为数据分片的透明代理，能够自动路由数据至集群中的各个节点，所以 <code>Distributed</code> 表引擎需要和其他数据表引擎一起协同工作。<br>从实体表层面来看，一张分片由两部分组成：</p>
 <ul>
 <li>本地表：通常以 <code>_local</code> 为后缀进行命名。本地表是承接数据的载体，可以使用非 <code>Distributed</code> 的任意表引擎，一张本地表对应了一个数据分片。</li>
@@ -549,17 +543,18 @@
 <h6 id="副本复制数据流程"><a href="#副本复制数据流程" class="headerlink" title="副本复制数据流程"></a>副本复制数据流程</h6><p>除了刚才的分片写入流程之外，还会触发副本数据的复制流程。数据在多个副本之间，有两种复制实现方式：一种是继续借助 <code>Distributed</code> 表引擎，由它将数据写入副本。另一种则是借助 <code>ReplicatedMergeTree</code> 表引擎实现副本数据的分发。</p>
 <h6 id="分布式查询流程"><a href="#分布式查询流程" class="headerlink" title="分布式查询流程"></a>分布式查询流程</h6><p>与数据写入有所不同，在面向集群查询数据的时候，只能通过 <code>Distributed</code> 表引擎实现。当 <code>Distributed</code> 表接收到 <code>SELECT</code> 查询的时候，他会依次查询每个分片的数据，再合并汇总返回。</p>
 <ol>
-<li>多副本的路由规则<br>在查询数据的时候，如果集群中的一个 <code>shard</code>，拥有多个 <code>replica</code>，那么 <code>Distributed</code> 表引擎需要面临副本选择的问题。他会使用负载均衡算法从众多 <code>replica</code> 中选择一个，而具体使用何种负载均衡算法，则由 <code>load_balancing</code> 参数控制：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">load_balancing = random / nearest_hostname / in_order / first_or_random</span><br></pre></td></tr></table></figure>
-有四种负载均衡算法：</li>
-</ol>
+<li><p>多副本的路由规则<br>在查询数据的时候，如果集群中的一个 <code>shard</code>，拥有多个 <code>replica</code>，那么 <code>Distributed</code> 表引擎需要面临副本选择的问题。他会使用负载均衡算法从众多 <code>replica</code> 中选择一个，而具体使用何种负载均衡算法，则由 <code>load_balancing</code> 参数控制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">load_balancing = random / nearest_hostname / in_order / first_or_random</span><br></pre></td></tr></table></figure>
+<p>有四种负载均衡算法：</p>
 <ul>
 <li><code>random</code></li>
 <li><code>nearest_hostname</code></li>
 <li><code>in_order</code></li>
 <li><code>first_or_random</code></li>
 </ul>
-<ol start="2">
-<li>多分片查询<br>分布式查询与分布式写入类似，同样本着谁执行谁负责的原则，他会接收 <code>SELECT</code> 查询的 <code>Distributed</code> 表并负责串联起整个过程。首先他会针对分布式表的 <code>SQL</code> 语句，按照分片数量将查询拆分为若干个本地表的子查询，然后向各个分片发起查询，然后再汇总各个分片的返回结果。</li>
+</li>
+<li><p>多分片查询<br>分布式查询与分布式写入类似，同样本着谁执行谁负责的原则，他会接收 <code>SELECT</code> 查询的 <code>Distributed</code> 表并负责串联起整个过程。首先他会针对分布式表的 <code>SQL</code> 语句，按照分片数量将查询拆分为若干个本地表的子查询，然后向各个分片发起查询，然后再汇总各个分片的返回结果。</p>
+</li>
 </ol>
 <hr>
 
