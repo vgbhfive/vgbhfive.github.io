@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Vgbhfive&#39;s Blog">
+<meta property="og:url" content="https://blog.vgbhfive.cn/page/2/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="vgbhfive、博客、Java、ClickHouse、Neo4j、Prometheus、MySQL、Redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/page/2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">特征工程入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-22 00:17:39" itemprop="dateCreated datePublished" datetime="2022-05-22T00:17:39+08:00">2022-05-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-04 15:49:00" itemprop="dateModified" datetime="2022-06-04T15:49:00+08:00">2022-06-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>特征工程将数据转换为能更好地表示潜在问题的特征，从而提高机器学习性能。<br>特征工程具体包含内容如下：</p>
+<ul>
+<li>转换数据的过程。处理的数据经常是表格形式的，此时数据会被组织成行（观察值）和列（属性）。</li>
+<li>特征。特征是对机器学习过程有意义的数据属性，我们需要经常查看表格，确定哪些列是特征，哪些列只是普通的属性。</li>
+<li>更好地表示潜在问题。转换数据的目的在于更好地表达更大的问题。</li>
+<li>提高机器学习性能。特征工程的最终目的在于获取更好的数据，以便学习算法从中挖掘模式，取得更好的效果。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E5%85%A5%E9%97%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/" class="post-title-link" itemprop="url">Neo4j系列博客-高级应用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-04-29 22:14:23" itemprop="dateCreated datePublished" datetime="2022-04-29T22:14:23+08:00">2022-04-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-10 22:49:05" itemprop="dateModified" datetime="2022-05-10T22:49:05+08:00">2022-05-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>在之前的学习中，大致明白了 <code>Neo4j</code> 的基本操作、程序开发、数据库管理等操作，对于一些基本的操作已经足够，而现在则是通过一些高级的使用来探索其他功能的启发。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/" class="post-title-link" itemprop="url">Neo4j系列博客-集群</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-04-04 23:22:03" itemprop="dateCreated datePublished" datetime="2022-04-04T23:22:03+08:00">2022-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-02 14:34:52" itemprop="dateModified" datetime="2022-05-02T14:34:52+08:00">2022-05-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>集群技术是一项在较低成本下能有效提高系统整体性能、可靠性、灵活性和可扩展性，并广泛应用于生产系统的必备技术，同样 <code>Neo4j</code> 企业版也提供了集群技术，主要分为：高可用性集群（<code>High Availablity, HA</code>）和因果集群（<code>Causal Clustering</code>）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-TRUNCATE%E5%87%BD%E6%95%B0%E4%B8%8Etruncate%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/MySQL-TRUNCATE%E5%87%BD%E6%95%B0%E4%B8%8Etruncate%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">MySQL-TRUNCATE函数与truncate命令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-20 11:24:19" itemprop="dateCreated datePublished" datetime="2022-03-20T11:24:19+08:00">2022-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-21 22:31:25" itemprop="dateModified" datetime="2022-03-21T22:31:25+08:00">2022-03-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="TRUNCATE-函数"><a href="#TRUNCATE-函数" class="headerlink" title="TRUNCATE 函数"></a><code>TRUNCATE</code> 函数</h3><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p><code>TRUNCATE(X, D)</code> 函数是 <code>MySQL</code> 自带的一个系统函数。其中 <code>X</code> 是数值，而 <code>D</code> 是保留小数的位数。其作用就是按照小数位数，进行数值截取（此处的截取是按保留位数直接进行截取，没有四舍五入）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/MySQL-TRUNCATE%E5%87%BD%E6%95%B0%E4%B8%8Etruncate%E5%91%BD%E4%BB%A4/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-HTTP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-HTTP/" class="post-title-link" itemprop="url">Neo4j系列博客-程序开发-HTTP</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-17 22:16:02" itemprop="dateCreated datePublished" datetime="2022-03-17T22:16:02+08:00">2022-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-30 21:31:14" itemprop="dateModified" datetime="2022-03-30T21:31:14+08:00">2022-03-30</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="HTTP-API"><a href="#HTTP-API" class="headerlink" title="HTTP API"></a><code>HTTP API</code></h3><p><code>Neo4j HTTP API</code> 是专门针对跨平台操作开发出来的一套与开发平台、开发语言无关的 <code>API</code>，因为可以使用任何编程语言来调用 <code>Neo4j HTTP API</code>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-HTTP/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/" class="post-title-link" itemprop="url">Neo4j系列博客-程序开发-驱动式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-17 22:15:52" itemprop="dateCreated datePublished" datetime="2022-03-17T22:15:52+08:00">2022-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-26 21:26:25" itemprop="dateModified" datetime="2022-03-26T21:26:25+08:00">2022-03-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="驱动包开发模式"><a href="#驱动包开发模式" class="headerlink" title="驱动包开发模式"></a>驱动包开发模式</h3><p><code>Neo4j</code> 驱动程序也为其他的语言开发了访问途径，编写使用驱动程序的应用程序实例就可以与数据库基于事务的会话。在会话中事务可以运行创建和查询数据的相关命令，也可以定义数据库模式以及监视和管理数据库。当 <code>Neo4j</code> 部署在因果集群中时，驱动程序可以处理读取和写入操作的路由。使用因果集群驱动程序还提供书签，用于保证因果一致性，也就是说应用程序可以在集群的不同成员上运行多个查询，同时保持数据的一致。 </p>
+<p><code>Neo4j</code> 驱动程序使用 <code>Bolt</code> 协议进行通信，因果集群提供了使用驱动程序获取集群拓扑的功能，驱动程序必须具有集群感知能力才能提供路由和负载均衡。（<code>Bolt</code> 在多个版本中提供兼容）</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="post-title-link" itemprop="url">Neo4j系列博客-程序开发-嵌入式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-28 22:22:56" itemprop="dateCreated datePublished" datetime="2022-02-28T22:22:56+08:00">2022-02-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-21 22:32:12" itemprop="dateModified" datetime="2022-03-21T22:32:12+08:00">2022-03-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><code>Neo4j</code> 正式支持 <code>.Net</code> 、 <code>Java</code> 、 <code>JavaScript</code> 、 <code>Ruby</code> 、 <code>PHP</code> 和 <code>Python</code> 的二进制 <code>Bolt</code> 协议驱动程序。这些开发平台通过引入相应的驱动程序包便可与 <code>Neo4j</code> 相互集成，然后就可以对 <code>Neo4j</code> 进行数据操作。</p>
+<h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><p>目前 <code>Neo4j</code> 支持三种开发模式，分别为：</p>
+<ul>
+<li><code>Java</code> 嵌入式开发模式。<code>Neo4j</code> 是基于 <code>Java</code> 语言开发的，所以他能与 <code>Java</code> 开发天然结合，完全可以在代码中调用 <code>Neo4j</code> 的 <code>API</code>，并将对 <code>Neo4j</code> 数据库的操作嵌入在 <code>Java</code> 代码中。</li>
+<li>驱动包开发模式。通过 <code>HTTP</code> 的 <code>HTTP API</code> 的驱动包让非基于 <code>JVM</code> 的开发平台、编程语言也能够操作 <code>Neo4j</code> 数据库。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">Neo4j系列博客-数据库管理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-26 10:54:48" itemprop="dateCreated datePublished" datetime="2022-02-26T10:54:48+08:00">2022-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 22:19:07" itemprop="dateModified" datetime="2022-02-28T22:19:07+08:00">2022-02-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>部署主要包括：容量规划、单实例或集群安装及安装后的相关处理。</p>
+<h4 id="系统需求"><a href="#系统需求" class="headerlink" title="系统需求"></a>系统需求</h4><p>运行一个 <code>Neo4j</code> 数据库实例所需的系统需求清单：</p>
+<ul>
+<li><code>CPU</code>：通常性能受限于内存容量和磁盘 <code>I/O</code> 容量。推荐配置：<code>Intel Core i7, IBM POWER8</code></li>
+<li>内存：图越大则所需内存越多。推荐配置：<code>16~32GB</code> 或更多。</li>
+<li>磁盘：磁盘性能是最重要的指标。推荐配置：<code>SSD w/ SATA</code>。</li>
+<li>文件系统：由于普通 <code>Linux / UNIX</code> 系统中存在的缓冲区高速缓存或页面高速缓存，大多数磁盘都是经过缓存进行的。因此当系统发生故障时，这种延迟可能会造成文件更新内容的丢失。推荐配置：<code>ext4 / ZFS</code>。</li>
+<li>软件：<code>Neo4j</code> 需要一个 <code>Java</code> 虚拟机，因此 <code>Neo4j</code> 中都会提前预装 <code>JVM</code>。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/" class="post-title-link" itemprop="url">Neo4j系列博客-Cypher-3</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-20 16:18:37" itemprop="dateCreated datePublished" datetime="2022-02-20T16:18:37+08:00">2022-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-11-25 22:00:18" itemprop="dateModified" datetime="2022-11-25T22:00:18+08:00">2022-11-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="查询调优"><a href="#查询调优" class="headerlink" title="查询调优"></a>查询调优</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-select%E6%9F%A5%E8%AF%A2%E4%B8%BA%E7%A9%BA%E4%BD%86%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E6%95%B0%E6%8D%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/MySQL-select%E6%9F%A5%E8%AF%A2%E4%B8%BA%E7%A9%BA%E4%BD%86%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E6%95%B0%E6%8D%AE/" class="post-title-link" itemprop="url">MySQL-select查询为空但数据库有数据</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-02-20 13:40:01 / Modified: 13:53:49" itemprop="dateCreated datePublished" datetime="2022-02-20T13:40:01+08:00">2022-02-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="问题复现"><a href="#问题复现" class="headerlink" title="问题复现"></a>问题复现</h3><p>年后又是一波需求狂潮，在经历了上一周的痛苦上班时间之后，这周一又开始了新的需求，新的 Code 生活也伴随而来重新开始。</p>
+<p>首先我先简略描述一下本次的需求，我这边负责的后台向服务端的接口推送一条信息，然后服务端会把接收到的信息处理后，同步推送到我们的另一个接口。<br>而在上一步的推送信息之后，我们这边会启动一个异步的任务会在特定的时间段内处理服务端返回的信息。<br>那么问题就来了，在这个异步任务中实时去查询 <code>SQL</code>，但是查询回来的<strong>结果是空的</strong>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/MySQL-select%E6%9F%A5%E8%AF%A2%E4%B8%BA%E7%A9%BA%E4%BD%86%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E6%95%B0%E6%8D%AE/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介集群技术是一项在较低成本下能有效提高系统整体性能、可靠性、灵活性和可扩展性，并广泛应用于生产系统的必备技术，同样 Neo4j 企业版也提供了集群技术，主要分为：高可用性集群（High Availablity, HA）和因果集群（Causal Clustering）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-集群">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介集群技术是一项在较低成本下能有效提高系统整体性能、可靠性、灵活性和可扩展性，并广泛应用于生产系统的必备技术，同样 Neo4j 企业版也提供了集群技术，主要分为：高可用性集群（High Availablity, HA）和因果集群（Causal Clustering）。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/04/16/6rwULljeSnQvmfM.png">
+<meta property="og:image" content="https://s2.loli.net/2022/04/17/eiEPZCoQULDwl9Y.png">
+<meta property="og:image" content="https://s2.loli.net/2022/04/23/PgiSaGloAExvUn6.png">
+<meta property="article:published_time" content="2022-04-04T15:22:03.000Z">
+<meta property="article:modified_time" content="2022-05-02T06:34:52.464Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/04/16/6rwULljeSnQvmfM.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-集群 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-集群
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-04-04 23:22:03" itemprop="dateCreated datePublished" datetime="2022-04-04T23:22:03+08:00">2022-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-02 14:34:52" itemprop="dateModified" datetime="2022-05-02T14:34:52+08:00">2022-05-02</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>集群技术是一项在较低成本下能有效提高系统整体性能、可靠性、灵活性和可扩展性，并广泛应用于生产系统的必备技术，同样 <code>Neo4j</code> 企业版也提供了集群技术，主要分为：高可用性集群（<code>High Availablity, HA</code>）和因果集群（<code>Causal Clustering</code>）。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="因果集群"><a href="#因果集群" class="headerlink" title="因果集群"></a>因果集群</h3><p>因果集群技术基于 <code>Raft</code> 协议开发，可支持数据中心和云所需要的大规模和多拓扑环境，其中内置了由 <code>Neo4j Bolt</code> 驱动处理的负载均衡，还支持同样由 <code>Bolt</code> 驱动管理的集群可感知会话，以此帮助开发人员解决架构上的问题。<br>因果集群的安全性改进还包括：多用户、基于角色的访问控制（读取者、发布者、架构者和管理者）、查询安全事件日志、列出并终止运行中的查询以及细粒度的访问控制等特性。</p>
+<p><code>Neo4j</code> 因果集群主要提供以下两个特点：</p>
+<ul>
+<li>安全性：核心服务器为事务提供处理提供容错平台，仅有一部分核心服务器正常运行时，整个系统仍然是可用的。</li>
+<li>可扩展性：只读副本为图查询提供了一个大规模高可扩展平台，可以在分布广泛的拓扑中执行非常大的图查询工作。</li>
+</ul>
+<p>以上两个特点结合起来就是允许最终用户拥有完整数据库的全部功能，并在可以在发生多个硬件或网络故障的情况下也可以正常的对数据库进行读写操作。</p>
+<h4 id="操作视图"><a href="#操作视图" class="headerlink" title="操作视图"></a>操作视图</h4><p>从操作视图的角度来看，可以认为集群主要包括两个角色，一个是核心服务器，另一个就是只读副本。<br><img src="https://s2.loli.net/2022/04/16/6rwULljeSnQvmfM.png" alt="neo4j-8-1.jpg"></p>
+<ol>
+<li><p>核心服务器<br>核心服务器的主要职责就是保护数据，使用 <code>Raft</code> 协议复制所有事务来实现。<code>Raft</code> 协议能确保数据在最终用户应用程序提交事务之前是安全的。然而在实际中意味者集群中的大多数（即 <code>N/2+1</code>）核心服务器接收事务，就可以安全地提交事务到最终用户应用程序。<br>但是这种安全性对写操作有延迟影响，写操作由多数核心服务器进行确认，然而随着核心服务器数量的增长，必定会影响写操作的效率。实际上，只需要少量的核心服务器就可以为特定部署提供足够的容错能力，可以使用公式 <code>M = 2F + 1</code>，其中 <code>M</code> 是允许 <code>F</code> 个核心服务器发生故障所需的核心服务器总数。<br><small>如果核心服务器集群发生故障而无法再处理写入操作时，则核心服务器将转化为只读状态，以确保整个集群的数据安全。</small></p>
+</li>
+<li><p>只读副本<br>只读副本的主要职责是扩展图操作（例如 <code>Cypher</code> 查询、过程处理等）的工作负载，类似于核心服务器中受数据保护的高速缓存，当并不是简单的键值高速缓存。然而事实上，只读副本是能够完成任意只读图查询和过程处理的全功能的 <code>Neo4j</code> 数据库。<br>只读副本通过事务日志以异步的方式从核心服务器上复制数据，周期性（通常在毫秒内）地轮询核心服务器，以查找自上次轮询之后处理的新事务，然后核心服务器将新事务发送到只读副本。大量的只读副本可以从相对较少的核心服务器复制数据，从而确保大量的图查询工作负载得以均衡。<br>只读副本与核心服务器不同的在于不参与集群拓扑的决策，丢失只读副本不影响集群的可用性，除了影响图查询性能吞吐的能力之外，也不会影响集群的容错能力。</p>
+</li>
+</ol>
+<h4 id="应用视图"><a href="#应用视图" class="headerlink" title="应用视图"></a>应用视图</h4><p>在应用程序中，通常从图数据库中读写数据，但是根据工作负载需要考虑读取时之前的写入，以确保因果一致性。因果一致性可以保证数据很容易写入到核心服务器，并可以从只读副本中读到这些写入的数据。<br><img src="https://s2.loli.net/2022/04/17/eiEPZCoQULDwl9Y.png" alt="neo4j-8-2.jpg"><br>在实行事务时客户端可以请求书签，然后作为下一次事务的参数，使用书签功能集群就可以确保其中的服务器只处理了客户端的书签事务之后才可以处理下一个事务，这提供了一个因果链，从客户的角度来确保行为的正确性。<br>除了书签之外剩余的工作都有集群来处理，其中主要是由数据库驱动程序与集群拓扑管理器一起完成，以选择最合适的核心服务器和只读副本来提高服务的质量。</p>
+<h4 id="创建新的因果集群"><a href="#创建新的因果集群" class="headerlink" title="创建新的因果集群"></a>创建新的因果集群</h4><p>接下来配置具有三个核心实例的集群，三个核心实例是形成一个安全的因果集群所需的最少的服务器数量，并配备三个只读副本来提供一定的横向扩展的能力。</p>
+<ol>
+<li>下载配置<br>从官网下载企业版，然后解压到对应的机器上，接着配置每台机器的配置文件，主要配置 <code>neo4j.conf</code> 。<br>在三台独立的机器上运行 <code>Neo4j</code> 时，实现一个因果集群的最基本配置就是两个网络配置和三个集群配置。</li>
+</ol>
+<ul>
+<li><code>dbms.connection.default_listen_address</code>：本机用于监听传入消息的地址或网络接口。</li>
+<li><code>dbms.connection.default_advertised_address</code>：告知其他机器需要连接的地址。</li>
+<li><code>dbms.mode</code>：数据库实例的运行模式。</li>
+<li><code>causal_clustering.excepted_core_cluster_size</code>：启动时的初始集群大小。建立集群时需要在早期就实现稳定的核心服务器资格认证，以确保集群数据的安全读写操作。</li>
+<li><code>causal_clustering.initial_discovery_members</code>：用于引导核心服务器或只读副本去初始发现核心集群成员，该值是以逗号为分隔的地址&#x2F;端口列表。</li>
+</ul>
+<ol start="2">
+<li><p>启动服务器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/neo4j start</span><br></pre></td></tr></table></figure>
+<p>启动成功之后，从 <code>Neo4j-shell</code> 中使用 <code>call dbms.cluster.oerview()</code> 命令来显式集群的状态和每个集群成员的信息。</p>
+</li>
+<li><p>添加新的核心服务器<br>添加新的核心服务器与前面的配置一样，只需要配置新添加的核心服务器的 <code>neo4j.conf</code> 配置文件并修改其他已存在的集群中的核心服务器的 <code>neo4j.conf</code> 配置文件即可。一旦重新配置完成就可以重启核心服务器，新的核心服务器也会自动加入到集群中。</p>
+</li>
+<li><p>设置集群领导者偏好<br>因果集群中的核心服务器使用 <code>Raft</code> 协议来保证一致性和安全性。<code>Raft</code> 协议的实现细节是它使用其他领导者角色对基础日子加以排序，其他的实例作为追随者，复制领导者的状态。在具体的实现中，这意味着对数据库的写操作是由当前为领导者角色的核心服务器来排序的。<br>相关的配置参数是 <code>neo4j.conf</code> 配置文件中的 <code>causal_clustering.refuse_to_be_leader</code>，该配置项默认为 <code>false</code>，设置为 <code>true</code> 之后表示在领导者的选举中弃权。</p>
+</li>
+<li><p>添加只读副本<br>添加只读副本与核心服务器类似，因为只读副本不参与集群的决策，因此配置项更少，只读副本只需要知道核心服务器的地址，以便于绑定到这些地址上正常运行发现协议，一旦完成了发现过程，只读副本就会知道核心服务器的状态，并且选择一个合适的核心服务器进行数据复制。</p>
+</li>
+</ol>
+<ul>
+<li>数据库的操作模式，必须取消注释并且设置为 <code>dbms.mode = READ_REPLICA</code>。</li>
+<li>集群中核心实例的地址 <code>causal_clustering.initial_discovery_members</code>。</li>
+</ul>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><p>因果集群的生命周期主要包括：发现协议、加入集群、核心服务器和只读副本成员资格获取以及用于轮询、捕获和备份的协议到最后的关闭集群。</p>
+<ol>
+<li><p>发现协议<br>发现协议是构建集群的第一步，他提供了现有核心集群服务器的一些提示，并使用这些提示初始化网络连接协议。而在这些提示中，服务器会加入到现有集群或者形成自己的集群，但是发现协议仅支持从核心服务器到核心服务器和从只读副本到核心服务器的发现过程。<br>这个提示的具象化就是 <code>neo4j.conf</code> 配置文件中的 <code>initial_discovery_members</code> 配置项，该配置项通常为点分十进制 <code>IP</code> 地址和端口，且在执行过程中当前服务器尝试与其他列出的服务器连接，一旦连接成功即可成功加入集群的拓扑结构中。同时发现服务也会持续运行在因果集群的全生命周期，用以维持可用服务器的当前状态，还可以帮助客户端通过驱动转发请求到合适的服务器。<br><small>发现协议只针对核心服务器，而不管执行发现的是只读副本还是核心服务器。</small></p>
+</li>
+<li><p>核心服务器成员资格<br>若此时为核心服务器执行发现协议，则一旦与核心服务器集群建立连接，就会加入到 <code>Raft</code> 协议中去。<br><code>Raft</code> 协议处理集群成员资格的方式就是通过<strong>使其成为分布式日志同步的一部分</strong>。要想加入到 <code>Raft</code> 集群则必须将集群成员资格插入到 <code>Raft</code> 日志中，然后复制到集群的其他成员目录中，一旦该目录被应用于 <code>Raft</code> 共识组（运行 <code>Raft</code> 算法的服务器）中的大部分成员，则集群成员更新自己的集群视图以添加新加入的成员。新加入的核心服务器还必须在初始化其内部 <code>Raft</code> 实例时，从其他核心服务器获取到自己的 <code>Raft</code> 日志。<br><small>当一个实例想要加入到一个集群时，取决于集群的当前状态和它本身是否有资格加入。其资格的判定在于是否与集群成员保存有相同的数据库存储（可以是过时的数据）。</small></p>
+</li>
+<li><p>只读副本成员资格<br>若只读副本执行发现协议，则一旦与任何核心服务器建立连接，就会将自己加入到共享白板（<code>Shared Whiteboard</code>）中。其中共享白板实时提供所有只读副本的视图，并用于最终用户应用程序的数据库驱动程序中的请求路由和集群状态的监控。<br><small>只读副本不涉及 <code>Raft</code> 协议，也不影响集群拓扑。</small></p>
+</li>
+<li><p><code>Raft</code> 协议实现事务<br>一旦集群建立成功，就意味着每个核心服务器都会花时间处理数据库事务。而更新操作会通过 <code>Raft</code> 协议在核心服务器之间可靠复制，更新操作以包含事务命令的 <code>Raft</code> 日志条目的形式呈现，再作用到图数据库上。<br>因果集群中仅在核心服务器之间采用了 <code>Raft</code> 协议，并对集群中的核心服务器划分为三类角色：<code>Leader</code>（领导者，只有一个）、 <code>Follower</code>（通常多个）、 <code>Candidate</code>（候选人，通常多个）。<br><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022398199">选举流程</a><br><code>Raft</code> 协议的事务执行过程就是在某时刻 <code>Raft Leader</code> 将事务附加到其本地日志的头部，并要求其他实例执行相同的操作。当领导者看到大多数的实例都已经附加上此条目之后，就可以将这个事务安全地提交到 <code>Raft</code> 日志中，至此就可以通知客户端应用程序事务已经安全地提交。<br><small>在任何一个 <code>Raft</code> 协议实例中，只有一个领导者能够在给定的任期内驱动协议的正常运转，领导者承担强制 <code>Raft</code> 日志排序和管理日志的责任。</small><br>追随者根据领导者的日志变化来更新自身的日志，如果集群中的任何参与者怀疑领导者出现故障，那么就可以通过进入候选者状态来发起领导者候选。其中最佳领导者的最佳状态由最长运行时间、最长日志、最高提交条目来决定。</p>
+</li>
+<li><p>跟踪协议<br>只读副本一方面处理图查询，另一方面处理与核心服务器事务更新的一致性。而从核心服务器到只读副本的更新是通过事务发送来传递的，事务发送由只读副本频繁轮询任意一个核心服务器，得到其接收和处理的最后一个事务编号来启动，其中轮询的频率是可以设置的。<br><small><code>Neo4j</code> 事务编号是严格递增的整数值。只读副本通过自身最后处理的事务编号与核心服务器的事务编号比较来判断该事务是否在只读副本上执行过。</small><br>如果有时候核心服务器与只读副本之间的数据差异较大时，就会直接执行回滚操作并直接将数据库内容从核心服务器复制到只读副本中。</p>
+</li>
+<li><p>备份协议<br>参考上一节内容中的备份。</p>
+</li>
+<li><p>关闭只读副本<br>只读副本正常关闭时会调用发现协议从集群的共享白板视图中删除自身，这样可以确保数据库的完全关闭和集群数据的一致性。<br>非常规关机之后，只读副本可能不再具有完全一致的存储文件和事务日志，因此在后续重新启动时，只读副本会回滚这段时间的事务，以保证数据的一致性。</p>
+</li>
+<li><p>关闭核心服务器<br>正常关闭核心服务器需要通过 <code>Raft</code> 协议来处理，当一个核心服务器关闭时，协议会将成员资格条目附加到 <code>Raft</code> 日志上，然后其他的核心服务器重复同样的操作，一旦大多数核心服务器都提交了成员资格条目，在逻辑上该核心服务器就可以离开集群并安全关闭。<br>而非正常关闭核心服务器不会通知集群已经离开集群，此时集群中的核心服务器数量与之前记录的一致，这样在同步事务时会更加的困难，因此在收到告警时，请在必要的时候进行人工干预。</p>
+</li>
+</ol>
+<h4 id="灾备恢复"><a href="#灾备恢复" class="headerlink" title="灾备恢复"></a>灾备恢复</h4><p>灾备恢复是指把少量幸存实例从只读状态转换到可读写状态的实例组成的集群。</p>
+<ul>
+<li>确保已经发生数据中心丢失的风险，并且可以访问正在运行的集群中幸存的成员，然后对集群中的每个实例进行以下操作。</li>
+<li>运行命令 <code>./bin/neo4j stop</code> 停止数据库实例。</li>
+<li>修改 <code>neo4j.conf</code> 配置文件中的 <code>causal_clustering.initial_discovery_members</code> 参数为当前可用实例的 <code>IP</code> 地址。</li>
+<li>更改 <code>neo4j.conf</code> 配置文件中的 <code>causal+clustering.expected_core_cluster_size = 2</code>，即有两个实例幸存。</li>
+<li>重新启动实例 <code>./bin/neo4j start</code>。</li>
+</ul>
+<h4 id="其他设置"><a href="#其他设置" class="headerlink" title="其他设置"></a>其他设置</h4><ol>
+<li><p><code>causal_clustering.raft_advertised_address</code><br>该配置项为地址&#x2F;端口对，是本机 <code>Neo4j</code> 实例向集群的其他成员通知他在核心集群内监听 <code>Raft</code> 消息的位置。</p>
+</li>
+<li><p><code>causal_clustering.transaction_advertised_address</code><br>值为地址&#x2F;端口对，指定本机 <code>Neo4j</code> 实例在哪里监听事务传输捕获协议中的事务请求。</p>
+</li>
+<li><p><code>causal_clustering.discover_listen_address</code><br>发现协议所使用的地址&#x2F;端口对。</p>
+</li>
+<li><p><code>causal_clustering.raft_listen_address</code><br>值为地址&#x2F;端口对，指定 <code>Neo4j</code> 实例将绑定到哪个网络地址和端口用以进行集群通信。此配置必须与 <code>causal_clustering.raft_advertised_address</code> 配置相配合，因为本机也会监听自己的 <code>causal_clustering.raft_advertised_address</code> 配置。</p>
+</li>
+<li><p><code>causal_clustering.transaction_listen_address</code><br>值为地址&#x2F;端口对，指定 <code>Neo4j</code> 实例将绑定到哪个网络地址和端口上进行集群通信。此配置必须与 <code>causal_clustering.transaction_advertised_address</code> 配置相配合，因为本机也会监听自己的 <code>causal_clustering.transaction_advertised_address</code> 配置。</p>
+</li>
+</ol>
+<hr>
+
+<h3 id="高性能集群"><a href="#高性能集群" class="headerlink" title="高性能集群"></a>高性能集群</h3><p>高可用性 <code>Neo4j</code> 集群采用了主从复制结构，优点在于硬件故障时的应变能力和容错能力和扩展 <code>Neo4j</code> 读密集型数据场景的能力。<br>弹性和容错是指即使在网络或硬件发生故障时，<code>Neo4j</code> 集群仍然可以继续提供服务的能力。这就意味着集群中的一个节点坏了，服务依旧是可用的。主从结构的另外一个好处就是能够在读密集型场景下的横向扩展能力，另外还支持缓存分区，使得集群相比单实例具有更大的负载处理能力。</p>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>一个高可用性集群由一个主实例和零个或多个从实例组成，集群中所有的实例都在其本地数据库文件中保存有集群数据的完整副本。<br><img src="https://s2.loli.net/2022/04/23/PgiSaGloAExvUn6.png" alt="neo4j-8-3.jpg"><br><small>横线箭头代表协调每个实例之间的数据复制和选举管理。斜线箭头代表集群中主实例与从实例之间保持数据库最新。</small></p>
+<ol>
+<li><p>仲裁实例<br>仲裁实例是一个仅在仲裁模式下运行的 <code>Neo4j</code> 实例，但是它只参与集群的通信，用于在选举出现僵局时进行仲裁，并不参与集群的其他操作（也不复制集群中的数据）。</p>
+</li>
+<li><p>事务传播<br>在主机上的写操作与在非集群模式下的方式一样，在主机上执行成功之后，会将该事务推送到从机上，然而如果推送中间发生异常，主机也是默认推送成功。<br>但是在从机上执行写操作时，每个写操作都是首先与主机同步，此时主机和从机都会被锁定，当事务提交时，首先在主机上提交，在主机上提交成功后才会在从机上提交。同时为了保证一致性，在执行写操作时从机和主机的状态必须完全一致，从机的自动更新协议包含在与主机的通过协议中。（写操作尽量在主机上完成）</p>
+</li>
+<li><p>故障恢复<br>当集群中的一个实例不可用时，集群中的其他实例将会检测到此问题并将其标记为临时故障，在该实例发生故障之后如果可以重新实现和集群同步，那么会重新加入到集群中。如果一个主机发生故障，那么稍后在集群中就会进行主机选举，如果一个从机被选中，他的角色也会由从机转变为主机，之后就会向集群中的其他成员通报自己的身份。在选举过程中的几秒钟是不能进行写操作的。</p>
+</li>
+<li><p>分支<br>数据分支可能由以下两种方式引起：</p>
+</li>
+</ol>
+<ul>
+<li>从机落后主机很多，然后离开或重新加入集群，这类型的分支是无害的。</li>
+<li>重新发生了主机选举，旧的主机还有一个或多个事务未推送，这类型的分支是有害的，需要采取措施处理。</li>
+</ul>
+<ol start="5">
+<li>总结</li>
+</ol>
+<ul>
+<li>写入事务是可以在集群中的任何实例中执行。</li>
+<li><code>Neo4j</code> 高可用性集群是具有容错功能的。</li>
+<li>从机的写操作将先在主机上同步。</li>
+<li>如果主机发生故障，着自动选出新的主机。</li>
+<li>集群会自动处理一个实例发生故障的情况，并且在它再次可用时还可以重新加入集群中。</li>
+<li>事务具有原子性、一致性、持久性，直到最后才会传递到从机。</li>
+<li>如果主机关闭，那么正在运行的事务将会回滚，新事务将会阻塞或者执行失败，直至主机可用为止。</li>
+<li>读操作的负载能力会随着集群中的数据库实例增加而增加。</li>
+</ul>
+<h4 id="搭建高可用性集群"><a href="#搭建高可用性集群" class="headerlink" title="搭建高可用性集群"></a>搭建高可用性集群</h4><p>搭建高可用性集群步骤如下：</p>
+<ul>
+<li>每台机器上安装 <code>Neo4j</code> 企业版。</li>
+<li>若是有需要，可以配置仲裁实例。</li>
+<li>修改每台机器上 <code>Neo4j</code> 实例的配置文件。</li>
+<li>安装单个实例。</li>
+<li>修改具体的参数配置 <code>dbms.mode</code>、<code>ha.server_id</code>、<code>ha.initial_hosts</code>。</li>
+</ul>
+<ol>
+<li>重要配置项<br>在启动 <code>Neo4j</code> 集群时，每个实例按照配置项来关联其他的实例，当一个实例需要建立到其他实例的连接时，能否加入集群取决于集群的当前状态和该实例是否有这个加入，为了保证实例具有资格加入集群，因此每个实例都必须与集群的其他成员具有相同的数据库存储，或者是没有数据库存储的全新部署。<br><small>参与到集群中的实例应该配置 <code>IP</code> 地址或主机名。</small></li>
+</ol>
+<ul>
+<li><code>dbms.mode</code> 配置数据库的操作模式，需设置为 <code>dbms.mode = HA</code>。</li>
+<li><code>ha.server_id</code> 是每个实例的集群标识符，他必须是整数，并且必须在集群中所有的实例中保持唯一，为 <code>ha.server_id = 1</code>。</li>
+<li><code>ha.host.coordination</code> 是指实力监听集群的端口，默认端口为 <code>5001</code>。</li>
+<li><code>ha.ininial_hosts</code> 是用逗号隔开的地址&#x2F;端口对列表，该列表指定一个实力如何与其他的实例进行通信。当实例启动时，使用这些主机地址来查找和加入集群，当集群冷启动没有集群可用时，数据库也是不可用的，直到 <code>ha.ininial_hosts</code> 中列出的地址都在线且彼此通信才可以恢复使用。</li>
+<li><code>ha.host.data</code> 是一个地址&#x2F;端口对设置，用来指定从机监听来自主机的事务，默认配置端口为 <code>6001</code>。<code>ha.host.data</code> 必须使用与 <code>ha.host.coordination</code> 使用不同的端口。</li>
+</ul>
+<ol start="2">
+<li><p>配置文件示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ha.server_id = 1</span><br><span class="line">ha.initial_hosts = neo4j-01.local:5001,neo4j-02.local:5001,neo4j-03.local:5001</span><br><span class="line">dbms.mode = HA</span><br><span class="line">dbms.connector.http.enabled = true</span><br><span class="line">dbms.connector.http.listen+address:7474</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置仲裁实例<br>高可用性集群的典型部署就是三台机器来提供容错和读可扩展性。至此为了防止主机不可用，可以部署仲裁实例的 <code>Neo4j</code> 实例，他也会被视为集群的一员，主要作用是用于主机的选举，但不会参与到其他的操作。<br>仲裁实例的 <code>neo4j.conf</code> 配置文件与其他实例的配置基本相同，只是将 <code>dbms.mode</code> 配置的值变为 <code>ARBITER</code>，启动和停止仲裁实例的方法也与其他实例一致。</p>
+</li>
+</ol>
+<h4 id="状态信息端点"><a href="#状态信息端点" class="headerlink" title="状态信息端点"></a>状态信息端点</h4><p><code>Neo4j</code> 高可用性集群常见的操作就是将所有的写入请求定向到主机上，从机只负责读取操作，这样在集群中对读操作做到负载均衡，同时支持故障转移。<br>实现这个功能最常见的方法是在集群上加入一个负载均衡器，可以选用 <code>HA Proxy</code>（一个支持高可用性、负载均衡 <code>TCP</code> 和 <code>HTTP</code> 开源应用程序代理软件），这里的负载均衡器使用 <code>HTTP</code> 端点来发现主节点和从节点。</p>
+<ol>
+<li>状态端点信息<br>每个高可用性集群的实例都有关于其在集群中状态的三个端点，每个端点都是可用的，具体的状态取决于负载均衡的需求和设置。三个端点分别为：</li>
+</ol>
+<ul>
+<li><code>/db/manage/server/ha/master</code></li>
+<li><code>/db/manage/server/ha/slave</code></li>
+<li><code>/db/manage/server/ha/available</code></li>
+</ul>
+<p><code>master</code> 和 <code>salve</code> 可以将写入和非写入请求引导向特定的实例。<code>available</code> 端点一般情况下会将任意请求指向可用于事务处理的实例。查询端点的状态信息，执行 <code>HTTP GET</code> 操作。</p>
+<ol start="2">
+<li>状态信息端点详情<br>端点如下：</li>
+</ol>
+<ul>
+<li><code>/db/manage/server/ha/master</code><table>
+<thead>
+<tr>
+<th>实例状态</th>
+<th>返回状态码</th>
+<th>正文文本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Master</code></td>
+<td><code>200 OK</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>Slave</code></td>
+<td><code>404 Not Found</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>Unknown</code></td>
+<td><code>404 Not Found</code></td>
+<td><code>Unknown</code></td>
+</tr>
+</tbody></table>
+</li>
+<li><code>/db/manage/server/ha/slave</code><table>
+<thead>
+<tr>
+<th>实例状态</th>
+<th>返回状态码</th>
+<th>正文文本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Master</code></td>
+<td><code>404 Not Found</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>Slave</code></td>
+<td><code>200 OK</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>Unknown</code></td>
+<td><code>404 Not Found</code></td>
+<td><code>Unknown</code></td>
+</tr>
+</tbody></table>
+</li>
+<li><code>/db/manage/server/ha/available</code><table>
+<thead>
+<tr>
+<th>实例状态</th>
+<th>返回状态码</th>
+<th>正文文本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Master</code></td>
+<td><code>200 OK</code></td>
+<td><code>master</code></td>
+</tr>
+<tr>
+<td><code>Slave</code></td>
+<td><code>200 OK</code></td>
+<td><code>salve</code></td>
+</tr>
+<tr>
+<td><code>Unknown</code></td>
+<td><code>404 Not Found</code></td>
+<td><code>Unknown</code></td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><small><code>UNKNOWN</code> 状态表示当前 <code>Neo4j</code> 实例既不是主机也不是从机。</small></p>
+<ol start="3">
+<li>运行<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#&gt; curl http://localhost:7474/db/manage/server/ha/master</span><br><span class="line">true</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="HAProxy-负载均衡"><a href="#HAProxy-负载均衡" class="headerlink" title="HAProxy 负载均衡"></a><code>HAProxy</code> 负载均衡</h4><p>在 <code>Neo4j</code> 高可用性集群架构中，集群通常由负载均衡器管理。</p>
+<h5 id="为-Bolt-协议配置-HAProxy"><a href="#为-Bolt-协议配置-HAProxy" class="headerlink" title="为 Bolt 协议配置 HAProxy"></a>为 <code>Bolt</code> 协议配置 <code>HAProxy</code></h5><p>在 <code>Neo4j</code> 高可用性集群的部署中，<code>HAProxy</code> 将配置两个端口其中一个用于写入操作路由到主机，另一个则用于从机读操作的负载均衡。每个应用程序都有两个驱动程序实例，一个连接到主机端口用于执行写操作，而另一个连接到从机端口用于执行读操作。</p>
+<ol>
+<li><p>设置通信模式和空闲超时<br>如果一个服务器或者客户端空闲超过两个小时，那么该客户端或服务器就会被断开连接。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defaults</span><br><span class="line">	mode	tcp</span><br><span class="line">	timeout connect 	30s</span><br><span class="line">	timeout client 		2h</span><br><span class="line">	timeout	server 		2h</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置写操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">frontend neo4j-write</span><br><span class="line">	bind *:7680</span><br><span class="line">	default backend current-master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主机后端配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">backend current-master</span><br><span class="line">	option	httpchk	 HEAD  /db/manage/server/ha/master HTTP/1.0</span><br><span class="line">	server db01 10.0.1.10:7687 check port 7474</span><br><span class="line">	server db02 10.0.1.11:7687 check port 7474</span><br><span class="line">	server db03 10.0.1.12:7687 check port 7474</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置读连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">frontend neo4j-read</span><br><span class="line">	bind *:7681</span><br><span class="line">	default backend slaves</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从机的后端配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">backend slaves</span><br><span class="line">	balance roundrobin</span><br><span class="line">	option  httpchk  HEAD  /db/manage/server/ha/slave HTTP/1.0</span><br><span class="line">	server db01 10.0.1.10:7687 check port 7474</span><br><span class="line">	server db02 10.0.1.11:7687 check port 7474</span><br><span class="line">	server db03 10.0.1.12:7687 check port 7474</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><small>主机的后端配置与从机的后端配置相同。</small></p>
+<p>然后将上述的所有配置放到一个文件中，就可以得到一个基本可运行的 <code>HAProxy</code> 配置文件，它采用 <code>Bolt</code> 协议为应用程序提供负载均衡功能。</p>
+<h5 id="为-HTTP-API-配置-HAProxy"><a href="#为-HTTP-API-配置-HAProxy" class="headerlink" title="为 HTTP API 配置 HAProxy"></a>为 <code>HTTP API</code> 配置 <code>HAProxy</code></h5><p>添加以下配置文件 <code>haproxy.cfg</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">global</span><br><span class="line">	daemon</span><br><span class="line">	maxconn 256</span><br><span class="line">defaults</span><br><span class="line">	mode http</span><br><span class="line">	timeout connect 5000ms</span><br><span class="line">	timeout client 50000ms</span><br><span class="line">	timeout server 50000ms</span><br><span class="line">frontend http-in</span><br><span class="line">	bind *:80</span><br><span class="line">	default_backend neo4j</span><br><span class="line">backend neo4j</span><br><span class="line">	option httochk GET /db/manage/server/ha/available</span><br><span class="line">	server s1 10.0.1.10:7474 maxconn 32</span><br><span class="line">	server s2 10.0.1.11:7474 maxconn 32</span><br><span class="line">	server s3 10.0.1.12:7474 maxconn 32</span><br><span class="line">listen admin</span><br><span class="line">	bind *:8080</span><br><span class="line">	stats enable</span><br></pre></td></tr></table></figure>
+<p>使用以下方式启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg</span><br></pre></td></tr></table></figure>
+<p>至此就可以通过 <code>http://ip:8080/haproxy?stats</code> 来查看状态信息。默认用户名密码为 <code>admin</code>。</p>
+<h5 id="优化读写"><a href="#优化读写" class="headerlink" title="优化读写"></a>优化读写</h5><p><code>HAProxy</code> 支持使用 <code>HTTP</code> 响应码区分集群实例是否可用的功能，因此如果在应用程序中可以区分读请求和写请求，那么就可以使用两个独立的逻辑负载均衡器，其中一个用来将所有的写请求定向到主机，而另一个则将读请求定向到从机。在 <code>HAProxy</code> 中可以通过添加多个后端服务来构建逻辑负载均衡器。<br>下面将请求定向到从机：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">global</span><br><span class="line">	daemon</span><br><span class="line">	maxconn 256</span><br><span class="line">defaults</span><br><span class="line">	mode http</span><br><span class="line">	timeout connect 5000ms</span><br><span class="line">	timeout client 50000ms</span><br><span class="line">	timeout server 50000ms</span><br><span class="line">frontend http-in</span><br><span class="line">	bind *:80</span><br><span class="line">	default_backend neo4j-slaves</span><br><span class="line">backend neo4j-slaves</span><br><span class="line">	option httochk GET /db/manage/server/ha/slave</span><br><span class="line">	server s1 10.0.1.10:7474 maxconn 32 check</span><br><span class="line">	server s2 10.0.1.11:7474 maxconn 32 check</span><br><span class="line">	server s3 10.0.1.12:7474 maxconn 32 check</span><br><span class="line">listen admin</span><br><span class="line">	bind *:8080</span><br><span class="line">	stats enable</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/" title="Neo4j系列博客-集群">https://blog.vgbhfive.cn/Neo4j系列博客-集群/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/MySQL-TRUNCATE%E5%87%BD%E6%95%B0%E4%B8%8Etruncate%E5%91%BD%E4%BB%A4/" rel="prev" title="MySQL-TRUNCATE函数与truncate命令">
+      <i class="fa fa-chevron-left"></i> MySQL-TRUNCATE函数与truncate命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/" rel="next" title="Neo4j系列博客-高级应用">
+      Neo4j系列博客-高级应用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E6%9E%9C%E9%9B%86%E7%BE%A4"><span class="nav-number">2.</span> <span class="nav-text">因果集群</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E8%A7%86%E5%9B%BE"><span class="nav-number">2.1.</span> <span class="nav-text">操作视图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E8%A7%86%E5%9B%BE"><span class="nav-number">2.2.</span> <span class="nav-text">应用视图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E5%9B%A0%E6%9E%9C%E9%9B%86%E7%BE%A4"><span class="nav-number">2.3.</span> <span class="nav-text">创建新的因果集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.4.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%81%BE%E5%A4%87%E6%81%A2%E5%A4%8D"><span class="nav-number">2.5.</span> <span class="nav-text">灾备恢复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.6.</span> <span class="nav-text">其他设置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E9%9B%86%E7%BE%A4"><span class="nav-number">3.</span> <span class="nav-text">高性能集群</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">3.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E9%9B%86%E7%BE%A4"><span class="nav-number">3.2.</span> <span class="nav-text">搭建高可用性集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E4%BF%A1%E6%81%AF%E7%AB%AF%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">状态信息端点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HAProxy-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">3.4.</span> <span class="nav-text">HAProxy 负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA-Bolt-%E5%8D%8F%E8%AE%AE%E9%85%8D%E7%BD%AE-HAProxy"><span class="nav-number">3.4.1.</span> <span class="nav-text">为 Bolt 协议配置 HAProxy</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA-HTTP-API-%E9%85%8D%E7%BD%AE-HAProxy"><span class="nav-number">3.4.2.</span> <span class="nav-text">为 HTTP API 配置 HAProxy</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E8%AF%BB%E5%86%99"><span class="nav-number">3.4.3.</span> <span class="nav-text">优化读写</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

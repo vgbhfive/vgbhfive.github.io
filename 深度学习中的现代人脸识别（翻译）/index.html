@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="原文地址：Modern Face Recognition with Deep Learning 原文作者: Adam Geitgey 本文永久链接：深度学习中的现代人脸识别（翻译） 译者：Vgbhfive    我们学习现代人脸识别的工作原理如果仅仅是用来认识你的朋友那么就太简单了吧。现在我们可以将这项技术推向极限，已解决更重要的问题-威尔·法雷尔 (著名演员) 和 查德·史密斯 (著名摇滚音乐">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习中的现代人脸识别（翻译）">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="原文地址：Modern Face Recognition with Deep Learning 原文作者: Adam Geitgey 本文永久链接：深度学习中的现代人脸识别（翻译） 译者：Vgbhfive    我们学习现代人脸识别的工作原理如果仅仅是用来认识你的朋友那么就太简单了吧。现在我们可以将这项技术推向极限，已解决更重要的问题-威尔·法雷尔 (著名演员) 和 查德·史密斯 (著名摇滚音乐">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/03/18/uQ6DoiXBKNbLeGs.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/03/18/hJ17GSErx4TKNOZ.gif">
+<meta property="og:image" content="https://i.loli.net/2021/03/18/hdEwNVbiDosqpSW.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/qdCva9D4HMtVOXZ.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/mcxXBzsKgVpJM5q.gif">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/DhrlCXNZSO3tEYP.gif">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/3PXa2LESA461Uye.gif">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/AqM3Ni9v54WkQ1x.gif">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/mxNCyYDoGLUBw8b.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/jYuNMB1vACTsmaK.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/8NOyIWHgsTmCaPY.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/nmSLco2leX4auGK.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/lgXKS6yeYaiCckJ.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/q6d4rx9ih5z2B1y.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/8MJVGIb6z7lZDsX.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/b9MvxpchmtV71Js.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/19/sOgaAfcVln68t3q.jpg">
+<meta property="og:image" content="https://miro.medium.com/max/700/1*woPojJbd6lT7CFZ9lHRVDw.gif">
+<meta property="article:published_time" content="2021-03-18T13:50:40.000Z">
+<meta property="article:modified_time" content="2021-03-19T16:08:02.357Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Translate">
+<meta property="article:tag" content="Raspberry">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/18/uQ6DoiXBKNbLeGs.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>深度学习中的现代人脸识别（翻译） | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习中的现代人脸识别（翻译）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-18 21:50:40" itemprop="dateCreated datePublished" datetime="2021-03-18T21:50:40+08:00">2021-03-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-20 00:08:02" itemprop="dateModified" datetime="2021-03-20T00:08:02+08:00">2021-03-20</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li>原文地址：<a target="_blank" rel="noopener" href="https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78">Modern Face Recognition with Deep Learning</a></li>
+<li>原文作者: <a target="_blank" rel="noopener" href="https://medium.com/@ageitgey">Adam Geitgey</a></li>
+<li>本文永久链接：<a href="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">深度学习中的现代人脸识别（翻译）</a></li>
+<li>译者：<a href="https://blog.vgbhfive.cn/">Vgbhfive</a></li>
+</ul>
+<hr>
+
+<p>我们学习现代人脸识别的工作原理如果仅仅是用来认识你的朋友那么就太简单了吧。现在我们可以将这项技术推向极限，已解决更重要的问题-<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Will_Ferrell">威尔·法雷尔 (著名演员)</a> 和 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Chad_Smith">查德·史密斯 (著名摇滚音乐家)</a>。</p>
+<p><img src="https://i.loli.net/2021/03/18/uQ6DoiXBKNbLeGs.jpg" alt="1_l7zNW_4-afEOfP_mXxs75w.jpeg"></p>
+<p style="text-align: center;"><small style="font-size: 40%;">这些人之一是威尔·法雷尔（Will Farrell）。另一个是查德·史密斯（Chad Smith）。我发誓他们是不同的人！</small></p>
+
+<span id="more"></span>
+
+<hr>
+
+<h3 id="如何在非常复杂的问题上使用机器学习"><a href="#如何在非常复杂的问题上使用机器学习" class="headerlink" title="如何在非常复杂的问题上使用机器学习"></a>如何在非常复杂的问题上使用机器学习</h3><p>到目前为止，在第 <a target="_blank" rel="noopener" href="https://medium.com/@ageitgey/machine-learning-is-fun-80ea3ec3c471">1</a> 、<a target="_blank" rel="noopener" href="https://medium.com/@ageitgey/machine-learning-is-fun-part-2-a26a10b68df3">2</a> 和 <a target="_blank" rel="noopener" href="https://medium.com/@ageitgey/machine-learning-is-fun-part-3-deep-learning-and-convolutional-neural-networks-f40359318721">3</a> 中，我们使用机器学习来解决只有一步的孤立问题。所有这些问题都可以通过选择一种机器学习算法，输入数据并获得结果来解决。</p>
+<p>但是人脸识别实际上是一系列相关的问题：</p>
+<ul>
+<li>首先，查看图片并找到其中的所有面孔。</li>
+<li>其次，专注于每一张面孔，并且能够理解（即使面孔朝向不同的反向或光线不足的地方转动）它们仍然是同一个人。</li>
+<li>第三，能够挑选出与其他面孔区分开来的脸部特征，例如眼睛大小，脸部长度等。</li>
+<li>最后，将该面孔的独特特征与已有认识的人中进行比对，以确定该人的名字。</li>
+</ul>
+<br/>
+
+<p>作为人类，人类的大脑可以自动且立即执行上述的操作。然后实际上，人类很擅长识别在日常生活中见到的所有面孔。<br>然而计算机并不具备这种能力（至少现在还不太行），因此我们必须教会计算机如何分别完成这些过程的每一个步骤。</p>
+<p>我们需要建立一个管道，在其中分别解决人脸识别的每一个步骤，并将当前步骤的结果传递到下一步。换句话说，就是我们需要将把几种机器学习算法链接到一起。</p>
+<p><img src="https://i.loli.net/2021/03/18/hJ17GSErx4TKNOZ.gif" alt="1"></p>
+<p style="text-align: center;"><small style="font-size: 40%;">用于检测人脸的基本管道可能如何工作</small></p>
+
+<hr>
+
+<h3 id="人脸识别"><a href="#人脸识别" class="headerlink" title="人脸识别"></a>人脸识别</h3><p>在解决这个问题中，对于每一步，我们将学习不同的机器学习算法。我不会完全解释每种算法，但是你可以学习到每种算法的主要思想，并且可以学习如何 Python 中构建自己的人脸识别系统。</p>
+<h4 id="1、找出所有的面孔"><a href="#1、找出所有的面孔" class="headerlink" title="1、找出所有的面孔"></a>1、找出所有的面孔</h4><p>开发流程中的第一步就是人脸检测。显然，我们只有先找出图片中的所有面孔，然后才能将他们全部分开。</p>
+<p>如果你在过去的十年里使用过任何智能手机上的相机，则可能已经看到了人脸检测的实际效果：<br><img src="https://i.loli.net/2021/03/18/hdEwNVbiDosqpSW.png" alt="2"><br>人脸检测是相机的一项重要功能。当相机可以自动挑选出面孔时，可以确保在拍摄照片之前将所有面孔都对准焦点。但是，我们要将这一功能用于其他目的-查找要传递到下一步的图像区域。</p>
+<br/>
+
+<p>在 2000 年代初期，Paul Viola 和 Michael Jones 发明了<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework">一种面部检测方法</a>，该方法能够以足够快的速度运行在廉价相机上，从而成为人脸检测的主流。<br>但是，现在有了更加可靠的解决方案。我们将使用一种在 2005 年发明的方法，称为“**<a target="_blank" rel="noopener" href="http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf">定向梯度直方图</a>**” ，简称 HOG 。</p>
+<br/>
+
+<p>要想在图像中查找面孔，我们需要将图像设置为黑白，因此我们不需要颜色数据来查找面孔：<br><img src="https://i.loli.net/2021/03/19/qdCva9D4HMtVOXZ.jpg" alt="3"></p>
+<p>然后，我们将会一次查看图像中的每一个像素。对于每一个像素，我们要查看直接围绕他的像素：<br><img src="https://i.loli.net/2021/03/19/mcxXBzsKgVpJM5q.gif" alt="4"></p>
+<p>我们的目标是弄清楚当前元素与直接围绕他的像素相比有多暗。然后，我们绘制一个箭头表示图像朝哪个方向变暗：<br><img src="https://i.loli.net/2021/03/19/DhrlCXNZSO3tEYP.gif" alt="5"></p>
+<p style="text-align: center;"><small style="font-size: 40%;">仅看一个像素和触摸它的像素，图像朝右上方变暗。</small></p>
+
+<p>如果对图像中的<strong>每个像素</strong>重复该过程，则最终每个像素都会被箭头替代。这些箭头称之为<code>渐变</code>，它们显示了整个图像从明到暗的流动：<br><img src="https://i.loli.net/2021/03/19/3PXa2LESA461Uye.gif" alt="6"></p>
+<p>这似乎是一件随机的事情，但是确实有充分的理由将像素转换为<code>渐变</code>。如果我们直接分析像素，同一张照片的真正黑暗的图像和真正明亮的图像将具有完全不同的像素值。但是，仅考虑相邻像素之间的亮度变化的反向，则黑暗的图像和明亮的图像都将具有相同的特定表示。这样会使得问题更加容易解决。</p>
+<br/>
+
+<p>如果如上述的话，为每一个元素保存<code>渐变</code>会给我们带来太多的细节。此时，如果我们能够以更高的层次看到明暗的基本流程那就更棒了，这样我们就可以看到图像的基本图案。</p>
+<p>为此，我们将图像分成每个 16x16 像素的小方块。在每一个小方块中，我们将计算出每个主要方向上有多少个渐变点（向上、垂直、向右等）。然后，我们先图像中的那个正方形替代为最强的箭头反向。</p>
+<p>最终结果就变成了，我们将原始图像转换为非常简单的表示形式，以一种简单的方式捕获面部的基本结构：<br><img src="https://i.loli.net/2021/03/19/AqM3Ni9v54WkQ1x.gif" alt="7"></p>
+<p style="text-align: center;"><small style="font-size: 40%;">原始图像被转换为​​HOG表示，可以捕获图像的主要特征，而与图像的亮度无关。</small></p>
+
+<p>在此之上，我们已经有了很大的进步。但是要在此 HOG 图像中找到脸部，我们要做的就是找到图像中看起来与其他训练脸部中提取的已知 HOG 模式最相似的部分。<br><img src="https://i.loli.net/2021/03/19/mxNCyYDoGLUBw8b.png" alt="8"></p>
+<p>使用此技术，我们就可以轻松地在任何图像中找到人脸。<br><img src="https://i.loli.net/2021/03/19/jYuNMB1vACTsmaK.jpg" alt="9"></p>
+<br/>
+
+<p>如果你想自己尝试使用 Python 和 dlib 进行操作，那么下面的 <a target="_blank" rel="noopener" href="https://gist.github.com/ageitgey/1c1cb1c60ace321868f7410d48c228e1">代码</a> 会帮助你如何生成和查看图像的 HOG 表示。</p>
+<h4 id="2、摆姿势和投影面"><a href="#2、摆姿势和投影面" class="headerlink" title="2、摆姿势和投影面"></a>2、摆姿势和投影面</h4><p>这时，我们会发现一个问题，我们识别出了我们图像中的面孔，当面对不同反向的面孔表情与计算机看起来是完全不一样的：<br><img src="https://i.loli.net/2021/03/19/8NOyIWHgsTmCaPY.png" alt="2-1.png"></p>
+<p style="text-align: center;"><small style="font-size: 40%;">人们可以轻松地识别出这两个图像都是威尔·法瑞尔的，但计算机会将这些图像视为两个完全不同的人。</small></p>
+
+<p>为了解决这个问题，我们将尝试使每张图片变形，以使眼睛和嘴唇始终处于图像的样本位置。这个步骤将会在我们接下来的步骤中比较人脸将会变得更加容易。</p>
+<p>基于此，我们将使用一种成为<code>人脸界标估计</code>的算法。有很多种方法都可以做到这一点，但是我们将使用 Vahid Kazemi 和 Josephine Sullivan 在 2014 年发明的<a target="_blank" rel="noopener" href="http://www.csc.kth.se/~vahidk/papers/KazemiCVPR14.pdf">方法</a>。</p>
+<p>基本思想就是，我们得出存在于每个面孔上的 68 个特定的点（称之为地标），即下巴顶部、每只眼睛的外边缘、每根眉毛的内边缘等。然后，我们会训练一种机器学习算法，能够在任何面孔上找到以下 68 个特定点：<br><img src="https://i.loli.net/2021/03/19/nmSLco2leX4auGK.png" alt="2-2.png"></p>
+<p style="text-align: center;"><small style="font-size: 40%;">在每张面孔上找到68个地标。</small></p>
+
+<p>这是在测试图像上找到的 68 个面部地标的结果：<br><img src="https://i.loli.net/2021/03/19/lgXKS6yeYaiCckJ.jpg" alt="2-3.jpeg"></p>
+<p>现在我们知道了眼睛和嘴巴的存在，我们进行简单的旋转、缩放和剪切图像，以使眼睛和嘴巴尽可能的居中。在这之中，我们不会做任何的 3d 变形，我们只使用保留平行线的基本图像变换（例如旋转、缩放），如此称之为<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Affine_transformation">仿射变换</a>。<br><img src="https://i.loli.net/2021/03/19/q6d4rx9ih5z2B1y.png" alt="2-4.png"></p>
+<p>现在无论面孔如何进行旋转，我们都可以使眼睛和嘴巴居中于图像中大致相同的位置，这样就能使我们的下一个步骤更加准确。</p>
+<br/>
+
+<p>如果你想自己尝试使用 Python 和 dlib 进行操作，这里查找人脸界标的 <a target="_blank" rel="noopener" href="https://gist.github.com/ageitgey/1c1cb1c60ace321868f7410d48c228e1">代码</a> 能很好地帮助到你。</p>
+<h4 id="3、对面孔进行编码"><a href="#3、对面孔进行编码" class="headerlink" title="3、对面孔进行编码"></a>3、对面孔进行编码</h4><p>到了这一步我们已经解决了大部分的问题，那么接下来就是如何将图像中的面孔进行识别并标记。<br>为此我们需要一种从每张面孔中提取一些基本测量值的方法。然后，我们可以用相同的方式测量未知面孔，并用最接近的测量值找到已知面孔（例如我们可以测量妹子耳朵的大小、两眼之间的距离、鼻子的长度等）。</p>
+<h5 id="测量面孔的最可靠方法"><a href="#测量面孔的最可靠方法" class="headerlink" title="测量面孔的最可靠方法"></a>测量面孔的最可靠方法</h5><p>事实证明，对于我们人类来说显而易见的测量值（例如眼睛颜色）对于计算机查看图像中的各个像素而言并没有任何意义。研究人员发现，最准确的方法应该是让计算机找出测量值以自行收集。在确定面孔的哪些部位很重要时，深度学习比人类做得更好。</p>
+<p>解决方案就是训练一个深度卷积神经网络。但是，于其训练他来识别图片对象，我们不如训练它来为每个面孔生成 128 个测量值。</p>
+<p>训练过程通过一次查看 3 张图像来进行：</p>
+<ul>
+<li>加载已知人物的训练脸部图像。</li>
+<li>加载同一个已知人物的另一张图像。</li>
+<li>加载完全不同的人的图像。</li>
+</ul>
+<p>然后，该算法查看针对这三个图像中的每个图象当前正在生成的测量结果。接着，他会稍微调整神经网络，以确保他为 #1 和 #2 生成的测量值稍微接近一点，同时确保 #2 和 #3 的测量值稍微分开一点：<br><img src="https://i.loli.net/2021/03/19/8MJVGIb6z7lZDsX.png" alt="3-1.png"></p>
+<p>在对成千上万的人类的数百万张图像重复比对此过程百万次之后，神经网络学会了可靠地为每个人生成 128 个测量值。同一个人的任何十张不同图片都应进行大致相同的测量。</p>
+<p>人类将机器学习为每个面孔生成的 128 个测量值称为<code>嵌入</code>。将复杂的原始数据（例如图片）简化为计算机生成的数字列表的想法在机器学习中产生了很多。</p>
+<h5 id="编码我们的面孔图像"><a href="#编码我们的面孔图像" class="headerlink" title="编码我们的面孔图像"></a>编码我们的面孔图像</h5><p>训练卷积神经网络以输出人脸嵌入的过程需要大量数据和计算功能。目前即便是使用 NVidia Telsa 显卡，也需要大约 24 小时左右的的连续训练才能获得良好的准确性。</p>
+<p>不过，一旦对神经网络进行了训练，我们就可以生成任何脸部的测量结果，甚至是以前从未见过的测量结果。因此，在<a target="_blank" rel="noopener" href="https://github.com/cmusatyalab/openface/tree/master/models/openface">这里</a>你可以找到已经训练好的神经网络。</p>
+<p>到这一步，我们需要做的就是通过已经预先训练的神经网络运行人脸图像，以获取每个面孔的 128 个测量值。这时测试图像的尺寸：<br><img src="https://i.loli.net/2021/03/19/b9MvxpchmtV71Js.png" alt="3-2.png"></p>
+<p>那么，对于这 128 个准确的测量值到底是测量了面孔的哪一部分呢？事实证明，我们并不知道，但是这对我们来说并不重要。我们需要关心的是，当查看同一个面孔时的两张图像时，神经网络会生成几乎相同的测量值。</p>
+<br/>
+
+<p>如果你也想自己尝试这个步骤，OpenFace 提供了对应的 <a target="_blank" rel="noopener" href="https://github.com/cmusatyalab/openface/blob/master/batch-represent/batch-represent.lua">lua 脚本</a>，该脚本将在文件夹中生成所有图像的嵌入并将它们写入 csv 文件中。</p>
+<h5 id="从编码中查找面孔的姓名"><a href="#从编码中查找面孔的姓名" class="headerlink" title="从编码中查找面孔的姓名"></a>从编码中查找面孔的姓名</h5><p>最后一步实际上是整个过程中最简单的步骤，我们需要做的就是在已知数据库中找到最接近我们测试图像的面孔的姓名。</p>
+<p>为此我们可以使用任何基本的机器学习分类算法来做到这一点。不需要花哨的深度学习技巧，我们仅使用一个简单的线性 SVM 分类器，至于其他的许多分类算法都是可以使用的。</p>
+<p>我们需要做的就是训练一个分类器，该分类器可以从新测试图像中获取测量值，并告诉哪个已知人物最接近匹配项。运行此分类器需要尽可能的快，而分类器的结果就是该人的名字。</p>
+<p>至此，我们开始了测试。首先，我训练了一个分类器，其中嵌入了 Will Ferrell、Chad Smith 和 Jimmy Falon 的大约 20 张图像：<br><img src="https://i.loli.net/2021/03/19/sOgaAfcVln68t3q.jpg" alt="3-3.jpeg"></p>
+<p>然后就是对应的测试效果了。<br><img src="https://miro.medium.com/max/700/1*woPojJbd6lT7CFZ9lHRVDw.gif" alt="3-4"></p>
+<p>效果很明显就出来了，神经网络对于不同姿势的面孔（甚至是侧面）都是可以完美识别。</p>
+<hr>
+
+<h3 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h3><p>我们回顾以下上面的步骤：</p>
+<ul>
+<li>使用 HOG 算法对图片进行编码，以创建图片的简化版本。使用此简化的图像，找到图像中最看起来像人脸的普通 HOG 编码的部分。</li>
+<li>通过找到面部的主要地标来找出面部的姿势。一旦找到这些地标，就可以使用它们使图像变形，以使眼睛和嘴巴居中。</li>
+<li>通过神经网络传递居中的脸部图像，该网络知道如何测量脸部特征。同时保存这 128 个测量值。</li>
+<li>查看我们以前测量过的所有面孔，看看哪个人的测量值与现在需要识别的面孔测量值最接近。那就是我们最终的结果。</li>
+</ul>
+<p><small>上面步骤中使用的 OpenFace 已经由作者发布了一个新的基于 Python 的人脸识别库 - face_recognition。</small></p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://github.com/ageitgey/face_recognition#face-recognition">https://github.com/ageitgey/face_recognition#face-recognition</a><br><a target="_blank" rel="noopener" href="https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78">https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78</a><br><a target="_blank" rel="noopener" href="https://github.com/cmusatyalab/openface">https://github.com/cmusatyalab/openface</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" title="深度学习中的现代人脸识别（翻译）">https://blog.vgbhfive.cn/深度学习中的现代人脸识别（翻译）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Translate/" rel="tag"># Translate</a>
+              <a href="/tags/Raspberry/" rel="tag"># Raspberry</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Go-64-bit-mode-not-compiled-in/" rel="prev" title="Go 64-bit mode not compiled in">
+      <i class="fa fa-chevron-left"></i> Go 64-bit mode not compiled in
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/MySQL-indexes/" rel="next" title="MySQL-indexes">
+      MySQL-indexes <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E9%9D%9E%E5%B8%B8%E5%A4%8D%E6%9D%82%E7%9A%84%E9%97%AE%E9%A2%98%E4%B8%8A%E4%BD%BF%E7%94%A8%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">如何在非常复杂的问题上使用机器学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">人脸识别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81%E6%89%BE%E5%87%BA%E6%89%80%E6%9C%89%E7%9A%84%E9%9D%A2%E5%AD%94"><span class="nav-number">2.1.</span> <span class="nav-text">1、找出所有的面孔</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81%E6%91%86%E5%A7%BF%E5%8A%BF%E5%92%8C%E6%8A%95%E5%BD%B1%E9%9D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">2、摆姿势和投影面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81%E5%AF%B9%E9%9D%A2%E5%AD%94%E8%BF%9B%E8%A1%8C%E7%BC%96%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">3、对面孔进行编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%8B%E9%87%8F%E9%9D%A2%E5%AD%94%E7%9A%84%E6%9C%80%E5%8F%AF%E9%9D%A0%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.1.</span> <span class="nav-text">测量面孔的最可靠方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E6%88%91%E4%BB%AC%E7%9A%84%E9%9D%A2%E5%AD%94%E5%9B%BE%E5%83%8F"><span class="nav-number">2.3.2.</span> <span class="nav-text">编码我们的面孔图像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%8E%E7%BC%96%E7%A0%81%E4%B8%AD%E6%9F%A5%E6%89%BE%E9%9D%A2%E5%AD%94%E7%9A%84%E5%A7%93%E5%90%8D"><span class="nav-number">2.3.3.</span> <span class="nav-text">从编码中查找面孔的姓名</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E9%A1%BE"><span class="nav-number">3.</span> <span class="nav-text">回顾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

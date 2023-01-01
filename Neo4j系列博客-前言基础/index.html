@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基础图数据库是基于图论实现的一种新型 NoSQL 数据库。他的数据存储结构和数据的查询方式都是以图论为基础的。图论中图的基本元素为节点和边，在图数据库中对应的就是节点和关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-前言基础">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%89%8D%E8%A8%80%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="基础图数据库是基于图论实现的一种新型 NoSQL 数据库。他的数据存储结构和数据的查询方式都是以图论为基础的。图论中图的基本元素为节点和边，在图数据库中对应的就是节点和关系。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/01/01/ihrwNxQXD5WMedl.jpg">
+<meta property="og:image" content="https://s2.loli.net/2022/01/01/VHUlOxIiy4LYTvp.jpg">
+<meta property="og:image" content="https://s2.loli.net/2022/01/02/bfg3tCa5x2I87Pn.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/02/16GEnL5NcHfdBVg.png">
+<meta property="article:published_time" content="2022-01-01T03:24:49.000Z">
+<meta property="article:modified_time" content="2022-01-02T06:09:14.704Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/01/ihrwNxQXD5WMedl.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%89%8D%E8%A8%80%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-前言基础 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%89%8D%E8%A8%80%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-前言基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-01 11:24:49" itemprop="dateCreated datePublished" datetime="2022-01-01T11:24:49+08:00">2022-01-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-02 14:09:14" itemprop="dateModified" datetime="2022-01-02T14:09:14+08:00">2022-01-02</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><p>图数据库是基于图论实现的一种新型 <code>NoSQL</code> 数据库。他的数据存储结构和数据的查询方式都是以<strong>图论</strong>为基础的。图论中图的基本元素为<strong>节点</strong>和<strong>边</strong>，在图数据库中对应的就是<strong>节点</strong>和<strong>关系</strong>。</p>
+<span id="more"></span>
+
+<h4 id="图数据模型"><a href="#图数据模型" class="headerlink" title="图数据模型"></a>图数据模型</h4><p>图数据库要存储具体的图数据，最终落实为具体的数据文件，自然就涉及特定的<strong>图数据模型</strong>。<br>常用的有三种：</p>
+<ul>
+<li>属性图。</li>
+<li>超图。</li>
+<li>三元组。</li>
+</ul>
+<p>符合以下特征的图数据模型就成为属性图：</p>
+<ul>
+<li>包含节点和关系。</li>
+<li>节点可以有属性（键值对）。</li>
+<li>节点可以有一个或多个标签。</li>
+<li>关系有名字和方向，并总是有一个开始节点和一个结束节点。</li>
+<li>关系也可以有属性。</li>
+</ul>
+<p>超图适用于多对多关系。例如，常见的有房产拥有关系。</p>
+<p>三元组是一个包含主谓宾的数据结构。例如，张三和李四拥有一百块钱等。</p>
+<h4 id="图计算引擎"><a href="#图计算引擎" class="headerlink" title="图计算引擎"></a>图计算引擎</h4><p>图计算引擎是能够组织存储大型图数据集并且实现了全局图计算算法的一种数据库核心构件。</p>
+<p>图计算引擎的工作流程，它包含一个具有联机事务处理过程的数据库记录系统，图计算引擎用于响应终端或应用进程运行时发来的查询请求，周期性从记录系统中进行数据抽取、转换和加载，然后将数据从记录数据系统读入到图计算引擎并进行离线查询和分析，最后将查询、分析的结果返回给用户终端或应用程序。<br><img src="https://s2.loli.net/2022/01/01/ihrwNxQXD5WMedl.jpg" alt="neo4j-1.jpg"></p>
+<p>较为流行的图计算引擎有两种：</p>
+<ul>
+<li>单机图计算引擎。 <code>Cassovary</code>。</li>
+<li>分布式图计算引擎。 <code>Pegasus</code> 和 <code>Giraph</code>。</li>
+</ul>
+<hr>
+
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><code>Neo4j</code> 实现了专业数据库级别的图数据模型的存储。<br>与普通的图处理或内存级数据库不同，<code>Neo4j</code> 提供了完整的数据库特性，包括以下内容：</p>
+<ul>
+<li>支持 <code>ACID</code> 事务。 <code>Neo4j</code> 通过 <code>ACID</code> 事务提供真正的数据安全，通过事务来保证数据在硬件故障或者系统崩溃得到情况下数据不丢失。</li>
+<li>集群支持。 <code>Neo4j</code> 使用多副本主从复制的方式构建高可靠性集群，支持大数据集合并且可以不断扩展其容量，可存储数百万亿个实体。</li>
+<li>备份与故障转移。</li>
+<li>本地化的数据库。 <code>Neo4j</code> 自底向上构成一个图数据库。它的体系结构旨在优化快速管理、存储和遍历节点和关系。</li>
+<li>界面友好。 <code>Neo4j</code> 提供了一个查询与展示一体化的 <code>Web</code> 操作界面。</li>
+<li>声明式图查询语言。 <code>Cypher</code> 是一种声明式图数据库查询语言，它表现力丰富，查询效率高，其地位与其他关系型数据库中的 <code>SQL</code> 语言类似。</li>
+<li>代码开源。</li>
+</ul>
+<hr>
+
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><code>Neo4j</code> 最初的设计动机在于为了更好的描述实体之间的联系。但传统的关系型数据库更加注重刻画实体内部的属性，实体与实体之间的关系主要是通过外键来实现的，因此在查询一个实体的关系时需要 <code>join</code> 操作，特别是深层次的关系查询时需要大量的 <code>join</code> 操作，而 <code>join</code> 操作通常又非常耗时。</p>
+<h4 id="免索引邻接"><a href="#免索引邻接" class="headerlink" title="免索引邻接"></a>免索引邻接</h4><p><code>Neo4j</code> 为了保证关系查询的速度，即免索引邻接属性，数据库中的每个节点都会维护与他相邻节点的引用。因此每个节点都相当于与它相邻节点的微索引，这比使用全局索引的代价要小很多。<br><img src="https://s2.loli.net/2022/01/01/VHUlOxIiy4LYTvp.jpg" alt="neo4j-2.jpg"></p>
+<p>使用免索引邻机制，每个节点都有直接或者间接指向其相邻节点的指针。</p>
+<p>免索引邻接针对 <code>RDBMS</code> 中的关系查询的缺点做了改进：</p>
+<ul>
+<li>免索引邻接使用遍历物理关系的方法查找，比起全局索引来说代价要小得多。</li>
+<li>当索引建立后试图反向遍历时，建立的索引就不起作用了。</li>
+</ul>
+<h4 id="底层索引结构"><a href="#底层索引结构" class="headerlink" title="底层索引结构"></a>底层索引结构</h4><p>从宏观角度来说，<code>Neo4j</code> 中仅仅包含两种数据类型和一种存储类型：</p>
+<ul>
+<li>节点（<code>Node</code>）: 节点类似于 <code>E-R</code> 图中的实体（<code>Entity</code>）。每一个实体可以有零个或多个属性（<code>Property</code>），这些属性以 <code>key-value</code> 对的形式存在。属性没有特殊的类别要求，同时每个节点还具有响应的标签（<code>Label</code>），用来区分不同类型的节点。</li>
+<li>关系（<code>Relationship</code>）: 关系也类似于 <code>E-R</code> 图中的关系（<code>Relationship</code>）。一个关系有起始节点和终止节点。另外，与节点一样，关系也能够有自己的属性和标签。</li>
+<li>属性（<code>Property</code>）。<br><img src="https://s2.loli.net/2022/01/02/bfg3tCa5x2I87Pn.png" alt="neo4j-3.jpg"></li>
+</ul>
+<p>节点和关系分别采用固定长度存储。其中节点为 <code>9</code> 字节，关系为 <code>33</code> 字节。</p>
+<p>节点存储文件用来存储节点的记录，文件名为 <code>neostore.nodestore.db</code> 。节点记录的长度为固定大小，如图中所示，每个节点记录的长度为 <code>9</code> 个字节。格式为： <code>Node:inUse + nextRelId + nextPropId</code> 。</p>
+<ul>
+<li><code>inUse</code>： <code>1</code> 表示该节点被正常使用，<code>0</code> 表示该节点被删除。</li>
+<li><code>nextRelId</code>： 该节点的下一个关系 <code>ID</code>。</li>
+<li><code>nextPropId</code>： 该节点的下一个属性 <code>ID</code>。</li>
+</ul>
+<p><code>Node[12,used=true,rel=11,prop=22]</code> 采用固定字节长度的记录可以快速地查询到存储文件中的节点。</p>
+<p>关系存储文件用来存储关系的记录，文件名为 <code>neostore.relationshipstore.db</code> 。像节点的存储一样，关系存储区的记录大小也是固定的。格式为： <code>Relationship:inUse + firstNode + secondNode + relType + firstPrevRelId + firstNextRelId + secondPrevRelId + secondNextRelId + nextPropId</code> 。</p>
+<ul>
+<li><code>inUse</code>： <code>1</code> 表示该节点被正常使用，<code>0</code> 表示该节点被删除。</li>
+<li><code>firstNode</code>： 当前关系的起始节点。</li>
+<li><code>secondNode</code>： 当前关系的终止节点。</li>
+<li><code>relType</code>： 关系的类型。</li>
+<li><code>firstPrevRelId &amp; firstNextRelId</code>： 起始节点的前一个和后一个关系的 <code>ID</code>。</li>
+<li><code>secondPrevRelId &amp; secondNextRelId</code>： 终止节点的前一个和后一个关系 <code>ID</code>。</li>
+<li><code>nextPropId</code>： 该节点的下一个属性 <code>ID</code>。</li>
+</ul>
+<p><code>Relationship[11,used=true,source=12,target=11,type=2,sPrev=-1,sNext=-1,tPrev=-1,tNext=10,prop=23]</code> 采用固定字节长度的记录可以快速地查询到存储文件中的关系。</p>
+<p><code>Neo4j</code> 中有一个 <code>.id</code> 文件用来保持对未使用记录的跟踪，用来回收未使用的记录占用的空间。</p>
+<p>属性记录的物理存储位置在 <code>neostore.propertystore.db</code> 文件中。与节点和关系的存储记录一样，属性的存储记录也是固定长度。每个属性记录包含四个属性块和属性链中下一个属性的 <code>ID</code>。属性链是单向链表，而关系链是双向链表。<br>属性索引文件主要用于存储属性的名称，属性索引的值部分存储的是指向动态内存的记录或者内联值，短字符串和短数组会直接内联在属性存储记录中。当长度超过属性记录中的 <code>propBlock</code> 长度限制后，会单独存储在其他的动态存储文件中。</p>
+<p><code>Neo4j</code> 中有两种动态存储： 动态字符串存储（<code>neostore.propertystore.db.strings</code>）和动态数组存储（<code>neostore.propertystore.db.arrys</code>）。动态存储记录是可以扩张的，如果一个属性长到一条动态存储记录仍然无法完全容纳时，可以申请多个动态存储记录逻辑上进行连接。</p>
+<h4 id="遍历方式"><a href="#遍历方式" class="headerlink" title="遍历方式"></a>遍历方式</h4><p>每个节点记录都包含一个指向该节点的第一个属性的指针和联系链中第一个联系的指针。要读取一个节点的属性，从指向第一个属性的指针开始，遍历整个单向链表结构。要找到一个节点的关系，从指向的第一个关系开始，遍历整个双向链表，直到找到感兴趣的关系。一旦找到了感兴趣关系的记录，就可以与使用和查找节点属性一样的方法查找关系的属性。也可以很方便的获取起始节点和结束节点的 <code>ID</code>。<br><img src="https://s2.loli.net/2022/01/02/16GEnL5NcHfdBVg.png" alt="neo4j-4.jpg"><br><small>每一个列表都是双向链表，因此我们可以在任何一个方向上进行快速便利和高效地插入和删除。</small>	</p>
+<p>通过固定大小的存储记录和指针 <code>ID</code>，只要跟随指针就可以简单地实现遍历并且高速执行。要遍历一个节点到另一个节点的特定关系，在 <code>Neo4j</code> 中只需要遍历几个指针，然后执行一些低成本的 <code>ID</code> 计算即可，这相较于全局索引的时间复杂度要低很多，这就是 <code>Neo4j</code> 实现高效遍历的秘密。</p>
+<ul>
+<li>从一个给定节点定位关系链中第一个关系的位置，可以通过计算他在关系存储的偏移量来获得。跟获得节点存储位置的方法一样，使用关系 <code>ID</code> 乘以关系记录的固定大小即可找到关系在存储文件中的正确位置。</li>
+<li>在关系记录中，搜索第二个字段可以找到第二个节点的 <code>ID</code>。用节点记录大小乘以节点 <code>ID</code> 可以得到节点在存储中的正确位置。</li>
+</ul>
+<h4 id="存储优化"><a href="#存储优化" class="headerlink" title="存储优化"></a>存储优化</h4><p><code>Neo4j</code> 支持存储优化（压缩和内联存储属性值），对于某些短字符的属性可以直接存储在属性文件中（<code>neostore.propertystore.db</code>）。<br><code>Neo4j</code> 还可以对属性名称的空间严格维护。属性名称都通过属性索引文件从属性存储中间接引用。属性索引允许所有具有相同名称的属性共享单个记录。<br><code>Neo4j</code> 采用了缓存策略，保证那些经常访问的数据可以快速地被多次重复访问。其中页面置换算法是基于最不经常使用的页置换（<code>LFU, Least Frequently Used</code>）缓存策略，根据页面的常用程度进行微调。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%89%8D%E8%A8%80%E5%9F%BA%E7%A1%80/" title="Neo4j系列博客-前言基础">https://blog.vgbhfive.cn/Neo4j系列博客-前言基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/MyBatis-No-setter-found-for-the-keyProperty-id/" rel="prev" title="MyBatis-No setter found for the keyProperty id">
+      <i class="fa fa-chevron-left"></i> MyBatis-No setter found for the keyProperty id
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/" rel="next" title="Neo4j系列博客-入门">
+      Neo4j系列博客-入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">图数据模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E"><span class="nav-number">1.2.</span> <span class="nav-text">图计算引擎</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%8D%E7%B4%A2%E5%BC%95%E9%82%BB%E6%8E%A5"><span class="nav-number">3.1.</span> <span class="nav-text">免索引邻接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E7%B4%A2%E5%BC%95%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">底层索引结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F"><span class="nav-number">3.3.</span> <span class="nav-text">遍历方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E4%BC%98%E5%8C%96"><span class="nav-number">3.4.</span> <span class="nav-text">存储优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

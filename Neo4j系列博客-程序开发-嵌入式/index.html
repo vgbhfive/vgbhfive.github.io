@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Neo4j 正式支持 .Net 、 Java 、 JavaScript 、 Ruby 、 PHP 和 Python 的二进制 Bolt 协议驱动程序。这些开发平台通过引入相应的驱动程序包便可与 Neo4j 相互集成，然后就可以对 Neo4j 进行数据操作。 入门目前 Neo4j 支持三种开发模式，分别为：  Java 嵌入式开发模式。Neo4j 是基于 Java 语言开发的，所以他能与 Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-程序开发-嵌入式">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="Neo4j 正式支持 .Net 、 Java 、 JavaScript 、 Ruby 、 PHP 和 Python 的二进制 Bolt 协议驱动程序。这些开发平台通过引入相应的驱动程序包便可与 Neo4j 相互集成，然后就可以对 Neo4j 进行数据操作。 入门目前 Neo4j 支持三种开发模式，分别为：  Java 嵌入式开发模式。Neo4j 是基于 Java 语言开发的，所以他能与 Java">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/03/11/1Jk8X26ZVwid54f.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/13/S3jOcmHdY51MrRW.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/13/UGpFQwZ9vsnbmr3.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/14/ZLcOBGEsu4NgCyn.png">
+<meta property="article:published_time" content="2022-02-28T14:22:56.000Z">
+<meta property="article:modified_time" content="2022-03-21T14:32:12.972Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/03/11/1Jk8X26ZVwid54f.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-程序开发-嵌入式 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-程序开发-嵌入式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-28 22:22:56" itemprop="dateCreated datePublished" datetime="2022-02-28T22:22:56+08:00">2022-02-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-21 22:32:12" itemprop="dateModified" datetime="2022-03-21T22:32:12+08:00">2022-03-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><code>Neo4j</code> 正式支持 <code>.Net</code> 、 <code>Java</code> 、 <code>JavaScript</code> 、 <code>Ruby</code> 、 <code>PHP</code> 和 <code>Python</code> 的二进制 <code>Bolt</code> 协议驱动程序。这些开发平台通过引入相应的驱动程序包便可与 <code>Neo4j</code> 相互集成，然后就可以对 <code>Neo4j</code> 进行数据操作。</p>
+<h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><p>目前 <code>Neo4j</code> 支持三种开发模式，分别为：</p>
+<ul>
+<li><code>Java</code> 嵌入式开发模式。<code>Neo4j</code> 是基于 <code>Java</code> 语言开发的，所以他能与 <code>Java</code> 开发天然结合，完全可以在代码中调用 <code>Neo4j</code> 的 <code>API</code>，并将对 <code>Neo4j</code> 数据库的操作嵌入在 <code>Java</code> 代码中。</li>
+<li>驱动包开发模式。通过 <code>HTTP</code> 的 <code>HTTP API</code> 的驱动包让非基于 <code>JVM</code> 的开发平台、编程语言也能够操作 <code>Neo4j</code> 数据库。</li>
+</ul>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="嵌入式开发模式"><a href="#嵌入式开发模式" class="headerlink" title="嵌入式开发模式"></a>嵌入式开发模式</h3><p><code>Java API</code> 嵌入式开发模式中，应用程序、<code>Java API</code>、<code>Neo4j</code> 数据的关系如下图所示：<br><img src="https://s2.loli.net/2022/03/11/1Jk8X26ZVwid54f.png" alt="neo4j-5-1.jpg"></p>
+<p>当在同一个 <code>JVM</code> 中运行自己的代码和 <code>Neo4j</code> 时，需要注意以下几点：</p>
+<ul>
+<li>不要创建或保留过多不需要的对象。大型缓存会将不需要的对象推向垃圾回收区，会增加垃圾回收的负担。</li>
+<li>尽量不要使用内部 <code>Neo4j API</code>。他们是供 <code>Neo4j</code> 内部使用，使用不当可能会破坏或更改 <code>Neo4j</code> 的固有特性。</li>
+<li>在嵌入式模式下运行时，不要启用 <code>-XX:+TrustFinalNonStaticFields</code> 的 <code>JVM</code> 标志。</li>
+</ul>
+<h4 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h4><p>这一小节是为开发前的准备工作，包括 <code>JAR</code> 包的引入、不同 <code>IDE</code> 下的引入方式和程序主体代码的编写。</p>
+<h5 id="引入-JAR-包"><a href="#引入-JAR-包" class="headerlink" title="引入 JAR 包"></a>引入 <code>JAR</code> 包</h5><p>首先根据应用程序使用的 <code>Java</code> 版本选择合适的 <code>Neo4j JAR</code> 包版本，然后在应用程序项目中引入此 <code>JAR</code> 包，这样 <code>Neo4j API</code> 就嵌入到了 <code>Java</code> 应用程序中。以下部分将介绍通过两个途径来引入 <code>Neo4j JAR</code> 包：</p>
+<ul>
+<li>将 <code>JAR</code> 文件直接添加到 <code>Java</code> 的执行路径 <code>ClassPath</code> 中。</li>
+<li>使用依赖关系管理来添加 <code>Neo4j JAR</code> 包的依赖。</li>
+</ul>
+<h5 id="Intellij-IDEA"><a href="#Intellij-IDEA" class="headerlink" title="Intellij IDEA"></a><code>Intellij IDEA</code></h5><p>使用 <code>Libraries\Global Libraries</code> 和 <code>Configure Library</code> 对话框，可以引入 <code>JAR</code> 文件。</p>
+<h5 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a><code>Maven</code></h5><p>添加到项目根目录下的 <code>pom.xml</code> 文件中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependecy&gt;</span><br><span class="line">	&lt;groupId&gt;org.neo4j&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;neo4j&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;3.1&lt;/version&gt;</span><br><span class="line">&lt;/dependecy&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动和关闭-Neo4j"><a href="#启动和关闭-Neo4j" class="headerlink" title="启动和关闭 Neo4j"></a>启动和关闭 <code>Neo4j</code></h5><p>在完成上述步骤后，我们尝试使用 <code>Java API</code> 启动和关闭 <code>Neo4j</code>。要创建一个新的数据库或者打开一个已经存在的数据库，首先需要创建 <code>GraphDatabaseService</code> 实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graphDb = <span class="keyword">new</span> <span class="title class_">GraphDatabaseFactory</span>().newEmbeddedDatabase(DB_PATH);</span><br><span class="line">registerShutdownHook(graphDb);</span><br></pre></td></tr></table></figure>
+<p><small><code>GraphDatabaseService</code> 实例可以在多个线程之间共享，但不能创建指向同一个数据库的多个实例。</small><br>关闭一个已经打开的实例，需要调用 <code>shutdown()</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graphDb.shutdown();</span><br></pre></td></tr></table></figure>
+
+<h5 id="按配置文件启动-Neo4j"><a href="#按配置文件启动-Neo4j" class="headerlink" title="按配置文件启动 Neo4j"></a>按配置文件启动 <code>Neo4j</code></h5><p><code>Neo4j</code> 数据库包含一个配置文件，如果想要让 <code>Neo4j</code> 按照配置启动，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">GraphDatabaseService</span> <span class="variable">graphDb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GraphDatabaseService</span>()</span><br><span class="line">	.newEmbeddedDatabaseBuilder(testDirectory.graphDbDir())</span><br><span class="line">	.loadPropertiesFromFile(pathToConfig + <span class="string">&quot;neo4j.conf&quot;</span>)</span><br><span class="line">	.newGraphDatabase();</span><br></pre></td></tr></table></figure>
+<p>当然配置项也可以在代码中设置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">GraphDatabaseService</span> <span class="variable">graphDb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GraphDatabaseService</span>()</span><br><span class="line">	.newEmbeddedDatabaseBuilder(testDirectory.graphDbDir())</span><br><span class="line">	.setConfig(GraphDatabaseSettings.pagecache_memory, <span class="string">&quot;512M&quot;</span>)</span><br><span class="line">	.setConfig(GraphDatabaseSettings.string_block_size, <span class="string">&quot;60&quot;</span>)</span><br><span class="line">	.setConfig(GraphDatabaseSettings.array_block_size, <span class="string">&quot;300&quot;</span>)</span><br><span class="line">	.newGraphDatabase();</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动一个只读实例"><a href="#启动一个只读实例" class="headerlink" title="启动一个只读实例"></a>启动一个只读实例</h5><p>如果希望以只读的方式打开 <code>Neo4j</code> 数据库而不想进行任何写操作，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">GraphDatabaseService</span> <span class="variable">graphDb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GraphDatabaseService</span>()</span><br><span class="line">	.newEmbeddedDatabaseBuilder(testDirectory.graphDbDir())</span><br><span class="line">	.setConfig(GraphDatabaseSettings.read_only, <span class="literal">true</span>)</span><br><span class="line">	.newGraphDatabase();</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建图实例"><a href="#创建图实例" class="headerlink" title="创建图实例"></a>创建图实例</h4><p><code>Neo4j</code> 数据库中数据的基本结构：</p>
+<ul>
+<li>节点：表示一个实体，可以用关系连接起来。</li>
+<li>关系：用来连接节点。</li>
+<li>属性：依附在节点或关系上的属性及其属性值。</li>
+</ul>
+<p>任何关系都有一个指定的类型名。如果两个节点被 <code>KNOWS</code> 类型的关系相互连接起来，那么说明这两个人互相认识对方。因此图的很多含义就是被用这样的方式编码后存储在 <code>Neo4j</code> 数据库中，尽管关系是直接将两个节点连接起来，但不管关系指向哪个节点，他们在数据库中都可以快速地遍历、查询。</p>
+<h5 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h5><p>关系的类型标签可以使用枚举类型 <code>enum</code> 创建。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">enum</span> <span class="title class_">RelType</span> <span class="keyword">implements</span> <span class="title class_">RelationshipType</span> &#123;</span><br><span class="line">	ACTED_IN, DIRECTED, PRODUCED;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就是启动数据库实例，需要注意的是，如果创建的数据库当前并不存在，那么就会系统会自动创建一个新的数据库。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graphDb = <span class="keyword">new</span> <span class="title class_">GraphDatabaseFactory</span>().newEmbeddedDatabase(DB_PATH);</span><br><span class="line">registerShutdownHook(graphDb);</span><br></pre></td></tr></table></figure>
+<p>这个实例是可以被被多个线程共享，但是在进行事务操作时多个进程之间是相互冲突的，因此在同一个时间只能有一个进程操作某实例。</p>
+<h5 id="操作写入到事务中"><a href="#操作写入到事务中" class="headerlink" title="操作写入到事务中"></a>操作写入到事务中</h5><p>在 <code>Neo4j Java API</code> 中所有的操作都必须放入到一个事务中，正如这样以保证某些重要操作的可靠性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> graphDb.beginTx()) &#123;</span><br><span class="line">	<span class="comment">// 所有的操作都放入到 try-catch 块中</span></span><br><span class="line">	tx.success();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	tx.failure();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	tx.finish();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建一个节点"><a href="#创建一个节点" class="headerlink" title="创建一个节点"></a>创建一个节点</h5><p>除了上面的枚举类型定义，还需要定义变量，变量定义完成后还需要对变量进行赋值并创建节点。节点创建完成后并没有赋任何属性值，所以节点只包含默认的 <code>id</code> 值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GraphDatabaseService graphDb;</span><br><span class="line">Node TheMatrix;</span><br><span class="line">Node Keanu;</span><br><span class="line">TheMatrix = graphDb.createNode();</span><br><span class="line">Keanu = graphDb.createNode();</span><br></pre></td></tr></table></figure>
+
+<h5 id="为节点创建属性值"><a href="#为节点创建属性值" class="headerlink" title="为节点创建属性值"></a>为节点创建属性值</h5><p>在 <code>Neo4j</code> 中节点、关系都有属性，也就是说节点、关系所附带的值包含 <code>ID</code> 、<code>Label</code>（关系为 <code>Type</code>）、属性三种。任何节点或关系都可以包含多个属性。<br>属性包括属性名和属性值两部分。属性名可以按照 <code>Java</code> 命名规范取名，属性值可以是单个值也可以是数组。<br><small><code>NULL</code> 在 <code>Neo4j</code> 中不可以赋值，但可以通过 <code>NULL</code> 来判断属性是否存在。</small></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> graphDb.beginTx()) &#123;</span><br><span class="line">	TheMatrix = graphDb.createNode();</span><br><span class="line">	TheMatrix.setProperty(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;The matrix&quot;</span>);</span><br><span class="line">	TheMatrix.setProperty(<span class="string">&quot;released&quot;</span>, <span class="number">1999</span>);</span><br><span class="line">	TheMatrix.setProperty(<span class="string">&quot;tagline&quot;</span>, <span class="string">&quot;Welcome to the Real World&quot;</span>);</span><br><span class="line">	Keanu = graphDb.createNode();</span><br><span class="line">	Keanu.setProperty(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;Keanu Reeves&quot;</span>);</span><br><span class="line">	Keanu.setProperty(<span class="string">&quot;born&quot;</span>, <span class="number">1960</span>);</span><br><span class="line">	tx.success();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	tx.failure();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	tx.finish();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="为节点添加标签"><a href="#为节点添加标签" class="headerlink" title="为节点添加标签"></a>为节点添加标签</h5><p>在 <code>Neo4j</code> 中有一种将节点归类的方法，那就是标签（<code>Label</code>）。通过给节点添加相同或不同的标签可以将节点进行归类。每个节点可以添加一个或多个标签，标签是一种文字描述，可以通过标签加载、查询所有节点。<br>创建一个标签，可以通过使用枚举类型继承 <code>Neo4j</code> 的 <code>Label</code> 接口来创建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">MyLabels</span> <span class="keyword">implements</span> <span class="title class_">Label</span> &#123;</span><br><span class="line">	Movie, Person;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为节点添加标签</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> graphDb.beginTx()) &#123;</span><br><span class="line">	TheMatrix.addLabel(MyLabels.Movie);</span><br><span class="line">	Keanu.addLabel(MyLabels.Person);</span><br><span class="line">	tx.success();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	tx.failure();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	tx.finish();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>添加标签之后就可以通过标签来查询此类节点的集合。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> graphDb.beginTx()) &#123;</span><br><span class="line">	ResourceIterable&lt;Node&gt; movies = GlobalGraphOperations.at(graphDb)</span><br><span class="line">		.getAllNodesWithLabel(MyLabels.Movie);</span><br><span class="line">	tx.success();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	tx.failure();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	tx.finish();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在查找节点时，想通过节点属性和标签同时锁定节点集合，那么可以通过 <code>findNodesByLabelAndProperty()</code> 方法来实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ResourceIterable&lt;Node&gt; movies = GlobalGraphOperations.at(graphDb)</span><br><span class="line">		.findNodesByLabelAndProperty(MyLabels.Movie, <span class="string">&quot;title&quot;</span>, <span class="string">&quot;The matrix&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建关系"><a href="#创建关系" class="headerlink" title="创建关系"></a>创建关系</h5><p>创建两个节点之间的关系并为这个新创建的关系添加属性值。在创建时可以指定关系的类型，关系的类型类似节点的标签，唯一不同的是关系的类型只能指定一个。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">relationship = Keanu.createRelationshipTo(TheMatrix, RelType.ACTED_IN);</span><br><span class="line">relationship.setProperty(<span class="string">&quot;roles&quot;</span>, <span class="string">&quot;Neo&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="输出图结果"><a href="#输出图结果" class="headerlink" title="输出图结果"></a>输出图结果</h5><p>将创建的图数据打印在控制台上。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Keanu.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">System.out.println(relationship.getProperty(<span class="string">&quot;roles&quot;</span>));</span><br><span class="line">System.out.println(secondNode.getProperty(<span class="string">&quot;title&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h5 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Keanu.getSingleRelationship(RelType.ACTED_IN, Direction.OUTGOING).delete();</span><br><span class="line">Keanu.delete();</span><br><span class="line">TheMatrix.delete();</span><br></pre></td></tr></table></figure>
+<p><small>如果尝试删除一个带有关系边的节点时必定会失败，因此必须首先删除关系并确保没有任何关系指向这个节点时，才能够删除它。这是为了任何关系都有起始节点和结束节点的指向，没有空指向的关系。</small></p>
+<h5 id="关闭数据库"><a href="#关闭数据库" class="headerlink" title="关闭数据库"></a>关闭数据库</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graphDb.shutdown();</span><br></pre></td></tr></table></figure>
+
+<h4 id="图数据遍历"><a href="#图数据遍历" class="headerlink" title="图数据遍历"></a>图数据遍历</h4><p>至此我们已经创建了一个由节点、关系和索引组成的图数据库，接下来就是查询图数据的强大功能：图遍历功能。图遍历是以一种特殊的方式在图中按照节点之间的关系依次访问各个节点的过程。<br><code>Neo4j</code> 遍历 <code>API</code> 采用的是一种基于回调的、惰性执行的机制，使用 <code>Neo4j</code> 的图遍历功能可以使用指定的方式对数据库进行遍历。另外还可以使用 <code>Cypher</code> 查询语句的声明式方法对图进行查询。</p>
+<h5 id="入门概念"><a href="#入门概念" class="headerlink" title="入门概念"></a>入门概念</h5><p>使用以下几个概念来解释图遍历功能</p>
+<ul>
+<li>路径拓展（<code>PathExpander</code>）：定义将要对图数据库中的什么进行遍历，一般是指针对关系的指向和关系的类型进行遍历。</li>
+<li>顺序（<code>Order</code>）：深度优先或广度优先。</li>
+<li>唯一性（<code>Uniqueness</code>）：在遍历过程中，确保每个节点（关系、路径）只被遍历一次。</li>
+<li>评估器（<code>Evaluator</code>）：用来决定返回什么结果，以及是否停止或继续遍历当前位置。</li>
+<li>开始节点：启动遍历最先开始的节点。</li>
+</ul>
+<p> <code>Neo4j</code> 遍历框架的结构图如下：<br><img src="https://s2.loli.net/2022/03/13/S3jOcmHdY51MrRW.png" alt="neo4j-5-2.jpg"></p>
+<h5 id="遍历框架的-Java-API"><a href="#遍历框架的-Java-API" class="headerlink" title="遍历框架的 Java API"></a>遍历框架的 <code>Java API</code></h5><p>遍历框架除了包括节点和关系之外还有几个主要接口：</p>
+<ul>
+<li>遍历描述接口（<code>Traversal Description Interface</code>）</li>
+<li>评估器接口（<code>Evaluator Interface</code>）</li>
+<li>遍历器接口（<code>Traverser Interface</code>）</li>
+<li>唯一性接口（<code>Uniqueness Interface</code>）</li>
+</ul>
+<p> 遍历框架中的路径接口（<code>Path Interface</code>）在遍历中有特殊用途，因为他在评估该位置时用于表示图中的位置。此外路径拓展接口是遍历的核心，但是在使用 <code>API</code> 时很少需要实现它，因为但需要实现它时，还有一组更加高级的接口：<code>branchSelector</code> 、<code>BranchOrderingPolicy</code> 和 <code>TraversalBranch</code>。</p>
+<h5 id="遍历描述接口"><a href="#遍历描述接口" class="headerlink" title="遍历描述接口"></a>遍历描述接口</h5><p>遍历描述接口（<code>Traversal Description</code>）是用于定义和初始化遍历的主接口。他不必由遍历框架的用户实现，而是由遍历框架的实现来作为用户描述遍历的方式。<code>Traversal Description</code> 实例是不可变的，并且其返回一个新的 <code>Traversal Description</code> 与使用该方法的参数来调用该方法的对象相比，该 <code>Traversal Description</code> 可以被修改。</p>
+<h5 id="关系接口"><a href="#关系接口" class="headerlink" title="关系接口"></a>关系接口</h5><p>关系（<code>Relationships</code>）接口用于将关系类型添加到要遍历的关系类型列表中。默认情况下，该列表为空意味者他将遍历所有类型的关系。如果一个或者多个关系添加到此列表中，则只会遍历所添加的类型的瓜西。<br>共有两种遍历方法：</p>
+<ul>
+<li>包括方向参数，仅遍历指定方向的关系。</li>
+<li>不包括方向参数，那么将遍历双向关系。</li>
+</ul>
+<h5 id="评估器接口"><a href="#评估器接口" class="headerlink" title="评估器接口"></a>评估器接口</h5><p>评估器用于在每个位置（路径中的位置）处来确定：如果遍历继续，当前节点是否应包括在结果中。<br>给定一个路径，遍某个分支的动作可以为以下动作之一：</p>
+<ul>
+<li><code>Evalution.INCLUDE_AND_CONTINUE</code>：在结果中包括此节点并继续遍历。</li>
+<li><code>Evalution.INCLUDE_AND_PRUNE</code>：在结果中包括此节点，但不继续遍历。</li>
+<li><code>Evalution.EXCLUDE_AND_CONTINUE</code>：在结果中排除此节点，但继续遍历。</li>
+<li><code>Evalution.EXCLUDE_AND_PRUNE</code>：在结果中排除此节点，不继续遍历。</li>
+</ul>
+<p> 可以为遍历器添加多个评估器。但是要注意对于遍历器遇到的所有位置（包括起始节点）都将调用评估器。</p>
+<h5 id="遍历器接口"><a href="#遍历器接口" class="headerlink" title="遍历器接口"></a>遍历器接口</h5><p>遍历器（<code>Traverser</code>）对象是调用 <code>Traversal Description</code> 对象的 <code>traverse()</code> 方法返回的结果，他表示在图中定位的遍历以及结果格式的规范。每次调用 <code>Traverser</code> 的 <code>next()</code> 方法时遍历操作都将被 <strong>惰性</strong> 地执行一次。</p>
+<h5 id="唯一性接口"><a href="#唯一性接口" class="headerlink" title="唯一性接口"></a>唯一性接口</h5><p>唯一性是用来设置在遍历期间如何重新访问遍历过地位置的规则，如果未设置，则默认为 <code>NODE_GLOBAL</code>。<br>可以向遍历描述提供唯一性参数以指示在什么情况下遍历可以重新访问图中的相同位置，目前 <code>Neo4j</code> 可使用地唯一性级别为：</p>
+<ul>
+<li><code>NONE</code>：可以重新访问图中的任何位置。</li>
+<li><code>NODE_GLOBAL</code>：整个图中的任何一个节点都不可能被访问多次。</li>
+<li><code>RELATIONSHIP_GLOBAL</code>：整个图中的任何一个关系都不可能被访问多次。</li>
+<li><code>NODE_PATH</code>：节点不会先前出现在达到他的路径中。</li>
+<li><code>RELATIONSHIP_PATH</code>：先前在达到他的路径中不会存在关系边。</li>
+<li><code>NODE_RECENT</code>：类似于 <code>NODE_GLOBAL</code> 唯一性，存在受访节点地全局集合，每个位置被检查。</li>
+<li><code>RELATIONSHIP_RECENT</code>：类似于 <code>NODE_RECENT</code> 唯一性，但它指的是关系而不是节点。</li>
+</ul>
+<p> 深度优先&#x2F;广度优先就是用于设置深度优先&#x2F;广度优先 <code>BranchSelector</code> 排序策略地遍历方法。同样的结果可以通过从 <code>BranchOrderingPolicies</code> 中调用带有排序策略地 <code>order</code> 方法来实现，也可以编写自己的 <code>BranchSelector / BranchOrderingPolicy</code> 来实现排序。</p>
+<h5 id="遍历顺序"><a href="#遍历顺序" class="headerlink" title="遍历顺序"></a>遍历顺序</h5><p>遍历顺序是指在遍历过程中按照什么顺序来遍历图的各个分支。</p>
+<h5 id="分支选择器"><a href="#分支选择器" class="headerlink" title="分支选择器"></a>分支选择器</h5><p><code>BranchSelector / BranchOrderingPolicy</code> 用于选择下一次的遍历分支，这用于实现遍历排序。遍历框架提供了一些基本的排序实现：</p>
+<ul>
+<li><code>BranchOrderingPolicies.PREORDER_DEPTH_FIRST</code>：深度优先遍历，在访问其子节点之前访问每个节点。</li>
+<li><code>BranchOrderingPolicies.POSTORDER_DEPTH_FIRST</code>：深度优先遍历，在访问其子节点后访问每个节点。</li>
+<li><code>BranchOrderingPolicies.PREORDER_BREADTH_FIRST</code>：广度优先遍历，在访问其子节点之前访问每个节点。</li>
+<li><code>BranchOrderingPolicies.POSTORDER_BREADTH_FIRST</code>：深度优先遍历，在访问其子节点后访问每个节点。</li>
+</ul>
+<p> <small>广度优先遍历比深度优先遍历需要更高的内存开销。</small></p>
+<p><code>BranchSelectors</code> 具有状态属性，因此需要每次遍历唯一地实例化这个类。它通过 <code>BranchOrderingPolicy</code> 接口提供给 <code>Traversal Description</code>，<code>BranchOrderingPolicy</code> 接口是 <code>BranchSelectors</code> 实例的工厂。</p>
+<h5 id="分支遍历策略"><a href="#分支遍历策略" class="headerlink" title="分支遍历策略"></a>分支遍历策略</h5><p>一个用于创建 <code>BranchSelectors</code> 的工厂，用于决定返回分支的顺序（其中分支的位置表示为从起始节点到当前节点的路径）。常见的策略是深度优先和广度优先，这也就是为什么有更方便的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description.order(BranchOrderingPolicies.PREORDER_DEPTH_FIRST);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>分支选择器（<code>BranchSelector</code>）<br><code>BranchSelector</code> 用来从某个分支获取更多分支。本质上就是路径（<code>Path</code>）和关系拓展器（<code>RelationshipExpander</code>）的复合，可以用来从当前的一个分支获得新的 <code>TraversalBranches</code>。</p>
+</li>
+<li><p>遍历路径<br><code>Path</code> 是一个通用接口，在 <code>Neo4j API</code> 中使用 <code>Paths</code> 可以进行双向的的遍历。遍历器可以将图中被标记为返回的、被访问位置的、路径的形式返回其结果。<code>Path</code> 对象也用来评估图中的位置，用于确定遍历是否应当从某个点继续，以及是否应当将某个位置包括在结果集中。</p>
+</li>
+<li><p>路径扩展器<br>遍历框架使用路径拓展器（<code>PathExpander</code>，路径拓展器用来替换关系拓展器）来发现在遍历中从特定路径到进一步分支应遵循的关系。</p>
+</li>
+<li><p>拓展器<br>这个是比 <code>RelationshipExpander</code> 关系更加通用的存在，可以定义要为任何给定节点遍历的所有关系。</p>
+</li>
+</ol>
+<h5 id="Java-中使用遍历框架"><a href="#Java-中使用遍历框架" class="headerlink" title="Java 中使用遍历框架"></a><code>Java</code> 中使用遍历框架</h5><p>使用遍历描述可以生成遍历器。<br><img src="https://s2.loli.net/2022/03/13/UGpFQwZ9vsnbmr3.png" alt="neo4j-5-3.jpg"></p>
+<p>首先定义一个关系类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Rels</span> <span class="keyword">implements</span> <span class="title class_">RelationshipType</span> &#123;</span><br><span class="line">	LIKES, KNOWS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>遍历实例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Path position : db.traversalDescription()</span><br><span class="line">	.depthFirst()</span><br><span class="line">	.relationships(Rels.KNOW)</span><br><span class="line">	.relationships(Rels.LIKES, Direction.INCOMING)</span><br><span class="line">	.evaluator(Evaluators.toDepth(<span class="number">5</span>))</span><br><span class="line">	.traverse(node)) &#123;</span><br><span class="line">	output += position + <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于遍历的描述是不可变的，因此可以创建一个模板米哦啊书来保存由不同遍历共享的公共设置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">firendsTraversal = db.traversalDescription()</span><br><span class="line">	.depthFirst()</span><br><span class="line">	.relationships(Rels.KNOWS)</span><br><span class="line">	.uniqueness(Uniqueness.RELATIONSHIP_GLOBAL);</span><br></pre></td></tr></table></figure>
+
+<p>现在创建一个新的遍历器，将遍历深度设置在 <code>2</code> 到 <code>4</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Path path : firendsTraversal</span><br><span class="line">	.evaluator(Evaluators.fromDepth(<span class="number">2</span>))</span><br><span class="line">	.evaluator(Evaluators.toDepth(<span class="number">4</span>))</span><br><span class="line">	.traverse(node)) &#123;</span><br><span class="line">	output += path + <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将遍历器转换为可迭代的节点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Node currentNode : firendsTraversal</span><br><span class="line">	.traverse(node)</span><br><span class="line">	.nodes()) &#123;</span><br><span class="line">	output += currentNode.getProperty(<span class="string">&quot;name&quot;</span>) + <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用关系来遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Relationship relationship : firendsTraversal</span><br><span class="line">	.traverse(node)</span><br><span class="line">	.relationships()) &#123;</span><br><span class="line">	output += relationship.getType().name() + <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据索引"><a href="#数据索引" class="headerlink" title="数据索引"></a>数据索引</h4><p>在关系型数据库中，索引提供了有序排列数据的方式，使用索引可以像字典一样快速地定位所要查找的记录。在 <code>Neo4j</code> 中索引也可以对指定的属性值进行快速定位查找，与关系数据库有所不同的是 <code>Neo4j</code> 中除了 <code>Cypher</code>，也可以通过 <code>Java</code> 应用程序通过代码来创建索引。</p>
+<h5 id="自动索引"><a href="#自动索引" class="headerlink" title="自动索引"></a>自动索引</h5><p>参考之前 <code>Cypher</code> 中模式下的索引内容。</p>
+<h5 id="手动索引"><a href="#手动索引" class="headerlink" title="手动索引"></a>手动索引</h5><p>手动索引操作是 <code>Neo4j</code> 索引 <code>API</code> 的一部分，每个索引都绑定到某个唯一的属性名称上，并且对节点或关系都可以创建索引。</p>
+<h5 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h5><p>如果每个索引在请求时发现并不存在，则系统会自动创建此索引，如果没有给他定义配置参数，则索引将使用默认配置参数创建。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">IndexManager</span> <span class="variable">index</span> <span class="operator">=</span> graphDb.index();</span><br><span class="line">Index&lt;Node&gt; actors = index.forNodes(<span class="string">&quot;actors&quot;</span>);</span><br><span class="line">Index&lt;Node&gt; movies = index.forNodes(<span class="string">&quot;movies&quot;</span>);</span><br><span class="line"><span class="type">relationshipIndex</span> <span class="variable">roles</span> <span class="operator">=</span> index.forRelationships(<span class="string">&quot;roles&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>如果想要知道某个索引是否已经存在</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">IndexManager</span> <span class="variable">index</span> <span class="operator">=</span> graphDb.index();</span><br><span class="line"><span class="type">boolean</span> <span class="variable">indexExists</span> <span class="operator">=</span> index.existsForNodes(<span class="string">&quot;actors&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h5><p>索引是可以删除的。删除时，将删除索引的全部内容及其关联配置。删除这个索引之后，可以使用相同的名称创建其索引，这样能保证索引的唯一性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">IndexManager</span> <span class="variable">index</span> <span class="operator">=</span> graphDb.index();</span><br><span class="line">Index&lt;Node&gt; actors = index.forNodes(<span class="string">&quot;actors&quot;</span>);</span><br><span class="line">actors.delete();</span><br></pre></td></tr></table></figure>
+
+<p><small>索引的删除实际上实在事务内提交的。如果这个事务被回滚了，那么多索引的删除就是无效的，索引还依然存在。</small></p>
+<h5 id="添加索引"><a href="#添加索引" class="headerlink" title="添加索引"></a>添加索引</h5><p>索引支持将任意数量的键值对与任意数量的实体（节点或关系）相关联，也就是说一个创建好的索引可以被赋予在任何数量的节点或关系上。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Node</span> <span class="variable">reeves</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">reeves.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Keanu Reeves&quot;</span>);</span><br><span class="line">actors.add(reeves, <span class="string">&quot;name&quot;</span>, reeves.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line"><span class="type">Node</span> <span class="variable">bellucci</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">bellucci.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Monica Bellucci&quot;</span>);</span><br><span class="line">actors.add(bellucci, <span class="string">&quot;name&quot;</span>, bellucci.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">actors.add(bellucci, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;La Bellucci&quot;</span>);</span><br><span class="line"><span class="type">Node</span> <span class="variable">theMatrix</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">theMatrix.setProperty(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;The matrix&quot;</span>);</span><br><span class="line">theMatrix.setProperty(<span class="string">&quot;year&quot;</span>, <span class="number">1999</span>);</span><br><span class="line">movies.add(theMatrix, <span class="string">&quot;title&quot;</span>, theMatrix.getProperty(<span class="string">&quot;title&quot;</span>));</span><br><span class="line">movies.add(theMatrix, <span class="string">&quot;year&quot;</span>, theMatrix.getProperty(<span class="string">&quot;year&quot;</span>));</span><br><span class="line"><span class="type">Node</span> <span class="variable">theMatrixReloaded</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">theMatrixReloaded.setProperty(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;The Matrix Reloaded&quot;</span>);</span><br><span class="line">theMatrixReloaded.setProperty(<span class="string">&quot;year&quot;</span>, <span class="number">2003</span>);</span><br><span class="line">movies.add(theMatrixReloaded, <span class="string">&quot;title&quot;</span>, theMatrixReloaded.getProperty(<span class="string">&quot;title&quot;</span>));</span><br><span class="line">movies.add(theMatrixReloaded, <span class="string">&quot;year&quot;</span>, theMatrixReloaded.getProperty(<span class="string">&quot;year&quot;</span>));</span><br><span class="line"><span class="type">Node</span> <span class="variable">malena</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">malena.setProperty(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;Malena&quot;</span>);</span><br><span class="line">malena.setProperty(<span class="string">&quot;year&quot;</span>, <span class="number">200</span>);</span><br><span class="line">movies.add(malena, <span class="string">&quot;title&quot;</span>, malena.getProperty(<span class="string">&quot;title&quot;</span>));</span><br><span class="line">movies.add(malena, <span class="string">&quot;year&quot;</span>, malena.getProperty(<span class="string">&quot;year&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="type">RelationshipType</span> <span class="variable">ACTS_IN</span> <span class="operator">=</span> RelationshipType.withName(<span class="string">&quot;ACTS_IN&quot;</span>);</span><br><span class="line"><span class="type">relationship</span> <span class="variable">role1</span> <span class="operator">=</span> reeves.createRelationshipTo(theMatrix, ACTS_IN);</span><br><span class="line">role1.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Neo&quot;</span>);</span><br><span class="line">roles.add(role1, <span class="string">&quot;name&quot;</span>, role1.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line"><span class="type">relationship</span> <span class="variable">role2</span> <span class="operator">=</span> reeves.createRelationshipTo(theMatrixReloaded, ACTS_IN);</span><br><span class="line">role2.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Neo&quot;</span>);</span><br><span class="line">roles.add(role2, <span class="string">&quot;name&quot;</span>, role2.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line"><span class="type">relationship</span> <span class="variable">role3</span> <span class="operator">=</span> bellucci.createRelationshipTo(theMatrixReloaded, ACTS_IN);</span><br><span class="line">role3.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Persephone&quot;</span>);</span><br><span class="line">roles.add(role3, <span class="string">&quot;name&quot;</span>, role3.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line"><span class="type">relationship</span> <span class="variable">role4</span> <span class="operator">=</span> bellucci.createRelationshipTo(malena, ACTS_IN);</span><br><span class="line">role4.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Malena SScordia&quot;</span>);</span><br><span class="line">roles.add(role4, <span class="string">&quot;name&quot;</span>, role4.getProperty(<span class="string">&quot;name&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>创建索引后，数据库中的图结构如下<br><img src="https://s2.loli.net/2022/03/14/ZLcOBGEsu4NgCyn.png" alt="neo4j-5-4.jpg"></p>
+<h5 id="将索引移除"><a href="#将索引移除" class="headerlink" title="将索引移除"></a>将索引移除</h5><p>将索引从节点或关系上移除与上面的添加操作类似，移除索引需要制定索引的参数，可以通过提供以下参数组合来完成：</p>
+<ul>
+<li>实体（节点、索引）</li>
+<li>实体、索引键名</li>
+<li>实体、索引键名、索引键值<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">actors.remove(bellucci);</span><br><span class="line">actors.remove(bellucci, <span class="string">&quot;name&quot;</span>);</span><br><span class="line">actors.remove(bellucci, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;La Bellucci&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="更新索引"><a href="#更新索引" class="headerlink" title="更新索引"></a>更新索引</h5><p>要更新索引必须删除旧的索引条目，然后再添加新的索引条目。<br>节点或关系可以与索引中任意数量的键值对关联，这意味着可以使用具有相同键的许多键值对对节点或关系建立索引。当属性值改变想更新索引时，仅仅对新值创建索引是不够的，还必须删除旧值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建节点</span></span><br><span class="line"><span class="type">Node</span> <span class="variable">fishburn</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">fishburn.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Fishburn&quot;</span>);</span><br><span class="line"><span class="comment">// 对 name 创建索引</span></span><br><span class="line">actors.add(fishburn, <span class="string">&quot;name&quot;</span>, fishburn.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line"><span class="comment">// 属性值更改，我们需要重新更新这个索引</span></span><br><span class="line">actors.remove(fishburn, <span class="string">&quot;name&quot;</span>, fishburn.getProperty(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">fishburn.setProperty(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Laurence Fishburn&quot;</span>);</span><br><span class="line">actors.add(fishburn, <span class="string">&quot;name&quot;</span>, fishburn.getProperty(<span class="string">&quot;name&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h5 id="节点索引下的查询"><a href="#节点索引下的查询" class="headerlink" title="节点索引下的查询"></a>节点索引下的查询</h5><p>节点在创建好索引的情况下，可以通过两种方式查询：<code>get</code> 和 <code>query</code>。<code>get</code> 方法将返回与给定键值对完全匹配的结果。<code>query</code> 方法可以直接使用索引查询更底层功能。</p>
+<ol>
+<li><p><code>get</code> 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回与查询的键值对完全匹配的结果</span></span><br><span class="line">IndexHits&lt;Node&gt; hits = actors.get(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Keanu Reeves&quot;</span>);</span><br><span class="line"><span class="type">Node</span> <span class="variable">reeves</span> <span class="operator">=</span> hits.getSingle();</span><br></pre></td></tr></table></figure>
+<p><code>IndexHits</code> 是一个 <code>Iterator</code> 类的继承，它提供了一些特别有用的方法。</p>
+</li>
+<li><p><code>query</code> 方法<br><code>query</code> 方法有两种使用方式，一种使用方式就是提供单一的键值对来匹配查询索引所关联的属性；另一种方式就是提供多个键值对来匹配（可以使用模糊匹配运算符 <code>*</code>）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单一键值对</span></span><br><span class="line"><span class="keyword">for</span> (Node actor : actors.query(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;*e*&quot;</span>)) &#123;</span><br><span class="line">	<span class="comment">// *e* 为模糊匹配，返回结果为 Reeves 和 Bellucci</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 多个键值对</span></span><br><span class="line"><span class="keyword">for</span> (Node movie : movies.query(<span class="string">&quot;title:*Matrix* AND year:1999&quot;</span>)) &#123;</span><br><span class="line">	<span class="comment">// 返回结果为 1999 年的 The Matrix</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="关系索引下的索引"><a href="#关系索引下的索引" class="headerlink" title="关系索引下的索引"></a>关系索引下的索引</h5><p>关系索引下的查询与节点索引类似，但在查询中需要指定所要查询的关系的开始节点或结束节点。这些额外的方法在 <code>RelationshipIndex</code> 接口中，该接口扩展了 <code>Index&lt;Relationship&gt;</code> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以 reeves 作为开始节点的关系，使用单一键值对查询</span></span><br><span class="line">IndexHits&lt;Relationship&gt; reevesAsNeoHits = roles.get(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Neo&quot;</span>, reeves, <span class="literal">null</span>);</span><br><span class="line"><span class="type">Relationship</span> <span class="variable">reevesAsNeo</span> <span class="operator">=</span> reevesAsNeoHits.Iterabor().next();</span><br><span class="line">reevesAsNeoHits.close();</span><br><span class="line"><span class="comment">// 使用 query 方法</span></span><br><span class="line">IndexHits&lt;Relationship&gt; matrixAsNeoHits = roles.query(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;*eo&quot;</span>, <span class="literal">null</span>, theMatrix);</span><br><span class="line"><span class="type">Relationship</span> <span class="variable">matrixNeo</span> <span class="operator">=</span> matrixAsNeoHits.Iterator().next();</span><br><span class="line">matrixAsNeoHits.close();</span><br></pre></td></tr></table></figure>
+<p>查询特定关系</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">roles.add(reevesAsNeo, <span class="string">&quot;type&quot;</span>, reevesAsNeo.getType().name());</span><br><span class="line"><span class="keyword">try</span> (Transaction tx : graphDb.beginTx()) &#123;</span><br><span class="line">	IndexHits&lt;Relationship&gt; typeHits = roles.query(<span class="string">&quot;type:ACTS_IN AND name:Neo&quot;</span>, <span class="literal">null</span>, theMatrix);</span><br><span class="line">	<span class="type">Relationship</span> <span class="variable">typeNeo</span> <span class="operator">=</span> typeHits.iterator().next();</span><br><span class="line">	typeHits.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果评分"><a href="#结果评分" class="headerlink" title="结果评分"></a>结果评分</h5><p>在查询中特别是模糊匹配查询中，我们需要得到结果集中每个结果的匹配相似度，这就需要评分实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IndexHits&lt;Node&gt; hits = movies.query(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;The*&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (Node movie : hits) &#123;</span><br><span class="line">	System.out.println(movie.getProperty(<span class="string">&quot;title&quot;</span>) + <span class="string">&quot; &quot;</span> + hits.currentScore());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="索引配置和全文索引"><a href="#索引配置和全文索引" class="headerlink" title="索引配置和全文索引"></a>索引配置和全文索引</h5><p>在创建索引时，可以配置索引的一些属性来控制索引的行为。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 Lucene 全文索引</span></span><br><span class="line"><span class="type">IndexManager</span> <span class="variable">index</span> <span class="operator">=</span> graphDb.index();</span><br><span class="line">Index&lt;Node&gt; fulltextMovies = index.forNodes(<span class="string">&quot;movie-fulltext&quot;</span>, MapUtil.stringMap(IndexManager.PROVIDER, <span class="string">&quot;lucene&quot;</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;fulltext&quot;</span>));</span><br><span class="line">fulltextMovies.add(theMatrix, <span class="string">&quot;title&quot;</span>, <span class="string">&quot;The Matrix&quot;</span>);</span><br><span class="line">fulltextMovies.add(theMatrixReloaded, <span class="string">&quot;title&quot;</span>, <span class="string">&quot;The Matrix Reloaded&quot;</span>);</span><br><span class="line"><span class="type">Node</span> <span class="variable">found</span> <span class="operator">=</span> fulltextMovies.query(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;roleAdEd&quot;</span>).getSingle();</span><br><span class="line"><span class="comment">// 不区分大小写的全文索引</span></span><br><span class="line"><span class="type">IndexManager</span> <span class="variable">index</span> <span class="operator">=</span> graphDb.index().forNodes(<span class="string">&quot;exact-case-insensitive&quot;</span>, MapUtil.stringMap(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;exact&quot;</span>, <span class="string">&quot;to_lower_case&quot;</span>, <span class="string">&quot;true&quot;</span>));</span><br><span class="line"><span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> graphDb.createNode();</span><br><span class="line">index.add(node, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;Thomas Anderson&quot;</span>);</span><br><span class="line">assertContains(index.query(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Thomas Anderson&quot;</span>), node);</span><br><span class="line">assertContains(index.query(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;thomas Anderson&quot;</span>), node);</span><br></pre></td></tr></table></figure>
+
+<h5 id="Lucene-索引的其他特性"><a href="#Lucene-索引的其他特性" class="headerlink" title="Lucene 索引的其他特性"></a><code>Lucene</code> 索引的其他特性</h5><ol>
+<li><p>数值范围<br>当对数值型数据创建索引时，<code>Lucene</code> 支持针对数值的智能索引。首先需要使用 <code>ValueContext</code> 方法标记一个值，使其被当作一个数值来创建索引，然后可以按照范围进行查询。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">movies.add(theMatrix, <span class="string">&quot;year-numeric&quot;</span>, <span class="keyword">new</span> <span class="title class_">ValueContext</span>(<span class="number">1999</span>).indexNumeric());</span><br><span class="line">movies.add(theMatrixReloaded, <span class="string">&quot;year-numeric&quot;</span>, <span class="keyword">new</span> <span class="title class_">ValueContext</span>(<span class="number">2003</span>).indexNumeric());</span><br><span class="line">movies.add(malena, <span class="string">&quot;year-numeric&quot;</span>, <span class="keyword">new</span> <span class="title class_">ValueContext</span>(<span class="number">2000</span>).indexNumeric());</span><br><span class="line">hits = movies.query(QueryContext.numericRange(<span class="string">&quot;year-numeric&quot;</span>, <span class="number">1997</span>, <span class="number">1999</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Lucene</code> 排序<br><code>Lucene</code> 索引具有优秀的排序功能，通过 <code>QueryContext</code> 类就可以实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">hits = movies.query(<span class="string">&quot;title&quot;</span>, <span class="keyword">new</span> <span class="title class_">QueryContext</span>(<span class="string">&quot;*&quot;</span>).sort(<span class="string">&quot;title&quot;</span>));</span><br><span class="line"><span class="keyword">for</span> (Node hit : hits) &#123;</span><br><span class="line">	<span class="comment">// 按照 title 排序</span></span><br><span class="line">&#125;</span><br><span class="line">hits = movies.query(<span class="string">&quot;title&quot;</span>, <span class="keyword">new</span> <span class="title class_">QueryContext</span>(<span class="string">&quot;title:*&quot;</span>).sort(<span class="string">&quot;year&quot;</span>, <span class="string">&quot;title&quot;</span>));</span><br><span class="line"><span class="keyword">for</span> (Node hit : hits) &#123;</span><br><span class="line">	<span class="comment">// 按照 year 排序然后再按照 title 排序</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 也可以按照匹配的相似度（分数）对结果进行排序</span></span><br><span class="line">hits = movies.query(<span class="string">&quot;title&quot;</span>, <span class="keyword">new</span> <span class="title class_">QueryContext</span>(<span class="string">&quot;The*&quot;</span>).sortByScore());</span><br><span class="line"><span class="keyword">for</span> (Node hit : hits) &#123;</span><br><span class="line">	<span class="comment">// 按照相似度排序</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>Lucene</code> 查询对象进行查询<br>可以通过编程方式实例化这些查询并作为参数传入，而不是传递 <code>Lucene</code> 查询语法查询。(<code>TermQuery</code> 基本上与在索引上使用 <code>get</code> 方法是一样的)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Node</span> <span class="variable">actor</span> <span class="operator">=</span> actors.query(<span class="keyword">new</span> <span class="title class_">TermQuery</span>(<span class="keyword">new</span> <span class="title class_">Term</span>(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Keanu Revves&quot;</span>))).getSingle();</span><br><span class="line"><span class="comment">// 使用 Lucene 查询对象执行通配符搜索</span></span><br><span class="line">hits = movies.query(<span class="keyword">new</span> <span class="title class_">WildcardQuery</span>(<span class="keyword">new</span> <span class="title class_">Term</span>(<span class="string">&quot;title&quot;</span>, <span class="string">&quot;The Matrix*&quot;</span>)));</span><br><span class="line"><span class="keyword">for</span> (Node movie : hits) &#123;</span><br><span class="line">	System.out.println(movie.getProperty(<span class="string">&quot;title&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复合查询<br><code>Lucene</code> 支持在同一查询中查询多个术语。但是复合查询无法对已经创建索引条目和尚未创建索引条目的属性同时进行搜索。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hits = movies.query(<span class="string">&quot;title:*Matirx* AND year:1999&quot;</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>操作符<br>查询中的默认关系运算符（<code>AND</code> 或 <code>OR</code>）也可以通过 <code>QueryContext</code> 类来更改行为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">QueryContext</span> <span class="variable">query</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">QueryContext</span>(<span class="string">&quot;title:*Matrix* AND year:1999&quot;</span>).defaultOperator(Operator.AND);</span><br><span class="line">hits = movies.query(query);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="事务管理"><a href="#事务管理" class="headerlink" title="事务管理"></a>事务管理</h4><p>为了完全保持数据完整性并确保良好的事务行为，<code>Neo4j</code> 支持 <code>ACID</code> 即原子性（<code>Atomicity</code>）、一致性（<code>Consistency</code>）、隔离性（<code>Isolation</code>）、持久性（<code>Durability</code>）四个要素。<br>特别需要注意以下几点：</p>
+<ul>
+<li>访问图、索引或者模式的所有数据库操作都必须在事务中执行。</li>
+<li>默认访问级别为 <code>READ_COMMITTED</code>。</li>
+<li>通过遍历检索的数据不受其他事务的修改保护。</li>
+<li>可以只有写锁被获取并保持，直到事务结束。</li>
+<li>可以手动获取节点和关系上的写锁，以实现更高级别的隔离（<code>SERIALIZABLE</code>）。</li>
+<li>在节点和关系级别都可以获取锁定权限。</li>
+<li>死锁检测被构建在核心事务管理中。</li>
+</ul>
+<h5 id="交互周期"><a href="#交互周期" class="headerlink" title="交互周期"></a>交互周期</h5><p>处理事务的交互周期如下：</p>
+<ul>
+<li>开始一个事务。</li>
+<li>执行数据库操作。</li>
+<li>将事务标记为成功或不成功。</li>
+<li>完成事务。</li>
+</ul>
+<p>事务是被限制在线程内的，可以嵌套为 <strong>平行嵌套事务</strong>。平行嵌套事务指的是所有嵌套事务都被添加到顶层事务的作用域中。嵌套事务可以标记顶层事务以进行回滚，这意味着整个事务都将被回滚，仅回滚在嵌套事务中的操作是不可能的。<br>完成每个事务然后提交是很重要的，程序中惯用的方法就是使用 <code>try-finally</code> 块处理事务。首先在 <code>try</code> 块中的最后一个操作应该是标记事务成功即执行 <code>success()</code> 方法，而 <code>finally</code> 块写完成事务的相关操作。完成事务将根据成功状态执行提交或回滚。</p>
+<p><small>在事务中执行的所有修改都会被暂时保存在内存中，所以在遇到大型事务时应将其拆分为小的事务，以避免内存溢出。</small></p>
+<h5 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h5><p><code>Neo4j</code> 中的事务使用读提交隔离级别，也就是一旦事务被提交就可以看到修改，而不会出现在其他事务中看到未提交的数据。另外 <code>Neo4j API</code> 还支持显式锁定节点和关系，通过获取和释放锁可以获得更高级别的隔离。</p>
+<ol>
+<li>默认自动加锁的情况</li>
+</ol>
+<ul>
+<li>在添加、更改或删除节点或关系上的属性时，将对操作的节点或关系执行写锁定。</li>
+<li>在创建或删除节点时，将为操作的节点执行写锁定。</li>
+<li>在创建或删除关系时，将对操作的关系及其两个节点执行写锁定。<br>锁将添加到事务中，并在事务完成时释放。</li>
+</ul>
+<ol start="2">
+<li><code>Cypher</code> 中的更新丢失<br><code>Cypher</code> 中在某些情况下可以获取写锁来模拟改进的隔离。例如多个并发 <code>Cypher</code> 查询增加属性值的情况，由于读提交隔离级别的限制，增加操作的结果可能是无法确定，如果存在直接依赖，则 <code>Cypher</code> 将在读取前自动获取写锁定。直接依赖关系是指 <code>SET</code> 的右侧在表达式中读取依赖属性或者在 <code>map</code> 字面值的键值对的值中。<br>然而在某些情况下判断读写依赖太过于复杂，可以在某些情况下 <code>Cypher</code> 不会自动加上写锁定。</li>
+</ol>
+<ul>
+<li>在读取请求的值之前，通过写入虚拟属性来获取节点的写锁定。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n) WITH n.prop as p SET n.prop = k + 1</span><br></pre></td></tr></table></figure></li>
+<li>在同一查询中读取和写入的属性之间的循环依赖性。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n) SET n += &#123;propA: n.propB + 1, propB: n.propA + 1&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> 为了在复杂情况下确保行为的确定性，有比远哦在所操作的节点上显式获取写锁定。虽然在 <code>Cypher</code> 中没有明确的支持，但是可以通过写入一个临时属性来解决这个限制就可以了。 </p>
+<h5 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h5><p>在任何系统中只要使用了锁，那么就会遇到死锁，然而在 <code>Neo4j</code> 中有在死锁发生异常之前会检查任何死锁的机制，在抛出异常之前，事务被标记为回滚。由事务获取的所有锁仍然被保留着，并在事务完成时释放（<code>finally</code> 块中）。因死锁而导致未能执行的事务之后就由用户在需要时进行重试。</p>
+<ol>
+<li>死锁处理程序<br>在代码中处理死锁首先需要明确以下问题：</li>
+</ol>
+<ul>
+<li>需要进行有限的重试次数，如果达到阈值则失败。</li>
+<li>在每次尝试之间暂停一下，以允许其他事务完成，然后再次尝试。</li>
+<li>重试循环不仅可以用于死锁，也可以用于其它类型的瞬态错误。</li>
+</ul>
+<p> 使用 <code>TransactionTemplate</code> 处理死锁，他将帮助我们实现所需要的处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义基本模板</span></span><br><span class="line"><span class="type">TransactionTemplate</span> <span class="variable">template</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TransactionTemplate</span>().retries(<span class="number">5</span>).backoff(<span class="number">3</span>, TimeUnit.SECONDS);</span><br><span class="line"><span class="comment">// 指定要使用的数据库和要执行的函数</span></span><br><span class="line"><span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> template.with(GraphDatabaseService).execute(Transaction -&gt; &#123;</span><br><span class="line">	<span class="type">Object</span> <span class="variable">result1</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">return</span> result1;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>使用循环处理死锁<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Throwable</span> <span class="variable">txEx</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">RETRIES</span> <span class="operator">=</span> <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">BACKOFF</span> <span class="operator">=</span> <span class="number">3000</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; RETRIES; i++) &#123;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> GraphDatabaseService.beginTx()) &#123;</span><br><span class="line">		<span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> doStuff(tx);</span><br><span class="line">		tx.success();</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">		txEx = ex;</span><br><span class="line">		<span class="keyword">if</span> (!(ex <span class="keyword">instanceof</span> DeadlockDetectedException)) &#123;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (i &lt; RETRIES - <span class="number">1</span>) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(BACKOFF);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TransactionFailureException</span>(<span class="string">&quot;Interrupted&quot;</span>, e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (txEx <span class="keyword">instanceof</span> TransactionFailureException) &#123;</span><br><span class="line">	<span class="keyword">throw</span> ((TransactionFailureException) txEx);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (txEx <span class="keyword">instanceof</span> Error) &#123;</span><br><span class="line">	<span class="keyword">throw</span> ((Error) txEx);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (txEx <span class="keyword">instanceof</span> RuntimePermission) &#123;</span><br><span class="line">	<span class="keyword">throw</span> ((RuntimeException) txEx);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TransactionFailureException</span>(<span class="string">&quot;Failed&quot;</span>, txEx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h5><p><code>Neo4j</code> 提供了三个主要的策略来确保唯一性，即单线程策略、获取或创建策略、消极锁策略。这三种策略可以运行在高可用性集群环境和单实例环境。</p>
+<ol>
+<li><p>单线程策略<br>单线程策略指的是系统中不会存在多个线程去创建同一个实体（节点、关系）。同样，在高可用性集群环境下，外部的单线程也可以在高可用性集群环境和单实例环境。</p>
+</li>
+<li><p>获取或创建策略<br>获取或创建唯一节点的首选方法就是使用唯一性约束和 <code>Cypher</code>。通过使用 <code>put-if-absent</code> 功能，可以使用手动索引来保证实体唯一性。此时手动索引将是一个锁，并且这个锁仅仅锁定用来保证线程和事务唯一性的最小资源。</p>
+</li>
+<li><p>消极锁策略<br>虽然消极锁策略也是一个保证唯一性的策略，但 <code>Neo4j</code> 更推荐使用以上两个策略，如果都不可性再考虑使用消极锁策略。</p>
+</li>
+</ol>
+<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>过程（<code>Procedure</code>）是以 <code>Java</code> 编写然后部署到数据库中的扩展插件，过程可以在 <code>Cypher</code> 中执行。其中用户自定义过程与数据库的存储过程又有本质的区别，用户自定义过程并不是使用 <code>Cypher</code> 创建的数据操作的集合，而是使用 <code>Java API</code> 创建的数据库功能插件。<br>过程是一种允许 <code>Neo4j</code> 通过编写自定义代码来扩展出更多功能的机制，然后直接通过 <code>Cypher</code> 调用，过程可以接收参数对数据库执行操作并返回相应结果。<br>通过将打包后的 <code>JAR</code> 文件放到每个独立或者集群服务器的 <code>neo4j-home/plugins</code> 目录下来部署到数据库中，每一个部署完成后的数据库都必须重新启动以使新的过程生效。<br>过程是扩展 <code>Neo4j</code> 的首选手段，过程提供的功能如下：</p>
+<ul>
+<li>提供对 <code>Cypher</code> 中不可用的功能的访问，例如手动索引。</li>
+<li>提供对第三方系统的访问。</li>
+<li>执行全局操作，例如对连接的组件计数或查找密集节点。</li>
+<li>实现难以用 <code>Cypher</code> 明确表达的操作。</li>
+</ul>
+<h5 id="调用过程"><a href="#调用过程" class="headerlink" title="调用过程"></a>调用过程</h5><p>调用过程需要使用 <code>Cypher</code> <code>CALL</code> 子句。此外过程名必须是唯一指定的。<code>CALL</code> 语句可以是 <code>Cypher</code> 语句中的唯一子句或者可以与其他子句结合，可以在查询中直接提供参数或从关联的参数集中提取参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CALL org.neo4j.example.findMaxNodes(1000);</span><br></pre></td></tr></table></figure>
+
+<h5 id="用户自定义过程"><a href="#用户自定义过程" class="headerlink" title="用户自定义过程"></a>用户自定义过程</h5><p>自定义过程通过包含代码本以及任何依赖包的 <code>JAR</code> 包文件（不包括 <code>Neo4j</code> 依赖）进行部署。这些文件应放置在每个独立数据库或集群成员的 <code>plugin</code> 目录中，并在下次重启后生效。</p>
+<ol>
+<li><p>创建新项目<br>使用 <code>Maven</code> 创建一个项目，依赖部分中的 <code>neo4j</code> 范围设置为 <code>provided</code>，因为一旦这个过程部署到 <code>Neo4j</code> 实例中，此依赖将由 <code>Neo4j</code> 提供。此外还有测试所需要的依赖库 <code>Neo4j Harness</code>，一个允许启动轻量级 <code>Neo4j</code> 实例的应用程序。<code>Neo4j</code> 驱动程序，用于发送调用过程的 <code>Cypher</code> 语句。<code>JUnit</code> 一个通用的 <code>Java</code> 测试框架。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.neo4j&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;neo4j&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;$&#123;neo4j.version&#125;&lt;/version&gt;</span><br><span class="line">	&lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.neo4j.test&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;neo4j-harness&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;$&#123;neo4j.version&#125;&lt;/version&gt;</span><br><span class="line">	&lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.neo4j.driver&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;neo4j-java-driver&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;<span class="number">1.0</span>-SNAPSHOT&lt;/version&gt;</span><br><span class="line">	&lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;<span class="number">4.12</span>&lt;/version&gt;</span><br><span class="line">	&lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写集成测试<br>具体步骤就是首先决定程序要做什么，然后写一个测试用例证明他是正确的，最后写一个能够通过测试的过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ManualFullTextIndexTest</span> &#123;</span><br><span class="line">	<span class="meta">@Rule</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">Neo4jRule</span> <span class="variable">neo4j</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Neo4jRule</span>().withProcedure(FullTextIndex.class);</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">shouldAllowIndexingAndFindingANode</span><span class="params">()</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">		<span class="keyword">try</span> (<span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(neo4j.boltURI(), Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig())) &#123;</span><br><span class="line">			<span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> driver.session();</span><br><span class="line">			<span class="type">long</span> <span class="variable">nodeId</span> <span class="operator">=</span> session.run(<span class="string">&quot;CREATE (p:User &#123;name: &#x27;Brookreson&#x27;&#125;) RETURN id(p)&quot;</span>).single().get(<span class="number">0</span>).asLong();</span><br><span class="line">			session.run(<span class="string">&quot;CALL example.index(&#123;id&#125;, [&#x27;name&#x27;])&quot;</span>, parameters(<span class="string">&quot;id&quot;</span>, nodeId));</span><br><span class="line">			<span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> session.run(<span class="string">&quot;CALL example.search(&#x27;User&#x27;, &#x27;name:Brook*&#x27;)&quot;</span>);</span><br><span class="line">			assertThat(result.single().get(<span class="string">&quot;nodedId&quot;</span>).asLong, equalTo(nodeId));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义过程<br>完整的示例可以从 <code>Github</code> 上<a target="_blank" rel="noopener" href="https://github.com/neo4j-examples/neo4j-procedure-template">找到</a>。下面说一下需要注意的地方：</p>
+</li>
+</ol>
+<ul>
+<li>所有过程都需要使用 <code>@Procedure</code> 注解。有写入数据库操作的过程，需要另外添加 <code>@PerformsWrites</code>。</li>
+<li>过程的上下文对象要与过程使用的每个资源对象相同，都需要添加 <code>@Context</code> 注解。</li>
+<li>需要了解过程有关输入和输出的详细信息。</li>
+</ul>
+<h4 id="在线备份"><a href="#在线备份" class="headerlink" title="在线备份"></a>在线备份</h4><p>以编程方式备份完整或后续增量的数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">OnlineBackup</span> <span class="variable">backup</span> <span class="operator">=</span> OnlineBackup.from(<span class="string">&quot;127.0.0.1&quot;</span>);</span><br><span class="line">backup.full(backupPath.getPath());</span><br><span class="line">assertTrue(<span class="string">&quot;Should be consistent&quot;</span>, backup.isConsistent());</span><br><span class="line">backup.incermental(backupPath.getPath());</span><br></pre></td></tr></table></figure>
+
+<h4 id="JMX-监控"><a href="#JMX-监控" class="headerlink" title="JMX 监控"></a><code>JMX</code> 监控</h4><p>为了连续了解 <code>Neo4j</code> 数据库的运行状况，我们可以使用基于 <code>JMX (Java Management Extensions)</code> 报告运行指标，<code>JMX</code> 作为一个为应用程序、设备、系统等植入管理系统的框架，<code>JMX</code> 可以跨越一系列异构操作平台、系统体系结构和网络传输协议，灵活开发无缝集成系统、网络和服务来管理应用。</p>
+<p>那么如何使用 <code>JMX</code> 接入 <code>Neo4j</code> 呢？要启用此功能，必须在配置文件中将 <code>com.sun.management.jmxremote</code> 选项取消注释。然后重启 <code>Neo4j</code> 和 <code>JConsole</code> 接着就可以在 <code>JConsole</code> 的面板中找到 <code>neo4j</code> 的进程了。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/" title="Neo4j系列博客-程序开发-嵌入式">https://blog.vgbhfive.cn/Neo4j系列博客-程序开发-嵌入式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/" rel="prev" title="Neo4j系列博客-数据库管理">
+      <i class="fa fa-chevron-left"></i> Neo4j系列博客-数据库管理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/" rel="next" title="Neo4j系列博客-程序开发-驱动式">
+      Neo4j系列博客-程序开发-驱动式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A5%E9%97%A8"><span class="nav-number">1.</span> <span class="nav-text">入门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">嵌入式开发模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%95%E5%85%A5-JAR-%E5%8C%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">引入 JAR 包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Intellij-IDEA"><span class="nav-number">2.1.2.</span> <span class="nav-text">Intellij IDEA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Maven"><span class="nav-number">2.1.3.</span> <span class="nav-text">Maven</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%92%8C%E5%85%B3%E9%97%AD-Neo4j"><span class="nav-number">2.1.4.</span> <span class="nav-text">启动和关闭 Neo4j</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8C%89%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%90%AF%E5%8A%A8-Neo4j"><span class="nav-number">2.1.5.</span> <span class="nav-text">按配置文件启动 Neo4j</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%8F%AA%E8%AF%BB%E5%AE%9E%E4%BE%8B"><span class="nav-number">2.1.6.</span> <span class="nav-text">启动一个只读实例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%9B%BE%E5%AE%9E%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">创建图实例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%86%99%E5%85%A5%E5%88%B0%E4%BA%8B%E5%8A%A1%E4%B8%AD"><span class="nav-number">2.2.2.</span> <span class="nav-text">操作写入到事务中</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9"><span class="nav-number">2.2.3.</span> <span class="nav-text">创建一个节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E8%8A%82%E7%82%B9%E5%88%9B%E5%BB%BA%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="nav-number">2.2.4.</span> <span class="nav-text">为节点创建属性值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E8%8A%82%E7%82%B9%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE"><span class="nav-number">2.2.5.</span> <span class="nav-text">为节点添加标签</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%B3%E7%B3%BB"><span class="nav-number">2.2.6.</span> <span class="nav-text">创建关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E5%9B%BE%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.7.</span> <span class="nav-text">输出图结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.8.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.2.9.</span> <span class="nav-text">关闭数据库</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E6%95%B0%E6%8D%AE%E9%81%8D%E5%8E%86"><span class="nav-number">2.3.</span> <span class="nav-text">图数据遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E6%A6%82%E5%BF%B5"><span class="nav-number">2.3.1.</span> <span class="nav-text">入门概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E6%A1%86%E6%9E%B6%E7%9A%84-Java-API"><span class="nav-number">2.3.2.</span> <span class="nav-text">遍历框架的 Java API</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E6%8F%8F%E8%BF%B0%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.3.</span> <span class="nav-text">遍历描述接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.4.</span> <span class="nav-text">关系接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E5%99%A8%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.5.</span> <span class="nav-text">评估器接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%99%A8%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.6.</span> <span class="nav-text">遍历器接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%94%AF%E4%B8%80%E6%80%A7%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.7.</span> <span class="nav-text">唯一性接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.3.8.</span> <span class="nav-text">遍历顺序</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%80%89%E6%8B%A9%E5%99%A8"><span class="nav-number">2.3.9.</span> <span class="nav-text">分支选择器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%81%8D%E5%8E%86%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.10.</span> <span class="nav-text">分支遍历策略</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-%E4%B8%AD%E4%BD%BF%E7%94%A8%E9%81%8D%E5%8E%86%E6%A1%86%E6%9E%B6"><span class="nav-number">2.3.11.</span> <span class="nav-text">Java 中使用遍历框架</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.</span> <span class="nav-text">数据索引</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.1.</span> <span class="nav-text">自动索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.2.</span> <span class="nav-text">手动索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.3.</span> <span class="nav-text">创建索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.4.</span> <span class="nav-text">删除索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.5.</span> <span class="nav-text">添加索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%86%E7%B4%A2%E5%BC%95%E7%A7%BB%E9%99%A4"><span class="nav-number">2.4.6.</span> <span class="nav-text">将索引移除</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.7.</span> <span class="nav-text">更新索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E7%B4%A2%E5%BC%95%E4%B8%8B%E7%9A%84%E6%9F%A5%E8%AF%A2"><span class="nav-number">2.4.8.</span> <span class="nav-text">节点索引下的查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E7%B4%A2%E5%BC%95%E4%B8%8B%E7%9A%84%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.9.</span> <span class="nav-text">关系索引下的索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E8%AF%84%E5%88%86"><span class="nav-number">2.4.10.</span> <span class="nav-text">结果评分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E9%85%8D%E7%BD%AE%E5%92%8C%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.11.</span> <span class="nav-text">索引配置和全文索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Lucene-%E7%B4%A2%E5%BC%95%E7%9A%84%E5%85%B6%E4%BB%96%E7%89%B9%E6%80%A7"><span class="nav-number">2.4.12.</span> <span class="nav-text">Lucene 索引的其他特性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.</span> <span class="nav-text">事务管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%A4%E4%BA%92%E5%91%A8%E6%9C%9F"><span class="nav-number">2.5.1.</span> <span class="nav-text">交互周期</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">2.5.2.</span> <span class="nav-text">隔离级别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">2.5.3.</span> <span class="nav-text">死锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">2.5.4.</span> <span class="nav-text">策略</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%87%E7%A8%8B"><span class="nav-number">2.6.</span> <span class="nav-text">过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="nav-number">2.6.1.</span> <span class="nav-text">调用过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%87%E7%A8%8B"><span class="nav-number">2.6.2.</span> <span class="nav-text">用户自定义过程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E5%A4%87%E4%BB%BD"><span class="nav-number">2.7.</span> <span class="nav-text">在线备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JMX-%E7%9B%91%E6%8E%A7"><span class="nav-number">2.8.</span> <span class="nav-text">JMX 监控</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">4.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

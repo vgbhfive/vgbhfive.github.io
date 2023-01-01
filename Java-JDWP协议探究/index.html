@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介JDWP 与其他许多协议不同，它仅仅定义了数据传输的格式，但并没有指定具体的传输方式。这就意味着一个JDWP 的实现可以不需要做任何修改就正常工作在不同的传输方式上。JDWP 是语言无关的。理论上我们可以选用任意语言实现JDWP 。然而我们注意到，在JDWP 的两端分别是target vm 和debugger。Target vm 端，JDWP 模块必须以Agent library 的形式在Ja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java-JDWP协议探究">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介JDWP 与其他许多协议不同，它仅仅定义了数据传输的格式，但并没有指定具体的传输方式。这就意味着一个JDWP 的实现可以不需要做任何修改就正常工作在不同的传输方式上。JDWP 是语言无关的。理论上我们可以选用任意语言实现JDWP 。然而我们注意到，在JDWP 的两端分别是target vm 和debugger。Target vm 端，JDWP 模块必须以Agent library 的形式在Ja">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2019/08/08/JRZl5USgLYCq7Go.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/08/08/ye62MEWYq9Av8Hp.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/08/08/zPZFDWS98ehQ4vg.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/08/08/Gt8udpEWT2vrJYw.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/08/08/sVzLZUDJ26xEcXC.jpg">
+<meta property="article:published_time" content="2019-08-08T03:04:18.000Z">
+<meta property="article:modified_time" content="2020-02-05T06:24:47.854Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/08/08/JRZl5USgLYCq7Go.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Java-JDWP协议探究 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java-JDWP协议探究
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-08-08 11:04:18" itemprop="dateCreated datePublished" datetime="2019-08-08T11:04:18+08:00">2019-08-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:24:47" itemprop="dateModified" datetime="2020-02-05T14:24:47+08:00">2020-02-05</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>JDWP 与其他许多协议不同，它仅仅定义了数据传输的格式，但并没有指定具体的传输方式。这就意味着一个JDWP 的实现可以不需要做任何修改就正常工作在不同的传输方式上。<br>JDWP 是语言无关的。理论上我们可以选用任意语言实现JDWP 。然而我们注意到，在JDWP 的两端分别是<strong>target vm</strong> 和<strong>debugger</strong>。<br>Target vm 端，JDWP 模块必须以<strong>Agent library</strong> 的形式在Java 虚拟机启动时加载，并且它必须通过Java 虚拟机提供的<strong>JVMTI</strong> 接口实现各种debug 的功能，所以必须使用C&#x2F;C++ 语言编写。而debugger 端就没有这样的限制，可以使用任意语言编写，只要遵守JDWP 规范即可。<br><strong>JDI（Java Debug Interface）</strong>就包含了一个Java 的JDWP debugger 端的实现，JDK 中调试工具jdb 也是使用JDI 完成其调试功能的。</p>
+<hr>
+
+<span id="more"></span>
+
+<h3 id="协议分析"><a href="#协议分析" class="headerlink" title="协议分析"></a>协议分析</h3><p>JDWP 大致分为两个阶段：</p>
+<ul>
+<li>握手。</li>
+<li>应答。<br>握手是在传输层连接建立完成后，做的第一件事：<br>Debugger 发送 14 bytes 的字符串“JDWP-Handshake”到 target Java 虚拟机，Target Java 虚拟机回复“JDWP-Handshake”。握手完成，debugger 就可以向 target Java 虚拟机发送命令了。</li>
+</ul>
+<p>JDWP 是通过命令（command）和回复（reply）进行通信的，这与 HTTP 有些相似。JDWP 本身是无状态的，因此对 command 出现的顺序并不受限制。<br>JDWP 有两种基本的包（packet）类型：</p>
+<ul>
+<li>命令包（command packet）。</li>
+<li>回复包（reply packet）。</li>
+</ul>
+<p>Debugger 和target Java 虚拟机都有可能发送command packet 。Debugger 通过发送command packet 获取target Java 虚拟机的信息以及控制程序的执行。Target Java 虚拟机通过发送command packet 通知 debugger 某些事件的发生，如到达断点或是产生异常。<br>Reply packet 是用来回复command packet 该命令是否执行成功，如果成功reply packet 还有可能包含command packet 请求的数据，比如当前的线程信息或者变量的值。从target Java 虚拟机发送的事件消息是不需要回复的。</p>
+<p><small><strong>JDWP 是异步的，command packet 的发送方不需要等待接收到reply packet 就可以继续发送下一个command packet 。</strong></small></p>
+<hr>
+
+<h3 id="Packet-的结构"><a href="#Packet-的结构" class="headerlink" title="Packet 的结构"></a>Packet 的结构</h3><p>Packet 分为包头（header）和数据（data）两部分组成。<br>包头部分的结构和长度是固定，而数据部分的长度是可变的，具体内容视packet 的内容而定。<br>Command packet 和Reply packet 的包头长度相同，都是11 个bytes，这样更有利于传输层的抽象和实现。</p>
+<h4 id="Command-packet"><a href="#Command-packet" class="headerlink" title="Command packet"></a>Command packet</h4><p><img src="https://i.loli.net/2019/08/08/JRZl5USgLYCq7Go.jpg" alt="1.jpg"></p>
+<ul>
+<li>Length 是整个packet 的长度，包括length 部分。因为包头的长度是固定的11 bytes，所以如果一个command packet 没有数据部分，则length 的值就是 11。</li>
+<li>Id 是一个唯一值，用来标记和识别reply 所属的command。Reply packet 与它所回复的command packet 具有相同的Id，异步的消息就是通过Id 来配对识别的。</li>
+<li>Flags 目前对于command packet 值始终是 0。</li>
+<li>Command Set 相当于一个command 的分组，一些功能相近的command 被分在同一个Command Set 中。Command Set 的值被划分为3 个部分：<ul>
+<li>0-63: 从debugger 发往target Java 虚拟机的命令。</li>
+<li>64 – 127： 从target Java 虚拟机发往debugger 的命令。</li>
+<li>128 – 256： 预留的自定义和扩展命令。</li>
+</ul>
+</li>
+</ul>
+<h4 id="Reply-packet"><a href="#Reply-packet" class="headerlink" title="Reply packet"></a>Reply packet</h4><p><img src="https://i.loli.net/2019/08/08/ye62MEWYq9Av8Hp.jpg" alt="2.jpg"></p>
+<ul>
+<li>Length、Id 作用与command packet 中的一样。</li>
+<li>Flags 目前对于reply packet 值始终是 0x80。我们可以通过Flags 的值来判断接收到的packet 是command 还是 reply。</li>
+<li>Error Code 用来表示被回复的命令是否被正确执行了。零表示正确，非零表示执行错误。</li>
+<li>Data 的内容和结构依据不同的command 和reply 都有所不同。比如请求一个对象成员变量值的command，它的data 中就包含该对象的id 和成员变量的id 。而reply 中则包含该成员变量的值。</li>
+</ul>
+<hr>
+
+<h3 id="传输接口-Java-Debug-Wire-Protocol-Transport-Interface"><a href="#传输接口-Java-Debug-Wire-Protocol-Transport-Interface" class="headerlink" title="传输接口(Java Debug Wire Protocol Transport Interface)"></a>传输接口(Java Debug Wire Protocol Transport Interface)</h3><p>如何使JDWP 能够无缝的使用不同的传输实现，而又无需修改JDWP 本身的代码？ <strong>JDWP 传输接口（Java Debug Wire Protocol Transport Interface）</strong>为我们解决了这个问题。</p>
+<p>JDWP 传输接口定义了一系列的方法用来定义JDWP 与传输层实现之间的交互方式。<br>首先传输层的必须以<strong>动态链接库</strong>的方式实现，并且暴露一系列的标准接口供JDWP 使用。与JNI 和JVMTI 类似，访问传输层也需要一个<strong>环境指针（jdwpTransport）</strong>，通过这个指针可以访问传输层提供的所有方法。<br>当JDWP agent 被Java 虚拟机加载后，JDWP 会根据<strong>参数</strong>去加载指定的传输层实现（Sun 的 JDK 在 Windows 提供 socket 和 share memory 两种传输方式，而在 Linux 上只有 socket 方式）。<br>传输层实现的动态链接库实现必须暴露<strong>jdwpTransport_OnLoad 接口</strong>，JDWP agent 在加载传输层动态链接库后会调用该接口进行传输层的初始化。</p>
+<p>jdwpTransport_OnLoad 接口定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">JNIEXPORT jint JNICALL </span></span><br><span class="line"><span class="function"><span class="title">jdwpTransport_OnLoad</span><span class="params">(JavaVM *jvm, </span></span></span><br><span class="line"><span class="params"><span class="function">    jdwpTransportCallback *callback, <span class="comment">// callback 参数指向一个内存管理的函数表，传输层用它来进行内存的分配和释放</span></span></span></span><br><span class="line"><span class="params"><span class="function">    jint version, </span></span></span><br><span class="line"><span class="params"><span class="function">    jdwpTransportEnv** env <span class="comment">// env 参数是环境指针，指向的函数表由传输层初始化</span></span></span></span><br><span class="line"><span class="params"><span class="function">    )</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>JDWP 传输层定义的接口主要分为两类：</p>
+<ul>
+<li>连接管理。</li>
+<li>I&#x2F;O 操作。</li>
+</ul>
+<h4 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h4><p>连接管理接口主要负责连接的建立和关闭。<br>一个连接为JDWP 和debugger 提供了可靠的数据流。Packet 被接收的<strong>顺序严格</strong>的按照被写入连接的顺序。<br>连接的<strong>建立是双向</strong>的，即JDWP 可以主动去连接debugger 或者JDWP 等待debugger 的连接。对于主动去连接debugger，需要调用<strong>Attach() 方法</strong>。</p>
+<p>在连接建立后，会立即进行<strong>握手操作</strong>，确保对方也在使用JDWP 。因此方法参数中分别指定了attch 和握手的超时时间。</p>
+<p>JDWP 等待debugger 连接的方式，首先需要调用StartListening() 方法，定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">jdwpTransportError </span></span><br><span class="line"><span class="function"><span class="title">StartListening</span><span class="params">(jdwpTransportEnv* env, <span class="type">const</span> <span class="type">char</span>* address, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">char</span>** actualAddress)</span></span></span><br></pre></td></tr></table></figure>
+<p> 该方法将使JDWP 处于<strong>监听状态</strong>，随后调用Accept() 方法接收连接：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">jdwpTransportError </span></span><br><span class="line"><span class="function"><span class="title">Accept</span><span class="params">(jdwpTransportEnv* env, jlong acceptTimeout, jlong </span></span></span><br><span class="line"><span class="params"><span class="function">    handshakeTimeout)</span></span></span><br></pre></td></tr></table></figure>
+<p> 与Attach() 方法类似，在连接建立后，会立即进行握手操作。</p>
+<h4 id="I-x2F-O-操作"><a href="#I-x2F-O-操作" class="headerlink" title="I&#x2F;O 操作"></a>I&#x2F;O 操作</h4><p>I&#x2F;O 操作接口主要是负责从传输层读写packet 。<br>有 ReadPacket 和 WritePacket 两个方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">jdwpTransportError </span></span><br><span class="line"><span class="function"><span class="title">ReadPacket</span><span class="params">(jdwpTransportEnv* env, jdwpPacket* packet)</span> </span></span><br><span class="line"><span class="function">jdwpTransportError </span></span><br><span class="line"><span class="function"><span class="title">WritePacket</span><span class="params">(jdwpTransportEnv* env, <span class="type">const</span> jdwpPacket* packet)</span></span></span><br></pre></td></tr></table></figure>
+<p> 其结构jdwpPacket 与我们开始提到的JDWP packet 结构一致，定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123; </span><br><span class="line">    jint len;        <span class="comment">// packet length </span></span><br><span class="line">    jint id;         <span class="comment">// packet id </span></span><br><span class="line">    jbyte flags;     <span class="comment">// value is 0 </span></span><br><span class="line">    jbyte cmdSet;    <span class="comment">// command set </span></span><br><span class="line">    jbyte cmd;       <span class="comment">// command in specific command set </span></span><br><span class="line">    jbyte *data;     <span class="comment">// data carried by packet </span></span><br><span class="line">&#125; jdwpCmdPacket; </span><br><span class="line"> </span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123; </span><br><span class="line">    jint len;        <span class="comment">// packet length </span></span><br><span class="line">    jint id;         <span class="comment">// packet id </span></span><br><span class="line">    jbyte flags;     <span class="comment">// value 0x80 </span></span><br><span class="line">    jshort errorCode;    <span class="comment">// error code </span></span><br><span class="line">    jbyte *data;     <span class="comment">// data carried by packet </span></span><br><span class="line">&#125; jdwpReplyPacket; </span><br><span class="line"> </span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">jdwpPacket</span> &#123; </span><br><span class="line">    <span class="keyword">union</span> &#123; </span><br><span class="line">        jdwpCmdPacket cmd; </span><br><span class="line">        jdwpReplyPacket reply; </span><br><span class="line">    &#125; type; </span><br><span class="line">&#125; jdwpPacket;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="命令实现机制"><a href="#命令实现机制" class="headerlink" title="命令实现机制"></a>命令实现机制</h3><p>JDWP 作为一种协议，它的作用就在于充当了调试器与Java 虚拟机的沟通桥梁。通俗点讲，调试器在调试过程中需要不断向Java 虚拟机查询各种信息，那么JDWP 就规定了查询的具体方式。</p>
+<p>我们通过一个最简单的VirtualMachine（命令集合 1）的Version 命令的Java 测试用例来说明:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">CommandPacket packet = <span class="keyword">new</span> <span class="built_in">CommandPacket</span>( </span><br><span class="line">	JDWPCommands.VirtualMachineCommandSet.CommandSetID, </span><br><span class="line">	JDWPCommands.VirtualMachineCommandSet.VersionCommand); </span><br><span class="line">         </span><br><span class="line">ReplyPacket reply = debuggeeWrapper.vmMirror.<span class="built_in">performCommand</span>(packet); </span><br><span class="line"> </span><br><span class="line">String description = reply.<span class="built_in">getNextValueAsString</span>(); </span><br><span class="line"><span class="type">int</span>    jdwpMajor   = reply.<span class="built_in">getNextValueAsInt</span>(); </span><br><span class="line"><span class="type">int</span>    jdwpMinor   = reply.<span class="built_in">getNextValueAsInt</span>(); </span><br><span class="line">String vmVersion   = reply.<span class="built_in">getNextValueAsString</span>(); </span><br><span class="line">String vmName      = reply.<span class="built_in">getNextValueAsString</span>(); </span><br><span class="line"> </span><br><span class="line">logWriter.<span class="built_in">println</span>(<span class="string">&quot;description\t= &quot;</span> + description); </span><br><span class="line">logWriter.<span class="built_in">println</span>(<span class="string">&quot;jdwpMajor\t= &quot;</span> + jdwpMajor); </span><br><span class="line">logWriter.<span class="built_in">println</span>(<span class="string">&quot;jdwpMinor\t= &quot;</span> + jdwpMinor); </span><br><span class="line">logWriter.<span class="built_in">println</span>(<span class="string">&quot;vmVersion\t= &quot;</span> + vmVersion); </span><br><span class="line">logWriter.<span class="built_in">println</span>(<span class="string">&quot;vmName\t\t= &quot;</span> + vmName);</span><br></pre></td></tr></table></figure>
+<p> 分析：<br>我们会创建一个VirtualMachine 的Version 命令的命令包实例packet 。该命令包主要就是配置了两个参数: CommandSetID 和VersionComamnd ，它们的值均为1。表明我们想执行的命令是属于命令集合1 的命令1，即VirtualMachine 的Version 命令。<br>然后在performCommand 方法中我们发送了该命令并收到了JDWP 的回复包reply，通过解析reply，我们得到了该命令的回复信息。</p>
+<p>结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">description = Java 虚拟机 version 1.6.0 (IBM J9 VM, J2RE 1.6.0 IBM J9 2.4 Windows XP x86-32 </span><br><span class="line">jvmwi3260sr5-20090519_35743 (JIT enabled, AOT enabled) </span><br><span class="line">J9VM - 20090519_035743_lHdSMr </span><br><span class="line">JIT  - r9_20090518_2017 </span><br><span class="line">GC   - 20090417_AA, 2.4) </span><br><span class="line">jdwpMajor    = 1 </span><br><span class="line">jdwpMinor    = 6 </span><br><span class="line">vmVersion    = 1.6.0 </span><br><span class="line">vmName       = IBM J9 VM</span><br></pre></td></tr></table></figure>
+
+<p>测试用例的执行结果显示，我们通过该命令获得了Java 虚拟机的版本信息，这正是VirtualMachine 的Version 命令的作用。<br>前面已经提到，<strong>JDWP 接收到的是调试器发送的命令包，返回的就是反馈信息的回复包</strong>。我们模拟的调试器会发送VirtualMachine 的Version 命令。<br>JDWP 在执行完该命令后就向调试器返回Java 虚拟机的版本信息。返回信息的包内容同样是在<strong>JDWP Spec</strong> 里面规定的。</p>
+<p>在JDWP 内部是如何处理接收到的命令并返回回复包的呢？<br><img src="https://i.loli.net/2019/08/08/zPZFDWS98ehQ4vg.jpg" alt="1.jpg"><br>JDWP 接收和发送的包都会经过<strong>TransportManager</strong> 进行处理。<br>JDWP 的应用层与传输层是独立的，就在于TransportManager 调用的是JDWP 传输接口（Java Debug Wire Protocol Transport Interface），所以无需关心底层网络的具体传输实现。<br>TransportManager 的主要作用就是充当JDWP 与外界通讯的数据包的中转站，负责将JDWP 的命令包在接收后进行解析或是对回复包在发送前进行打包，从而使JDWP 能够专注于应用层的实现。<br>对于收到的命令包，TransportManager 处理后会转给<strong>PacketDispatcher</strong> ，进一步封装后会继续转到<strong>CommandDispatcher</strong> 。然后CommandDispatcher 会根据命令中提供的命令组号和命令号创建一个具体的<strong>CommandHandler</strong> 来处理JDWP 命令。<br>其中，CommandHandler 才是真正执行JDWP 命令的类。为每个JDWP 命令都定义一个相<strong>对应的CommandHandler 的子类</strong>，当接收到某个命令时，就会创建处理该命令的CommandHandler 的子类的实例来作具体的处理。</p>
+<p><img src="https://i.loli.net/2019/08/08/Gt8udpEWT2vrJYw.jpg" alt="2.jpg"></p>
+<h4 id="单线程执行的命令"><a href="#单线程执行的命令" class="headerlink" title="单线程执行的命令"></a>单线程执行的命令</h4><p>对于一个可以直接在该线程中完成的命令（我们称为单线程执行的命令），一般其内部会调用JVMTI 方法和JNI 方法来真正对Java 虚拟机进行操作。</p>
+<h4 id="多线程执行的命令"><a href="#多线程执行的命令" class="headerlink" title="多线程执行的命令"></a>多线程执行的命令</h4><p>对于一些较为复杂的命令，是无法在CommandHandler 子类的处理线程中完成的。<br>例如：ClassType 的InvokeMethod 命令，它会要求在指定的某个线程中执行一个静态方法，显然CommandHandler 子类的当前线程并不是所要求的线程。</p>
+<p>为了解决这个JDWP 线程会先把这个请求先放到一个列表中，然后等待，直到所要求的线程执行完那个静态方法后，再把结果返回给调试器。</p>
+<hr>
+
+<h3 id="事件处理机制"><a href="#事件处理机制" class="headerlink" title="事件处理机制"></a>事件处理机制</h3><p>前面介绍的VirtualMachine 的Version 命令过程非常简单，就是一个查询和信息返回的过程。<br>在实际调试过程中，一个JDI 的命令往往会有数条这类简单的查询命令参与，而且会涉及到很多更为复杂的命令。要了解更为复杂的JDWP 命令实现机制，就必须介绍<strong>JDWP 的事件处理机制</strong>。</p>
+<p>我们通过介绍在调试过程中断点的触发是如何实现的，来为大家揭示其中的实现机制。<br>任意调试一段Java 程序，并在某一行中加入断点。然后，我们执行到该断点，此时所有Java 线程都处于<strong>suspend 状态</strong>，这是很常见的断点触发过程。<br>为了记录在此过程中JDWP 的行为，我们使用了一个开启了trace 信息的JDWP。虽然这并不是一个复杂的操作，但整个trace 信息也有几千行。<br>可见，作为相对底层的JDWP ，其实际处理的命令要比想象的多许多，为了介绍JDWP 的事件处理机制，我们挑选了其中比较重要的一些trace 信息来说明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[RequestManager.cpp:601] AddRequest: event=BREAKPOINT[2], req=48, modCount=1, policy=1 </span><br><span class="line">[RequestManager.cpp:791] GenerateEvents: event #0: kind=BREAKPOINT, req=48 </span><br><span class="line">[RequestManager.cpp:1543] HandleBreakpoint: BREAKPOINT events: count=1, suspendPolicy=1, </span><br><span class="line">                          location=0 </span><br><span class="line">[RequestManager.cpp:1575] HandleBreakpoint: post set of 1 </span><br><span class="line">[EventDispatcher.cpp:415] PostEventSet -- wait for release on event: thread=4185A5A0, </span><br><span class="line">                          name=(null), eventKind=2 </span><br><span class="line"> </span><br><span class="line">[EventDispatcher.cpp:309] SuspendOnEvent -- send event set: id=3, policy=1 </span><br><span class="line">[EventDispatcher.cpp:334] SuspendOnEvent -- wait for thread on event: thread=4185A5A0, </span><br><span class="line">                          name=(null) </span><br><span class="line">[EventDispatcher.cpp:349] SuspendOnEvent -- suspend thread on event: thread=4185A5A0, </span><br><span class="line">                          name=(null) </span><br><span class="line">[EventDispatcher.cpp:360] SuspendOnEvent -- release thread on event: thread=4185A5A0, </span><br><span class="line">                          name=(null)</span><br></pre></td></tr></table></figure>
+
+<p>调试器需要发起一个断点的请求，这是通过 JDWP 的 Set 命令完成的。在 trace 中，我们看到 AddRequest 就是做了这件事。可以清楚的发现，调试器请求的是一个断点信息（event&#x3D;BREAKPOINT[2]）。</p>
+<p>在 JDWP 的实现中，这一过程表现为：<br>在 Set 命令中会生成一个具体的request , JDWP 的RequestManager 会记录这个 request（<small>request 中会包含一些过滤条件，当事件发生时 RequestManager 会过滤掉不符合预先设定条件的事件</small>		），并通过JVMTI 的 SetEventNotificationMode() 方法使这个事件触发生效（<small>否则事件发生时 Java 虚拟机不会报告</small>）。<br><img src="https://i.loli.net/2019/08/08/sVzLZUDJ26xEcXC.jpg" alt="3.jpg"></p>
+<p>当断点发生时，Java 虚拟机就会调用 JDWP 中预先定义好的处理该事件的回调函数。在 trace 中，HandleBreakpoint 就是我们在 JDWP 中定义好的处理断点信息的回调函数。它的作用就是要生成一个 JDWP 端所描述的断点事件来告知调试器（<small>Java 虚拟机只是触发了一个 JVMTI 的消息</small>）。</p>
+<p>由于断点的事件在调试器申请时就要求所有 Java 线程在断点触发时被 suspend，那这一步由谁来完成呢？<br>这里要谈到一个细节问题，HandleBreakpoint 作为一个回调函数，其执行线程其实就是断点触发的Java 线程。<br>显然，我们不应该由它来负责suspend 所有Java 线程。</p>
+<p>原因很简单，我们还有一步工作要做，就是要把该断点触发信息返回给调试器。<br>如果我们先返回信息，然后 suspend 所有 Java 线程，这就无法保证在调试器收到信息时所有Java 线程已经被suspend。<br>反之，先 Suspend 了所有 Java 线程，谁来负责发送信息给调试器呢？<br>为了解决这个问题，我们通过 JDWP 的 <strong>EventDispatcher 线程</strong>来帮我们 suspend 线程和发送信息。<br>实现的过程是，我们让触发断点的 Java 线程来<strong>PostEventSet</strong>（trace 中可以看到），把生成的 JDWP 事件放到一个队列中，然后就开始等待。<br>由 EventDispatcher 线程来负责从队列中取出 JDWP 事件，并根据事件中的设定，来 suspend 所要求的 Java 线程并发送出该事件。</p>
+<p>在这里我们在事件触发的 Java 线程和 EventDispatcher 线程之间添加了一个<strong>同步机制</strong>，当事件发送出去后事件触发的Java 线程会把JDWP 中的该事件删除，到这里整个JDWP 事件处理就完成了。</p>
+<hr>
+
+<h3 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h3><p>关于Java 线程在执行断点之后，都会处于<strong>suspend 状态</strong>，但是线程在这种状态会出现死锁的情况。<br>因此，现在大部分的线程停止都是处于<strong>wait 状态</strong>，通过设置超时时间或者通过notify() 唤醒线程。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/java/j-lo-jpda3/index.html">https://www.ibm.com/developerworks/cn/java/j-lo-jpda3/index.html</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Java-JDWP%E5%8D%8F%E8%AE%AE%E6%8E%A2%E7%A9%B6/" title="Java-JDWP协议探究">https://blog.vgbhfive.cn/Java-JDWP协议探究/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/JavaAgent%E9%BB%91%E7%9B%92%E5%AD%90%E6%8F%AD%E7%A7%98/" rel="prev" title="JavaAgent黑盒子揭秘">
+      <i class="fa fa-chevron-left"></i> JavaAgent黑盒子揭秘
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Java-JMX%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%A9%B6/" rel="next" title="Java-JMX框架探究">
+      Java-JMX框架探究 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">协议分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Packet-%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">Packet 的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Command-packet"><span class="nav-number">3.1.</span> <span class="nav-text">Command packet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reply-packet"><span class="nav-number">3.2.</span> <span class="nav-text">Reply packet</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E6%8E%A5%E5%8F%A3-Java-Debug-Wire-Protocol-Transport-Interface"><span class="nav-number">4.</span> <span class="nav-text">传输接口(Java Debug Wire Protocol Transport Interface)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">连接管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#I-x2F-O-%E6%93%8D%E4%BD%9C"><span class="nav-number">4.2.</span> <span class="nav-text">I&#x2F;O 操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">命令实现机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">5.1.</span> <span class="nav-text">单线程执行的命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">5.2.</span> <span class="nav-text">多线程执行的命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">事件处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E8%AF%9D"><span class="nav-number">7.</span> <span class="nav-text">后话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

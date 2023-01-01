@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引入最近工作的部分是重构一个系统的部分代码，并做一些安全性的升级，其中就牵扯到了 TLS 1.2 。但是在我查到 JDK 1.6 不支持 TLS 1.2 之后，就开始漫长的解决方法寻找之旅。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK1.6支持TLS1.2">
+<meta property="og:url" content="https://blog.vgbhfive.cn/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="引入最近工作的部分是重构一个系统的部分代码，并做一些安全性的升级，其中就牵扯到了 TLS 1.2 。但是在我查到 JDK 1.6 不支持 TLS 1.2 之后，就开始漫长的解决方法寻找之旅。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-03T14:47:18.000Z">
+<meta property="article:modified_time" content="2021-02-03T15:31:51.477Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Day">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>JDK1.6支持TLS1.2 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JDK1.6支持TLS1.2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-02-03 22:47:18 / Modified: 23:31:51" itemprop="dateCreated datePublished" datetime="2021-02-03T22:47:18+08:00">2021-02-03</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>最近工作的部分是重构一个系统的部分代码，并做一些安全性的升级，其中就牵扯到了 TLS 1.2 。但是在我查到 JDK 1.6 不支持 TLS 1.2 之后，就开始漫长的解决方法寻找之旅。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li><p>升级JDK<br>升级JDK 1.6 到 121 版本之后就会支持 TLS 1.2 。<br><small>JDK1.6 121版本是需要收费的！！！</small></p>
+</li>
+<li><p>引入外部包<br>需要引入的包名为 <a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on/1.54">bcprov-jdk15on</a> 。并且需要根据引入的 jar 包继承实现 SSLSocketFactory 类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.bouncycastle.crypto.tls.*;</span><br><span class="line"><span class="keyword">import</span> org.bouncycastle.jce.provider.BouncyCastleProvider;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.*;</span><br><span class="line"><span class="keyword">import</span> javax.security.cert.X509Certificate;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.net.InetAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.Socket;</span><br><span class="line"><span class="keyword">import</span> java.net.UnknownHostException;</span><br><span class="line"><span class="keyword">import</span> java.security.KeyStore;</span><br><span class="line"><span class="keyword">import</span> java.security.Principal;</span><br><span class="line"><span class="keyword">import</span> java.security.SecureRandom;</span><br><span class="line"><span class="keyword">import</span> java.security.Security;</span><br><span class="line"><span class="keyword">import</span> java.security.cert.CertificateExpiredException;</span><br><span class="line"><span class="keyword">import</span> java.security.cert.CertificateFactory;</span><br><span class="line"><span class="keyword">import</span> java.util.Hashtable;</span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TLSSocketConnectionFactory</span> <span class="keyword">extends</span> <span class="title class_">SSLSocketFactory</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == <span class="literal">null</span>) &#123;</span><br><span class="line">            Security.addProvider(<span class="keyword">new</span> <span class="title class_">BouncyCastleProvider</span>());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Socket <span class="title function_">createSocket</span><span class="params">(Socket socket, <span class="keyword">final</span> String host, <span class="type">int</span> port,</span></span><br><span class="line"><span class="params">                               <span class="type">boolean</span> arg3)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="keyword">if</span> (socket == <span class="literal">null</span>) &#123;</span><br><span class="line">            socket = <span class="keyword">new</span> <span class="title class_">Socket</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!socket.isConnected()) &#123;</span><br><span class="line">            socket.connect(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(host, port));</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">final</span> <span class="type">TlsClientProtocol</span> <span class="variable">tlsClientProtocol</span> <span class="operator">=</span> <span class="keyword">new</span>     <span class="title class_">TlsClientProtocol</span>(socket.getInputStream(), socket.getOutputStream(), <span class="keyword">new</span>     <span class="title class_">SecureRandom</span>());</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> _createSSLSocket(host, tlsClientProtocol);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> String[] getDefaultCipherSuites() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> String[] getSupportedCipherSuites() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> Socket <span class="title function_">createSocket</span><span class="params">(String host, <span class="type">int</span> port)</span> <span class="keyword">throws</span> IOException, UnknownHostException &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> Socket <span class="title function_">createSocket</span><span class="params">(InetAddress host, <span class="type">int</span> port)</span> <span class="keyword">throws</span> IOException &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> Socket <span class="title function_">createSocket</span><span class="params">(String host, <span class="type">int</span> port, InetAddress localHost, <span class="type">int</span> localPort)</span> <span class="keyword">throws</span> IOException, UnknownHostException &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> Socket <span class="title function_">createSocket</span><span class="params">(InetAddress address, <span class="type">int</span> port, InetAddress localAddress, <span class="type">int</span> localPort)</span> <span class="keyword">throws</span> IOException &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> SSLSocket <span class="title function_">_createSSLSocket</span><span class="params">(<span class="keyword">final</span> String host, <span class="keyword">final</span> TlsClientProtocol tlsClientProtocol)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">SSLSocket</span>() &#123;</span><br><span class="line">            <span class="keyword">private</span> java.security.cert.Certificate[] peertCerts;</span><br><span class="line"> </span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> InputStream <span class="title function_">getInputStream</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123; <span class="keyword">return</span> tlsClientProtocol.getInputStream(); &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> OutputStream <span class="title function_">getOutputStream</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123; <span class="keyword">return</span> tlsClientProtocol.getOutputStream(); &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123; tlsClientProtocol.close(); &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addHandshakeCompletedListener</span><span class="params">( HandshakeCompletedListener arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">getEnableSessionCreation</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> String[] getEnabledCipherSuites() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> String[] getEnabledProtocols() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">getNeedClientAuth</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> SSLSession <span class="title function_">getSession</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">SSLSession</span>() &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getApplicationBufferSize</span><span class="params">()</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> String <span class="title function_">getCipherSuite</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getCreationTime</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">byte</span>[] getId() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getLastAccessedTime</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> java.security.cert.Certificate[] getLocalCertificates() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> Principal <span class="title function_">getLocalPrincipal</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getPacketBufferSize</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> X509Certificate[] getPeerCertificateChain() <span class="keyword">throws</span> SSLPeerUnverifiedException &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> java.security.cert.Certificate[] getPeerCertificates() <span class="keyword">throws</span> SSLPeerUnverifiedException &#123; <span class="keyword">return</span> peertCerts; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> String <span class="title function_">getPeerHost</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getPeerPort</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> Principal <span class="title function_">getPeerPrincipal</span><span class="params">()</span> <span class="keyword">throws</span> SSLPeerUnverifiedException &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> String <span class="title function_">getProtocol</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> SSLSessionContext <span class="title function_">getSessionContext</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> Object <span class="title function_">getValue</span><span class="params">(String arg0)</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> String[] getValueNames() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invalidate</span><span class="params">()</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isValid</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">putValue</span><span class="params">(String arg0, Object arg1)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeValue</span><span class="params">(String arg0)</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> String[] getSupportedProtocols() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">getUseClientMode</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">getWantClientAuth</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeHandshakeCompletedListener</span><span class="params">(HandshakeCompletedListener arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEnableSessionCreation</span><span class="params">(<span class="type">boolean</span> arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEnabledCipherSuites</span><span class="params">(String[] arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEnabledProtocols</span><span class="params">(String[] arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNeedClientAuth</span><span class="params">(<span class="type">boolean</span> arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUseClientMode</span><span class="params">(<span class="type">boolean</span> arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setWantClientAuth</span><span class="params">(<span class="type">boolean</span> arg0)</span> &#123; &#125;</span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> String[] getSupportedCipherSuites() &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">startHandshake</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">                tlsClientProtocol.connect(<span class="keyword">new</span> <span class="title class_">DefaultTlsClient</span>() &#123;</span><br><span class="line"> </span><br><span class="line">                    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> Hashtable&lt;Integer, <span class="type">byte</span>[]&gt; getClientExtensions() <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">                        Hashtable&lt;Integer, <span class="type">byte</span>[]&gt; clientExtensions = <span class="built_in">super</span>.getClientExtensions();</span><br><span class="line">                        <span class="keyword">if</span> (clientExtensions == <span class="literal">null</span>) &#123;</span><br><span class="line">                            clientExtensions = <span class="keyword">new</span> <span class="title class_">Hashtable</span>&lt;Integer, <span class="type">byte</span>[]&gt;();</span><br><span class="line">                        &#125;</span><br><span class="line"> </span><br><span class="line">                        <span class="type">byte</span>[] host_name = host.getBytes();</span><br><span class="line"> </span><br><span class="line">                        <span class="keyword">final</span> <span class="type">ByteArrayOutputStream</span> <span class="variable">baos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">                        <span class="keyword">final</span> <span class="type">DataOutputStream</span> <span class="variable">dos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DataOutputStream</span>(baos);</span><br><span class="line">                        dos.writeShort(host_name.length + <span class="number">3</span>);</span><br><span class="line">                        dos.writeByte(<span class="number">0</span>);</span><br><span class="line">                        dos.writeShort(host_name.length);</span><br><span class="line">                        dos.write(host_name);</span><br><span class="line">                        dos.close();</span><br><span class="line">                        clientExtensions.put(ExtensionType.server_name, baos.toByteArray());</span><br><span class="line">                        <span class="keyword">return</span> clientExtensions;</span><br><span class="line">                    &#125;</span><br><span class="line"> </span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> TlsAuthentication <span class="title function_">getAuthentication</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TlsAuthentication</span>() &#123;</span><br><span class="line"> </span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">notifyServerCertificate</span><span class="params">(Certificate serverCertificate)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                    <span class="type">KeyStore</span> <span class="variable">ks</span> <span class="operator">=</span> _loadKeyStore();</span><br><span class="line"> </span><br><span class="line">                                    <span class="type">CertificateFactory</span> <span class="variable">cf</span> <span class="operator">=</span> CertificateFactory.getInstance(<span class="string">&quot;X.509&quot;</span>);</span><br><span class="line">                                    List&lt;java.security.cert.Certificate&gt; certs = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;java.security.cert.Certificate&gt;();</span><br><span class="line">                                    <span class="type">boolean</span> <span class="variable">trustedCertificate</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">                                    <span class="keyword">for</span> (org.bouncycastle.asn1.x509.Certificate c : serverCertificate.getCertificateList()) &#123;</span><br><span class="line">                                        java.security.cert.<span class="type">Certificate</span> <span class="variable">cert</span> <span class="operator">=</span> cf.generateCertificate(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(c.getEncoded()));</span><br><span class="line">                                        certs.add(cert);</span><br><span class="line"> </span><br><span class="line">                                        <span class="type">String</span> <span class="variable">alias</span> <span class="operator">=</span> ks.getCertificateAlias(cert);</span><br><span class="line">                                        <span class="keyword">if</span>(alias != <span class="literal">null</span>) &#123;</span><br><span class="line">                                            <span class="keyword">if</span> (cert <span class="keyword">instanceof</span> java.security.cert.X509Certificate) &#123;</span><br><span class="line">                                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                                    ( (java.security.cert.X509Certificate) cert).checkValidity();</span><br><span class="line">                                                    trustedCertificate = <span class="literal">true</span>;</span><br><span class="line">                                                &#125; <span class="keyword">catch</span>(CertificateExpiredException cee) &#123;</span><br><span class="line">                                                    </span><br><span class="line">                                                &#125;</span><br><span class="line">                                            &#125;</span><br><span class="line">                                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                            </span><br><span class="line">                                        &#125;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                    <span class="keyword">if</span> (!trustedCertificate) &#123;</span><br><span class="line"></span><br><span class="line">                                    &#125;</span><br><span class="line">                                    peertCerts = certs.toArray(<span class="keyword">new</span> <span class="title class_">java</span>.security.cert.Certificate[<span class="number">0</span>]);</span><br><span class="line">                                &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">                                    ex.printStackTrace();</span><br><span class="line">                                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IOException</span>(ex);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line"> </span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="keyword">public</span> TlsCredentials <span class="title function_">getClientCredentials</span><span class="params">(CertificateRequest certificateRequest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">                                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">                            &#125;</span><br><span class="line"> </span><br><span class="line">                            <span class="keyword">private</span> KeyStore <span class="title function_">_loadKeyStore</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                                <span class="type">FileInputStream</span> <span class="variable">trustStoreFis</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                    <span class="type">KeyStore</span> <span class="variable">localKeyStore</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"> </span><br><span class="line">                                    <span class="type">String</span> <span class="variable">trustStoreType</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;javax.net.ssl.trustStoreType&quot;</span>) != <span class="literal">null</span> ? System.getProperty(<span class="string">&quot;javax.net.ssl.trustStoreType&quot;</span>) : KeyStore.getDefaultType();</span><br><span class="line">                                    <span class="type">String</span> <span class="variable">trustStoreProvider</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;javax.net.ssl.trustStoreProvider&quot;</span>) != <span class="literal">null</span> ? System.getProperty(<span class="string">&quot;javax.net.ssl.trustStoreProvider&quot;</span>) : <span class="string">&quot;&quot;</span>;</span><br><span class="line"> </span><br><span class="line">                                    <span class="keyword">if</span> (trustStoreType.length() != <span class="number">0</span>) &#123;</span><br><span class="line">                                        <span class="keyword">if</span> (trustStoreProvider.length() == <span class="number">0</span>) &#123;</span><br><span class="line">                                            localKeyStore = KeyStore.getInstance(trustStoreType);</span><br><span class="line">                                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                            localKeyStore = KeyStore.getInstance(trustStoreType, trustStoreProvider);</span><br><span class="line">                                        &#125;</span><br><span class="line"> </span><br><span class="line">                                        <span class="type">char</span>[] keyStorePass = <span class="literal">null</span>;</span><br><span class="line">                                        <span class="type">String</span> <span class="variable">str5</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;javax.net.ssl.trustStorePassword&quot;</span>) != <span class="literal">null</span> ? System.getProperty(<span class="string">&quot;javax.net.ssl.trustStorePassword&quot;</span>) : <span class="string">&quot;&quot;</span>;</span><br><span class="line"> </span><br><span class="line">                                        <span class="keyword">if</span> (str5.length() != <span class="number">0</span>) &#123;</span><br><span class="line">                                            keyStorePass = str5.toCharArray();</span><br><span class="line">                                        &#125;</span><br><span class="line"> </span><br><span class="line">                                        localKeyStore.load(trustStoreFis, keyStorePass);</span><br><span class="line"> </span><br><span class="line">                                        <span class="keyword">if</span> (keyStorePass != <span class="literal">null</span>) &#123;</span><br><span class="line">                                            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; keyStorePass.length; i++) &#123;</span><br><span class="line">                                                keyStorePass[i] = <span class="number">0</span>;</span><br><span class="line">                                            &#125;</span><br><span class="line">                                        &#125;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                    <span class="keyword">return</span> localKeyStore;</span><br><span class="line">                                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                    <span class="keyword">if</span> (trustStoreFis != <span class="literal">null</span>) &#123;</span><br><span class="line">                                        trustStoreFis.close();</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;;</span><br><span class="line">                    &#125;</span><br><span class="line"> </span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+
+<h3 id="成功"><a href="#成功" class="headerlink" title="成功"></a>成功</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpsURLConnection</span> <span class="variable">con</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	con = (HttpsURLConnection) myurl.openConnection();</span><br><span class="line">	con.setSSLSocketFactory(<span class="keyword">new</span> <span class="title class_">TLSSocketConnectionFactory</span>());</span><br><span class="line"></span><br><span class="line">	con.setRequestMethod(<span class="string">&quot;POST&quot;</span>);</span><br><span class="line">	con.setDoOutput(<span class="literal">true</span>);</span><br><span class="line">	con.setDoInput(<span class="literal">true</span>);</span><br><span class="line">	con.setUseCaches(<span class="literal">false</span>);</span><br><span class="line">	con.setInstanceFollowRedirects(<span class="literal">true</span>);</span><br><span class="line">	con.setRequestProperty(<span class="string">&quot;Content-type&quot;</span>, <span class="string">&quot;application/json;charset=utf-8&quot;</span>); </span><br><span class="line">	con.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>, <span class="string">&quot;Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)&quot;</span>); </span><br><span class="line">	con.connect();</span><br><span class="line"></span><br><span class="line">	out = con.getOutputStream();</span><br><span class="line">	out.write(signData.getBytes(<span class="string">&quot;utf-8&quot;</span>));</span><br><span class="line">	out.flush();</span><br><span class="line">	out.close();</span><br><span class="line"></span><br><span class="line">	log.info(<span class="string">&quot;ResponseCode: &quot;</span> + con.getResponseCode());</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">	e1.printStackTrace();;</span><br><span class="line">&#125; <span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ol>
+<li><p>host name wrong</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*用于解决host name wrong问题，重写主机验证方法，如果请求正常可以去掉*/</span></span><br><span class="line">con.setHostnameVerifier(<span class="keyword">new</span> <span class="title class_">HostnameVerifier</span>()&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">verify</span><span class="params">(String hostname, SSLSession session)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Internal TLS error, this could be an attack<br>你可以在这里找到对应的<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/48713079/tls-version-1-2-java1-6-bouncycastle-internal-tls-error">解决办法</a></p>
+</li>
+<li><p>Could not generate DH keypair</p>
+</li>
+</ol>
+<ul>
+<li>调整https使用的dhparam 指定1024位</li>
+<li>修改服务器使用1024位dhparam<br><small><a target="_blank" rel="noopener" href="https://blog.csdn.net/z13662788373/article/details/79742389">解决来源</a></small></li>
+</ul>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/" title="JDK1.6支持TLS1.2">https://blog.vgbhfive.cn/JDK1-6支持TLS1-2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Day/" rel="tag"># Day</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/kubectl%E6%A6%82%E8%BF%B0/" rel="prev" title="kubectl概述">
+      <i class="fa fa-chevron-left"></i> kubectl概述
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Failed-to-read-artifact-descriptor-for/" rel="next" title="Failed to read artifact descriptor for *">
+      Failed to read artifact descriptor for * <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%8A%9F"><span class="nav-number">3.</span> <span class="nav-text">成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="驱动包开发模式Neo4j 驱动程序也为其他的语言开发了访问途径，编写使用驱动程序的应用程序实例就可以与数据库基于事务的会话。在会话中事务可以运行创建和查询数据的相关命令，也可以定义数据库模式以及监视和管理数据库。当 Neo4j 部署在因果集群中时，驱动程序可以处理读取和写入操作的路由。使用因果集群驱动程序还提供书签，用于保证因果一致性，也就是说应用程序可以在集群的不同成员上运行多个查询，同时保持数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-程序开发-驱动式">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="驱动包开发模式Neo4j 驱动程序也为其他的语言开发了访问途径，编写使用驱动程序的应用程序实例就可以与数据库基于事务的会话。在会话中事务可以运行创建和查询数据的相关命令，也可以定义数据库模式以及监视和管理数据库。当 Neo4j 部署在因果集群中时，驱动程序可以处理读取和写入操作的路由。使用因果集群驱动程序还提供书签，用于保证因果一致性，也就是说应用程序可以在集群的不同成员上运行多个查询，同时保持数">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-03-17T14:15:52.000Z">
+<meta property="article:modified_time" content="2022-03-26T13:26:25.345Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-程序开发-驱动式 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-程序开发-驱动式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-17 22:15:52" itemprop="dateCreated datePublished" datetime="2022-03-17T22:15:52+08:00">2022-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-26 21:26:25" itemprop="dateModified" datetime="2022-03-26T21:26:25+08:00">2022-03-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="驱动包开发模式"><a href="#驱动包开发模式" class="headerlink" title="驱动包开发模式"></a>驱动包开发模式</h3><p><code>Neo4j</code> 驱动程序也为其他的语言开发了访问途径，编写使用驱动程序的应用程序实例就可以与数据库基于事务的会话。在会话中事务可以运行创建和查询数据的相关命令，也可以定义数据库模式以及监视和管理数据库。当 <code>Neo4j</code> 部署在因果集群中时，驱动程序可以处理读取和写入操作的路由。使用因果集群驱动程序还提供书签，用于保证因果一致性，也就是说应用程序可以在集群的不同成员上运行多个查询，同时保持数据的一致。 </p>
+<p><code>Neo4j</code> 驱动程序使用 <code>Bolt</code> 协议进行通信，因果集群提供了使用驱动程序获取集群拓扑的功能，驱动程序必须具有集群感知能力才能提供路由和负载均衡。（<code>Bolt</code> 在多个版本中提供兼容）</p>
+<span id="more"></span>
+
+<h4 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h4><ol>
+<li><p>使用依赖管理获得驱动</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.neo4j.driver<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>neo4j-java-driver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用官方驱动包<br>每个 <code>Neo4j</code> 驱动程序都有一个用于创建驱动程序的数据库对象，步骤如下：</p>
+</li>
+</ol>
+<ul>
+<li>向数据库对象请求一个新的驱动程序。</li>
+<li>向驱动程序对象请求一个新的会话。</li>
+<li>请求会话对象创建事务。</li>
+<li>使用事务对象运行语句，他返回一个表示结果的对象。</li>
+<li>处理结果。</li>
+<li>关闭会话。</li>
+</ul>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.AuthTokens;</span><br><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.Driver;</span><br><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.GraphDatabase;</span><br><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.Record;</span><br><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.Session;</span><br><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.StatementResult;</span><br><span class="line"><span class="keyword">import</span> org.neo4j.driver.v1.Transaction;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.neo4j.driver.v1.Values.parameters;</span><br><span class="line"></span><br><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>));</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> driver.session()) &#123;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">		tx.run(<span class="string">&quot;CREATE (a:Person &#123;name: &#123;name&#125;, title: &#123;title&#125;&#125;)&quot;</span>, parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Arthur&quot;</span>, <span class="string">&quot;title&quot;</span>, <span class="string">&quot;King&quot;</span>));</span><br><span class="line">		tx.success();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">		<span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> tx.run(<span class="string">&quot;MATCH (a:Person) WHERE a.name = &#123;name&#125;&quot;</span> + <span class="string">&quot;RETURN a.name AS name, a.title as title&quot;</span>, parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Arthur&quot;</span>));</span><br><span class="line">		whiel (result.hasNext()) &#123;</span><br><span class="line">			<span class="type">Record</span> <span class="variable">record</span> <span class="operator">=</span> result.next();</span><br><span class="line">			System.out.println(String.format(<span class="string">&quot;%s %s&quot;</span>, record.gete(<span class="string">&quot;title&quot;</span>).asString(), record.get(<span class="string">&quot;name&quot;</span>).asString()));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">driver.close();</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置与连接"><a href="#配置与连接" class="headerlink" title="配置与连接"></a>配置与连接</h4><p>驱动程序对象实例可以在整个应用程序中跨多个线程进行全局共享，它包含一个到集群的各个成员的连接池，可以借由它执行任何操作。同时驱动程序提供 <code>Session</code> 封装了针对数据库的一个或多个工作事务的上下文。</p>
+<h5 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h5><p>驱动程序包含一个图数据库对象，此对象提供驱动程序实例。当从数据库对象请求驱动程序实例时，需要提供 <code>URI</code> 声明 <code>Neo4j</code> 服务器的协议、主机和端口。<br>其中 <code>URI</code> 分为两种分为直接 <code>URI</code> 和路由 <code>URI</code>。其中直接 <code>URI</code> 用于连接单个实例，如果应用程序依赖路由和负载均衡，则需要单独提供。路由 <code>URI</code> 则是用于创建支持集群的驱动程序，路由驱动程序连接到集群并处理路由和负载均衡，可以根据连接获得集群拓扑信息。</p>
+<p><code>Bolt URI</code> 格式遵循 <code>schema://host:port</code> 的标准 <code>URI</code> 模式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>创建驱动程序应用时需要传递一个 <code>URI</code> 当作初始化参数来连接服务器，如果没有服务器可用在该 <code>URI</code> 响应，则抛出 <code>ServiceUnavailableException</code>，因此可以在应用实例中组装一个 <code>List</code> 循环创建连接，这样会比较可靠。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Driver <span class="title function_">acquireDriver</span><span class="params">(List&lt;String&gt; uris, AuthToken authToken, Config config)</span> &#123;</span><br><span class="line">	<span class="keyword">for</span> (String uri : uris) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> GraphDatabase.driver(uri, authToken, config);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ServiceUnavailableException e) &#123;</span><br><span class="line">			<span class="comment">// This URI failed, so loop around  again if we have another</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ServiceUnavailableException</span>(<span class="string">&quot;No valid database URI found&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><ol>
+<li><p>加密和授权<br>所有 <code>Neo4j</code> 驱动程序支持使用 <code>SSL/TLS</code> 对 <code>Neo4j</code> 驱动程序和 <code>Neo4j</code> 实例之间的连接进行加密。但是在使用本地地址 <code>localhost</code> 时不会启用加密。强烈建议使用加密功能以保护 <code>Neo4j</code> 中存储的身份验证凭据和数据。</p>
+</li>
+<li><p>加密<br>驱动程序可以通过配置来打开或关闭 <code>TLS</code> 加密。建议只应在可信的内部网络中关闭加密。虽然大部分驱动程序默认启用加密，但最好时明确配置为使用加密。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">	AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>),</span><br><span class="line">	Config.build().withEncryptionLevel(Config.EncryptionLevel.REQUIRED).toConfig());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解密<br>当建立加密连接时，需要验证远程对等端是期望连接到的对等端。没有验证这一点则容易受到<strong>中间人</strong>攻击，欺骗获取加密连接。<br><code>Neo4j</code> 共有两种信任策略：</p>
+</li>
+</ol>
+<ul>
+<li>信任第一次使用策略。指的是驱动程序将信任对主机的第一个连接是安全和有效的，在后续的连接上，驱动程序将验证他与第一个连接上的主机通信。因此请确保在可信的网络环境中建立与服务器的第一个连接。 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">	AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>),</span><br><span class="line">	Config.build().withEncryptionLevel(Config.EncryptionLevel.REQUIRED).withTrustStrategy(Config.TrustStrategy.trustOnFirstUse(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;/path/to/neo4j_known_hosts&quot;</span>))).toConfig());</span><br></pre></td></tr></table></figure></li>
+<li>信任签名的证书策略。指的是为驱动程序提供信任的证书。 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">	AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>),</span><br><span class="line">	Config.build().withEncryptionLevel(Config.EncryptionLevel.REQUIRED).withTrustStrategy(Config.TrustStrategy.trustOnFirstUse(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;/path/to/certificate.pem&quot;</span>))).toConfig());</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="4">
+<li>客户端授权<br>服务器将要求驱动程序为用户提供身份验证凭证，以便连接到数据库，除非已禁用身份验证。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line"> 	AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>),</span><br><span class="line"> 	Config.build().withEncryptionLevel(Config.EncryptionLevel.REQUIRED).toConfig());</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="执行-Cypher-语句"><a href="#执行-Cypher-语句" class="headerlink" title="执行 Cypher 语句"></a>执行 <code>Cypher</code> 语句</h4><p><code>Session</code> 会话用于事务处理的轻量级容器，与 <code>Neo4j</code> 数据库的所有交互都在 <code>session</code> 中进行，每个 <code>session</code> 会话是针对数据库的一个或多个事务，同时 <code>Session</code> 可以从驱动程序对象中获取。<br>使用路由驱动程序时，可以将 <code>session</code> 会话访问模式声明为 <code>READ</code> 或 <code>WRITE</code>。驱动程序将针对所选工作模式对指定的集群成员创建会话。在通常情况下，事务可以保证从用 <code>session</code> 创建运行的语句到对于每个语句的结果处理以及任何异常都能在可控的范围内，当事务全部执行完毕后，会话将被关闭。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">	tx.run(<span class="string">&quot;CREATE (:Person &#123;name: &#x27;Guinevere&#x27;&#125;&quot;</span>);</span><br><span class="line">	tx.Success();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Session"><a href="#Session" class="headerlink" title="Session"></a><code>Session</code></h5><p><code>Session</code> 会话如同 <code>Web</code> 开发中的 <code>Session</code>，可以区分开不同的操作实例。使用 <code>driver.session</code> 方法来创建一个新的 <code>Session</code>，<code>Session</code> 会话创建是一个低资源消耗的过程，其底层原理是连接将从构建的驱动程序连接池创建 <code>Session</code>，并在关闭时返还到连接池。</p>
+<ol>
+<li><p>访问模式<br>当驱动程序启用路由时，需要先制定访问模式 <code>READ</code> 或者 <code>WRITE</code>。如果省略则默认使用 <code>WRITE</code> 模式。路由驱动程序将分别针对适合写入或读取的实例创建会话，如果是针对因果集群进行部署意味者驱动程序可以有效地路由读取和写入。<br>如果创建会话的实例对于声明的访问模式不可用，则会抛出 <code>SessionExpiredException</code>。</p>
+</li>
+<li><p>连接池<br>驱动程序具有连接池，<code>Session</code> 会话将借用连接来执行工作，当会话关闭时，<code>Session</code> 将返回到连接池。最重要的时确保会话是正确关闭的，以便结果和错误完全由客户端接收，并且 <code>Session</code> 连接可以重新使用。另外当抛出异常时 <code>Session</code> 会话将被关闭，这样可以确保执行所有操作都是稳定可靠的。</p>
+</li>
+</ol>
+<h5 id="回滚事务"><a href="#回滚事务" class="headerlink" title="回滚事务"></a>回滚事务</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">	tx.run(<span class="string">&quot;CREATE (:Person &#123;name: &#123;name&#125;&#125;&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Merlin&quot;</span>));</span><br><span class="line">	tx.failure();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="自动提交事务"><a href="#自动提交事务" class="headerlink" title="自动提交事务"></a>自动提交事务</h5><p>通常情况下事务在程序中是被明确声明的，但有些情况下 <code>Session</code> 的 <code>run</code> 方法可以隐含地自动提交需要运行语句的事务，这只出现在只读查询的情况下，因为读操作不会改变数据库内容。并且自动提交事务不支持书签功能，在调试时难以诊断故障。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> transaction.run(<span class="string">&quot;CREATE (person:Person &#123;name: &#123;name&#125;&#125;)&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Arthur&quot;</span>));</span><br><span class="line">transaction.success();</span><br></pre></td></tr></table></figure>
+
+<h5 id="查询语句中的参数"><a href="#查询语句中的参数" class="headerlink" title="查询语句中的参数"></a>查询语句中的参数</h5><p>建议在查询语句始终使用参数。使用参数具有显著的性能和安全优势：</p>
+<ul>
+<li>参数允许查询中重复使用，使查询更加高效。</li>
+<li>保护数据库免受 <code>Cypher</code> 注入攻击。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> transaction.run(<span class="string">&quot;CREATE (person:Person &#123;name: &quot;</span>Arthur<span class="string">&quot;&#125;)&quot;</span>);</span><br><span class="line">transaction.success();</span><br></pre></td></tr></table></figure>
+
+<h5 id="书签"><a href="#书签" class="headerlink" title="书签"></a>书签</h5><p>可以在 <code>Session</code> 执行操作之后创建一个书签，书签是指向某些操作的指针。当为其他相关工作创建新会话时，可以使用已经创建的书签，同时书签确保之后的操作依赖于先前的操作。无论数据是否已复制到集群的每个实例，书签都保证下一个操作会被应用于先前设置了标签的实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>));</span><br><span class="line">String bookmark;</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> driver.session(AccessMode.WRITE)) &#123;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line"> 		tx.run(<span class="string">&quot;CREATE (a:Person &#123;name: &#123;name&#125;, title: &#123;title&#125;&#125;)&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Arthur&quot;</span>, <span class="string">&quot;title&quot;</span>, <span class="string">&quot;King&quot;</span>));</span><br><span class="line"> 		tx.success();</span><br><span class="line"> 		tx.close();</span><br><span class="line"> 	&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 		bookmark = session.lastBookmark();</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> bookmark;</span><br></pre></td></tr></table></figure>
+
+<p>创建书签之后，在集群随后的操作中就可以使用它。<code>Session</code> 会话将会为加过书签的实例提供服务。数据的视图对于应用程序是一致的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Driver</span> <span class="variable">driver</span> <span class="operator">=</span> GraphDatabase.driver(<span class="string">&quot;bolt://localhost:7687&quot;</span>, AuthTokens.basic(<span class="string">&quot;neo4j&quot;</span>, <span class="string">&quot;neo4j&quot;</span>));</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> driver.session()) &#123;</span><br><span class="line">	StatementResult result;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">		result = tx.run(<span class="string">&quot;MATCH (a:Person) WHERE a.name = &#123;name&#125;&quot;</span> + <span class="string">&quot;RETURN a.name AS name, a.title as title&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Arthur&quot;</span>));</span><br><span class="line">		tx.success();</span><br><span class="line">		tx.close();</span><br><span class="line">		whiel (result.hasNext()) &#123;</span><br><span class="line"> 			<span class="type">Record</span> <span class="variable">record</span> <span class="operator">=</span> result.next();</span><br><span class="line"> 			System.out.println(String.format(<span class="string">&quot;%s %s&quot;</span>, record.get(<span class="string">&quot;title&quot;</span>).asString(), record.get(<span class="string">&quot;name&quot;</span>).asString()));</span><br><span class="line"> 		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h4><h5 id="结果游标"><a href="#结果游标" class="headerlink" title="结果游标"></a>结果游标</h5><p>结果游标提供了对结果记录流的访问。游标可以不断依次指向结果集合中的每个记录。在将游标移动到第一条记录之前，他会先指向记录的起始位置。一旦游标已经遍历到结果流的末尾，就可以使用摘要信息和元数据。<br>随着游标在结果集中前进，结果记录将被惰性加载。这意味着必须将游标移动到第一个结果，然后才能使用此结果。通常最好的做法就是明确使用结果和关闭会话，特别是在运行 <code>update</code> 语句时。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">searchTerm</span> <span class="operator">=</span> <span class="string">&quot;Sword&quot;</span>;</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line"> 	<span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> tx.run(<span class="string">&quot;MATCH (weapon:Weapon) WHERE weapon.name CONTAINS &#123;term&#125; RETURN weapon.name&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, searchTerm));</span><br><span class="line"> 	<span class="keyword">while</span> (result.hasNext()) &#123;</span><br><span class="line"> 		<span class="type">Record</span> <span class="variable">record</span> <span class="operator">=</span> result.next();</span><br><span class="line"> 		System.out.println(record.get(<span class="string">&quot;weapon.name&quot;</span>).asString());</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果记录集合由记录组成。记录提供结果的一部分固定不变的内容，他是键和值的有序映射。这些键值对称为字段，由于字段都是有键和有序的，因此可以通过位置或键访问字段的值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">searchTerm</span> <span class="operator">=</span> <span class="string">&quot;Sword&quot;</span>;</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line"> 	<span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> tx.run(<span class="string">&quot;MATCH (weapon:Weapon) WHERE weapon.name CONTAINS &#123;term&#125; RETURN weapon.name, weapon.material, weapon.size&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, searchTerm));</span><br><span class="line"> 	<span class="keyword">while</span> (result.hasNext()) &#123;</span><br><span class="line"> 		<span class="type">Record</span> <span class="variable">record</span> <span class="operator">=</span> result.next();</span><br><span class="line"> 		List&lt;String&gt; sword = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"> 		<span class="keyword">for</span> (String key : record.keys()) &#123;</span><br><span class="line"> 			sword.add(key + <span class="string">&quot;: &quot;</span> + record.get(key));</span><br><span class="line"> 		&#125;</span><br><span class="line"> 		System.out.println(sword);</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="保留结果"><a href="#保留结果" class="headerlink" title="保留结果"></a>保留结果</h5><p>语句执行获得的结果直到在 <code>Session</code> 会话中运行另一个语句之前或直到当前事务关闭结果集都可用。如果需要保留特定的结果集，每个驱动程序提供了收集结果集合并将其转换为每种语言的标准数据结构的方法，另外保存的结果也可以直接用于其他待运行的新语句中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Record&gt; records;</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> driver.session()) &#123;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">		<span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> tx.run(<span class="string">&quot;MATCH (knight:Person:Knight) WHERE knight.castle = &#123;castle&#125; RETURN knight.name AS name&quot;</span>, Values.parameters(<span class="string">&quot;castle&quot;</span>, <span class="string">&quot;Camelot&quot;</span>));</span><br><span class="line">		records = result.list();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (Record record : records) &#123;</span><br><span class="line">	System.out.println(record.get(<span class="string">&quot;name&quot;</span>).asString() + <span class="string">&quot; is a knight of Camelot&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在查询中使用结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">StatementResult result;</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">	result = tx.run(<span class="string">&quot;MATCH (knight:Person:Knight) WHERE knight.castle = &#123;castle&#125; RETURN id(knight) AS knight_id&quot;</span>, Values.parameters(<span class="string">&quot;castle&quot;</span>, <span class="string">&quot;Camelot&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (Record record : result.list()) &#123;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">		result = tx.run(<span class="string">&quot;MATCH (knight) WHERE id(knight) = &#123;id&#125; &quot;</span> + </span><br><span class="line">						<span class="string">&quot;MATCH (king:Person) WHERE king.name = &#123;king&#125; &quot;</span> + </span><br><span class="line">						<span class="string">&quot;CREATE (knight)-[:DEFENDS]-&gt;(king)&quot;</span>, Values.parameters(<span class="string">&quot;id&quot;</span>, record.get(<span class="string">&quot;knight_id&quot;</span>), <span class="string">&quot;king&quot;</span>, <span class="string">&quot;Arthur&quot;</span>));</span><br><span class="line">		tx.success();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果摘要"><a href="#结果摘要" class="headerlink" title="结果摘要"></a>结果摘要</h5><p><code>Cypher</code> 语句的元数据可以与结果一起展现出来，方法是通过在 <code>Cypher</code> 语句前面添加 <code>PROFILE</code> 或 <code>EXPLAIN</code> 关键字来获得查询操作的运行计划。在 <code>Cypher</code> 指令前面添加 <code>PROFILE</code> 关键字会导致本次查询操作将生成一个运行计划，通过 <code>IresultSummary</code> 对象的 <code>Profile</code> 属性可以获得此运行计划。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">	<span class="type">StatementResult</span> <span class="variable">result</span> <span class="operator">=</span> tx.run(<span class="string">&quot;PROFILE MATCH (p:Person &#123;name: &#123;name&#125;&#125;) RETURN id(p)&quot;</span>, Values.parameters(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Camelot&quot;</span>));</span><br><span class="line">	<span class="type">ResultSummary</span> <span class="variable">summary</span> <span class="operator">=</span> result.consume();</span><br><span class="line">	System.out.println(summary.statementType());</span><br><span class="line">	System.out.println(summary.profile());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以为查询提供通知，同时也可以查询执行时间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">	<span class="type">ResultSummary</span> <span class="variable">summary</span> <span class="operator">=</span> tx.run(<span class="string">&quot;EXPLAIN MATCH (king), (queen) RETURN king, queen&quot;</span>).consume();</span><br><span class="line">	<span class="keyword">for</span> (Notification notification : summary.notifications()) &#123;</span><br><span class="line">		System.out.println(notification);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p><code>Neo4j</code> 具有用于处理和存储数据类型的系统，驱动程序可以将数据在应用程序语言类型和 <code>Neo4j</code> 类型系统之间进行转换，同时为了理解传递参数和过程结果的数据类型，需要知道 <code>Neo4j</code> 类型系统的基础知识和理解 <code>Neo4j</code> 类型在驱动程序中的映射关系。</p>
+<p><code>Neo4j</code> 类型对参数和结果都是有效的：</p>
+<ul>
+<li><code>Boolean</code></li>
+<li><code>Integer</code></li>
+<li><code>Float</code></li>
+<li><code>String</code></li>
+<li><code>List</code></li>
+<li><code>Map</code></li>
+<li><code>Node</code></li>
+<li><code>Relationship</code></li>
+<li><code>Path</code></li>
+</ul>
+<p><code>Map</code> 和 <code>List</code> 可以由数据库处理并在语句中使用。<code>List</code> 的每个元素可以是 <code>Neo4j</code> 的基本类型，也可以存储节点和关系上的属性。节点或关系的属性不能使用 <code>Map</code> 和 <code>List</code> 相组合的类型。</p>
+<table>
+<thead>
+<tr>
+<th>Neo4j</th>
+<th>Java</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Null</td>
+<td>Null</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>java.lang.Boolean</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td>java.lang.Long</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>java.lang.Double</td>
+</tr>
+<tr>
+<td>String</td>
+<td>java.lang.String</td>
+</tr>
+<tr>
+<td>List</td>
+<td>java.util.List<T></td>
+</tr>
+<tr>
+<td>Map</td>
+<td>java.util.Map&lt;K, V&gt;</td>
+</tr>
+<tr>
+<td>Node</td>
+<td>org.neo4j.driver.v1.types.Node(*)</td>
+</tr>
+<tr>
+<td>Relationship</td>
+<td>org.neo4j.driver.v1.types.Relationship(*)</td>
+</tr>
+<tr>
+<td>Path</td>
+<td>org.neo4j.driver.v1.Path(*)</td>
+</tr>
+</tbody></table>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>异常列表如下：</p>
+<ul>
+<li><code>ClientException</code> 指示客户端执行的操作不正确，提供的错误代码可用于确定问题的详细原因。</li>
+<li><code>ConnectionFailureException</code> 指示底层连接中存在问题，很可能已经被终止。</li>
+<li><code>DatabaseException</code> 指示底层数据库中存在问题，提供的错误代码可用于确定问题的详细原因。</li>
+<li><code>NoSuchRecordException</code> 每当客户端期望读取不可用的记录（不是服务器返回的）时抛出，通常表示客户端代码和数据库应用程序逻辑之间的期望不匹配。</li>
+<li><code>ServiceUnavailableException</code> 表示驱动程序无法与提供的端点通信，在路由 <code>URI</code> 的情况下，可能需要重新创建驱动程序以解决此问题。</li>
+<li><code>SessionExpiredException</code> 表示会话不再满足获取他的条件。（例如服务器不再接受写入请求）</li>
+<li><code>TransientException</code> 用信号通知可能通过重试来解决的临时故障，提供的错误代码可用于确定问题的详细原因。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> session.beginTransaction()) &#123;</span><br><span class="line">		tx.run(<span class="string">&quot;This will case a syntax error&quot;</span>).consume();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (ClientException e) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%A9%B1%E5%8A%A8%E5%BC%8F/" title="Neo4j系列博客-程序开发-驱动式">https://blog.vgbhfive.cn/Neo4j系列博客-程序开发-驱动式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="prev" title="Neo4j系列博客-程序开发-嵌入式">
+      <i class="fa fa-chevron-left"></i> Neo4j系列博客-程序开发-嵌入式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-HTTP/" rel="next" title="Neo4j系列博客-程序开发-HTTP">
+      Neo4j系列博客-程序开发-HTTP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E5%8C%85%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">驱动包开发模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A5%E9%97%A8"><span class="nav-number">1.1.</span> <span class="nav-text">入门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%8E%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.2.</span> <span class="nav-text">配置与连接</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">1.2.1.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C-Cypher-%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.3.</span> <span class="nav-text">执行 Cypher 语句</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Session"><span class="nav-number">1.3.1.</span> <span class="nav-text">Session</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%9E%E6%BB%9A%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">回滚事务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.3.3.</span> <span class="nav-text">自动提交事务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">查询语句中的参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B9%A6%E7%AD%BE"><span class="nav-number">1.3.5.</span> <span class="nav-text">书签</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C"><span class="nav-number">1.4.</span> <span class="nav-text">返回结果</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E6%B8%B8%E6%A0%87"><span class="nav-number">1.4.1.</span> <span class="nav-text">结果游标</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%9D%E7%95%99%E7%BB%93%E6%9E%9C"><span class="nav-number">1.4.2.</span> <span class="nav-text">保留结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E6%91%98%E8%A6%81"><span class="nav-number">1.4.3.</span> <span class="nav-text">结果摘要</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8"><span class="nav-number">1.6.</span> <span class="nav-text">异常</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">3.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

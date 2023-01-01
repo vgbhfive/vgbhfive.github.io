@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Cypher 概述Cypher 是一种声明式图数据库查询语言，它具有丰富的表现力，能高效地查询和更新图数据。 Cypher 查询语言设计很人性化，既适合开发人员，也很适合专业的运营人员。 Cypher 借鉴了 SQL 语言的结构，查询可由各种各样的语句组合。语句被链接在一起，相互之间传递中间结果集。 模式Neo4j 图由节点和关系构成。节点可能还有标签和属性，关系可能还有类型和属性。节点表达的是实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-Cypher-1">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="Cypher 概述Cypher 是一种声明式图数据库查询语言，它具有丰富的表现力，能高效地查询和更新图数据。 Cypher 查询语言设计很人性化，既适合开发人员，也很适合专业的运营人员。 Cypher 借鉴了 SQL 语言的结构，查询可由各种各样的语句组合。语句被链接在一起，相互之间传递中间结果集。 模式Neo4j 图由节点和关系构成。节点可能还有标签和属性，关系可能还有类型和属性。节点表达的是实">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/01/22/S8LQBfEZC5ahjFW.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/22/27WOcPYJ15tQLlK.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/22/gZsxqekymDwHElC.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/23/9Gysg7juhXt2Prf.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/24/2THeaopOsRhlnux.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/27/8J3dtWOh97NFGjT.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/27/afuqZ79dEQGhwbD.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/27/ynCG7rT9wfhdtiF.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/27/wY13F29GPIMVJdv.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/28/lPXQrDNGMiz58nt.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/28/stKfIVgByb23Cnk.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/28/H12eE6QLWfaUlOb.png">
+<meta property="og:image" content="https://s2.loli.net/2022/02/01/lFPqDvY69sBtjWN.png">
+<meta property="og:image" content="https://s2.loli.net/2022/02/02/O8SMn94DVL1RFJK.png">
+<meta property="og:image" content="https://s2.loli.net/2022/02/02/O8SMn94DVL1RFJK.png">
+<meta property="og:image" content="https://s2.loli.net/2022/02/02/ZtRyNUzmf9sl2Ix.png">
+<meta property="article:published_time" content="2022-01-11T14:48:28.000Z">
+<meta property="article:modified_time" content="2022-02-03T03:06:44.651Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/22/S8LQBfEZC5ahjFW.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-Cypher-1 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-Cypher-1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-11 22:48:28" itemprop="dateCreated datePublished" datetime="2022-01-11T22:48:28+08:00">2022-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-03 11:06:44" itemprop="dateModified" datetime="2022-02-03T11:06:44+08:00">2022-02-03</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Cypher-概述"><a href="#Cypher-概述" class="headerlink" title="Cypher 概述"></a>Cypher 概述</h3><p><code>Cypher</code> 是一种声明式图数据库查询语言，它具有丰富的表现力，能高效地查询和更新图数据。 <code>Cypher</code> 查询语言设计很人性化，既适合开发人员，也很适合专业的运营人员。</p>
+<p><code>Cypher</code> 借鉴了 <code>SQL</code> 语言的结构，查询可由各种各样的语句组合。语句被链接在一起，相互之间传递中间结果集。</p>
+<h4 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h4><p><code>Neo4j</code> 图由节点和关系构成。节点可能还有标签和属性，关系可能还有类型和属性。节点表达的是实体，关系连接一对节点。节点可以按照类似关系数据库中的表，但又不完全一样。节点的标签可以理解为不同的表名，属性类似关系数据库中表的列。一个节点的数据类似关系数据库中表的一行数据。拥有相同标签的节点通常具有类似的属性，但不完全一样，这点与关系数据库中一张表中的行数据拥有相同的列是不一样的。<br>单个节点或者关系只能编码很少的信息，但<strong>模式可以将很多节点和关系编码为任意复杂的想法</strong>。</p>
+<span id="more"></span>
+
+<p><code>Cypher</code> 采用一对圆括号来表示节点，如： <code>()、(foo)</code>。<br><code>Cypher</code> 使用一对短横线 <code>--</code> 表示一个无方向关系。有方向的关系在其中一段加上一个箭头 <code>&lt;--</code> 或 <code>--&gt;</code> 。方括号表达式 <code>[...]</code> 可用于添加详情。里面可以包含变量、属性和类型信息。<br>将节点和关系的语法结合在一起可以表达模式。<br>为了增强模块性和减少重复，<code>Cypher</code> 允许将模式赋给一个变量。这使得匹配得到的路径可以被用于其他表达式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(Keanu:Person:Actor &#123;name: &quot;Keanu Reeves&quot;&#125;)-[role:ACTED_IN &#123;roles: [&quot;Neo&quot;]&#125;]-&gt;(matrix:Movie &#123;title: &quot;The Matrix&quot;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询和更新图"><a href="#查询和更新图" class="headerlink" title="查询和更新图"></a>查询和更新图</h4><p>一个 <code>Cypher</code> 查询部分不能同时匹配和更新图数据。每个部分要么读取和匹配图，要么更新图。<br>如果需要从图中读取，然后更新图，那么该查询隐含地包含两个部分，即第一份部分是读取，第二部分是写入。如果查询只是读取，<code>Cypher</code> 将采用惰性加载（<code>Lazy Load</code>），事实上并没匹配模式，直到需要返回结果时才实际去匹配。而在更新查询语句时，所有的读取操作必须在任何的写操作发生之前完成。<br>当希望使用聚合数据进行过滤时，必须使用 <code>WITH</code> 将两个读语句部分连接在一起。第一部分做聚合，第二部分过滤来自第一部分的结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n &#123;name: &quot;John&quot;&#125;)-[:FRIEND]-(friend)</span><br><span class="line">WITH n, count(friend) AS friendsCount</span><br><span class="line">WHERE friendsCount &gt; 3</span><br><span class="line">SET n.friendCount = friendsCount</span><br><span class="line">RETURN n.friendCount</span><br></pre></td></tr></table></figure>
+
+<p>任何查询都可以返回结果。<code>RETURN</code> 语句有三个子语句，分别是： <code>SKIP</code>、 <code>LIMIT</code> 和 <code>ORDER BY</code>。<br><small>如果返回的图元素是刚刚被删除的，那么要注意此时返回指针的任何操作都是未定义的。</small></p>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>任何更新图的查询都运行在一个事务中。一个更新查询要么全部成功，要么全部失败。<code>Cypher</code> 或者创建一个新的事务，或者运行在一个已有的事务中：</p>
+<ul>
+<li>如果运行的上下文中没有事务，<code>Cypher</code> 将会创建一个，一旦查询完成就提交该事务。</li>
+<li>如果运行的上下文中已有事务，查询就会运行在该事务中。直到事务成功地提交之后，数据才会持久化到磁盘中去。</li>
+</ul>
+<p>可以将多个查询作为单个事务来提交：</p>
+<ul>
+<li>开始一个事务。</li>
+<li>运行多个 <code>Cypher</code> 更新查询。</li>
+<li>一次提交这些查询。</li>
+</ul>
+<p><small>查询将这些变化放在内存中，直到整个查询执行完成。一个巨大的查询会导致 <code>JVM</code> 使用大量的堆空间。</small></p>
+<h4 id="唯一性"><a href="#唯一性" class="headerlink" title="唯一性"></a>唯一性</h4><p>当进行模式匹配时，<code>Neo4j</code> 将确保单个模式中不会包含匹配到多次的同一个图关系。<strong>在大多数情况下，这是非常敏感的事</strong>。<br>然而有时也未必一直希望如此。如果查询应当返回该用户，可以通过多个 <code>MATCH</code> 语句延伸匹配关系来实现。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 创建节点和关系</span><br><span class="line">CREATE (adam:User &#123;name: &#x27;Adam&#x27;&#125;), (pernilla:User &#123;name: &#x27;Pernilla&#x27;&#125;), (david:User &#123;name: &#x27;David&#x27;&#125;), (adam)-[:FRIEND]-(pernilla), (pernilla)-[:FRIEND]-(david)</span><br><span class="line"></span><br><span class="line">// 查询用户关系，但是不包括自己</span><br><span class="line">MATCH (user:User &#123;name: &#x27;Adam&#x27;&#125;)-[r1:FRIEND]-()-[r2:FRIEND]-(friend_of_a_friend)</span><br><span class="line">RETURN friend_of_a_friend.name AS fofName</span><br><span class="line"></span><br><span class="line">// 这个查询与上面的查询是不一样的，包括自己</span><br><span class="line">MATCH (user:User &#123;name: &#x27;Adam&#x27;&#125;)-[r1:FRIEND]-(friend)</span><br><span class="line">MATCH (friend)-[r1:FRIEND]-(friend_of_a_friend)</span><br><span class="line">RETURN friend_of_a_friend.name AS fofName</span><br></pre></td></tr></table></figure>
+
+<h4 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h4><p><code>Cypher</code> 不是一成不变的语言。新版本可能会引入很多的新功能，，一些旧的功能将会被移除。如果需要，旧版本依旧可以访问到。这里有两种方式可以在查询中选择你想使用的版本：</p>
+<ul>
+<li>为所有查询设置版本。通过设置 <code>neo4j.conf</code> 文件中的 <code>cypher.default_language_version</code> 参数来配置 <code>Neo4j</code> 数据库使用哪个版本的 <code>Cypher</code> 语言。</li>
+<li>在查询中使用指定版本。在查询开始前写上版本。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CYPHER 2.3</span><br><span class="line">START n=node:nodes(name = &quot;A&quot;)</span><br><span class="line">RETURN n</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><h4 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h4><p><code>Cypher</code> 处理的所有值都有一个特定的类型，它支持如下类型：</p>
+<ul>
+<li>数值型。</li>
+<li>字符串。</li>
+<li>布尔型。</li>
+<li>节点。</li>
+<li>关系。</li>
+<li>路径。</li>
+<li>映射（<code>Map</code>）。</li>
+<li>列表（<code>List</code>）。</li>
+</ul>
+<p>在 <code>Cypher</code> 语句中，大多数类型的值都可以使用字面值表达式。<br>在使用 <code>null</code> 的时候要特别注意，因为 <code>null</code> 是任何类型的值。<br>节点、关系和路径可以作为模式匹配的返回结果。<em>其中标签不是值，他只是模式匹配的一种语法形式</em>。</p>
+<h4 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h4><p><code>Cypher</code> 中的表达式如下：</p>
+<ul>
+<li>十进制。</li>
+<li>十六进制整形字面值。</li>
+<li>八进制整形字面值。</li>
+<li>字符串字面值。</li>
+<li>布尔字面值。</li>
+<li>变量。</li>
+<li>属性。</li>
+<li>动态属性。</li>
+<li>参数。</li>
+<li>表达式列表。</li>
+<li>函数调用。</li>
+<li>聚合函数。</li>
+<li>路径-模式。</li>
+<li>计算式。</li>
+<li>返回 <code>true</code> 或者 <code>false</code> 的断言表达式。</li>
+<li>正则表达式。</li>
+<li>大小写敏感的字符串匹配表达式。</li>
+<li><code>CASE</code> 表达式。</li>
+</ul>
+<h4 id="CASE-表达式"><a href="#CASE-表达式" class="headerlink" title="CASE 表达式"></a><code>CASE</code> 表达式</h4><ol>
+<li><p>计算表达式的值，然后依次与 <code>WHEN</code> 语句中的表达式进行比较，直到匹配为止。如果匹配不上则将 <code>ELSE</code> 中的表达式作为结果。若是 <code>ELSE</code> 语句不存在，则直接返回 <code>null</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CASE test</span><br><span class="line">WHEN value THEN result</span><br><span class="line">[WHEN ...]</span><br><span class="line">[ELSE default]</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">// 示例</span><br><span class="line">MATCH (n)</span><br><span class="line">RETURN n.eye</span><br><span class="line">WHEN &#x27;blue&#x27;</span><br><span class="line">THEN 1</span><br><span class="line">WHEN &#x27;grown&#x27;</span><br><span class="line">THEN 2</span><br><span class="line">ELSE 3 END AS result</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按顺序判断断言，直到找到一个为 <code>true</code>，然后对应的结果被返回。如果没有找到，就返回 <code>ELSE</code> 的值。若没有 <code>ELSE</code> 语句，就返回 <code>null</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CASE</span><br><span class="line">WHEN predicate THEN result</span><br><span class="line">[WHEN ...]</span><br><span class="line">[ELSE default]</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">// 示例</span><br><span class="line">MATCH (n)</span><br><span class="line">RETURN</span><br><span class="line">CASE</span><br><span class="line">WHEN n.eyes = &#x27;blue&#x27;</span><br><span class="line">THEN 1</span><br><span class="line">WHEN n.age &lt; 40</span><br><span class="line">THEN 2</span><br><span class="line">ELSE 3 END AS result</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><p>当需要引用模式（<code>Pattern</code>）或者查询某一部分的时候，可以对其进行命名。针对不同部分的这些命名被称为变量。<br>其中变量名是区分大小写的。它可以包含下划线、字母和数字，但必须以字母开头，如果变量名中需要用到其他字符，可以使用方向单引号 ( ` ) 将变量名括起来。<br><small>变量仅在同一个查询中可见，不能被用于后续的查询。</small></p>
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><p><code>Cypher</code> 支持带参数的查询，这意味着开发人员不是必须用字符串来构建查询，此外这也可以让执行计划的缓存更加容易。<br>参数能够用于 <code>WHERE</code> 语句中的字面值和表达式，<code>START</code> 语句中的索引值、索引查询以及节点和关系的 <code>id</code>。参数不能用于属性名、关系类型和标签，因为这些模式（<code>Pattern</code>）将作为查询结构的一部分被编译进查询计划。<br>合法的参数名是字母、数字以及两者的结合。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 字符串</span><br><span class="line">&#123;name: &quot;John&quot;&#125;</span><br><span class="line">MATCH (n)</span><br><span class="line">WHERE n.name = $name</span><br><span class="line">RETURN n</span><br><span class="line"></span><br><span class="line">// 创建带有属性的节点</span><br><span class="line">&#123;</span><br><span class="line">	&quot;props&quot;: &#123;</span><br><span class="line">		&quot;name&quot;: &quot;Andres&quot;,</span><br><span class="line">		&quot;position&quot;: &quot;Developer&quot;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">CREATE ($props)</span><br><span class="line"></span><br><span class="line">// 节点ID</span><br><span class="line">&#123;ids: [0, 1, 2]&#125;</span><br><span class="line">MATCH (n)</span><br><span class="line">WHERE id(n) IN $ids</span><br><span class="line">RETURN n.name</span><br></pre></td></tr></table></figure>
+
+<h4 id="模式-1"><a href="#模式-1" class="headerlink" title="模式"></a>模式</h4><p>模式和模式匹配是 <code>Cypher</code> 非常核心的部分，要想高效使用 <code>Cypher</code> 必须深入理解模式。<br>模式描述数据的形式很类似于在白板上画出图的形状。通常用圆圈来表达节点，使用箭头来表达关系。</p>
+<h5 id="节点模式"><a href="#节点模式" class="headerlink" title="节点模式"></a>节点模式</h5><p>模式能够表达的最简单的形状就是节点。节点使用一对圆括号表示，然后中间含一个名字。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(n)</span><br></pre></td></tr></table></figure>
+
+<h5 id="关联节点的模式"><a href="#关联节点的模式" class="headerlink" title="关联节点的模式"></a>关联节点的模式</h5><p>模式可以表达多个节点及其之间的关系。<code>Cypher</code> 使用箭头来表达两个节点之间的关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a)--&gt;(b)</span><br></pre></td></tr></table></figure>
+
+<p>这个模式描述了一个非常简单的数据形状，即两个节点和从其中一个节点到另一个节点的关系。两个节点分别命名为 <code>a</code> 和 <code>b</code>，同时关系是有方向的，从 <code>a</code> 指向 <code>b</code>。<br>这一系列相互关联的节点和关系被称为路径（<code>Path</code>）。</p>
+<h5 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h5><p>除了可以描述节点之外，也可以用来描述标签，也可同时描述多个标签。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a:User:Admin)--&gt;(b)</span><br></pre></td></tr></table></figure>
+
+<h5 id="指定属性"><a href="#指定属性" class="headerlink" title="指定属性"></a>指定属性</h5><p>节点和关系是图的基础结构。<code>Neo4j</code> 的节点和关系都可以有属性，这样可以建立更丰富的模型。属性在模式中使用键值对的映射结构来表达，然后用大括号包起来。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(n &#123;name: &quot;John&quot;, sport: &quot;Hello World&quot;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>但模式中有属性时，它实际上为数据增加了额外的约束。在 <code>CREATE</code> 语句中，属性会被增加到新创建的节点和关系中。而在 <code>MERGE</code> 语句中，属性将作为一个约束去匹配数据库中的数据是否存在该属性。如果没有匹配到，此时 <code>MERGE</code> 的行为将会与 <code>CREATE</code> 一样，即属性将被设置到新创建的节点和关系中。</p>
+<h5 id="描述关系"><a href="#描述关系" class="headerlink" title="描述关系"></a>描述关系</h5><p>如前面所示，可以使用箭头简单地描述两个节点之间的关系。它描述了关系的存在性和方向性。当如果不关心关系的方向，则箭头是可以省略的。<br>与节点类似，如果后续还需要引用到该关系，则可以给关系赋值一个变量名。而变量名需要用方括号括起来，放在箭头的短横线之间。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a)-[r]-(b)</span><br></pre></td></tr></table></figure>
+
+<p>同时关系也是有类型的。给关系指定一个或多个类型。多个类型之间使用 <code>|</code> 相隔。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a)-[r:TYPE1|TYPE2]-(b)</span><br></pre></td></tr></table></figure>
+
+<p>与使用一串节点和关系来描述一个长路径的模式不同，很多关系（依次中间的节点）可以采用指定关系的长度的模式来描述。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a)-[*1...N]-(b)</span><br></pre></td></tr></table></figure>
+<p><small>变长关系不能用于 <code>CREATE</code> 和 <code>MERGE</code> 语句。</small></p>
+<h5 id="赋值给路径变量"><a href="#赋值给路径变量" class="headerlink" title="赋值给路径变量"></a>赋值给路径变量</h5><p>连接在一起的一系列节点和关系被称为路径。<code>Cypher</code> 允许使用标识符给路径命名。<br>在 <code>MATCH</code> 中，<code>CREATE</code> 和 <code>MERGE</code> 语句可以这么做，但当模式作为表达式的时候不能这样。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p = (a)-[*3...5]-&gt;(b)</span><br></pre></td></tr></table></figure>
+
+<h4 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h4><p>使用方括号和一组以逗号分隔的元素来创建一个列表。也可以使用 <code>range()</code> 函数，它可以生成列表，其中包含元素的开始元素和结束元素。<br>使用 <code>[]</code> 访问列表中的元素。<br>索引也可以为负数，这时访问的方向将从列表的末尾作为起始点。<br>也可以在 <code>[]</code> 中指定列表返回范围的元素。他将提取开始索引到结束索引的值，但不包含结束索引所包含的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RETURN [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] AS list</span><br><span class="line">RETURN range(0, 10)</span><br><span class="line">RETURN range(0, 10)[3]</span><br><span class="line">RETURN range(0, 10)[0...5]</span><br></pre></td></tr></table></figure>
+
+<p><small>如果返回一个范围的索引值越界，那么返回直接从越界的地方进行截断。如果是单个元素的索引值越界，则返回 <code>null</code>。</small></p>
+<h5 id="List-推导式"><a href="#List-推导式" class="headerlink" title="List 推导式"></a><code>List</code> 推导式</h5><p><code>List</code> 推导式是 <code>Cypher</code> 中基于已经存在的列表创建一个列表的语法构造。它遵循数学上的集合，代替使用映射和过滤函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RETURN [x IN range(0, 10) WHERE x % 2 = 0 | x^3] AS result</span><br></pre></td></tr></table></figure>
+
+<h5 id="模式推导式"><a href="#模式推导式" class="headerlink" title="模式推导式"></a>模式推导式</h5><p>模式推导式是 <code>Cypher</code> 基于模式匹配的结果创建列表的一种语法构造。模式推导式将像一般的 <code>MATCH</code> 语句那样去匹配模式，断言部分与一般的 <code>WHERE</code> 语句一样，但他将产生一个指定的定制映射。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MATCH (a:Person &#123;name: &quot;John&quot;&#125;)</span><br><span class="line">RETURN [(a)--&gt;(b) WHERE b:Movie | b.year] AS years </span><br></pre></td></tr></table></figure>
+
+<h5 id="字面值映射"><a href="#字面值映射" class="headerlink" title="字面值映射"></a>字面值映射</h5><p><code>Cypher</code> 也可以构造映射，通过 <code>REST</code> 接口可以获得 <code>JSON</code> 对象。在 <code>Java</code> 中对应的就是 <code>java.util.Map&lt;String, Object&gt;</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RETURN &#123; key: &#x27;Value&#x27;, listKey: [&#123;inner: &quot;Map1&quot;&#125;, &#123;inner: &quot;Map2&quot;&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Map-投射"><a href="#Map-投射" class="headerlink" title="Map 投射"></a><code>Map</code> 投射</h5><p><code>Cypher</code> 支持一个名为 <code>map projections</code> 的概念。踏实的基于已有的节点、关系和其他 <code>map</code> 值来构建变得容易。<br><code>Map</code> 投射以指向图实体的且用逗号风格的变量簇开头，并包含以 <code>&#123;&#125;</code> 包括起来的映射元素，语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map_variable &#123;map_element, [, ...n]&#125;</span><br></pre></td></tr></table></figure>
+<p>一个 <code>map</code> 元素投射一个或多个键值对到 <code>map</code> 投射。这里有四种类型的 <code>map</code> 投射元素：</p>
+<ul>
+<li>属性选择器。投射属性名作为键，<code>map_variable</code> 中对应键的值作为键值。</li>
+<li>字面值项。来自任意表达式的键值对，如 <code>key: &lt;expression&gt;</code>。</li>
+<li>变量选择器。投射一个变量，变量名作为键，变量的值作为投射的值。它的语法只有变量。</li>
+<li>全属性选择器。投射来自 <code>map_variable</code> 中的所有键值对。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">MATCH (actor:Person &#123;name: &#x27;Charline sheen&#x27;&#125;)-[:ACTED_IN]-&gt;(movie:Movie)</span><br><span class="line">RETURN actor &#123; .name, .realName, movies: collect(movie &#123;.title, .year&#125;)&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    name: &quot;Charline sheen&quot;,</span><br><span class="line">    realName: &quot;White Charline sheen&quot;,</span><br><span class="line">    movies: &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            title: &quot;Apocalypse Now&quot;,</span><br><span class="line">            year: 1979</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            title: &quot;Red Down&quot;,</span><br><span class="line">            year: 1983</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            title: &quot;Wall Street&quot;,</span><br><span class="line">            year: &lt;null&gt;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><small>如果 <code>map_variable</code> 的值指向一个 <code>null</code>，那么整个 <code>map</code> 投射将返回 <code>null</code>。</small></p>
+<h4 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h4><p>空值 <code>null</code> 在 <code>Cypher</code> 中表示未找到或者未定义。从概念上讲，<code>null</code> 意味者<em>一个未找到的未知值</em>。<br>对待 <code>null</code> 会与其他值有些不同，<code>null</code> 不等于 <code>null</code>，两个未知的值并不意味着他们是同一个值。因此 <code>null = null</code> 返回 <code>null</code> 而不是 <code>true</code>。</p>
+<p>返回空值的表达式：</p>
+<ul>
+<li>从列表中获取不存在的元素。 <code>[][0], head([])</code></li>
+<li>试图访问节点或者关系的不存在的属性。 <code>n.missingProperty</code></li>
+<li>与 <code>null</code> 作比较。 <code>1 &lt; null</code></li>
+<li>包含 <code>null</code> 的算术运算。 <code>1 + null</code></li>
+<li>包含任何 <code>null</code> 参数的函数调用。 <code>sin(null)</code></li>
+</ul>
+<hr>
+
+<h3 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h3><p>语句可分为三类，包括读语句、写语句和通用语句。</p>
+<p>读语句：</p>
+<ul>
+<li><code>MATCH</code></li>
+<li><code>OPTINAL MATCH</code></li>
+<li><code>WHERE</code></li>
+<li><code>START</code></li>
+<li><code>Aggregation</code></li>
+<li><code>LOAD CSV</code></li>
+</ul>
+<p>写语句：</p>
+<ul>
+<li><code>CREATE</code></li>
+<li><code>MERGE</code></li>
+<li><code>SET</code></li>
+<li><code>DELETE</code></li>
+<li><code>REMOVE</code></li>
+<li><code>FOREACH</code></li>
+<li><code>CREATE UNIQUE</code></li>
+</ul>
+<p>通用语句：</p>
+<ul>
+<li><code>RETURN</code></li>
+<li><code>ORDER BY</code></li>
+<li><code>LIMIT</code></li>
+<li><code>SKIP</code></li>
+<li><code>WITH</code></li>
+<li><code>UNWIND</code></li>
+<li><code>UNION</code></li>
+<li><code>CALL</code></li>
+</ul>
+<h4 id="MATCH"><a href="#MATCH" class="headerlink" title="MATCH"></a><code>MATCH</code></h4><p><code>MATCH</code> 语句用指定的模式检索数据库。他常与带有约束或者断言的 <code>WHERE</code> 语句一起使用，这意味着匹配更加具体。其中断言是模式描述的一部分，它不能看作是匹配结果的过滤器，这也就意味着 <code>WHERE</code> 应当总是与 <code>MATCH</code> 语句放在一起。<br><code>MATCH</code> 可以出现在查询的开始或者末尾，也可能位于 <code>WITH</code> 之后。如果他在语句开头，此时不会绑定任何数据。因此 <code>Neo4j</code> 将设计一个搜索去找到匹配这个语句以及 <code>WHERE</code> 中指定断言的结果。这其中将会牵涉数据库的扫描、搜索特定标签的节点或者搜索一个索引以找到匹配模式的开始点。这个搜索找到的节点和关系可作为一个<strong>“绑定模式元素”</strong>。这个可以用于匹配一些子图的模式，也可以用于任何进一步的 <code>MATCH</code> 语句，至此 <code>Neo4j</code> 将使用这些已知的元素来找到更进一步的未知元素。<br><img src="https://s2.loli.net/2022/01/22/S8LQBfEZC5ahjFW.png" alt="neo4j-13.jpg"></p>
+<h5 id="查找结点"><a href="#查找结点" class="headerlink" title="查找结点"></a>查找结点</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 指定不带标签的节点的模式</span><br><span class="line">MATCH (n) RETURN n</span><br><span class="line">// 指定带有标签的节点的模式</span><br><span class="line">MATCH (movie:Movie) RETURN movie.title</span><br><span class="line">// 为查询的节点增加标签约束</span><br><span class="line">MATCH (Person &#123;name: &#x27;Oliver Stone&#x27;&#125;)--(movie:Movie) RETURN movie.title</span><br></pre></td></tr></table></figure>
+
+<h5 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 关系的方向</span><br><span class="line">MATCH (Person &#123;name: &#x27;Oliver Stone&#x27;&#125;)--&gt;(movie:Movie) RETURN movie.title</span><br><span class="line">// 过滤关系的属性</span><br><span class="line">MATCH (:Person &#123;name: &#x27;Oliver Stone&#x27;&#125;)-[r]-(movie) RETURN type(r)</span><br><span class="line">// 匹配多种关系类型</span><br><span class="line">MATCH (Movie &#123;title: &#x27;Wall Street&#x27;&#125;)&lt;-[:ACTED_IN|:DIRECTED]-(actor) RETURN actor.name</span><br></pre></td></tr></table></figure>
+
+<h5 id="关系的深度"><a href="#关系的深度" class="headerlink" title="关系的深度"></a>关系的深度</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 多个关系</span><br><span class="line">MATCH (charlie &#123;name: &#x27;Charlie Sheen&#x27;&#125;)-[:ACTED_IN]-&gt;(movie)&lt;-[:DIRECTED]-(director) RETURN movie.title, director.name</span><br><span class="line">// 零长路径，变长路径的下界值为零，这意味着两个变量指向同一个节点</span><br><span class="line">MATCH (wallstreet:Movie &#123;title: &#x27;Wall Street&#x27;&#125;)-[*0..1]-(x) RETURN x</span><br><span class="line">// 匹配一簇关系，此时关系模式不会指定方向</span><br><span class="line">MATCH (a)-[r]-(b) WHERE id(r)=0 RETURN a, b</span><br></pre></td></tr></table></figure>
+
+<h5 id="最短节点"><a href="#最短节点" class="headerlink" title="最短节点"></a>最短节点</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 单条最短路径，通过 shortestPath 函数找到两个节点之间的最短路径</span><br><span class="line">MATCH (martin:Person &#123;name: &#x27;Martin Sheen&#x27;&#125;), (oliver:Person &#123;name: &#x27;Oliver Stone&#x27;&#125;), p = shortestPath((martin)-[*..15]-(oliver)) RETURN p</span><br><span class="line">// 两个节点之间的所有最短路径</span><br><span class="line">MATCH (martin:Person &#123;name: &#x27;Martin Sheen&#x27;&#125;), (oliver:Person &#123;name: &#x27;Oliver Stone&#x27;&#125;), p = shortestPath((martin)-[*]-(oliver)) RETURN p</span><br></pre></td></tr></table></figure>
+
+<h5 id="通过-id-查询关系和节点"><a href="#通过-id-查询关系和节点" class="headerlink" title="通过 id 查询关系和节点"></a>通过 <code>id</code> 查询关系和节点</h5><p><small><code>Neo4j</code> 会重用已删除节点和关系的 <code>id</code>。这意味着内部的 <code>id</code> 可能与预期的节点不一致。</small></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 通过 id 查询节点，可以在断言中使用 id() 函数来根据 id 查询节点</span><br><span class="line">MATCH (n) WHERE id(n)=0 RETURN n</span><br><span class="line">// 通过 id 查询多个节点时，可以使用 IN 语句</span><br><span class="line">MATCH (n) WHERE id(n) IN [0, 1, 2, 3] RETURN n</span><br><span class="line">// 通过 id 查询节点和关系</span><br><span class="line">MATCH ()-[r]-() WHERE id(r)=0 RETURN n</span><br></pre></td></tr></table></figure>
+
+<h4 id="OPTINAL-MATCH"><a href="#OPTINAL-MATCH" class="headerlink" title="OPTINAL MATCH"></a><code>OPTINAL MATCH</code></h4><p><code>OPTINAL MATCH</code> 语句用于搜索模式中描述的匹配项，对于找不到的项用 <code>null</code> 代替。其实 <code>OPTINAL MATCH</code> 与 <code>MATCH</code> 类似，不同之处在于，如果没有匹配到，<code>OPTINAL MATCH</code> 将用 <code>null</code> 作为未匹配部分的值。<code>OPTINAL MATCH</code> 在 <code>Cypher</code> 中类似于 <code>SQL</code> 语句中的 <code>outer join</code>。<br>要么匹配整个模式，要么都未匹配。其中 <code>WHERE</code> 是模式描述的一部分，匹配的时候就会考虑到 <code>WHERE</code> 中的断言，而不是匹配之后。这对于有多个 <code>(OPTINAL) MATCH</code> 语句的查询尤其重要，一定要将属于 <code>MATCH</code> 的 <code>WHERE</code> 语句与 <code>MATCH</code> 放在一起。<br><img src="https://s2.loli.net/2022/01/22/27WOcPYJ15tQLlK.png" alt="neo4j-14.jpg"></p>
+<h5 id="关系-1"><a href="#关系-1" class="headerlink" title="关系"></a>关系</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 如果某个关系是可选的，可以使用 OPTINAL MATCH（类似于 SQL 中的 outer join，存在就返回，不存在就返回 null）</span><br><span class="line">MATCH (a:Movie &#123;title: &#x27;Wall Street&#x27;&#125;) OPTINAL MATCH (a)--&gt;(x) RETURN x</span><br></pre></td></tr></table></figure>
+
+<h5 id="可选元素的属性"><a href="#可选元素的属性" class="headerlink" title="可选元素的属性"></a>可选元素的属性</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 如果可选的元素为 null，那么该元素的属性也返回 null</span><br><span class="line">MATCH (a:Movie &#123;title: &#x27;Wall Street&#x27;&#125;) OPTINAL MATCH (a)--&gt;(x) RETURN x, x.name</span><br></pre></td></tr></table></figure>
+
+<h5 id="可选关系类型"><a href="#可选关系类型" class="headerlink" title="可选关系类型"></a>可选关系类型</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 可在查询中指定可选的关系类型</span><br><span class="line">MATCH (a:Movie &#123;title: &#x27;Wall Street&#x27;&#125;) OPTINAL MATCH (a)-[r:ACTED_IN]]-&gt;() RETURN r</span><br></pre></td></tr></table></figure>
+
+<h4 id="WHERE"><a href="#WHERE" class="headerlink" title="WHERE"></a><code>WHERE</code></h4><p><code>WHERE</code> 在 <code>MATCH</code> 或者 <code>OPTINAL MATCH</code> 语句中添加约束或者与 <code>WITH</code> 一起使用来过滤结果。<br><code>WHERE</code> 不能单独使用，他只能作为 <code>MATCH</code> 、 <code>OPTINAL MATCH</code> 、 <code>START</code> 、 <code>WITH</code> 的一部分。</p>
+<ul>
+<li>如果是在 <code>WITH</code> 和 <code>START</code> 中，将被只用于过滤结果。</li>
+<li>对于 <code>MATCH</code> 和 <code>OPTINAL MATCH</code>，<code>WHERE</code> 为模式增加约束，不能被看作是匹配完成后的结果过滤。<br><img src="https://s2.loli.net/2022/01/22/gZsxqekymDwHElC.png" alt="neo4j-15.jpg"></li>
+</ul>
+<h5 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 在 WHERE 中使用布尔运算符</span><br><span class="line">MATCH (n) WHERE n.name = &#x27;Peter&#x27; XOR (n.age &lt; 30 AND n.name = &#x27;Tobias&#x27;) RETURN n</span><br><span class="line">// 节点标签的过滤</span><br><span class="line">MATCH (n) WHERE n:Swedish RETURN n</span><br><span class="line">// 属性存在性检查，has() 函数已经被移除并被 exists() 替代。</span><br><span class="line">MATCH (n) exists(n.belt) RETURN n </span><br></pre></td></tr></table></figure>
+
+<h5 id="字符串匹配"><a href="#字符串匹配" class="headerlink" title="字符串匹配"></a>字符串匹配</h5><p>可以使用 <code>STARTS WITH</code> 和 <code>ENDS WITH</code> 来匹配字符串的开始和结尾。如果不关心匹配字符串的未知，则可以用 <code>CONTAINS</code>，其中匹配时是<strong>区分大小写</strong>的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// STARTS WITH 匹配字符串的开始</span><br><span class="line">MATCH (n) WHERE n.name STARTS WITH &#x27;Pet&#x27; RETURN n</span><br><span class="line">// ENDS WITH 匹配字符串的结束</span><br><span class="line">MATCH (n) WHERE n.name ENDS WITH &#x27;ter&#x27; RETURN n</span><br><span class="line">// CONTAINS 用于检查字符串中方是否包含某个字符串，且不关心字符串的位置。</span><br><span class="line">MATCH (n) WHERE n.name CONTAINS &#x27;ete&#x27; RETURN n</span><br><span class="line">// 反向匹配</span><br><span class="line">MATCH (n) WHERE NOT n.name ENDS WITH &#x27;ter&#x27; RETURN n</span><br></pre></td></tr></table></figure>
+
+<h5 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h5><p><code>Cypher</code> 支持正则表达式过滤。正则表达式的语法继承自 <code>Java</code> 正则表达式。它支持字符串如何匹配标记，包括不区分大小写 <code>(?i)</code>、多行 <code>(?m)</code>、 单行 <code>(?s)</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 使用 =~&#x27;regexp&#x27; 来进行正则表达式</span><br><span class="line">MATCH (n) WHERE n.name =~ &#x27;Tob.*&#x27; RETURN n</span><br><span class="line">// 如果正则表达式中需要使用反斜杠，则需要使用转义符（字符串的反斜杠也需要转义）</span><br><span class="line">MATCH (n) WHERE n.address =~ &#x27;Swedeb\\/Malmo&#x27;</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用路径模式"><a href="#使用路径模式" class="headerlink" title="使用路径模式"></a>使用路径模式</h5><p>模式是返回一个路径列表的表达式。列表表达式也是断言，空列表代表 <code>false</code>，非空列表代表 <code>true</code>。因此模式不仅仅是表达式，同时也是断言。<br>模式的局限性在于只能在单条路径中表达，不能像在 <code>MATCH</code> 语句中那样使用逗号分隔多条路径，但是可以通过 <code>AND</code> 组合多个模式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 使用模式查询节点</span><br><span class="line">MATCH (tobias &#123;name: &#x27;Tobias&#x27;&#125;), (others) WHERE others.name IN [&#x27;Andres&#x27;, &#x27;Peter&#x27;] AND (tobiuas)&lt;--(others) RETURN others</span><br><span class="line">// 使用 NOT 排除模式的节点</span><br><span class="line">MATCH (persons), (peter &#123;name: &#x27;Peter&#x27;&#125;) WHERE NOT (persons)--&gt;(peter) RETURN persons</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用范围"><a href="#使用范围" class="headerlink" title="使用范围"></a>使用范围</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 检查列表中是否存在某个元素，可以使用 IN 运算符</span><br><span class="line">MATCH (n) WHERE n.name IN [&#x27;Peter&#x27;, &#x27;Tobias&#x27;] RETURN n</span><br><span class="line">// 不存在的属性默认为 false</span><br><span class="line">MATCH (n) WHERE n.belt = &#x27;White&#x27; RETURN n</span><br><span class="line">// 空值过滤，可以使用 IS NULL，不为空就是 IS NOT NULL 或者 NOT(IS NULL x) 也是可以的</span><br><span class="line">MATCH (person) WHERE person.name = &#x27;Peter&#x27; AND person.belt IS NULL RETURN person</span><br><span class="line">// 使用字典序检查某个元素是否在指定的范围</span><br><span class="line">MATCH (n) WHERE n.name &gt;= &#x27;Peter&#x27; AND n.name &lt; &#x27;Tobias&#x27; RETURN n</span><br></pre></td></tr></table></figure>
+
+<h4 id="START"><a href="#START" class="headerlink" title="START"></a><code>START</code></h4><p>通过遗留索引（<code>Legacy Index</code>）查找开始点。<code>Cypher</code> 中的每个查询描述了一个模式，一个模式可以有多个开始点。一个开始点是模式中的一个关系或者一个节点。<br>使用 <code>START</code> 时只能通过遗留索引寻找来引出开始点。其中使用不存在的遗留索引将会报错。<br><small><code>START</code> 语句应当仅用于访问遗留索引，所以其他的情况，都应该使用 <code>MATCH</code> 代替。</small><br><img src="https://s2.loli.net/2022/01/23/9Gysg7juhXt2Prf.png" alt="neo4j-16.jpg"></p>
+<h5 id="通过索引获取节点"><a href="#通过索引获取节点" class="headerlink" title="通过索引获取节点"></a>通过索引获取节点</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 通过索引搜索（Index Seek）获取节点</span><br><span class="line">START n = node:nodes(name = &#x27;A&#x27;) RETURN n</span><br><span class="line">// 通过索引查询（Index Query）获取节点</span><br><span class="line">START n = node:nodes(&quot;name:A&quot;) RETURN n</span><br></pre></td></tr></table></figure>
+
+<h5 id="通过索引获取关系"><a href="#通过索引获取关系" class="headerlink" title="通过索引获取关系"></a>通过索引获取关系</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 通过索引搜索（Index Seek）获取关系</span><br><span class="line">START r = relationship:roles(name = &#x27;Andres&#x27;) RETURN r</span><br></pre></td></tr></table></figure>
+
+<h4 id="Aggregation"><a href="#Aggregation" class="headerlink" title="Aggregation"></a><code>Aggregation</code></h4><p><code>Cypher</code> 支持使用聚合（<code>Aggregation</code>）来计算聚合在一起的数据，类似于 <code>SQL</code> 中的 <code>group by</code>。其中聚合函数有多个输入值，然后基于他们计算出一个聚合值。<br>聚合函数可以在匹配到的子图上进行计算，非聚合的表达式将值聚集起来，然后放入到聚合函数中。<br><img src="https://s2.loli.net/2022/01/24/2THeaopOsRhlnux.png" alt="neo4j-17.jpg"></p>
+<h5 id="Count"><a href="#Count" class="headerlink" title="Count"></a><code>Count</code></h5><p><code>count</code> 用于计算行的数量。<code>count</code> 有两种计算方式： <code>count(*)</code> 用于计算匹配的行数，而 <code>count(&lt;expression&gt;)</code> 用于计算列中非空值的数量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 计算节点的数量</span><br><span class="line">MATCH (n &#123;name: &#x27;A&#x27;&#125;)--&gt;(x) RETURN n, count(*)</span><br><span class="line">// 计算关系类型的数量</span><br><span class="line">MATCH (n &#123;name: &#x27;A&#x27;&#125;)-[r]-() RETURN type(r), count(*)</span><br><span class="line">// 计算非空值的数量</span><br><span class="line">MATCH (n:Person) RETURN count(n.property) </span><br></pre></td></tr></table></figure>
+
+<h5 id="统计"><a href="#统计" class="headerlink" title="统计"></a>统计</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// sum 计算所有值之和，空值将会被丢弃</span><br><span class="line">MATCH (n:Person) RETURN sum(n.property)</span><br><span class="line">// avg 计算数值列的平均值</span><br><span class="line">MATCH (n:Person) RETURN avg(n.property)</span><br><span class="line">// percentileDisc 计算给定值在一个组中的百分位，取值从 0.0 到 1.0，它使用舍入法，返回最接近百分位的值。</span><br><span class="line">MATCH (n:Person) RETURN percentileDisc(n.property, 0.5)</span><br><span class="line">// percentileCont 计算给定值在一个组中的百分位，取值从 0.0 到 1.0，它采用线性插值的方法，在两个值之间计算一个加权平均数。</span><br><span class="line">MATCH (n:Person) RETURN percentileCont(n.property, 0.4)</span><br><span class="line">// stdev 计算给定值在一个组中的标准偏差，它采用标准的 two-pass 方法，以 N-1 作为分母。当以部分样本作为无偏估计时应使用 stdev，当计算整个样本的标准偏差时，应使用 stdevp</span><br><span class="line">MATCH (n) WHERE n.name IN [&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;] RETURN stdev(n.property)</span><br><span class="line">// stdevp 计算给定值在一个组中的标准偏差</span><br><span class="line">MATCH (n) WHERE n.name IN [&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;] RETURN stdevp(n.property)</span><br><span class="line">// max 查找数值列中的最大值</span><br><span class="line">MATCH (n:Person) RETURN max(n.property)</span><br><span class="line">// min 查找数值列中的最小值</span><br><span class="line">MATCH (n:Person) RETURN min(n.property)</span><br><span class="line">// collect 将所有的值收集起来放入到一个列表，空值 null 将被忽略</span><br><span class="line">MATCH (n:Person) RETURN collect(n.property)</span><br><span class="line">// distinct 所有的聚合函数都可以带有 distinct 修饰符，他将去掉其中的重复值</span><br><span class="line">MATCH (n:Person &#123;name: &#x27;A&#x27;&#125;)--&gt;(m) RETURN count(distinct m.eyes)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Load-CSV"><a href="#Load-CSV" class="headerlink" title="Load CSV"></a><code>Load CSV</code></h4><p><code>Load CSV</code> 用于从 <code>CSV</code> 文件中导入数据。</p>
+<ul>
+<li><code>CSV</code> 文件的 <code>URL</code> 可以由 <code>FROM</code> 后面紧跟的任意表达式来指定。</li>
+<li>需要使用 <code>AS</code> 来为 <code>CSV</code> 数据指定一个变量。</li>
+<li><code>Load CSV</code> 支持以 <code>gzip, Deflate</code> 和 <code>ZIP</code> 压缩的资源。</li>
+<li><code>CSV</code> 文件可以存在数据库服务器上，通过 <code>file:///URl</code> 访问。支持通过 <code>HTTPS, HTTP, FTP</code> 来访问 <code>CSV</code> 文件。</li>
+<li><code>Load CSV</code> 支持 <code>HTTP</code> 重定向，但基于安全考虑，重定向时不能改变协议类型。</li>
+</ul>
+<h5 id="CSV-文件格式"><a href="#CSV-文件格式" class="headerlink" title="CSV 文件格式"></a><code>CSV</code> 文件格式</h5><ul>
+<li>字符编码为 <code>UTF-8</code>。</li>
+<li>行结束符与操作系统关联，如 <code>unix</code> 为 <code>\n</code>，<code>windows</code> 为 <code>\r\n</code>。</li>
+<li>默认的字段终止符。</li>
+<li>字段终止符可以使用 <code>Load CSV</code> 中的 <code>FIELDTERMINATOR</code> 选项来修改。</li>
+<li><code>CSV</code> 文件允许引号字符串，但读取数据的时候引号字符会被丢弃。</li>
+<li>字符串的引号字符为双引号<code>&quot;</code>。</li>
+<li>转义字符为<code>\</code>。</li>
+</ul>
+<h4 id="CREATE"><a href="#CREATE" class="headerlink" title="CREATE"></a><code>CREATE</code></h4><p><code>CREATE</code> 语句用于创建图元素：节点和关系。</p>
+<h5 id="创建节点"><a href="#创建节点" class="headerlink" title="创建节点"></a>创建节点</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 创建多个节点</span><br><span class="line">CREATE (n), (m)</span><br><span class="line">// 创建节点带有标签</span><br><span class="line">CREATE (n:Person:Swedish)</span><br><span class="line">// 创建节点时带有属性和标签</span><br><span class="line">CREATE (n:Person &#123;name: &#x27;Andres&#x27;, title: &#x27;Delevoper&#x27;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建关系"><a href="#创建关系" class="headerlink" title="创建关系"></a>创建关系</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 创建两个节点之间的关系并设置属性</span><br><span class="line">MATCH (a:Person), (b:Person) WHERE a.name = &#x27;Node A&#x27; AND b.name = &#x27;Node B&#x27; CREATE (a)-[r:RELTYPE &#123;name: a.name + &#x27;&lt;-&gt;&#x27; + b.name&#125;]-&gt;(b) RETURN r</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建路径"><a href="#创建路径" class="headerlink" title="创建路径"></a>创建路径</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 创建一个完整的路径</span><br><span class="line">CREATE p = (andres &#123;name: &#x27;Andres&#x27;&#125;)-[:WORKS_AT]-&gt;(neo)&lt;-[:WORKS_AT]-(michael &#123;name: &#x27;Michael&#x27;&#125;) RETURN p</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用参数"><a href="#使用参数" class="headerlink" title="使用参数"></a>使用参数</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 使用参数</span><br><span class="line">&#123;</span><br><span class="line">    &quot;props&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;Andres&quot;,</span><br><span class="line">        &quot;position&quot;: &quot;Delevoper&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">CREATE (n:Person $props) RETURN n</span><br><span class="line">// 使用 map 数组作为参数</span><br><span class="line">&#123;</span><br><span class="line">    &quot;props&quot;: [&#123;</span><br><span class="line">        &quot;name&quot;: &quot;Andres&quot;,</span><br><span class="line">        &quot;position&quot;: &quot;Delevoper&quot;</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        &quot;name&quot;: &quot;Michael&quot;,</span><br><span class="line">        &quot;position&quot;: &quot;Delevoper&quot;</span><br><span class="line">    &#125;]</span><br><span class="line">&#125;</span><br><span class="line">UNWIND $props AS map CREATE (n) SET n = map</span><br></pre></td></tr></table></figure>
+
+<h4 id="MERGE"><a href="#MERGE" class="headerlink" title="MERGE"></a><code>MERGE</code></h4><p><code>MERGE</code> 可以确保图数据库中存在某个特定的模式（<code>Pattern</code>），如果该模式不存在，那么就创建它。<br><code>MERGE</code> 匹配已存在的节点并绑定它，或者创建新的节点然后绑定它。它有点像 <code>MATCH</code> 和 <code>CREATE</code> 语句的组合，可以让你指定让某个数据存在，不管它是匹配到还是创建它。<br>当在整个模式上使用 <code>MERGE</code> 时，要么是整个模式匹配到，要么就整个模式被创建。<code>MERGE</code> 不能部分被用于模式，如果希望部分匹配，则可以将模式拆分为多个 <code>MEREG</code> 语句。<br><img src="https://s2.loli.net/2022/01/27/8J3dtWOh97NFGjT.png" alt="neo4j-18.jpg"></p>
+<h5 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 合并给定标签的节点</span><br><span class="line">MERGE (robert:Critic) RETURN robert, labels(robert)</span><br><span class="line">// 合并单个节点，要求属性和标签都能匹配到已存在的节点</span><br><span class="line">MERGE (michael:Person &#123;name: &#x27;Michael Douglas&#x27;&#125;) RETURN michael.name, michael.bornIn</span><br><span class="line">// 合并属性来自于已存在节点的单个节点（其中节点只会被创建一次）</span><br><span class="line">MATCH (person:Person1) MERGE (city:City &#123;name: person.bornIn&#125;) RETURN person.name, person.bornIn, city</span><br></pre></td></tr></table></figure>
+
+<h5 id="在-CREATE-和-MATCH-中使用"><a href="#在-CREATE-和-MATCH-中使用" class="headerlink" title="在 CREATE 和 MATCH 中使用"></a>在 <code>CREATE</code> 和 <code>MATCH</code> 中使用</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// MERGE 与 CREATE 搭配，检查节点是否存在，若不存在则创建它并设置属性</span><br><span class="line">MERGE (keanu:Person &#123;name: &#x27;Keanu Reeves&#x27;&#125;) ON CREATE SET keanu.created = timestamp() RETURN keanu.name, keanu.created</span><br><span class="line">// MERGE 与 MATCH 搭配，匹配节点并在找到的节点上设置属性</span><br><span class="line">MERGE (person:Person) ON MATCH SET person.found = TRUE RETURN person.name, person.found</span><br><span class="line">// MERGE 与 CREATE 和 MATCH 同时使用</span><br><span class="line">MERGE (keanu:Person &#123;name: &#x27;Keanu Reeves&#x27;&#125;) ON CREATE SET keanu.created = timestamp() ON MATCH SET keanu.lastSeen = timestamp() RETURN keanu.name, keanu.created, keanu.lastSeen</span><br></pre></td></tr></table></figure>
+
+<h5 id="关系-2"><a href="#关系-2" class="headerlink" title="关系"></a>关系</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 匹配或者创建无方向关系0</span><br><span class="line">MATCH (charlie:Person &#123;name: &#x27;Charlie Sheen&#x27;&#125;), (wallStreet &#123;title: &#x27;Wall Street&#x27;&#125;) MERGE (charlie)-[r:ACTED_IN]-(wallStreet) RETURN charlie.name, type(r), wallStreet.title</span><br><span class="line">// 合并已存在两节点之间的关系</span><br><span class="line">MATCH (person:Person) MERGE (city:City &#123;name: person.bornIN&#125;) MERGE (person)-[r:BORN_IN]-(city) RETURN person.name, person.bornIn, city</span><br><span class="line">// 合并一个已存在节点和一个合并节点之间的关系</span><br><span class="line">MATCH (person:Person) MERGE (person)-[r:HAS_CHAUFFEUR]-&gt;(chauffeur:Chauffeur &#123;name: person.chauffeurName&#125;) RETURN person.name, person.chauffeurName, chauffeur</span><br></pre></td></tr></table></figure>
+
+<h5 id="map-参数"><a href="#map-参数" class="headerlink" title="map 参数"></a><code>map</code> 参数</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// MERGE 不支持像 CREATE 节点时那样使用 map 参数。要在 MERGE 中使用 map 参数，需要显式地使用希望用的属性</span><br><span class="line">&#123;</span><br><span class="line">    &quot;params&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;Keanu Reeves&quot;,</span><br><span class="line">        &quot;role&quot;: &quot;Neo&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">MERGE (person:Person &#123;name: $params.name, role: $params.role&#125;) RETURN person.name, person.role</span><br></pre></td></tr></table></figure>
+
+<h4 id="SET"><a href="#SET" class="headerlink" title="SET"></a><code>SET</code></h4><p><code>SET</code> 语句用于更新节点的标以及节点和关系的属性。 <code>SET</code> 可以使用 <code>map</code> 中的参数来设置属性。<br><small>设置节点的标签时幂等性操作，即如果试图设置一个已经存在的标签到节点上，什么也不会发生。</small><br><img src="https://s2.loli.net/2022/01/27/afuqZ79dEQGhwbD.png" alt="neo4j-19.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 设置节点或关系属性</span><br><span class="line">MATCH (n &#123;name: &#x27;Andres&#x27;&#125;) SET n.surname = &#x27;Taylor&#x27; RETURN n</span><br><span class="line">// 删除属性，设置属性为 NULL，即可删除该属性</span><br><span class="line">MATCH (n &#123;name: &#x27;Andres&#x27;&#125;) SET n.name = NULL RETURN n</span><br><span class="line">// 在节点和关系之间设置属性，复制一个图的元素到另一个图的元素，这样会删除目标元素的其他所有属性</span><br><span class="line">MATCH (n &#123;name: &#x27;Andres&#x27;&#125;), (m &#123;name: &#x27;Peter&#x27;&#125;) SET n = m RETURN n, m</span><br><span class="line">// 使用参数来给属性赋值</span><br><span class="line">&#123;</span><br><span class="line">    &quot;username&quot;: &quot;Taylor&quot;</span><br><span class="line">&#125;</span><br><span class="line">MATCH (n &#123;name: &#x27;Andres&#x27;&#125;) SET n.name = $username RETURN n</span><br><span class="line">// 使用一个参数设置所有属性</span><br><span class="line">&#123;</span><br><span class="line">    &quot;props&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;Andres&quot;,</span><br><span class="line">        &quot;position&quot;: &quot;Developer&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">MATCH (n &#123;name: &#x27;Andres&#x27;&#125;) SET n = $props RETURN n</span><br><span class="line">// 节点设置多个标签</span><br><span class="line">MATCH (n &#123;name: &#x27;Peter&#x27;&#125;) SET n:Swedish:Bossman RETURN n</span><br></pre></td></tr></table></figure>
+
+<h4 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a><code>DELETE</code></h4><p><code>DELETE</code> 语句用于删除图元素（节点、关系或路径）。同时也可以删除属性和标签。记住不能只删除节点，而不删除与之相连的关系，要么显式地删除对应的关系，要么使用 <code>DETACH DELETE</code>。<br><img src="https://s2.loli.net/2022/01/27/ynCG7rT9wfhdtiF.png" alt="neo4j-20.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 删除单个节点</span><br><span class="line">MATCH (n:Useless) DELETE n</span><br><span class="line">// 删除所有节点和关系</span><br><span class="line">MATCH (n) DTACH DELETE n</span><br><span class="line">// 删除一个节点及其所有的关系</span><br><span class="line">MATCH (n &#123;name: &#x27;Andres&#x27;&#125;) DETACH DELETE n</span><br></pre></td></tr></table></figure>
+
+<h4 id="REMOVE"><a href="#REMOVE" class="headerlink" title="REMOVE"></a><code>REMOVE</code></h4><p><code>REMOVE</code> 语句用于删除图元素的属性和标签。<br><small>删除节点的标签是幂等性操作。如果删除一个节点不存在的标签，什么也不会发生。</small><br><img src="https://s2.loli.net/2022/01/27/wY13F29GPIMVJdv.png" alt="neo4j-21.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 删除一个属性</span><br><span class="line">MATCH (andres &#123;name: &#x27;Andres&#x27;&#125;) REMOVE andres.age RETURN andres</span><br><span class="line">// 删除节点的一个标签</span><br><span class="line">MATCH (n &#123;name: &#x27;Peter&#x27;&#125;) REMOVE n:German RETURN andres</span><br><span class="line">// 删除节点的多个标签</span><br><span class="line">MATCH (n &#123;name: &#x27;Peter&#x27;&#125;) REMOVE n:German:Swedish RETURN andres</span><br></pre></td></tr></table></figure>
+
+<h4 id="FOREACH"><a href="#FOREACH" class="headerlink" title="FOREACH"></a><code>FOREACH</code></h4><p><code>FOREACH</code> 语句用于更新列表中的数据，或路径的组件，或者聚合的结果。<br>列表（<code>Lists</code>）和路径（<code>Paths</code>）是 <code>Cypher</code> 中的关键概念，都可以使用 <code>FOREACH</code> 来更新其中的数据。它可以在聚合的列表或者路径的每个元素上执行更新命令。其中 <code>FOREACH</code> 括号中的变量是与外部分开的，这意味着 <code>FOREACH</code> 中创建的变量不能用于该语句之外。<br>在 <code>FOREACH</code> 括号内，可以执行任何的更新命令，包括 <code>CREATE</code>、<code>CREATE UNIQUE</code>、<code>DELETE</code> 和 <code>FOREACH</code>，如果希望对列表中的每个元素执行额外的 <code>MATCH</code> 命令，使用 <code>UNWIND</code> 命令更加合适。<br><img src="https://s2.loli.net/2022/01/28/lPXQrDNGMiz58nt.png" alt="neo4j-22.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 标记路径上的所有节点的 marked 属性为  true</span><br><span class="line">MATCH p = (begin)-[*]-(END) WHERE begin.name = &#x27;A&#x27; and END.name = &#x27;D&#x27; FOREACH (n IN nodes(p) | SET n.marked = TRUE)</span><br><span class="line">// 从列表中设置关系</span><br><span class="line">MATCH (a:Person &#123;name: &#x27;A&#x27;&#125;) FOREACH (name IN [&#x27;Mike&#x27;, &#x27;Carl&#x27;, &#x27;Bruce&#x27;] | CREATE (a)-[:FRIEND]-&gt;(:Person &#123;name: name&#125;))</span><br></pre></td></tr></table></figure>
+
+<h4 id="CREATE-UNIQUE"><a href="#CREATE-UNIQUE" class="headerlink" title="CREATE UNIQUE"></a><code>CREATE UNIQUE</code></h4><p><code>CREATE UNIQUE</code> 语句相当于 <code>MATCH</code> 和 <code>CREATE</code> 的组合体，尽可能的匹配，然后创建未匹配到的。<br><code>CREATE UNIQUE</code> 介于 <code>MATCH</code> 和 <code>CREATE</code> 之间，其作用是匹配所能匹配上的，然后创建不存在的。<code>CREATE UNIQUE</code> 会尽可能的减少对图的改变，充分利用已有的图。<br>其中与 <code>MATCH</code> 的另一个不同就是，<code>CREATE UNIQUE</code> 假设模式是唯一的，如果有多个匹配的子图可以找到，那么此时就会报错。<br><small>你可能会想到使用 <code>MERGE</code> 来代替 <code>CREATE UNIQUE</code>，但是 <code>MERGE</code> 不能很好的保证关系的一致性。</small><br><img src="https://s2.loli.net/2022/01/28/stKfIVgByb23Cnk.png" alt="neo4j-23.jpg"></p>
+<h5 id="节点-1"><a href="#节点-1" class="headerlink" title="节点"></a>节点</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 创建未匹配到含有属性的节点</span><br><span class="line">MATCH (root &#123;name: &#x27;root&#x27;&#125;) CREATE UNIQUE (root)-[:LOVES]-(someone &#123;name: &#x27;someone&#x27;&#125;) RETURN someone</span><br><span class="line">// 创建未匹配到带标签的节点</span><br><span class="line">MATCH (a &#123;name: &#x27;A&#x27;&#125;) CREATE UNIQUE (a)-[:KNOWS]-(c:blue)  RETURN c</span><br></pre></td></tr></table></figure>
+
+<h5 id="关系-3"><a href="#关系-3" class="headerlink" title="关系"></a>关系</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 创建未匹配的含有属性的关系</span><br><span class="line">MATCH (lft &#123;name: &#x27;A&#x27;&#125;), (rgt) WHERE rgt.name IN [&#x27;B&#x27;, &#x27;C&#x27;] CREATE UNIQUE (lft)-[r:KNOWS &#123;since: &#x27;forever&#x27;&#125;]-(rgt) RETURN r</span><br></pre></td></tr></table></figure>
+
+<h5 id="复杂模式"><a href="#复杂模式" class="headerlink" title="复杂模式"></a>复杂模式</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 描述复杂模式</span><br><span class="line">MATCH (root &#123;name: &#x27;root&#x27;&#125;) CREATE UNIQUE (root)-[:FOO]-(x), (root)-[:BAR]-(x) RETURN x</span><br></pre></td></tr></table></figure>
+
+<h4 id="RETURN"><a href="#RETURN" class="headerlink" title="RETURN"></a><code>RETURN</code></h4><p><code>RETURN</code> 语句定义了查询结果集中返回的内容。在查询的 <code>RETURN</code> 部分定义了模式中待查询的内容，其中可以是节点、关系或者是属性。<br><small>如果只需要属性值，要尽量避免返回整个节点或关系，这样有助于提高性能。</small><br><img src="https://s2.loli.net/2022/01/28/H12eE6QLWfaUlOb.png" alt="neo4j-24.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 返回节点</span><br><span class="line">MATCH (n &#123;name: &#x27;B&#x27;&#125;) RETURN n</span><br><span class="line">// 返回关系</span><br><span class="line">MATCH (n &#123;name: &#x27;A&#x27;&#125;)-[r:KNOWS]-(b) RETURN r</span><br><span class="line">// 返回属性</span><br><span class="line">MATCH (n &#123;name: &#x27;A&#x27;&#125;) RETURN n.happy</span><br><span class="line">// 返回所有信息</span><br><span class="line">MATCH p = (a &#123;name: &#x27;A&#x27;&#125;)-[r]-(b) RETURN *</span><br><span class="line">// 返回中携带特殊字符，使用 ` 将其包含起来</span><br><span class="line">MATCH (`This isn&#x27;t a common variable`) WHERE `This isn&#x27;t a common variable`.name = &#x27;A&#x27; RETURN `This isn&#x27;t a common variable`.happy</span><br><span class="line">// 列别命</span><br><span class="line">MATCH (a &#123;name: &#x27;A&#x27;&#125;) RETURN a.age AS SomethingTotallyDifferent</span><br><span class="line">// 可选属性</span><br><span class="line">MATCH (n) RETURN n.age</span><br><span class="line">// 其他表达式</span><br><span class="line">MATCH (a &#123;name: &#x27;A&#x27;&#125;) RETURN a.age &gt; 30, &quot;I&#x27;m a literal&quot;, (a)--&gt;()</span><br><span class="line">// 唯一性结果，DISTINCT 用于仅仅获取结果集中所依赖列的唯一行</span><br><span class="line">MATCH (a &#123;name: &#x27;A&#x27;&#125;)--&gt;(b) RETURN DISTINCT b</span><br></pre></td></tr></table></figure>
+
+<h4 id="ORDER-BY"><a href="#ORDER-BY" class="headerlink" title="ORDER BY"></a><code>ORDER BY</code></h4><p><code>ORDER BY</code> 是紧跟 <code>RETURN</code> 或者 <code>WITH</code> 的子句，它指定了输出的结果如何排序。（不能对节点和关系进行排序，只能对他们的属性进行排序）<br>在变量的范围方面，<code>ORDR BY</code> 遵循特定的规则，这取决于 <code>RETURN</code> 的投射或 <code>WITH</code> 语句是否聚合或者 <code>DISTINCT</code>。如果他是一个聚合或者 <code>DISTINCT</code> 投射，那么只有投射中的变量可用。如果投射不修改输出基数（聚合和 <code>DISTINCT</code> 做的），在投射之前可用的变量依旧可用。当投射语句覆盖已经存在的变量时，那么只有新的变量可用。<br><img src="https://s2.loli.net/2022/02/01/lFPqDvY69sBtjWN.png" alt="neo4j-25.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 根据多个属性对节点进行排序（多个属性会首先检查第一个变量，相等的值再检查下一个变量）</span><br><span class="line">MATCH (n) RERUEN n ORDER BY n.age, n.name</span><br><span class="line">// 节点降序排序</span><br><span class="line">MATCH (n) RERUEN n ORDER BY n.name DESC</span><br><span class="line">// 空值的排序</span><br><span class="line">MATCH (n) RERUEN n.length, n ORDER BY n.length</span><br></pre></td></tr></table></figure>
+
+<h4 id="LIMIT"><a href="#LIMIT" class="headerlink" title="LIMIT"></a><code>LIMIT</code></h4><p><code>LIMIT</code> 限制输出的行数。<code>LIMIT</code> 可接受结果为正整数的任意表达式，但表达式不能引用节点或者关系。<br><img src="https://s2.loli.net/2022/02/02/O8SMn94DVL1RFJK.png" alt="neo4j-26.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 返回结果的一个子集</span><br><span class="line">MATCH (n) RETURN n ORDER BY n.name LIMIT 3</span><br><span class="line">// LIMIT 接受来自任意表达式的正整数值，只要不引用外部的变量</span><br><span class="line">MATCH (n) RETURN n ORDER BY n.name LIMIT toInt(3 * rand()) + 1</span><br></pre></td></tr></table></figure>
+
+<h4 id="SKIP"><a href="#SKIP" class="headerlink" title="SKIP"></a><code>SKIP</code></h4><p><code>SKIP</code> 定义从哪行开始返回结果集。即使用 <code>SKIP</code> 可以跳过开始的一部分结果。<br><img src="https://s2.loli.net/2022/02/02/O8SMn94DVL1RFJK.png" alt="neo4j-26.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 从第四个开始返回结果的子集</span><br><span class="line">MATCH (n) RETURN n ORDER BY n.name SKIP 3</span><br><span class="line">// 返回中间的某个结果子集</span><br><span class="line">MATCH (n) RETURN n ORDER BY n.name SKIP 1 LIMIT 2</span><br><span class="line">// SKIP 接受来自任意表达式的正整数值，只要不引用外部的变量</span><br><span class="line">MATCH (n) RETURN n ORDER BY n.name SKIP toInt(3 * rand()) + 1</span><br></pre></td></tr></table></figure>
+
+<h4 id="WITH"><a href="#WITH" class="headerlink" title="WITH"></a><code>WITH</code></h4><p><code>WITH</code> 语句将分段的查询部分连接在一起，查询结果从一部分以<strong>管道</strong>的形式传递到另一部分作为开始点。<br>使用 <code>WITH</code> 可以将结果传递到后续查询之前对结果进行操作。其中操作可以改变结果的形式或数量，最常见的用法就是限制传递给其他 <code>MATCH</code> 语句的结果数，通过结合 <code>ORDER BY</code> 和 <code>LIMIT</code>，可获取排在前面多个结果。<br>另一个比较常见的用法就是在聚合值上过滤。<code>WITH</code> 用于在 <code>WHERE</code> 断言中引入聚合，这些聚合表达式创建了新的结果绑定字段，当然 <code>WITH</code> 也可以像 <code>RETURN</code> 一样对结果使用别名作为绑定名。<br><code>WITH</code> 还可以用于将图的读语句和更新语句分开，查询中的每一部分要么只是读取，要么都是写入，当写部分的语句是基于读语句的结果时，这两者之间的转换必须使用 <code>WITH</code>。<br><img src="https://s2.loli.net/2022/02/02/ZtRyNUzmf9sl2Ix.png" alt="neo4j-27.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 过滤聚合函数结果，聚合的结果必须要通过 WITH 语句传递才能进行过滤</span><br><span class="line">MATCH (david &#123;name: &#x27;D&#x27;&#125;)--(otherPerson)--&gt;() WITH otherPerson, count(*) AS foaf WHERE foaf &gt; 1 RETURN otherPerson</span><br><span class="line">// 在 collect 前对结果排序</span><br><span class="line">MATCH (n) WITH n ORDER BY n.name DESC LIMIT 3 RETURN collect(n.name)</span><br><span class="line">// 限制路径搜索的分支，以限制后的路径作为基础再做类似的有限制条件的过滤</span><br><span class="line">MATCH (n &#123;name: &#x27;A&#x27;&#125;)--(m) WITH m ORDER BY m.name DESC LIMIT 1 MATCH (m)--(o) RETURN o.name</span><br></pre></td></tr></table></figure>
+
+<h4 id="UNWIND"><a href="#UNWIND" class="headerlink" title="UNWIND"></a><code>UNWIND</code></h4><p><code>UNWIND</code> 将一个列表展开为若干个行的序列。<br>用 <code>UNWIND</code> 可以将任何列表转为单独的行，这些列表可以以参数的形式传入，如前面的 <code>collect</code> 行数返回的结果。<br><code>UNWIND</code> 一个较为常见的用法就是创建唯一列表。另外一个就是从提供给查询的参数列表中创建数据。<code>UNWIND</code> 需要给内部值指定新的名字。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 将一个产量列表转化为行并返回</span><br><span class="line">UNWIND [1, 2, 3] AS x RETURN x</span><br><span class="line">// 创建唯一列表，使用 DISTINCT 将一个重复值列表转为一个集合</span><br><span class="line">WITH [1, 1, 2, 3] AS coll UNWIND coll AS x WITH DISTINCT x RETURN collect(x) AS SET</span><br><span class="line">// 从列表参数中创建节点，不适用 FOREACH，通过列表参数来创建一系列节点和关系</span><br><span class="line">&#123;</span><br><span class="line">    &quot;events&quot;: [&#123;</span><br><span class="line">        &quot;year&quot;: 2004,</span><br><span class="line">        &quot;id&quot;: 1</span><br><span class="line">        &#125;, &#123;</span><br><span class="line">        &quot;year&quot;: 2014,</span><br><span class="line">        &quot;id&quot;: 2</span><br><span class="line">        &#125;]</span><br><span class="line">&#125;</span><br><span class="line">UNWIND $events AS event MERGE (y:Year &#123;year: event.year&#125;) MERGE (y)-[:IN]-(e:Event &#123;id: event.id&#125;) RETURN e.id AS x ORDER BY x</span><br></pre></td></tr></table></figure>
+
+<h4 id="UNION"><a href="#UNION" class="headerlink" title="UNION"></a><code>UNION</code></h4><p><code>UNION</code> 语句用于将多个查询结果组合起来。其中使用 <code>UNION</code> 组合查询的结果时，所有查询到的<strong>列的名称和数量必须完全一致</strong>。<br>在使用 <code>UNION ALL</code> 会包含所有的结果行，而用 <code>UNION</code> 组合时，会移除结果集中的重复行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 组合两个查询</span><br><span class="line">MATCH (n:Actor) RETURN n.name AS name UNION ALL MATCH (n:Movie) RETURN n.title AS name</span><br><span class="line">// 组合两个查询并移除重复值</span><br><span class="line">MATCH (n:Actor) RETURN n.name AS name UNION MATCH (n:Movie) RETURN n.title AS name</span><br></pre></td></tr></table></figure>
+
+<h4 id="CALL"><a href="#CALL" class="headerlink" title="CALL"></a><code>CALL</code></h4><p><code>CALL</code> 语句用于调用数据库中的过程（<code>Procedure</code>）。<br>在使用 <code>CALL</code> 语句的调用过程中，需要制定所需要的参数，其中可以通过在过程名的后面使用逗号分隔的列表来显式地指定，同时也可以使用查询参数来作为过程调用的参数。后者仅适用于在单独的过程调用中作为参数，即整个查询语句只包含一个单一的的 <code>CALL</code> 调用。<br><code>Neo4j</code> 支持 <code>VOID</code> 过程。<code>VOID</code> 过程既没有声明任何结果字段，也不会返回任何结果记录。但是调用 <code>VOID</code> 过程有一个明显的弊端，就是它既不允许也不需要使用 <code>YIELD</code>。在一个大的查询中调用 <code>VOID</code> 过程，就像 <code>WITH *</code> 在记录流中的作用那样，只是简单的传递输入的每一个结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 调用过程，列出数据库中的所有标签</span><br><span class="line">CALL db.labels</span><br><span class="line">// 在复杂查询中调用过程</span><br><span class="line">CALL db.labels YIELD label RETURN count(label) AS numLabels</span><br><span class="line">// 在复杂查询中调用过程并筛选结果</span><br><span class="line">CALL db.labels YIELD label WHERE label CONTAINS &#x27;User&#x27; RETURN count(label) AS numLabels</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<p><strong>本节未完，且看下回分解！</strong></p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/" title="Neo4j系列博客-Cypher-1">https://blog.vgbhfive.cn/Neo4j系列博客-Cypher-1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/" rel="prev" title="Neo4j系列博客-入门">
+      <i class="fa fa-chevron-left"></i> Neo4j系列博客-入门
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/MySQL-Aggregated-query-without-GROUP-BY/" rel="next" title="MySQL-Aggregated query without GROUP BY">
+      MySQL-Aggregated query without GROUP BY <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cypher-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">Cypher 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%92%8C%E6%9B%B4%E6%96%B0%E5%9B%BE"><span class="nav-number">1.2.</span> <span class="nav-text">查询和更新图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.3.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%94%AF%E4%B8%80%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">唯一性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="nav-number">1.5.</span> <span class="nav-text">兼容性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">CASE 表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">2.4.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F-1"><span class="nav-number">2.6.</span> <span class="nav-text">模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.6.1.</span> <span class="nav-text">节点模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E8%8A%82%E7%82%B9%E7%9A%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.6.2.</span> <span class="nav-text">关联节点的模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE"><span class="nav-number">2.6.3.</span> <span class="nav-text">标签</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%B1%9E%E6%80%A7"><span class="nav-number">2.6.4.</span> <span class="nav-text">指定属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E5%85%B3%E7%B3%BB"><span class="nav-number">2.6.5.</span> <span class="nav-text">描述关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC%E7%BB%99%E8%B7%AF%E5%BE%84%E5%8F%98%E9%87%8F"><span class="nav-number">2.6.6.</span> <span class="nav-text">赋值给路径变量</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E8%A1%A8"><span class="nav-number">2.7.</span> <span class="nav-text">列表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#List-%E6%8E%A8%E5%AF%BC%E5%BC%8F"><span class="nav-number">2.7.1.</span> <span class="nav-text">List 推导式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F%E6%8E%A8%E5%AF%BC%E5%BC%8F"><span class="nav-number">2.7.2.</span> <span class="nav-text">模式推导式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%97%E9%9D%A2%E5%80%BC%E6%98%A0%E5%B0%84"><span class="nav-number">2.7.3.</span> <span class="nav-text">字面值映射</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Map-%E6%8A%95%E5%B0%84"><span class="nav-number">2.7.4.</span> <span class="nav-text">Map 投射</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC"><span class="nav-number">2.8.</span> <span class="nav-text">空值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.</span> <span class="nav-text">语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MATCH"><span class="nav-number">3.1.</span> <span class="nav-text">MATCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E7%BB%93%E7%82%B9"><span class="nav-number">3.1.1.</span> <span class="nav-text">查找结点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB"><span class="nav-number">3.1.2.</span> <span class="nav-text">关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E7%9A%84%E6%B7%B1%E5%BA%A6"><span class="nav-number">3.1.3.</span> <span class="nav-text">关系的深度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%80%E7%9F%AD%E8%8A%82%E7%82%B9"><span class="nav-number">3.1.4.</span> <span class="nav-text">最短节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-id-%E6%9F%A5%E8%AF%A2%E5%85%B3%E7%B3%BB%E5%92%8C%E8%8A%82%E7%82%B9"><span class="nav-number">3.1.5.</span> <span class="nav-text">通过 id 查询关系和节点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OPTINAL-MATCH"><span class="nav-number">3.2.</span> <span class="nav-text">OPTINAL MATCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E5%85%83%E7%B4%A0%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">3.2.2.</span> <span class="nav-text">可选元素的属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E5%85%B3%E7%B3%BB%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.3.</span> <span class="nav-text">可选关系类型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WHERE"><span class="nav-number">3.3.</span> <span class="nav-text">WHERE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">3.3.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D"><span class="nav-number">3.3.2.</span> <span class="nav-text">字符串匹配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.3.3.</span> <span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%B7%AF%E5%BE%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.3.4.</span> <span class="nav-text">使用路径模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%8C%83%E5%9B%B4"><span class="nav-number">3.3.5.</span> <span class="nav-text">使用范围</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#START"><span class="nav-number">3.4.</span> <span class="nav-text">START</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E7%B4%A2%E5%BC%95%E8%8E%B7%E5%8F%96%E8%8A%82%E7%82%B9"><span class="nav-number">3.4.1.</span> <span class="nav-text">通过索引获取节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E7%B4%A2%E5%BC%95%E8%8E%B7%E5%8F%96%E5%85%B3%E7%B3%BB"><span class="nav-number">3.4.2.</span> <span class="nav-text">通过索引获取关系</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Aggregation"><span class="nav-number">3.5.</span> <span class="nav-text">Aggregation</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Count"><span class="nav-number">3.5.1.</span> <span class="nav-text">Count</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1"><span class="nav-number">3.5.2.</span> <span class="nav-text">统计</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Load-CSV"><span class="nav-number">3.6.</span> <span class="nav-text">Load CSV</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CSV-%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.6.1.</span> <span class="nav-text">CSV 文件格式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CREATE"><span class="nav-number">3.7.</span> <span class="nav-text">CREATE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%8A%82%E7%82%B9"><span class="nav-number">3.7.1.</span> <span class="nav-text">创建节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%B3%E7%B3%BB"><span class="nav-number">3.7.2.</span> <span class="nav-text">创建关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%B7%AF%E5%BE%84"><span class="nav-number">3.7.3.</span> <span class="nav-text">创建路径</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%82%E6%95%B0"><span class="nav-number">3.7.4.</span> <span class="nav-text">使用参数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MERGE"><span class="nav-number">3.8.</span> <span class="nav-text">MERGE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8A%82%E7%82%B9"><span class="nav-number">3.8.1.</span> <span class="nav-text">节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8-CREATE-%E5%92%8C-MATCH-%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-number">3.8.2.</span> <span class="nav-text">在 CREATE 和 MATCH 中使用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB-2"><span class="nav-number">3.8.3.</span> <span class="nav-text">关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#map-%E5%8F%82%E6%95%B0"><span class="nav-number">3.8.4.</span> <span class="nav-text">map 参数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SET"><span class="nav-number">3.9.</span> <span class="nav-text">SET</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DELETE"><span class="nav-number">3.10.</span> <span class="nav-text">DELETE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REMOVE"><span class="nav-number">3.11.</span> <span class="nav-text">REMOVE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FOREACH"><span class="nav-number">3.12.</span> <span class="nav-text">FOREACH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CREATE-UNIQUE"><span class="nav-number">3.13.</span> <span class="nav-text">CREATE UNIQUE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8A%82%E7%82%B9-1"><span class="nav-number">3.13.1.</span> <span class="nav-text">节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB-3"><span class="nav-number">3.13.2.</span> <span class="nav-text">关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.13.3.</span> <span class="nav-text">复杂模式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RETURN"><span class="nav-number">3.14.</span> <span class="nav-text">RETURN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ORDER-BY"><span class="nav-number">3.15.</span> <span class="nav-text">ORDER BY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LIMIT"><span class="nav-number">3.16.</span> <span class="nav-text">LIMIT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SKIP"><span class="nav-number">3.17.</span> <span class="nav-text">SKIP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WITH"><span class="nav-number">3.18.</span> <span class="nav-text">WITH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UNWIND"><span class="nav-number">3.19.</span> <span class="nav-text">UNWIND</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UNION"><span class="nav-number">3.20.</span> <span class="nav-text">UNION</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CALL"><span class="nav-number">3.21.</span> <span class="nav-text">CALL</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

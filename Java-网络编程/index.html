@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基础概念Java 网络API 允许我们通过套接字（Socket）打开或关闭网络连接，但所有的网络通信均是基于Java IO 类 InputStream 和OutputStream 实现的。 此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。 Java T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java-网络编程">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="基础概念Java 网络API 允许我们通过套接字（Socket）打开或关闭网络连接，但所有的网络通信均是基于Java IO 类 InputStream 和OutputStream 实现的。 此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。 Java T">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2019/11/02/LSWtzOejyGIU2is.jpg">
+<meta property="article:published_time" content="2019-11-02T05:41:42.000Z">
+<meta property="article:modified_time" content="2020-02-05T06:22:28.279Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/11/02/LSWtzOejyGIU2is.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Java-网络编程 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java-网络编程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-02 13:41:42" itemprop="dateCreated datePublished" datetime="2019-11-02T13:41:42+08:00">2019-11-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:22:28" itemprop="dateModified" datetime="2020-02-05T14:22:28+08:00">2020-02-05</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>Java 网络API 允许我们通过套接字（Socket）打开或关闭网络连接，但所有的网络通信均是基于Java IO 类 InputStream 和OutputStream 实现的。</p>
+<p>此外，我们还可以使用Java NIO API中相关的网络类，用法与Java网络API基本类似，Java NIO API可以以非阻塞模式工作，在某些特定的场景中使用非阻塞模式可以获得较大的性能提升。</p>
+<h3 id="Java-TCP网络基础"><a href="#Java-TCP网络基础" class="headerlink" title="Java TCP网络基础"></a>Java TCP网络基础</h3><p>通常情况下，客户端打开一个连接到服务器端的TCP&#x2F;IP 连接，然后客户端开始与服务器之间通信，当通信结束后客户端关闭连接。</p>
+<p>​客户端通过一个已打开的连接可以发送不止一个请求。事实上在服务器处于接收状态下，客户端可以发送尽可能多的数据，服务器也可以主动关闭连接。</p>
+<span id="more"></span>
+
+<h3 id="Java中Socket类和ServerSocket类"><a href="#Java中Socket类和ServerSocket类" class="headerlink" title="Java中Socket类和ServerSocket类"></a>Java中Socket类和ServerSocket类</h3><p>当客户端想要打开一个连接到服务器的TCP&#x2F;IP连接时，就要使用到Java Socket类。socket类只需要被告知连接的IP地址和TCP端口，其余的都有Java实现。</p>
+<p>假如我们想要打开一个监听服务，来监听客户端连接某些指定TCP端口的连接，那就需要使用Java ServerSocket类。当客户端通过Socket连接服务器端的ServerSocket监听时，服务器端会指定这个连接的一个Socket，此时客户端与服务器端间的通信就变成Socket与Socket之间的通信。</p>
+<p>关于Socket类和ServerSocket类会在后面的文章中有详细的介绍。</p>
+<h3 id="Java-UDP网络基础"><a href="#Java-UDP网络基础" class="headerlink" title="Java UDP网络基础"></a>Java UDP网络基础</h3><p>UDP的工作方式与TCP相比略有不同。使用UDP通信时，在客户端与服务器之间并没有建立连接的概念，客户端发送到服务器的数据，服务器可能（也可能并没有）收到这些数据，而且客户端也并不知道这些数据是否被服务器成功接收。当服务器向客户端发送数据时也是如此。</p>
+<p>正因为是不可靠的数据传输，UDP相比与TCP来说少了很多的协议开销。</p>
+<p>在某些场景中，使用无连接的UDP要优于TCP，这些在文章Java UDP DatagramSocket类介绍中会有更多介绍。</p>
+<hr>
+
+<h2 id="Socket、ServerSocket"><a href="#Socket、ServerSocket" class="headerlink" title="Socket、ServerSocket"></a>Socket、ServerSocket</h2><p>当我们想要在Java中使用TCP&#x2F;IP通过网络连接到服务器时，就需要创建java.net.Socket对象并连接到服务器。假如希望使用Java NIO，也可以创建Java NIO中的SocketChannel对象。</p>
+<h3 id="创建Socket"><a href="#创建Socket" class="headerlink" title="创建Socket"></a>创建Socket</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;78.46.84.171&quot;</span>, <span class="number">80</span>);</span><br><span class="line"><span class="comment">// 我们也可以像如下示例中使用域名代替IP地址：</span></span><br><span class="line"><span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;vgbhfive.cn&quot;</span>, <span class="number">80</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Socket发送数据"><a href="#Socket发送数据" class="headerlink" title="Socket发送数据"></a>Socket发送数据</h3><p>要通过Socket发送数据，我们需要获取Socket的输出流（OutputStream），示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;jenkov.com&quot;</span>, <span class="number">80</span>);</span><br><span class="line"><span class="type">OutputStream</span> <span class="variable">out</span> <span class="operator">=</span> socket.getOutputStream(); </span><br><span class="line"></span><br><span class="line">out.write(<span class="string">&quot;some data&quot;</span>.getBytes());</span><br><span class="line">out.flush();</span><br><span class="line">out.close(); </span><br><span class="line"></span><br><span class="line">socket.close();</span><br></pre></td></tr></table></figure>
+<p> 代码非常简单，但是想要通过网络将数据发送到服务器端，一定不要忘记调用flush()方法。操作系统底层的TCP&#x2F;IP实现会先将数据放入一个更大的数据缓存块中，而缓存块的大小是与TCP&#x2F;IP的数据包大小相适应的。（译者注：调用flush()方法只是将数据写入操作系统缓存中，并不保证数据会立即发送）</p>
+<h3 id="Socket读取数据"><a href="#Socket读取数据" class="headerlink" title="Socket读取数据"></a>Socket读取数据</h3><p>从Socket中读取数据，我们就需要获取Socket的输入流（InputStream），代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;jenkov.com&quot;</span>, <span class="number">80</span>);</span><br><span class="line"><span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> socket.getInputStream(); </span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">data</span> <span class="operator">=</span> in.read();</span><br><span class="line"><span class="comment">//... read more data... </span></span><br><span class="line"></span><br><span class="line">in.close();</span><br><span class="line">socket.close();</span><br></pre></td></tr></table></figure>
+<p> 代码也并不复杂，但需要注意的是，从Socket的输入流中读取数据并不能读取文件那样，一直调用read()方法直到返回-1为止，因为对Socket而言，只有当服务端关闭连接时，Socket的输入流才会返回-1，而是事实上服务器并不会不停地关闭连接。假设我们想要通过一个连接发送多个请求，那么在这种情况下关闭连接就显得非常愚蠢。</p>
+<p>因此，从Socket的输入流中读取数据时我们必须要知道需要读取的字节数，这可以通过让服务器在数据中告知发送了多少字节来实现，也可以采用在数据末尾设置特殊字符标记的方式连实现。</p>
+<h3 id="关闭Socket"><a href="#关闭Socket" class="headerlink" title="关闭Socket"></a>关闭Socket</h3><p>当使用完Socket后我们必须将Socket关闭，断开与服务器之间的连接。关闭Socket只需要调用Socket.close()方法即可，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;vgbhfive.cn&quot;</span>, <span class="number">80</span>); </span><br><span class="line">socket.close();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p><a target="_blank" rel="noopener" href="https://github.com/vgbhfive/VChatDemo">https://github.com/vgbhfive/VChatDemo</a></p>
+<hr>
+
+<h2 id="UDP-DatagramSocket"><a href="#UDP-DatagramSocket" class="headerlink" title="UDP DatagramSocket"></a>UDP DatagramSocket</h2><p>DatagramSocket 是Java 通过UDP（而非TCP）进行网络通信的机制。UDP 位于IP 之上。<br>使用Java 的DatagramSocket 来发送和接收UPD 数据包（数据报）。</p>
+<h3 id="UDP、TCP"><a href="#UDP、TCP" class="headerlink" title="UDP、TCP"></a>UDP、TCP</h3><p>UDP 的工作方式与TCP 有所不同。<br>通过TCP 发送数据时，首先要创建一个连接，建立TCP 连接后，TCP 会确保您的数据到达另一端，否则它将另一端告诉发生了错误。</p>
+<p>使用UDP，只需将数据包（数据报）发送到网络上的某个IP 地址。但是不能保证数据会到达，并且也无法保证UDP 数据包到达接收方的顺序。<br>这意味着UDP 比TCP 具有更少的协议开销（无流完整性检查）。</p>
+<p>UDP 适用于数据传输，在传输过程中是否丢失数据包并不重要。<br>例如，想象一下通过互联网传输实况电视信号。您希望信号尽可能接近现场。因此，如果丢失了一两帧，则不必担心，最实际的是不希望延迟直播，只是确保所有帧都在客户端显示。宁愿跳过错过的帧，并始终直接移至最新的帧。</p>
+<h3 id="DatagramSocket"><a href="#DatagramSocket" class="headerlink" title="DatagramSocket"></a>DatagramSocket</h3><p>通过DatagramSocket 发送数据，要通过Java DatagramSocket 发送数据则必须先创建一个DatagramPacket 。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">65508</span>];</span><br><span class="line">InetAddress address= InetAddress.getByName（<span class="string">&quot;test.com&quot;</span>）;</span><br><span class="line"></span><br><span class="line"><span class="type">DatagramPacket</span> <span class="variable">packet</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DatagramPacket</span>（buffer, buffer.length, address, <span class="number">9000</span>）;</span><br></pre></td></tr></table></figure>
+
+<p> 字节缓冲区（字节数组）是在UDP 数据报中发送的数据。<br>在DatagramPacket 构造函数的长度是要发送的缓冲区中数据的长度。在该数据量之后，缓冲区中的所有数据将被忽略。<br>在InetAddress 实例中包含要向其发送UDP 数据包的节点（例如服务器）的地址。这个InetAddress 类代表一个IP地址（Internet地址）。<br>这个getByName() 方法返回一个InetAddress 实例，该实例的IP 地址与给定的主机名匹配。<br>port 参数是服务器接收数据的UDP 端口。</p>
+<p><small>UDP和TCP端口不相同。一台计算机可以具有不同的进程，例如同时侦听UDP和TCP中的端口80。</small><br><small>缓冲区的长度为65508字节，是您可以在单个UDP数据包中发送的最大数据量。</small></p>
+<h3 id="DatagramSocket-send"><a href="#DatagramSocket-send" class="headerlink" title="DatagramSocket.send()"></a>DatagramSocket.send()</h3><p>发送数据，DatagramPacket 必须创建一个DatagramSocket 针对发送数据的目标。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DatagramSocket</span> <span class="variable">datagramSocket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DatagramSocket</span>();</span><br></pre></td></tr></table></figure>
+<p> 要发送数据，请调用send()方法，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">datagramSocket.send(packet);</span><br></pre></td></tr></table></figure>
+
+<p>Demo: </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DatagramSocket</span> <span class="variable">datagramSocket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DatagramSocket</span>();</span><br><span class="line"><span class="type">byte</span>[] buffer = <span class="string">&quot;0123456789&quot;</span>.getBytes();</span><br><span class="line"><span class="type">InetAddress</span> <span class="variable">address</span> <span class="operator">=</span> InetAddress.getLocalHost();</span><br><span class="line"></span><br><span class="line"><span class="type">DatagramPacket</span> <span class="variable">packet</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DatagramPacket</span>(buffer, buffer.length, address, <span class="number">80</span>);</span><br><span class="line">datagramSocket.send(packet);</span><br></pre></td></tr></table></figure>
+
+<h3 id="DatagramSocket-receive"><a href="#DatagramSocket-receive" class="headerlink" title="DatagramSocket.receive()"></a>DatagramSocket.receive()</h3><p>接收数据是通过DatagramSocket 建立一个完成DatagramPacket ，然后通过将数据接收到它DatagramSocket 的receive() 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DatagramSocket</span> <span class="variable">datagramSocket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DatagramSocket</span>(<span class="number">80</span>);</span><br><span class="line"><span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">10</span>];</span><br><span class="line"><span class="type">DatagramPacket</span> <span class="variable">packet</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DatagramPacket</span>(buffer, buffer.length);</span><br><span class="line">datagramSocket.receive(packet);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>首先，80 是DatagramSocket 用于接收UDP 数据包的UDP 端口。如前所述，TCP 和UDP 端口不相同，因此不会重叠。因此可以有两个不同的进程在TCP 和UDP 端口80 侦听，而不会发生任何冲突。</li>
+<li>其次，DatagramPacket 创建一个字节缓冲区和一个DatagramPacket。<br>DatagramPacket 与用于发送数据的节点一样，该节点没有关于要向其发送数据的节点的信息。这是因为我们将使用DatagramPacket来接收数据，而不是发送数据。因此，不需要目的地地址。</li>
+<li>最后，调用DatagramSocket 的receive() 方法。此方法会阻塞直到DatagramPacket 收到数据为止。收到的数据位于DatagramPacket 的字节缓冲区中。<br> 通过调用以下方法获得此缓冲区：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">byte</span>[] buffer = packet.getData();  </span><br></pre></td></tr></table></figure>
+ 如果需要确定缓冲区中接收了多少数据。那么就需要在使用的协议中指定每个UDP数据包发送多少数据，或者指定数据的结束标记。</li>
+</ul>
+<p>真正的服务器程序可能会receive() 在循环中调用该方法，并将所有接收到的DatagramPacket 传递给工作线程池，就像TCP 服务器处理传入连接一样。</p>
+<hr>
+
+<h2 id="URL-URLConnection"><a href="#URL-URLConnection" class="headerlink" title="URL + URLConnection"></a>URL + URLConnection</h2><p>在java.net包中包含两个有趣的类：URL类和URLConnection类。这两个类可以用来创建客户端到web服务器（HTTP服务器）的连接。<br>下面是一个简单的代码例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;https://vgbhfive.cn&quot;</span>);</span><br><span class="line"><span class="type">URLConnection</span> <span class="variable">urlConnection</span> <span class="operator">=</span> url.openConnection();</span><br><span class="line"><span class="type">InputStream</span> <span class="variable">input</span> <span class="operator">=</span> urlConnection.getInputStream();</span><br><span class="line"><span class="type">int</span> <span class="variable">data</span> <span class="operator">=</span> input.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span><br><span class="line">	System.out.print((<span class="type">char</span>) data);</span><br><span class="line">	data = input.read();</span><br><span class="line">&#125;</span><br><span class="line">input.close();</span><br></pre></td></tr></table></figure>
+
+<h3 id="HTTP-GET和POST"><a href="#HTTP-GET和POST" class="headerlink" title="HTTP GET和POST"></a>HTTP GET和POST</h3><p>默认情况下URLConnection发送一个HTTP GET请求到web服务器。如果你想发送一个HTTP POST请求，要调用URLConnection.setDoOutput(true)方法，<br>如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;https://vgbhfive.cn&quot;</span>);</span><br><span class="line"><span class="type">URLConnection</span> <span class="variable">urlConnection</span> <span class="operator">=</span> url.openConnection();</span><br><span class="line">urlConnection.setDoOutput(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<p>一旦你调用了setDoOutput(true)，你就可以打开URLConnection的OutputStream，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">OutputStream</span> <span class="variable">output</span> <span class="operator">=</span> urlConnection.getOutputStream();</span><br></pre></td></tr></table></figure>
+<p>你可以使用这个OutputStream向相应的HTTP请求中写任何数据，但你要记得将其转换成URL编码（关于URL编码的解释，自行Google）（译者注：具体名字是：application&#x2F;x-www-form-urlencoded MIME 格式编码）。<br>当你写完数据的时候要记得关闭OutputStream。</p>
+<h3 id="从URLs到本地文件"><a href="#从URLs到本地文件" class="headerlink" title="从URLs到本地文件"></a>从URLs到本地文件</h3><p>URL也被叫做统一资源定位符。如果你的代码不关心文件是来自网络还是来自本地文件系统，URL类是另外一种打开文件的方式。<br>下面是一个如何使用URL类打开一个本地文件系统文件的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;file:/c:/data/test.txt&quot;</span>);</span><br><span class="line"><span class="type">URLConnection</span> <span class="variable">urlConnection</span> <span class="operator">=</span> url.openConnection();</span><br><span class="line"><span class="type">InputStream</span> <span class="variable">input</span> <span class="operator">=</span> urlConnection.getInputStream();</span><br><span class="line"><span class="type">int</span> <span class="variable">data</span> <span class="operator">=</span> input.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span><br><span class="line">	System.out.print((<span class="type">char</span>) data);</span><br><span class="line">	data = input.read();</span><br><span class="line">&#125;</span><br><span class="line">input.close();</span><br></pre></td></tr></table></figure>
+<p>注意：这和通过HTTP访问一个web服务器上的文件的唯一不同处就是URL：”file:&#x2F;c:&#x2F;data&#x2F;test.txt”。</p>
+<hr>
+
+<h2 id="JarURLConnection"><a href="#JarURLConnection" class="headerlink" title="JarURLConnection"></a>JarURLConnection</h2><p>Java的JarURLConnection类用来连接Java Jar文件。一旦连接上，你可以获取Jar文件的信息。<br>一个简单的例子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">urlString</span> <span class="operator">=</span> <span class="string">&quot;http://butterfly.jenkov.com/&quot;</span></span><br><span class="line">                 + <span class="string">&quot;container/download/&quot;</span></span><br><span class="line">                 + <span class="string">&quot;jenkov-butterfly-container-2.9.9-beta.jar&quot;</span>;</span><br><span class="line"><span class="type">URL</span> <span class="variable">jarUrl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(urlString);</span><br><span class="line"><span class="type">JarURLConnection</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JarURLConnection</span>(jarUrl);</span><br><span class="line"></span><br><span class="line"><span class="type">Manifest</span> <span class="variable">manifest</span> <span class="operator">=</span> connection.getManifest();</span><br><span class="line"></span><br><span class="line"><span class="type">JarFile</span> <span class="variable">jarFile</span> <span class="operator">=</span> connection.getJarFile();</span><br><span class="line"><span class="comment">//do something with Jar file...</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h2 id="InetAddress"><a href="#InetAddress" class="headerlink" title="InetAddress"></a>InetAddress</h2><ul>
+<li>创建一个 InetAddress 实例</li>
+<li>InetAddress 的内部方法<br>InetAddress 是 Java 对 IP 地址的封装。这个类的实例经常和 UDP DatagramSockets 和 Socket，ServerSocket 类一起使用。</li>
+</ul>
+<h3 id="创建一个-InetAddress-实例"><a href="#创建一个-InetAddress-实例" class="headerlink" title="创建一个 InetAddress 实例"></a>创建一个 InetAddress 实例</h3><p>InetAddress 没有公开的构造方法，因此你必须通过一系列静态方法中的某一个来获取它的实例。</p>
+<p>下面是为一个域名实例化 InetAddres 类的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">InetAddress</span> <span class="variable">address</span> <span class="operator">=</span> InetAddress.getByName(<span class="string">&quot;jenkov.com&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p> 当然也会有为匹配某个 IP 地址来实例化一个 InetAddress:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">InetAddress</span> <span class="variable">address</span> <span class="operator">=</span> InetAddress.getByName(<span class="string">&quot;78.46.84.171&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p> 另外，它还有通过获取本地 IP 地址的来获取 InetAddress 的方法（正在运行程序的那台机器）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">InetAddress</span> <span class="variable">address</span> <span class="operator">=</span> InetAddress.getLocalHost();</span><br></pre></td></tr></table></figure>
+
+<h3 id="InetAddress-内部方法"><a href="#InetAddress-内部方法" class="headerlink" title="InetAddress 内部方法"></a>InetAddress 内部方法</h3><p>InetAddress 类还拥有大量你可以调用的其它方法。例如：你可以通过调用getAddress()方法来获取 IP 地址的 byte 数组。如果要了解更多的方法，最简单的方式就是读 JavaDoc 文档中关于 InetAddress 类的部分。</p>
+<hr>
+
+<h2 id="Protocol-Design"><a href="#Protocol-Design" class="headerlink" title="Protocol Design"></a>Protocol Design</h2><p>如果设计一个客户端到服务器的系统，那么同时也需要设计客户端和服务器之间的通信协议。当然，有时候协议已经为你决定好了，比如HTTP、XML_RPC（http response 的 body 使用xml）、或者SOAP(也是http response 的 body 使用xml)。设计客户端到服务端协议的时候，一旦协议决定开启一会儿，来看一些你必须考虑的地方：</p>
+<ol>
+<li>客户端到服务端的往返通讯</li>
+<li>区分请求结束和响应结束。</li>
+<li>防火墙穿透</li>
+</ol>
+<h3 id="客户端-服务端往返"><a href="#客户端-服务端往返" class="headerlink" title="客户端-服务端往返"></a>客户端-服务端往返</h3><p>当客户端和服务端通信，执行操作时，他们在交换信息。比如，客户端执行一个服务请求，服务端尝试完成这个请求，发回响应告诉客户端结果。这种客户端和服务端的信息交换就叫做往返。<br>示意图如下：<br><img src="https://i.loli.net/2019/11/02/LSWtzOejyGIU2is.jpg" alt="xxx.jpeg"></p>
+<p>当一个计算机（客户端或者服务端）在网络中发送数据到另一个计算机时，从数据发送到另一端接收数据完会花费一定时间。这就是数据在网络间的传送的时间花费。这个时间叫做延迟。<br>协议中含有越多的往返，协议变得越慢，延迟特别高。HTTP协议只包含一个单独的响应来执行服务。换句话说就是一个单独的往返。另一方面，在一封邮件发送前，SMTP协议包含了几个客户端和服务端的往返。<br>在协议中有多个往返的原因是：有大量的数据从客户端发送到服务端。</p>
+<p>这种情况下你有2个选择：</p>
+<ol>
+<li>在分开往返中发送头信息；</li>
+<li>将消息分成更小的数据块。</li>
+</ol>
+<p>如果服务端能完成头信息的一些初始验证 ，那么分开发送头信息是很明智的。如果头信息是空白的，发送大量数据本身就是浪费资源。<br>在传输大量数据时，如果网络连接失败了，得从头开始重新发送数据。数据分割发送时，只需要在网络连接失败处重新发送数据块。已经发送成功的数据块不需要重新发送。</p>
+<h3 id="区分请求结束和响应结束"><a href="#区分请求结束和响应结束" class="headerlink" title="区分请求结束和响应结束"></a>区分请求结束和响应结束</h3><p>如果协议容许在同一个连接中发送多个请求，需要一个让服务端知道当前请求何时结束、下一个请求何时开始。客户端也需要知道一个响应何时结束了，下一个响应何时开始。</p>
+<p>对于请求有2个方法区分结束：</p>
+<ol>
+<li>在请求的开始处发送请求的字长</li>
+<li>在请求数据的最后发送一个结束标记。</li>
+</ol>
+<p>HTTP用第一个机制。在请求头中 发送了“Content-Length”。请求头会告诉服务端在头文件后有多少字节是属于请求的。<br>这个模型的优势在于没有请求结束标志的开销。为了避免数据看上去像请求结束标志，也不需要对数据体进行编码。<br>第一个方法的劣势：在数据传输前，发送者必须知道多少字节数将被传输。如果数据时动态生成的，在发送前，首先你得缓存所有的数据，这样才能计算出数据的字节数。<br>运用请求结束标志时，不需要知道发送了多少字节数。只需要知道请求结束标志在数据的末尾。当然，必须确认已发送的数据中不包含会导致请求结束标志错误的数据。可以这样做：<br>可以说请求结束标志是字节值255。当然数据可能包含值255。因此，对数据中包含值255的每一个字节添加一个额外的字节，还有值255。结束请求标志被从字节值255到255之后的值为0。</p>
+<p>如下编码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">255 in data –&gt;255， 255</span><br><span class="line"></span><br><span class="line">end-of-request –&gt; 255, 0</span><br></pre></td></tr></table></figure>
+
+<p>这种255，0的序列永远不会出现在数据中，因为你把所有的值255变成了255,255。同时，255,255,0也不会被错认为255,0。255,255被理解成在一起的，0是单独的。</p>
+<h3 id="防火墙穿透"><a href="#防火墙穿透" class="headerlink" title="防火墙穿透"></a>防火墙穿透</h3><p>比起HTTP协议，大多数防火墙会拦截所有的其他通信。因此把协议放在HTTP的上层是个好方法，像XML-RPC,SOAP和REST也可以这样做。</p>
+<p>协议置于HTTP的上层，在客户端和服务端的HTTP请求和响应中可以来回发送数据。记住，HTTP请求和响应不止包含text或者HTML。也可以在里面发送二进制数据。</p>
+<p>将请求放置在HTTP协议上，唯一有点奇怪的是：HTTP请求必须包含一个“主机”头字段。如果你在HTTP协议上设计P2P协议，同样的人最可能不会运行多个“主机”。在这种情况下需要头字段是不必要的开销（但是个小开销）。</p>
+<hr>
+
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java-networking/udp-datagram-sockets.html">http://tutorials.jenkov.com/java-networking/udp-datagram-sockets.html</a><br><a target="_blank" rel="noopener" href="http://ifeve.com/">http://ifeve.com/</a></p>
+<hr>
+
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Java-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="Java-网络编程">https://blog.vgbhfive.cn/Java-网络编程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Java-NIO/" rel="prev" title="Java-NIO">
+      <i class="fa fa-chevron-left"></i> Java-NIO
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hello-world/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-TCP%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80"><span class="nav-number">1.1.</span> <span class="nav-text">Java TCP网络基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E4%B8%ADSocket%E7%B1%BB%E5%92%8CServerSocket%E7%B1%BB"><span class="nav-number">1.2.</span> <span class="nav-text">Java中Socket类和ServerSocket类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-UDP%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80"><span class="nav-number">1.3.</span> <span class="nav-text">Java UDP网络基础</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket%E3%80%81ServerSocket"><span class="nav-number">2.</span> <span class="nav-text">Socket、ServerSocket</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BASocket"><span class="nav-number">2.1.</span> <span class="nav-text">创建Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket%E5%8F%91%E9%80%81%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.</span> <span class="nav-text">Socket发送数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.</span> <span class="nav-text">Socket读取数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%ADSocket"><span class="nav-number">2.4.</span> <span class="nav-text">关闭Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo"><span class="nav-number">2.5.</span> <span class="nav-text">Demo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP-DatagramSocket"><span class="nav-number">3.</span> <span class="nav-text">UDP DatagramSocket</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UDP%E3%80%81TCP"><span class="nav-number">3.1.</span> <span class="nav-text">UDP、TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DatagramSocket"><span class="nav-number">3.2.</span> <span class="nav-text">DatagramSocket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DatagramSocket-send"><span class="nav-number">3.3.</span> <span class="nav-text">DatagramSocket.send()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DatagramSocket-receive"><span class="nav-number">3.4.</span> <span class="nav-text">DatagramSocket.receive()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#URL-URLConnection"><span class="nav-number">4.</span> <span class="nav-text">URL + URLConnection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-GET%E5%92%8CPOST"><span class="nav-number">4.1.</span> <span class="nav-text">HTTP GET和POST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8EURLs%E5%88%B0%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6"><span class="nav-number">4.2.</span> <span class="nav-text">从URLs到本地文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JarURLConnection"><span class="nav-number">5.</span> <span class="nav-text">JarURLConnection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InetAddress"><span class="nav-number">6.</span> <span class="nav-text">InetAddress</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-InetAddress-%E5%AE%9E%E4%BE%8B"><span class="nav-number">6.1.</span> <span class="nav-text">创建一个 InetAddress 实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InetAddress-%E5%86%85%E9%83%A8%E6%96%B9%E6%B3%95"><span class="nav-number">6.2.</span> <span class="nav-text">InetAddress 内部方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Protocol-Design"><span class="nav-number">7.</span> <span class="nav-text">Protocol Design</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BE%80%E8%BF%94"><span class="nav-number">7.1.</span> <span class="nav-text">客户端-服务端往返</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%86%E8%AF%B7%E6%B1%82%E7%BB%93%E6%9D%9F%E5%92%8C%E5%93%8D%E5%BA%94%E7%BB%93%E6%9D%9F"><span class="nav-number">7.2.</span> <span class="nav-text">区分请求结束和响应结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E7%A9%BF%E9%80%8F"><span class="nav-number">7.3.</span> <span class="nav-text">防火墙穿透</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

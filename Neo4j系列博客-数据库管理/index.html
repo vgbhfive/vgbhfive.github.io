@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="部署部署主要包括：容量规划、单实例或集群安装及安装后的相关处理。 系统需求运行一个 Neo4j 数据库实例所需的系统需求清单：  CPU：通常性能受限于内存容量和磁盘 I&#x2F;O 容量。推荐配置：Intel Core i7, IBM POWER8 内存：图越大则所需内存越多。推荐配置：16~32GB 或更多。 磁盘：磁盘性能是最重要的指标。推荐配置：SSD w&#x2F; SATA。 文件系统：由于普通 Lin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-数据库管理">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="部署部署主要包括：容量规划、单实例或集群安装及安装后的相关处理。 系统需求运行一个 Neo4j 数据库实例所需的系统需求清单：  CPU：通常性能受限于内存容量和磁盘 I&#x2F;O 容量。推荐配置：Intel Core i7, IBM POWER8 内存：图越大则所需内存越多。推荐配置：16~32GB 或更多。 磁盘：磁盘性能是最重要的指标。推荐配置：SSD w&#x2F; SATA。 文件系统：由于普通 Lin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-26T02:54:48.000Z">
+<meta property="article:modified_time" content="2022-02-28T14:19:07.839Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-数据库管理 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-数据库管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-26 10:54:48" itemprop="dateCreated datePublished" datetime="2022-02-26T10:54:48+08:00">2022-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 22:19:07" itemprop="dateModified" datetime="2022-02-28T22:19:07+08:00">2022-02-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>部署主要包括：容量规划、单实例或集群安装及安装后的相关处理。</p>
+<h4 id="系统需求"><a href="#系统需求" class="headerlink" title="系统需求"></a>系统需求</h4><p>运行一个 <code>Neo4j</code> 数据库实例所需的系统需求清单：</p>
+<ul>
+<li><code>CPU</code>：通常性能受限于内存容量和磁盘 <code>I/O</code> 容量。推荐配置：<code>Intel Core i7, IBM POWER8</code></li>
+<li>内存：图越大则所需内存越多。推荐配置：<code>16~32GB</code> 或更多。</li>
+<li>磁盘：磁盘性能是最重要的指标。推荐配置：<code>SSD w/ SATA</code>。</li>
+<li>文件系统：由于普通 <code>Linux / UNIX</code> 系统中存在的缓冲区高速缓存或页面高速缓存，大多数磁盘都是经过缓存进行的。因此当系统发生故障时，这种延迟可能会造成文件更新内容的丢失。推荐配置：<code>ext4 / ZFS</code>。</li>
+<li>软件：<code>Neo4j</code> 需要一个 <code>Java</code> 虚拟机，因此 <code>Neo4j</code> 中都会提前预装 <code>JVM</code>。</li>
+</ul>
+<span id="more"></span>
+
+<h4 id="文件位置"><a href="#文件位置" class="headerlink" title="文件位置"></a>文件位置</h4><p>默认情况下 <code>Neo4j</code> 安装后的重要文件及目录如下：（此处为 <code>Linux / UNIX</code> 发行版本的文件目录）</p>
+<ul>
+<li><code>Configuration</code>： <code>&lt;neo4j-home&gt;/conf/neo4j.conf</code></li>
+<li><code>Data</code>： <code>&lt;neo4j-home&gt;/data</code></li>
+<li><code>Logs</code>： <code>&lt;neo4j-home&gt;/logs</code></li>
+<li><code>Metrics</code>： <code>&lt;neo4j-home&gt;/metrics</code></li>
+<li><code>Import</code>： <code>&lt;neo4j-home&gt;/import</code></li>
+<li><code>Bin</code>： <code>&lt;neo4j-home&gt;/bin</code></li>
+<li><code>Lib</code>： <code>&lt;neo4j-home&gt;/lib</code></li>
+<li><code>Plugins</code>： <code>&lt;neo4j-home&gt;/plugins</code></li>
+</ul>
+<p><code>Log</code> 文件位置：</p>
+<ul>
+<li><code>neo4j.log</code>： 标准日志。</li>
+<li><code>debug.log</code>： 调试 <code>Neo4j</code> 的日志。</li>
+<li><code>http.log</code>： <code>HTTP API</code> 的请求日志。</li>
+<li><code>gc.log</code>： <code>JVM</code> 提供的垃圾收集日志。</li>
+<li><code>query.log</code>： 记录超过设定查询时间阈值的查询日志（仅限企业版）。</li>
+<li><code>security.log</code>： 数据库安全事件日志（仅限企业版）。</li>
+<li><code>service-error.log</code>： 安装或运行 <code>Windows</code> 服务时遇到的错误日志（仅限 <code>Windows</code>）。</li>
+</ul>
+<p>可以使用 <code>dbms.directions.*</code> 配置对数据库部分路径进行修改，<code>&lt;neo4j-home&gt;, bin, conf, certificates</code> 的位置可以使用环境变量进行配置。</p>
+<p><code>Neo4j</code> 数据库运行的用户必须对相应的文件夹和文件具有以下权限：</p>
+<ul>
+<li>只读权限： <code>conf, import, bin, lib, plugins</code>。</li>
+<li>读写权限： <code>data, logs, metrcis</code>。</li>
+<li>执行权限： <code>bin</code> 目录中的所有文件。</li>
+</ul>
+<h4 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h4><p><code>Neo4j</code> 使用到的主要端口：</p>
+<ul>
+<li>6362： 备份端口。默认情况下禁用备份功能。</li>
+<li>7474： <code>HTTP</code> 服务端口。建议生产环境下不打开此端口，因为未加密。</li>
+<li>7473： 由 <code>REST API</code> 使用。</li>
+<li>7687： 由 <code>Cypher-Shell</code> 和 <code>Neo4j</code> 浏览器使用。</li>
+<li>5000, 6000, 7000： 因果集群端口。列出的端口是配置文件中的默认端口，端口在实际使用中可能不同，须做相应的修改。</li>
+<li>5001, 6001： 高性能集群端口。列出的端口是配置文件中的默认端口，端口在实际使用中可能不同，须做相应的修改。</li>
+<li>2003： <code>Graphite</code> 监控端口。<code>Neo4j</code> 数据库与 <code>Graphite</code> 服务器通信的端口。</li>
+<li>3637： <code>JMX</code> 监控端口。不推荐采用这种检查数据库的方式，默认情况下不启用。</li>
+<li>1337： <code>Neo4j-shell</code> 工具使用的端口，现已被弃用。</li>
+</ul>
+<h4 id="初始密码"><a href="#初始密码" class="headerlink" title="初始密码"></a>初始密码</h4><p>使用 <code>neo4j-admin</code> 的 <code>set-inital-password</code> 命令设定当前用户的 <code>neo4j</code> 数据库密码，此操作必须在首次启动数据库之前执行。<br>语法为：<code>neo4j-admin set-inital-password &lt;password&gt;</code>。<br>如果未使用此方法显式设置密码，<code>Neo4j</code> 数据库将其设置为默认密码 <code>neo4j</code>，该密码可在首次登录时依据提示来更改此默认密码。</p>
+<h4 id="数据收集器"><a href="#数据收集器" class="headerlink" title="数据收集器"></a>数据收集器</h4><p><code>Neo4j</code> 使用数据收集器（<code>UDC</code>）收集使用数据的信息，并提供给官方的 <code>UDC</code> 服务器（网址为： <code>udc.neo4j.com</code>），该数据收集器可以禁用，并且不收集任何机密信息。<br><code>Neo4j</code> 数据库默认开启 <code>UDC</code> 程序，并伴随数据库启动而自动运行，<code>UDC</code> 将在数据库正常运行的 10 分钟后才发送第一个 <code>ping</code> 命令，这样做有两个考虑：首先不希望启动 <code>UDC</code> 而使数据库变慢，其次希望将自动 <code>ping</code> 测试保持最少。</p>
+<h4 id="配置-Neo4j-连接器"><a href="#配置-Neo4j-连接器" class="headerlink" title="配置 Neo4j 连接器"></a>配置 <code>Neo4j</code> 连接器</h4><p>应用程序与 <code>Neo4j</code> 数据库之间通信需要有相应的机制作为保障，从而 <code>Neo4j</code> 连接器应用而生，支持 <code>Bolt</code> 二进制协议或者 <code>HTTP/HTTPS</code> 方式，极大的方便了应用程序的开发。<br>默认情况下可配置三种不同的 <code>Neo4j</code> 连接器：<code>Bolt</code> 连接器、<code>HTTP</code> 连接器和 <code>HTTPS</code> 连接器。</p>
+<p>每种 <code>Neo4j</code> 连接器均有三个参数：</p>
+<ul>
+<li><code>enabled</code>： 启用或禁用连接器。</li>
+<li><code>listen_address</code>： 设定指定 <code>Neo4j</code> 如何监听传入链接，它由两部分组成：网络 <code>IP</code> 地址和端口号，并以格式 “网络 <code>IP</code> 地址 <code>:</code> 端口号” 表示。</li>
+<li><code>advertised_address</code>： 设定指定客户端使用该连接器的地址。</li>
+<li><code>dbms.connectors.default_listen_address</code>： 所有连接器的 <code>listen_address</code> 的默认网络接口地址。</li>
+<li><code>dbms.connectors.default_advertised_address</code>： 所有连接器的 <code>advertised_address</code> 的默认网络接口地址。</li>
+</ul>
+<h4 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h4><p>默认情况下，<code>Neo4j</code> 数据库在与官方驱动配套程序使用时，将采用 <code>TLS</code> 协议加密苏哦有客户服务器通信，包括 <code>Bolt</code> 和 <code>HTTP</code> 协议，这能确保应用程序与数据库之间的安全可靠通信。<br>如果需要使用自己的 <code>SSL</code> 证书，则需要这两个文件分别命名为 <code>neo4j.key</code> 和 <code>neo4j.cert</code>。其中密钥文件 <code>neo4j.key</code> 是不加密的，需要正确设置该文件的权限，以便只有 <code>Neo4j</code> 用户能够读取它。先将此文件放入指定的目录中，默认在 <code>&lt;neo4j-home&gt;/certificates</code> 目录下，也可通过在 <code>neo4j.conf</code> 中设置 <code>dbms.connectories.certificates</code> 来指定证书文件的存放路径，默认为 <code>certificates</code>（相对路径）。</p>
+<hr>
+
+<h3 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h3><p><code>Neo4j</code> 数据库提供了一个简单直观的 <code>Web</code> 监控界面，通过浏览器方式访问 <code>Neo4j</code> 数据库。主要包含：磁盘利用情况、缓存活跃情况和集群情况。<br>集群情况中包含了众多的界面参数：</p>
+<ul>
+<li><code>Store Sizes</code>： 存储容量。</li>
+<li><code>ID Allocation</code>： <code>ID</code> 分配。</li>
+<li><code>Page Cache</code>： 页面缓存。</li>
+<li><code>Transactions</code>： 事务。</li>
+</ul>
+<h4 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h4><p><small>指标的功能仅企业版支持。</small><br><code>Neo4j</code> 可以配置为以下两种不同的方式来呈现指标：</p>
+<ul>
+<li>将指标导出为 <code>CSV</code> 文件。</li>
+<li>向 <code>Graphite</code> 或基于 <code>Graphite</code> 协议的任何监控工具发送指标。</li>
+</ul>
+<ol>
+<li><p>启用指标记录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">metrics.neo4j.enabled=true</span><br><span class="line">metrics.neo4j.tx.enabled=true</span><br><span class="line">metrics.neo4j.pagecache.enabled=true</span><br><span class="line">metrics.neo4j.counts.enabled=true</span><br><span class="line">metrics.neo4j.network.enabled=true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Graphite</code><br>将以下设置添加到 <code>neo4j.conf</code> 配置文件中，以开启与 <code>Graphite</code> 的集成，从而启动 <code>Neo4j</code> 连接到 <code>Graphite</code> 来监控 <code>Neo4j</code> 的各项指标。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">metrics.graphite.enabled=true</span><br><span class="line">metrics.graphite.server=localhost:2003</span><br><span class="line">metrics.graphite.interval=3m</span><br><span class="line">metrics.prefix=Neo4j_1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>CSV</code> 文件<br>将以下设置添加到 <code>neo4j.conf</code> 配置文件中，以便将各项指标导出到本地 <code>CSV</code> 文件中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">metrics.csv.enabled=true</span><br><span class="line"># default is a metrics directory under neo4j-home</span><br><span class="line"># metrics.csv.path=&#x27;/local/fiel/system/path&#x27;</span><br><span class="line">metrics.csv.interval=3m</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可用通用指标<br>建议查书或者官方网站。</p>
+</li>
+</ol>
+<h4 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h4><p><code>Neo4j</code> 日志分为安全日志和查询日志两种，用于记录数据库的查询和发生的安全事件。</p>
+<h5 id="查询日志"><a href="#查询日志" class="headerlink" title="查询日志"></a>查询日志</h5><ul>
+<li><code>dbms.logs.query.enabled=fasle</code>： 是否记录数据库所执行的查询。</li>
+<li><code>dbms.logs.query.paramter_logging_enabled=true</code>： 是否设定查询耗时超过配置阈值。</li>
+<li><code>dbms.logs.query.threshold=0</code>： 用于设定记录查询的阈值，即如果查询执行所花费的时间大于此阈值，则记录此查询（前提是启用查询日志记录）。</li>
+<li><code>query.log</code>： 设置查询日志的文件名，存储在 <code>Logs</code> 目录中，当然也可以在 <code>neo4j.conf</code> 配置文件中配置查询日志的轮换。</li>
+<li><code>dbms.logs.query.ratation.keep_number=7</code>： 设置保存历是查询日志文件的数量。</li>
+<li><code>dbms.logs.query.ratation.size=20MB</code>： 查询日志自动轮换的文件大小。</li>
+</ul>
+<h5 id="安全事件日志"><a href="#安全事件日志" class="headerlink" title="安全事件日志"></a>安全事件日志</h5><p><code>Neo4j</code> 数据库安全事件日志功能用于记录所有的安全事件，对于本机用户管理，将记录以下操作：</p>
+<ul>
+<li>登陆尝试，每个默认值都记录成功和不成功的登录。</li>
+<li>更改用户的密码、管理员和用户。</li>
+<li>创建和删除用户，包括失败的尝试。</li>
+<li>创建和删除自定义角色，包括失败的尝试。</li>
+<li>为用户分配和删除角色，包括失败的尝试。</li>
+<li>暂停和激活用户。</li>
+<li>非管理员用户尝试列出用户和角色的失败尝试。</li>
+</ul>
+<p><small>如果使用 <code>LDAP</code> 作为身份验证方法，还会记录一些 <code>LDAP</code> 配置错误的情况，以及 <code>LDAP</code> 服务器通信事件和故障。</small></p>
+<p>安全事件日志文件名为 <code>security.log</code>，存放在 <code>Logs</code> 目录中，可以在 <code>neo4j.conf</code> 配置文件中配置安全事件日志的轮换。</p>
+<ul>
+<li><code>dbms.logs.security.rotation.size=20MB</code>： 安全事件日志自动轮换的文件大小。</li>
+<li><code>dbms.logs.security.rotation.delay=300s</code>： 设置在最后一次日志轮换发生后，日志可能再次轮换之前的最小时间间隔。</li>
+<li><code>dbms.logs.security.rotation.keep_number=7</code>： 设置保存安全事件日志的文件数量。</li>
+</ul>
+<h4 id="查询管理"><a href="#查询管理" class="headerlink" title="查询管理"></a>查询管理</h4><p><code>Neo4j</code> 提供了相应的手段可从安全性或性能角度对查询语句进行检查。查询日志可用于数据库的连续监控和故障排除，事务超时功能可以为查询设定最大的运行时间，查询管理则可查看数据库中运行的查询，必要时可以终止某个查询。</p>
+<h5 id="事务超时"><a href="#事务超时" class="headerlink" title="事务超时"></a>事务超时</h5><p>执行保护功能可以终止某执行时间超过配置超时时间的事务。<br><code>dbms.transaction.timeout=10s</code> 表示设定事务超时时间为 <code>10s</code>，而当设定值为 <code>0s</code> 时，则为禁用执行保护。</p>
+<p><small>此功能对使用自定义超时（通过 <code>Java API</code>）指定的事务不产生影响。</small></p>
+<h5 id="查询管理-1"><a href="#查询管理-1" class="headerlink" title="查询管理"></a>查询管理</h5><p><small>此功能仅在企业版中支持。</small></p>
+<ol>
+<li><p>列出所有的查询<br>管理员可以查询到当前运行中的所有查询，而当前用户仅可以查看到自己当前运行的所有查询。<br>语法为： <code>CALL dbms.listQueries();</code></p>
+</li>
+<li><p>终止多个查询<br>管理员可以终止给定查询 <code>ID</code> 列表的事务，而当前用户仅可以终止自己创建的事务。<br>语法为： <code>CALL dbms.killQueries(ids);</code>，其中 <code>ids</code> 为 <code>List&lt;String&gt;</code> 类型，是需要终止的事务 <code>ID</code> 的列表。</p>
+</li>
+<li><p>终止一个查询<br>管理员可以终止给定查询 <code>ID</code> 列表的任意一个事务，而当前用户仅可以终止自己创建的一个事务。<br>语法为： <code>CALL dbms,killQuery(id);</code>，类型为 <code>String</code> 类型，是需要终止的事务 <code>ID</code>。</p>
+</li>
+</ol>
+<h4 id="因果集群监控"><a href="#因果集群监控" class="headerlink" title="因果集群监控"></a>因果集群监控</h4><ol>
+<li><p>查询因果集群核心服务器<br>可以在因果集群的每个实例上调用过程 <code>dbms.cluster.role()</code> 以返回该实例的角色。<br>语法为： <code>CALL dbms.cluster.role()</code>，返回值为 <code>LEADER, FOLLOWER, READ_REPLICA</code> 三个中的一个，类型为 <code>String</code> 类型。</p>
+</li>
+<li><p>获取因果集群的整体概况<br>函数 <code>dbms.cluster.overview()</code> 返回集群中所有实例的详细信息，以便获取集群的拓扑概述。<br>语法为： <code>CALL dbms.cluster.overview()</code>。</p>
+</li>
+<li><p>获取路由推荐<br>应用程序需要知道哪个实例可以提供所需的服务。<br>语法为： <code>CALL dbms.cluster.routing.getServers()</code>，该过程返回特定服务与提供此服务的实例的地址之间的映射，还返回生存时间（<code>TTL</code>）信息。</p>
+</li>
+</ol>
+<hr>
+
+<h3 id="安全管理"><a href="#安全管理" class="headerlink" title="安全管理"></a>安全管理</h3><p>对于 <code>Neo4j</code> 数据库而言，首要的就是数据安全，可通过遵循有关服务器和网络安全性的行业做法确保物理数据安全，再通过适当的身份验证和授权规则来确保 <code>Neo4j</code> 的信息安全。</p>
+<h4 id="社区版用户管理"><a href="#社区版用户管理" class="headerlink" title="社区版用户管理"></a>社区版用户管理</h4><p><code>Neo4j</code> 社区版在安全管理方面相比企业版而言，功能较弱，仅提供用户和密码管理，没有涉及角色、权限控制等企业必需的安全管理功能。本地用户和角色管理通过使用内置的 <code>Cypher</code> 过程进行管理。</p>
+<ol>
+<li><p><code>dbms.security.listUsers</code><br>当前用户查看系统中所有用户的详细信息。<br>语法为：<code>CALL dbms.security.listUsers();</code>，返回值为：<code>username</code> 和 <code>flags</code>。</p>
+</li>
+<li><p><code>dbms.security.changePassword</code><br>当前用户更改自己的密码。<br>语法为：<code>CALL dbms.security.changePassword(password);</code>，其中参数为当前用户的新密码。</p>
+</li>
+<li><p><code>dbms.security.showCurrentUser</code><br>显示当前用户详情，并显示是否需要更改密码。<br>语法为：<code>CALL dbms.security.showCurrentUser();</code>，返回值为 <code>username</code> 和 <code>falgs</code>。</p>
+</li>
+<li><p><code>dbms.security.createUser</code><br>将用户添加到 <code>Neo4j</code> 社区版系统。<br>语法为：<code>CALL dbms.scurity.createUser(usernaem, password, requirePasswordChange);</code>，其中 <code>username</code> 和 <code>password</code> 为新添加用户的用户名和密码，<code>requirePasswordChange</code> 表示是否需要修改密码。</p>
+</li>
+<li><p><code>dbms.security.deleteUser</code><br>从系统中永久删除用户。<br>语法为：<code>CALL dbms,security.deleteUser();</code>，其中 <code>username</code> 为待删除的用户名。</p>
+</li>
+</ol>
+<h4 id="LDAP-集成"><a href="#LDAP-集成" class="headerlink" title="LDAP 集成"></a><code>LDAP</code> 集成</h4><p><code>LDAP</code> 协议以 <code>X.500</code> 标准为基础，但与 <code>X.500</code> 相比 <code>LDAP</code> 更简单，它可根据需要定制，并支持 <code>TCP/IP</code> 协议，因此使用非常广泛。<br><code>Neo4j</code> 本身支持 <code>LDAP</code> 协议，包括：<code>Active Directory</code>、<code>OpenLDAP</code> 或者其他的 <code>LDAP</code> 兼容的身份验证服务。所有设置都需要在服务器启动时在默认配置文件 <code>neo4j.conf</code> 中进行设定。</p>
+<ol>
+<li><p>配置<code>Neo4j</code> 使用 <code>LDAP</code> 作为身份验证和授权提供方。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dbms.security.auth_enabled=true</span><br><span class="line">dbms.security.auth_provider=ldap</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置活动目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dbms.security.ldap.host=ldap://myactivedirectiory.example.com</span><br><span class="line">dbms.security.ldap.authentication.user_dn_template=cn=[0],cn=Users,dc=example,dc=com</span><br><span class="line">dbms.security.ldap.authentication.user_search_base=cn=Users,dc=example,dc=com</span><br><span class="line">dbms.security.ldap.authentication.user_search_filter=cn=(&amp;(objextClass=*)(cn=&#123;0&#125;))</span><br><span class="line">dbms.security.ldap.authentication.group_membership_attributes=memberOf</span><br><span class="line">dbms.security.ldap.authentication.group_to_role_mapping=\</span><br><span class="line">	&quot;cn=Neo4j Read Only,cn=Users,dc=neo4j,dc=com&quot; = reader ;\</span><br><span class="line">	&quot;cn=Neo4j Read-Write,cn=Users,dc=neo4j,dc=com&quot; = publisher ;\</span><br><span class="line">	&quot;cn=Neo4j Schema Manager,ch=Users,dc=neo4j,dc=com&quot; = architect ;\</span><br><span class="line">	&quot;cn=Neo4j Administrator,cn=Users,dc=neo4j,dc=com&quot; = admin ;\</span><br><span class="line">	&quot;cn=Neo4j Procedures,cn=Users,dc=neo4j,dc=com&quot; = allowed_role ;\</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="ldapsearch-工具"><a href="#ldapsearch-工具" class="headerlink" title="ldapsearch 工具"></a><code>ldapsearch</code> 工具</h5><p>可以使用 <code>LDAP</code> 命令行工具 <code>ldapsearch</code> 来验证配置是否正确、<code>LDAP</code> 服务器是否正在响应，可以通过发送包含 <code>LDAP</code> 配置设置值的搜索命令来执行此项操作。</p>
+<ol>
+<li><p>参数 <code>dbms.security.ldap.authorization.use_system_account=true</code> 的验证为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -v -H ldap://&lt;dbms.security.ldap.host&gt; -x -D &lt;dbms.security.ldap.authentication.system_username&gt; -w &lt;dbms.security.ldap.authentication.system_password&gt; -b &lt;dbms.security.ldap.authentication.user_search_base&gt; &quot;&lt;dbms.security.ldap.authentication.user_search_filter&gt;&quot; &lt;dbms.security.ldap.authentication.group_membership_attributes&gt;</span><br><span class="line"># ldapsearch -v -H ldap://myactivedirectiory.example.com:389 -x -D cn=search-account,cn=Users,dc=example,dc=com -w secret -b cn=Users,dc=example,dc=com &quot;cn=(&amp;(objextClass=*)(cn=john))&quot; memberOf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数 <code>dbms.security.ldap.authorization.use_system_account=false</code> 的验证为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -v -H ldap://&lt;dbms.security.ldap.host&gt; -x -D &lt;dbms.security.ldap.authentication.user_dn_template : replace &#123;0&#125;&gt; -W -b &lt;dbms.security.ldap.authentication.user_search_base&gt; &quot;&lt;dbms.security.ldap.authentication.user_search_filter : replace &#123;0&#125;&gt;&quot; &lt;dbms.security.ldap.authentication.group_membership_attributes&gt;</span><br><span class="line"># ldapsearch -v -H ldap://myactivedirectiory.example.com:389 -x -D cn=search-account,cn=Users,dc=example,dc=com -W -b cn=Users,dc=example,dc=com &quot;cn=(&amp;(objextClass=*)(cn=john))&quot; memberOf</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="认证缓存"><a href="#认证缓存" class="headerlink" title="认证缓存"></a>认证缓存</h5><p>认证缓存（<code>Auth Cache</code>）是 <code>Neo4j</code> 通过 <code>LDAP</code> 服务器缓存认证结果以提升性能的机制，它采用 <code>dbms.security.ldap.autnentication.cache_enabled</code> 和 <code>dbms.security.auth_cache_ttl</code> 参数进行配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dbms.security.ldap.authentication.cache_enabled=true</span><br><span class="line">dbms.security.auth_cache_ttl=10m</span><br></pre></td></tr></table></figure>
+
+<p>管理员可以手动清除身份验证缓存，以强制重新查询来自联合身份验证提供的系统身份验证和授权信息，可以在 <code>Neo4j</code> 浏览器或 <code>Neo4j Cypher Shell</code> 中执行语句：<code>CALL dbms.security.clearAuthCache();</code> 即可。</p>
+<p>可以采用 <code>StartTLD</code> 来配置对活动目录的加密。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dbms.security.ldap.use_startls=true</span><br><span class="line">dbms.security.ldap.host=ldap://myactivedirectory.example.com</span><br><span class="line"># 也可以使用 LDAPS 来配置活动目录</span><br><span class="line">dbms.security.ldap.host=ldaps://myactivedirectory.example.com:636</span><br></pre></td></tr></table></figure>
+
+<p>在实际生产环境中，建议使用由证书颁发机构颁发的 <code>SSL</code> 证书来确保对 <code>LDAP</code> 服务器的安全访问。可以在 <code>neo4j.conf</code> 中使用参数 <code>dbms.jvm.addtional</code> 来指定证书的详细信息，以告知 <code>Neo4j</code> 本地证书的位置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dbms.jvm.addtional=-Djavax.net.ssl.keyStore=MyCert.key</span><br><span class="line">dbms.jvm.addtional=-Djavax.net.ssl.keyStorePassword=secret</span><br><span class="line">dbms.jvm.addtional=-Djavax.net.ssl.trustStore=MyCert.jks</span><br><span class="line">dbms.jvm.addtional=-Djavax.net.ssl.trustStorePassword=secret</span><br></pre></td></tr></table></figure>
+
+<h4 id="子图访问控制"><a href="#子图访问控制" class="headerlink" title="子图访问控制"></a>子图访问控制</h4><p>通过使用用户定义的过程和自定义角色，管理员可以将用户的访问和动作限制到图中的指定部分，即：可以在子图的级别配置访问控制。<br>自定义角色是由 <code>Neo4j</code> 数据库管理员创建和删除，仅用于控制执行某些自定义开发的过程，与数据库自带的角色相比，自定义角色的权限需要在 <code>neo4j.conf</code> 中显式准许。</p>
+<h5 id="管理自定义角色"><a href="#管理自定义角色" class="headerlink" title="管理自定义角色"></a>管理自定义角色</h5><ol>
+<li><p>本机用户场景<br>创建自定义角色，然后将此角色分配给相关用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 创建 accounting 角色并将其分配给预先存在的 billsmith 用户</span><br><span class="line">CALL dbms.security.createRole(&#x27;accounting&#x27;)</span><br><span class="line">CALL dbms.security.addRoleToUser(&#x27;accounting&#x27;, &#x27;billsmith&#x27;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>联合用户场景（<code>LDAP</code>）<br>在 <code>LDAP</code> 方案中，<code>LDAP</code> 用户组必须映射到 <code>Neo4j</code> 中的自定义角色。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 将组号 101 的 LDAP 组映射到自定义 accounting 角色</span><br><span class="line">dbms.security.realms.ldap.authorization.group_to_role_mapping=101=accounting</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="配置过程的权限"><a href="#配置过程的权限" class="headerlink" title="配置过程的权限"></a>配置过程的权限</h5><p>需要自行创建读或写数据的过程（<code>Procedure</code>），自然内置或第三方库自带的过程除外，此过程与普通 <code>Cypher</code> 语句执行的安全规则相同。<br>可以使用配置选项 <code>dbms.security.procedures.default_allowed</code> 和 <code>dbms.security.procedures.roles</code> 来准许特定角色执行相应的访问过程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 具有 Convert 角色的用户都可执行 apoc.convert 命名空间中的所有过程</span><br><span class="line">dbms.security.procedures.roles = apoc.convert.*:Convert;apoc.load.json.*:Convert,DataSource;apoc.trigger.add:TriggerHappy</span><br></pre></td></tr></table></figure>
+
+<h4 id="安全清单"><a href="#安全清单" class="headerlink" title="安全清单"></a>安全清单</h4><p>安全清单为 <code>Neo4j</code> 数据库安全性建议的总结。</p>
+<ul>
+<li>在安全网络及安全服务器上部署 <code>Neo4j</code>，使用子网和防火墙，只打开必要的端口。</li>
+<li>保护静态数据，使用卷加密，管理对数据库转换和备份的访问。</li>
+<li>保护传输中的数据，对远程访问 <code>Neo4j</code> 数据库，只打开加密的 <code>Bolt</code> 或 <code>HTTPS</code> 访问链接，使用受信任证书颁发机构颁发的 <code>SSL</code> 证书。</li>
+<li>验证部署的任何自定义代码（过程和非托管扩展）。</li>
+<li>确保 <code>Neo4j</code> 文件正确的文件权限。</li>
+<li>如果启用了 <code>LOAD CSV</code> 函数操作，确保未授权用户不可导入数据。</li>
+<li>检查 <code>neo4j.conf</code> 文件，了解已弃用函数和远程 <code>JMX</code> 相关的端口。</li>
+<li>使用 <code>Neo4j</code> 最新的补丁版本。</li>
+</ul>
+<hr>
+
+<h3 id="运维与优化"><a href="#运维与优化" class="headerlink" title="运维与优化"></a>运维与优化</h3><p>本节介绍影响操作性能的因素，以及如何调整 <code>Neo4j</code> 以获得最佳吞吐量。</p>
+<h4 id="内存调优"><a href="#内存调优" class="headerlink" title="内存调优"></a>内存调优</h4><p><code>Neo4j</code> 在启动时将自动配置内存相关参数的默认值，并默认可使用机器上的所有内存。<br>有三种类型的内存需要考虑：</p>
+<ul>
+<li>操作系统内存。</li>
+<li>页面缓存。</li>
+<li>堆空间。</li>
+</ul>
+<p><small>需要注意的是，操作系统内存不能显式配置，而实指定页面缓存和堆空间之后所剩余的内存。</small></p>
+<ol>
+<li><p>操作系统内存大小<br>必须为服务器上与 <code>Neo4j</code> 数据库不相关的其他程序预留一些内存。<br><code>1 GB</code> 内存是 <code>Neo4j</code> 服务器的最低配置。基本的计算方法如下： <code>系统内存 = 1GB + (graph.db / index) + (graph.db / schema)</code>。</p>
+</li>
+<li><p>页面缓存大小<br>页面缓存用于缓存存储在磁盘上的 <code>Neo4j</code> 数据，确保将来自磁盘的所有或至少大部分图数据缓存到内存中。<br>可通过简单的方法确定页面缓存的大小：汇总含 <code>&lt;neo4j-home&gt;/data/database/graph.db/*store.db*</code> 的所有文件大小，再增加 <code>20%</code> 的预留。<br>指定页面缓存的参数是 <code>dbms.memory.pagecache.size</code> 该参数设定允许 <code>Neo4j</code> 使用多少内存用于高速缓存。如果在启动时没有明确指定，<code>Neo4j</code> 将给予默认配置： <code>(机器可用内存 - JVM 最大堆分配) * 50%</code>。</p>
+</li>
+<li><p>堆大小<br>可用堆大小是影响 <code>Neo4j</code> 性能的一个重要因素。大多数 <code>Neo4j</code> 应用，堆大小设置为 <code>8~16GB</code> 之间即可稳定运行。在文件 <code>&lt;neo4j-home&gt;/conf/neo4j-wrapper.conf</code> 中设置 <code>dbms.memory.heap.initial_size</code> 和 <code>dbms.memory.heap_max_size</code> 参数即可，以兆字节为单位。（建议将这两个参数设置为相同的值，以避免不必要的垃圾收集）</p>
+</li>
+<li><p>调整垃圾收集器<br>建议使用并发垃圾收集器。</p>
+</li>
+<li><p>因此内存调优可按照如下步骤进行：</p>
+</li>
+</ol>
+<ul>
+<li>计划操作系统内存大小。</li>
+<li>计划页面缓存大小调整。</li>
+<li>计划堆空间大小。</li>
+<li>做合理的检查，实际操作系统内存分配 &#x3D; 可用内存 - （页面缓存 + 堆空间大小）。</li>
+</ul>
+<h4 id="压缩存储"><a href="#压缩存储" class="headerlink" title="压缩存储"></a>压缩存储</h4><p>在很多情况下，<code>Neo4j</code> 可以压缩和内联存储属性值，其目的在于节省磁盘空间和提高 <code>I/O</code> 操作性能。</p>
+<p>短数组的压缩存储采用<strong>位剃削</strong>算法，以减少存储数组中成员的位数。步骤如下：</p>
+<ul>
+<li>对于数组的每个成员，确定最左边设置位的位置。</li>
+<li>确定数组中所有成员中最大的位置。</li>
+<li>他将所有成员减少到该位数。</li>
+<li>存储这些值，前缀为一个小标题。</li>
+</ul>
+<p><small>当在数组中包括单个负值时，将使用原始字节大小来存储。</small></p>
+<h4 id="Linux-文件系统调优"><a href="#Linux-文件系统调优" class="headerlink" title="Linux 文件系统调优"></a><code>Linux</code> 文件系统调优</h4><p><code>Neo4j</code> 数据库在查询数据时通常会产生许多少量、随机的读操作，而在提交更改时经常会产生少量的顺序写操作。<br>因此修改 <code>Linux</code> 使用的完全公平排队（<code>Completely Fair Queuing, CFQ</code>）算法来调度 <code>IO</code> 请求，将其修改为期限调度器（<code>Deadline Scheduler</code>）更适合数据库的特定 <code>IO</code> 工作负载情形。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$echo &#x27;deadline&#x27; &gt; /sys/block/sda/queue/scheduler</span><br><span class="line">$cat /sys/block/sda/queue/scheduler</span><br><span class="line">noop [deadline] cfq</span><br></pre></td></tr></table></figure>
+
+<h4 id="磁盘、内存及相关提示"><a href="#磁盘、内存及相关提示" class="headerlink" title="磁盘、内存及相关提示"></a>磁盘、内存及相关提示</h4><p>与其他的持久化方案一致，性能取决于使用的持久化介质，这就意味着更好的磁盘等于更好的性能。<br>存储文件保存在低寻道时间的磁盘上将大大提高读取操作的性能。同时为了减少磁盘访问可以加大内存容量。<br>同时也可以使用 <code>dstat</code> 或 <code>vmstat</code> 等工具来收集应用程序的运行信息。</p>
+<hr>
+
+<h3 id="备份与恢复"><a href="#备份与恢复" class="headerlink" title="备份与恢复"></a>备份与恢复</h3><p>此功能仅适用于企业版。<br>将 <code>Neo4j</code> 数据库备份到远程或离线存储是一项基本操作，<code>Neo4j</code> 支持全量备份和增量备份，对于三种配置方式（单实例、高可用集群和因果集群）的 <code>Neo4j</code> 数据库，其备份过程是相同的。备份使用 <code>neo4j-bakcup</code> 工具在网络上运行，即可从 <code>Neo4j</code> 服务器备份到本地副本。</p>
+<p>必须配置两个参数才能执行备份：</p>
+<ul>
+<li><code>dbms.backup.enabled=true</code>，启用备份，这是默认值。</li>
+<li><code>dbms.backup.address=&lt;IP&gt;:6362</code>，配置备份服务监听的接口和端口。</li>
+</ul>
+<p><small>这里备份的数据与生产系统没有任何的依赖关系，需要分开存储，如果可以需要遵循<a target="_blank" rel="noopener" href="https://guozeyu.com/2018/08/backup/"><strong>321</strong>原则</a>。</small></p>
+<h4 id="执行备份"><a href="#执行备份" class="headerlink" title="执行备份"></a>执行备份</h4><p>备份命令 <code>neo4j-admin</code> 工具位于 <code>bin</code> 目录下，使用 <code>backup</code> 参数运行它，以便对正在运行的数据库执行联机备份。<br>语法为：<code>neo4j-admin backup --backup-dir=&lt;backup-path&gt; --name=&lt;graph.db-backup&gt; [--from=&lt;address&gt;] [--fallback-to-full[=&lt;true|fasle&gt;]] [--check-consistency[=&lt;true|false&gt;]] [--cc-report-dir=&lt;directory&gt;] [--additional-config=&lt;config-file-path&gt;] [--timeout=&lt;timeout&gt;]</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">neo4j-admin backup --from=192.168.1.34 --backup-dir=/mnt/backup/neo4j-backup --name=graph.db-backup</span><br></pre></td></tr></table></figure>
+
+<p>增量备份需指定现有备份目录并且有上次被封以来的事务日志。备份工具将上次备份之后的任何操作进行备份，其结果将是与当前服务器状态一致的更新备份。<br>另外增量备份可能会失败，主要原因在于事务日志被删除且 <code>--fallback-to-full</code> 参数被设置为 <code>false</code>，建议将参数设置为 <code>true</code>，避免在增量备份时失败可以转换为全量备份。同时事务日志的自动轮询时间也是很重要的，配置 <code>dbms.tx_log.rotation.retention_policy</code> 以便事务日志保存在增量备份之间。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">neo4j-admin backup --from=192.168.1.34 --backup-dir=/mnt/backup/neo4j-backup --name=graph.db-backup --fallback-to-full=true --check-consistency=true</span><br></pre></td></tr></table></figure>
+
+<p>备份因果集群时，核心服务器和只读副本都支持备份协议，都可用于集群备份，但是在生产中更倾向于使用只读副本作为备份，因为只读副本的数量在因果集群部署中远远多于核心服务器。</p>
+<h4 id="恢复备份"><a href="#恢复备份" class="headerlink" title="恢复备份"></a>恢复备份</h4><p><code>Neo4j</code> 备份是全功能的数据库备份。恢复备份，必须关闭数据库，使用 <code>neo4j-admin</code> 工具的 <code>restore</code> 参数恢复备份。<br>语法为：<code>neo4j-admin restore --from=&lt;backup-path&gt; --database=graph.db --force</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">neo4j-admin restore --from=/mnt/backup/neo4j-backup --database=graph.db --force</span><br></pre></td></tr></table></figure>
+
+<p>从高可用集群环境中的备份进行恢复，请按照以下步骤进行：</p>
+<ul>
+<li>关闭集群中的所有数据库实例。</li>
+<li>恢复每个实例上的备份。</li>
+<li>启动数据库实例。</li>
+</ul>
+<p>恢复 <code>Neo4j</code> 因果集群的步骤与创建因果集群的步骤类似，即首先创建一个新的因果集群，但是不要启动组成集群的实例，而首先进行数据库的恢复。</p>
+<hr>
+
+<h3 id="相关工具"><a href="#相关工具" class="headerlink" title="相关工具"></a>相关工具</h3><h4 id="Cypher-Shell"><a href="#Cypher-Shell" class="headerlink" title="Cypher Shell"></a><code>Cypher Shell</code></h4><p><code>Cypher Shell</code> 是 <code>Neo4j</code> 数据库的一个命令行工具，可以用于数据库连接、调用 <code>Cypher</code> 语句进行数据查询或定义相关模式和执行管理任务。<br><code>Cypher Shell</code> 采用显式事务方式，允许将多个操作分组一并执行或回滚，通信方式采用加密的二进制 <code>Bolt</code> 协议。<br>语法为：<code>cypher-shell [-h] [-a ADDRESS] [-u USEWRNAME] [-p PASSWORD] [--encryption &#123;true, fasle&#125;] [--format &#123;verbose, plain&#125;] [--debug] [--fail-fast | --fail-at-end] [cypher]</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$cypher-shell -u johnode -p secret</span><br><span class="line">neo4j&gt;MATCH (n) RETURn n</span><br></pre></td></tr></table></figure>
+
+<h4 id="转储和加载"><a href="#转储和加载" class="headerlink" title="转储和加载"></a>转储和加载</h4><p><code>Neo4j</code> 数据转储和加载需要用到 <code>neo4j-admin</code> 命令，该命令可将数据库从一个环境移动到另一个环境，也可用于数据库的脱机备份。<br>命令格式为：<code>neo4j-admin dump --database=&lt;datttabase&gt; --to=&lt;destination-path&gt;</code> 和 <code>neo4j-admin load --from=&lt;archive-path&gt; --database=&lt;database&gt; [--force]</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">neo4j-admin dump --database=graph.db --to=/backups/graph.db/2022-02-27.dump</span><br><span class="line">neo4j-admin load --from=/backups/graph.db/2022-02-27.dump --database=graph.db --force</span><br></pre></td></tr></table></figure>
+
+<p><small>对于 <code>Neo4j</code> 在版本上的变更导致数据库目录结构的变更，建议 <code>neo4j-admin dump</code> 和 <code>neo4j-admin load</code> 这种更安全的全库导出、导入方式。</small></p>
+<h4 id="一致性检查"><a href="#一致性检查" class="headerlink" title="一致性检查"></a>一致性检查</h4><p>一致性检查可以使用 <code>neo4j-admin</code> 工具的 <code>check-consistency</code> 参数来检查数据库的一致性。<br>该 <code>neo4j-admin</code> 工具位于 <code>bin</code> 目录中，语法调用为：<code>neo4j-admin check-conversistency --database=&lt;database&gt; [--report-dir=&lt;directory&gt;] [--additional-config=&lt;file&gt;] [--verbose]</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">neo4j-admin check-conversistency --database=graph.db</span><br></pre></td></tr></table></figure>
+
+<p>如果一致性检查工具未发现错误，则程序自动运行结束并不生成相应的报告；但如果发生错误，程序将会退出，退出代码为 <code>1</code>，并将错误信息写入到 <code>inconsistencies-YYYY-MM-DD.HH24.MI.SS.report</code> 的报告文件中，此文件位置在当前目录下或者由参数 <code>report-dir</code> 指定。<br>一致性检查工具可以调用由参数 <code>--additional-config</code> 指定的配置文件中的其他配置选项，配置文件的格式与 <code>neo4j.conf</code> 格式相同。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># conversistency-check.properties</span><br><span class="line">tools.conversistency_checker.check_graph=false</span><br><span class="line">tools.conversistency_checker.check_indexes=true</span><br><span class="line">tools.conversistency_checker.check_label_scan_store=true</span><br><span class="line">tools.conversistency_checker.check_property_owners=false</span><br></pre></td></tr></table></figure>
+<p><small>一致性检查工具不能与当前正在使用的数据库一起使用，如果与正在运行的数据库一起使用，这自动停止并输出错误信息。</small></p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://guozeyu.com/2018/08/backup/">321原则</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/" title="Neo4j系列博客-数据库管理">https://blog.vgbhfive.cn/Neo4j系列博客-数据库管理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/" rel="prev" title="Neo4j系列博客-Cypher-3">
+      <i class="fa fa-chevron-left"></i> Neo4j系列博客-Cypher-3
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="next" title="Neo4j系列博客-程序开发-嵌入式">
+      Neo4j系列博客-程序开发-嵌入式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">1.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">系统需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">文件位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3"><span class="nav-number">1.3.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%AF%86%E7%A0%81"><span class="nav-number">1.4.</span> <span class="nav-text">初始密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-number">1.5.</span> <span class="nav-text">数据收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Neo4j-%E8%BF%9E%E6%8E%A5%E5%99%A8"><span class="nav-number">1.6.</span> <span class="nav-text">配置 Neo4j 连接器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6"><span class="nav-number">1.7.</span> <span class="nav-text">证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7"><span class="nav-number">2.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E6%A0%87"><span class="nav-number">2.1.</span> <span class="nav-text">指标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97"><span class="nav-number">2.2.</span> <span class="nav-text">日志</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="nav-number">2.2.1.</span> <span class="nav-text">查询日志</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E6%97%A5%E5%BF%97"><span class="nav-number">2.2.2.</span> <span class="nav-text">安全事件日志</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">查询管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E8%B6%85%E6%97%B6"><span class="nav-number">2.3.1.</span> <span class="nav-text">事务超时</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E7%AE%A1%E7%90%86-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">查询管理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%A0%E6%9E%9C%E9%9B%86%E7%BE%A4%E7%9B%91%E6%8E%A7"><span class="nav-number">2.4.</span> <span class="nav-text">因果集群监控</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">安全管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BE%E5%8C%BA%E7%89%88%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">社区版用户管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LDAP-%E9%9B%86%E6%88%90"><span class="nav-number">3.2.</span> <span class="nav-text">LDAP 集成</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ldapsearch-%E5%B7%A5%E5%85%B7"><span class="nav-number">3.2.1.</span> <span class="nav-text">ldapsearch 工具</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E7%BC%93%E5%AD%98"><span class="nav-number">3.2.2.</span> <span class="nav-text">认证缓存</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%90%E5%9B%BE%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">子图访问控制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%92%E8%89%B2"><span class="nav-number">3.3.1.</span> <span class="nav-text">管理自定义角色</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B%E7%9A%84%E6%9D%83%E9%99%90"><span class="nav-number">3.3.2.</span> <span class="nav-text">配置过程的权限</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%B8%85%E5%8D%95"><span class="nav-number">3.4.</span> <span class="nav-text">安全清单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">运维与优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98"><span class="nav-number">4.1.</span> <span class="nav-text">内存调优</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8"><span class="nav-number">4.2.</span> <span class="nav-text">压缩存储</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98"><span class="nav-number">4.3.</span> <span class="nav-text">Linux 文件系统调优</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%8F%90%E7%A4%BA"><span class="nav-number">4.4.</span> <span class="nav-text">磁盘、内存及相关提示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-number">5.</span> <span class="nav-text">备份与恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%A4%87%E4%BB%BD"><span class="nav-number">5.1.</span> <span class="nav-text">执行备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%A4%87%E4%BB%BD"><span class="nav-number">5.2.</span> <span class="nav-text">恢复备份</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E5%85%B7"><span class="nav-number">6.</span> <span class="nav-text">相关工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cypher-Shell"><span class="nav-number">6.1.</span> <span class="nav-text">Cypher Shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AC%E5%82%A8%E5%92%8C%E5%8A%A0%E8%BD%BD"><span class="nav-number">6.2.</span> <span class="nav-text">转储和加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E6%A3%80%E6%9F%A5"><span class="nav-number">6.3.</span> <span class="nav-text">一致性检查</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

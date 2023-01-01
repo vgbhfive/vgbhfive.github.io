@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言前段时间在看算法这块的东西，看的我是头昏脑胀。所以这几天又捡起了 《深入理解Java虚拟机》 这本书，这次主要看的是书中的 第三部分，我一直崇尚知识是在不断的总结和不断地学习相互交叉，这样才能学以致用，用而有据。 概念字节码字节码指的是 Java 中的 .java 文件经过编译（ javac ）后生成的固定格式文件 .class 文件以供 JVM 使用。之所以被称为字节码文件是因为字节码文件是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java-字节码增强技术">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="前言前段时间在看算法这块的东西，看的我是头昏脑胀。所以这几天又捡起了 《深入理解Java虚拟机》 这本书，这次主要看的是书中的 第三部分，我一直崇尚知识是在不断的总结和不断地学习相互交叉，这样才能学以致用，用而有据。 概念字节码字节码指的是 Java 中的 .java 文件经过编译（ javac ）后生成的固定格式文件 .class 文件以供 JVM 使用。之所以被称为字节码文件是因为字节码文件是">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/06/05/Vxosc3G6Pif9dMj.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/05/Lu62Oxw1FcD4pPH.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/05/4lHGC3yM6rDuI1z.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/05/4lHGC3yM6rDuI1z.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/05/WmReBXHq25coGTJ.png">
+<meta property="article:published_time" content="2021-06-05T03:22:42.000Z">
+<meta property="article:modified_time" content="2021-06-05T07:54:20.766Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/06/05/Vxosc3G6Pif9dMj.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Java-字节码增强技术 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java-字节码增强技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-06-05 11:22:42 / Modified: 15:54:20" itemprop="dateCreated datePublished" datetime="2021-06-05T11:22:42+08:00">2021-06-05</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间在看算法这块的东西，看的我是头昏脑胀。所以这几天又捡起了 <strong>《深入理解Java虚拟机》</strong> 这本书，这次主要看的是书中的 <em>第三部分</em>，我一直崇尚知识是在不断的总结和不断地学习相互交叉，这样才能学以致用，用而有据。</p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="字节码"><a href="#字节码" class="headerlink" title="字节码"></a>字节码</h4><p>字节码指的是 <code>Java</code> 中的 <code>.java</code> 文件经过编译（ <code>javac</code> ）后生成的固定格式文件 <code>.class</code> 文件以供 <code>JVM</code> 使用。<br>之所以被称为字节码文件是因为字节码文件是由十六进制值组成，<code>JVM</code> 以两个十六进制值为一组，即一个字节进行读取。同时 <code>JVM</code> 也针对不同操作系统和平台进行优化，这也就是 <code>Java</code> 号称 <strong>一次编译，到处运行</strong> 的根本原因。</p>
+<p>由此又可以引出一个问题，由于 <code>JVM</code> 规范的存在，那么只要我们最终可以生成符合 <code>JVM</code> 规范的字节码文件那就可以在 <code>JVM</code> 上运行了，这也就产生了其他运行在 <code>JVM</code> 上的语言（如 Scale、Kotlin、Groovy ），可以通过其他语言可以扩展 <code>Java</code> 所没有的特性和语法糖。</p>
+<span id="more"></span>
+
+<h4 id="字节码增强"><a href="#字节码增强" class="headerlink" title="字节码增强"></a>字节码增强</h4><p>字节码增强指的是在 <code>Java</code> 字节码生成之后，对其进行修改，增强其功能，这种方式相当于对应用程序的二进制文件进行修改。字节码增强的应用场景主要是减少冗余代码，对开发人员屏蔽底层的实现细节。</p>
+<h4 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h4><ul>
+<li>通过创建原始类的一个子类，也就是动态创建这个类继承原有的类，从而扩展原有类的方法。</li>
+<li>直接修改原有类生成的 <code>Class</code> 文件，在许多类的跟踪过程中都会用到（运行时修改、类加载时修改字节码信息）。</li>
+</ul>
+<hr>
+
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="字节码格式"><a href="#字节码格式" class="headerlink" title="字节码格式"></a>字节码格式</h3><p>一个 <code>.java</code> 文件经过编译（ <code>javac</code> ）后就会生成 <code>.class</code> 文件。</p>
+<p>如下所示，左边为原始代码，右边为编译后的字节码：<br><img src="https://i.loli.net/2021/06/05/Vxosc3G6Pif9dMj.png" alt="de80a67bdb1c0a47d6adb3a0420a826d1235757.png"></p>
+<p>字节码文件解析：</p>
+<ul>
+<li><p>魔数：每个 <code>Class</code> 文件头 4 个字节代表魔数，它代表了这个文件是否是一个能被虚拟机接受的 <code>Class</code> 文件。魔数固定值为：<code>CAFEBABE</code> 。<br> <small>有趣的是，魔数的固定值是 <code>Java</code> 之父 <code>James Gosling</code> 制定的，为 <code>CafeBabe</code>（咖啡宝贝），而 <code>Java</code> 的图标为一杯咖啡。</small>	</p>
+</li>
+<li><p>版本号：前两个字节代表次版本号 <code>minorversion</code>，后两个字节代表主版本号 <code>majorversion</code>。将四个字节的十六进制值转换为十进制就是对应的版本号。</p>
+</li>
+<li><p>常量池：常量池的大小是不固定的，会根据类中常量的多少来确定。其中首选由一个 2 个字节十六进制的数来定义常量池长度，计算出常量池的十进制是多少，然后减一得出常量池的数量。<br> 常量池的类型：<br> |           常量               	    |     类型      |      描述              			|</p>
+</li>
+</ul>
+<p> |———————————-|—————|———————————–|<br> | CONSTANT_Utf8_info           	| tag标志位为1  	|  UTF-8编码的字符串 					|<br> | CONSTANT_Integer_info        	| tag标志位为3 	|  整形字面量        				|<br> | CONSTANT_Float_info          	| tag标志位为4 	|  浮点型字面量      					|<br> | CONSTANT_Long_info           	| tag标志位为5 	|  长整形字面量						|<br> | CONSTANT_Double_info         	| tag标志位为6 	|  双精度字面量						|<br> | CONSTANT_Class_info          	| tag标志位为7 	|  类或接口的符号引用				 	|<br> | CONSTANT_String_info         	| tag标志位为8 	|  字符串类型的字面量 				|<br> | CONSTANT_Fieldref_info       	| tag标志位为9  	|  字段的符号引用     				|<br> | CONSTANT_Methodref_info      	| tag标志位为10	|  类中方法的符号引用 				|<br> | CONSTANT_InterfaceMethodref_info | tag标志位为11 	|  接口中方法的符号引用				|<br> | CONSTANT_NameAndType_info tag    | 标志位为12		|  字段和方法的名称以及类型的符号引用 	|<br> | CONSTANT_Method-Handle_info  	| tag标志位为15	|  方法句柄							|<br> | CONSTANT_Method-Type_info    	| tag标志位为16	|  方法类型							|<br> | CONSTANT_Invoke-Dynamic_info 	| tag标志位为18	|  动态方法调用点 					|</p>
+<p> 常量池分布：<br> <img src="https://i.loli.net/2021/06/05/Lu62Oxw1FcD4pPH.png" alt="ac90457d635b90e2c08bf7659b0b7dfd50229.png"></p>
+<ul>
+<li>访问标志：常量池结束之后的两个字节，描述该 <code>Class</code> 是类还是接口，以及是否被 <code>Public、Abstract、Final</code> 等修饰符修饰。<br> 访问标志的类型：<br> |      标志名称 		|  标志值  	|      含义             			|</li>
+</ul>
+<p> |———————-|———–|——————————-|<br> | ACC_PUBLIC          	| 0X0001  	| <code>public</code> 类型 					|<br> | ACC_PRIVATE          | 0X0002  	| <code>private</code> 类型 				|<br> | ACC_FINAL        	| 0X0010  	| 声明为 <code>final</code>，只有类可以设置    	|<br> | ACC_SUPER          	| 0X0020  	| 使用invokespecial字节码指令的新语意，invokespecial指令的语意在JDK1.0.2发生过改变，为了区别这条指令使用哪种语意，JDK1.0.2之后编译出来的类都为真      					|<br> | ACC_INTERFACE		| 0X0200 	| 接口							|<br> | ACC_ABSTRACT        	| 0X0400 	| <code>abstract</code> 类型，对于接口或者抽象类来说，此标志值为真，其他类为假						|<br> | ACC_SYNTHETIC       	| 0X1000	| 这个类并非由用户代码产生			|<br> | ACC_ANNOTATION      	| 0X2000 	| 注解				 			|<br> | ACC_ENUM         	| 0X4000 	| 枚举 							|</p>
+<ul>
+<li>当前类索引：访问标志后的两个字节，描述的是当前类的全限定名。这两个字节保存的值为常量池中的索引值，根据索引值就能在常量池中找到这个类的全限定名。</li>
+<li>父类索引：当前类名后的两个字节，描述父类的全限定名，同上，保存的也是常量池中的索引值。</li>
+<li>接口索引：父类名称后为两字节的接口计数器，描述了该类或父类实现的接口数量。紧接着的 N 个字节是所有接口名称的字符串常量的索引值。</li>
+<li>字段表：字段表用于描述类和接口中声明的变量，包含类级别的变量以及实例变量，但是不包含方法内部声明的局部变量。<br> <img src="https://i.loli.net/2021/06/05/4lHGC3yM6rDuI1z.png" alt="0f795d2b2b28ce96b5963efb2e564e5a197874.png"></li>
+<li>方法表：字段表结束后为方法表，方法表也是由两部分组成，第一部分为两个字节描述方法的个数；第二部分为每个方法的详细信息。<br> <img src="https://i.loli.net/2021/06/05/4lHGC3yM6rDuI1z.png" alt="0f795d2b2b28ce96b5963efb2e564e5a197874.png"></li>
+<li>属性表：字节码的最后一部分，该项存放了在该文件中类或接口所定义属性的基本信息。</li>
+</ul>
+<p>字节码文件中格式释义：</p>
+<ul>
+<li><code>u2、u4</code> 分别代表有两个字节、四个字节。</li>
+<li><code>Class</code> 类文件的伪结构中只有两种数据类型：无符号数（unsigned quantity）和表（table）。<br> 无符号数属于基本的数据类型，<code>u2、u4</code> 分别代表两个字节和四个字节的无符号数。而其余的 <code>cp_info、field_info、method_info、attribute_info</code> 就是表。</li>
+</ul>
+<h3 id="字节码常用工具"><a href="#字节码常用工具" class="headerlink" title="字节码常用工具"></a>字节码常用工具</h3><ul>
+<li>查看反编译后的字节码，Idea插件：<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/9248-jclasslib-bytecode-viewer">jclasslib</a></li>
+<li>查看源码到字节码的映射：Idea插件：<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/5918-asm-bytecode-outline">ASM ByteCode Outline</a><hr></li>
+</ul>
+<h2 id="字节码增强-1"><a href="#字节码增强-1" class="headerlink" title="字节码增强"></a>字节码增强</h2><p>字节码增强技术就是一类对现有字节码进行修改或者动态生成全新字节码文件的技术。</p>
+<p><img src="https://i.loli.net/2021/06/05/WmReBXHq25coGTJ.png" alt="12e1964581f38f04488dfc6d2f84f003110966.png"></p>
+<h3 id="JDK-动态代理"><a href="#JDK-动态代理" class="headerlink" title="JDK 动态代理"></a>JDK 动态代理</h3><p><code>JDK</code> 动态代理是利用反射机制生成一个实现接口的匿名内部类，在调用具体方法之前调用 <code>InvokeHandler</code> 来处理。<br>接口类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Demo</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接口实现类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DemoImpl</span> <span class="keyword">implements</span> <span class="title class_">Demo</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> x + y;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代理实现处理类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JdkProxyFactory</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;  </span><br><span class="line">    <span class="keyword">private</span> Object target; <span class="comment">// 被代理对象  </span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">JdkProxyFactory</span><span class="params">(Object target)</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.target = target; <span class="comment">// 在构造方法对象时，传入被代理对象  </span></span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">createProxy</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(), </span><br><span class="line">        	target.getClass().getInterfaces(), <span class="built_in">this</span>); <span class="comment">// 三个参数： 类加载器、 实现接口、 invocationhandler  </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;jdk proxy invoke test!&quot;</span>);  </span><br><span class="line">        <span class="keyword">return</span> method.invoke(target, args);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>缺点：<br>使用 <code>JDK</code> 动态代理，必须要求 <code>target</code> 目标类实现接口，如果没有实现接口，就不能使用 <code>JDK</code> 动态代理。这个在 <code>Spring</code> 中关于 <code>AOP</code> 的实现也是如此，如果没有该类继承接口就采用 <code>Cglib</code> 动态代理来实现。</p>
+<h3 id="ASM"><a href="#ASM" class="headerlink" title="ASM"></a>ASM</h3><p><code>ASM</code> 可以直接修改 <code>.class</code> 字节码文件，也可以在类被加载入 <code>JVM</code> 之前动态修改类行为。</p>
+<p>大致流程就是 <code>ClassReader</code> 读取原有的字节码文件，然后经过 <code>Visitor</code> 处理字节码文件，最后通过 <code>ClassWriter</code> 生产新的字节码文件并替换原有的字节码文件。</p>
+<h4 id="核心-API"><a href="#核心-API" class="headerlink" title="核心 API"></a>核心 <code>API</code></h4><ul>
+<li><code>ClassReader</code> : 用于读取已经编译好的 <code>.class</code> 文件。</li>
+<li><code>ClassWriter</code> : 用于重新构建编译后的类，如修改类名、属性以及方法，也可以生成新的类的字节码文件。</li>
+<li><code>Visitor</code> : <code>CoreAPI</code> 根据字节码从上到下依次处理，对于字节码文件中不同的区域有不同的 <code>Visitor</code>，比如用于访问方法的 <code>MethodVisitor</code>、用于访问类变量的 <code>FieldVisitor</code>、用于访问注解的 <code>AnnotationVisitor</code> 等。</li>
+</ul>
+<h4 id="使用-ASM-实现-AOP"><a href="#使用-ASM-实现-AOP" class="headerlink" title="使用 ASM 实现 AOP"></a>使用 <code>ASM</code> 实现 <code>AOP</code></h4><p>原有基础类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123; </span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">operation</span><span class="params">()</span> &#123; </span><br><span class="line">		System.out.println(<span class="string">&quot;operation A ...&quot;</span>); </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重写 <code>Visitor</code> 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyClassVisitor</span> <span class="keyword">extends</span> <span class="title class_">ClassVisitor</span> <span class="keyword">implements</span> <span class="title class_">Opcodes</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MyClassVisitor</span><span class="params">(ClassVisitor cv)</span> &#123; <span class="built_in">super</span>(ASM5, cv); &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> MethodVisitor <span class="title function_">visitMethod</span><span class="params">(<span class="type">int</span> access, String name, String desc, String signature, String[] exceptions)</span> &#123;</span><br><span class="line">        <span class="type">MethodVisitor</span> <span class="variable">mv</span> <span class="operator">=</span> cv.visitMethod(access, name, desc, signature, exceptions);</span><br><span class="line">        <span class="keyword">if</span> (!name.equals(<span class="string">&quot;&lt;init&gt;&quot;</span>) &amp;&amp; mv != <span class="literal">null</span>) &#123;</span><br><span class="line">            mv = <span class="keyword">new</span> <span class="title class_">MyMethodVisitor</span>(mv); <span class="comment">// A 类中有两个方法：无参构造以及 operation 方法，这里不增强构造方法</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">MyMethodVisitor</span> <span class="keyword">extends</span> <span class="title class_">MethodVisitor</span> <span class="keyword">implements</span> <span class="title class_">Opcodes</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">MyMethodVisitor</span><span class="params">(MethodVisitor mv)</span> &#123; <span class="built_in">super</span>(Opcodes.ASM5, mv); &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">visitCode</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="built_in">super</span>.visitCode();</span><br><span class="line">            mv.visitFieldInsn(GETSTATIC, <span class="string">&quot;java/lang/System&quot;</span>, <span class="string">&quot;out&quot;</span>, <span class="string">&quot;Ljava/io/PrintStream;&quot;</span>);</span><br><span class="line">            mv.visitLdcInsn(<span class="string">&quot;start&quot;</span>); <span class="comment">// 方法在，打印&quot;end&quot;</span></span><br><span class="line">            mv.visitMethodInsn(INVOKEVIRTUAL, <span class="string">&quot;java/io/PrintStream&quot;</span>, <span class="string">&quot;println&quot;</span>, <span class="string">&quot;(Ljava/lang/String;)V&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">visitInsn</span><span class="params">(<span class="type">int</span> opcode)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> ((opcode &gt;= Opcodes.IRETURN &amp;&amp; opcode &lt;= Opcodes.RETURN) || opcode == Opcodes.ATHROW) &#123;</span><br><span class="line">                mv.visitFieldInsn(GETSTATIC, <span class="string">&quot;java/lang/System&quot;</span>, <span class="string">&quot;out&quot;</span>, <span class="string">&quot;Ljava/io/PrintStream;&quot;</span>);</span><br><span class="line">                mv.visitLdcInsn(<span class="string">&quot;end&quot;</span>); <span class="comment">// 方法在返回之前，打印&quot;end&quot;</span></span><br><span class="line">                mv.visitMethodInsn(INVOKEVIRTUAL, <span class="string">&quot;java/io/PrintStream&quot;</span>, <span class="string">&quot;println&quot;</span>, <span class="string">&quot;(Ljava/lang/String;)V&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(opcode);</span><br><span class="line">            mv.visitInsn(opcode);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Main 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Generator</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 读取</span></span><br><span class="line">       	<span class="type">ClassReader</span> <span class="variable">classReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassReader</span>(<span class="string">&quot;cn.vgbhfive.bytecodedemo.A&quot;</span>);</span><br><span class="line">        <span class="type">ClassWriter</span> <span class="variable">classWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassWriter</span>(ClassWriter.COMPUTE_MAXS);</span><br><span class="line">        <span class="comment">// 处理</span></span><br><span class="line">        <span class="type">ClassVisitor</span> <span class="variable">classVisitor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyClassVisitor</span>(classWriter);</span><br><span class="line">        classReader.accept(classVisitor, ClassReader.SKIP_DEBUG);</span><br><span class="line">        <span class="type">byte</span>[] data = classWriter.toByteArray();</span><br><span class="line">        <span class="comment">// 输出</span></span><br><span class="line">        <span class="type">File</span> <span class="variable">f</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;/bin/cn/vgbhfive/bytecodedemo/A.class&quot;</span>);</span><br><span class="line">        <span class="type">FileOutputStream</span> <span class="variable">fout</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(f);</span><br><span class="line">        fout.write(data);</span><br><span class="line">        fout.close();</span><br><span class="line">        System.out.println(<span class="string">&quot;generator A success!!!!!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">operation A ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<h3 id="Javassist"><a href="#Javassist" class="headerlink" title="Javassist"></a>Javassist</h3><p><code>ASM</code> 是在指令层次上操作字节码的，在看完前面这些东西并上手操作后最直观感受是在指令层次上操作字节码的框架实现起来比较晦涩。那么就有了另外一类框架：强调源代码层次操作字节码的框架 <code>Javassist</code> 。</p>
+<p>利用 <code>Javassist</code> 实现字节码增强时，可以无须关注字节码刻板的结构，优点就是在于编程简单。可以直接使用 <code>Java</code> 编码的形式，而不需要了解虚拟机指令，就能动态改变类的结构或者动态生成类。</p>
+<h4 id="核心-API-1"><a href="#核心-API-1" class="headerlink" title="核心 API"></a>核心 <code>API</code></h4><ul>
+<li><code>CtClass</code> ( <code>compile-time class</code> ) : 编译时类信息，它是一个 <code>Class</code> 文件在代码中的抽象表现形式，可以通过一个类的全限定名来获取一个 <code>CtClass</code> 对象，用来表示这个类文件。</li>
+<li><code>ClassPool</code> : 从开发视角来看，<code>ClassPool</code> 是一张保存 <code>CtClass</code> 信息的 <code>HashMap</code>，<code>key</code> 为类名，<code>value</code> 为类名对应的 <code>CtClass</code> 对象。</li>
+<li><code>CtMethod</code> : 类中的方法。</li>
+<li><code>CtField</code> : 类中的属性。</li>
+</ul>
+<h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JavassistTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NotFoundException, CannotCompileException, IllegalAccessException, InstantiationException, IOException &#123;</span><br><span class="line">        <span class="type">ClassPool</span> <span class="variable">cp</span> <span class="operator">=</span> ClassPool.getDefault();</span><br><span class="line">        <span class="type">CtClass</span> <span class="variable">aa</span> <span class="operator">=</span> cp.get(<span class="string">&quot;cn.vgbhfive.bytecodedemo.A&quot;</span>);</span><br><span class="line">        <span class="type">CtMethod</span> <span class="variable">m</span> <span class="operator">=</span> aa.getDeclaredMethod(<span class="string">&quot;operation&quot;</span>);</span><br><span class="line">        m.insertBefore(<span class="string">&quot;&#123; System.out.println(\&quot;start\&quot;); &#125;&quot;</span>);</span><br><span class="line">        m.insertAfter(<span class="string">&quot;&#123; System.out.println(\&quot;end\&quot;); &#125;&quot;</span>);</span><br><span class="line">        <span class="type">Class</span> <span class="variable">c</span> <span class="operator">=</span> aa.toClass();</span><br><span class="line">        aa.writeFile(<span class="string">&quot;F://workSpace/projects&quot;</span>);</span><br><span class="line">        <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> (A) c.newInstance();</span><br><span class="line">        a.operation();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">operation A ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h2 id="运行时类的重载"><a href="#运行时类的重载" class="headerlink" title="运行时类的重载"></a>运行时类的重载</h2><p>在上面我们解决了如何利用字节码文件来重写类中的方法，那么这就引出了另一个问题，修改后的字节码文件我们又当如何在运行中的 <code>JVM</code> 中重新加载修改后的字节码文件呢？</p>
+<h3 id="Instrument"><a href="#Instrument" class="headerlink" title="Instrument"></a><code>Instrument</code></h3><p><code>Instrument</code> 是 <code>JVM</code> 提供的一个可以修改已加载类的类库，专门为 <code>Java</code> 语言编写的插桩服务提供支持。它需要依赖 <code>JVMTI</code> 的 <code>Attach API</code> 机制实现。</p>
+<p>若想使用 <code>Instrument</code> 的类修改功能，就需要实现它的 <code>ClassFileTransformer</code> 接口，重新定义一个类文件转换器。 接口中的 <code>transform()</code> 方法会在类文件被加载时调用，而这个方法中可以利用上文中的 <code>ASM</code> 或 <code>Javassist</code> 对传入的字节码进行改写或替换，最后生成新的字节码数组然后返回。</p>
+<p>新的类文件转换器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestTransformer</span> <span class="keyword">implements</span> <span class="title class_">ClassFileTransformer</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">byte</span>[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="type">byte</span>[] classfileBuffer) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">ClassPool</span> <span class="variable">cp</span> <span class="operator">=</span> ClassPool.getDefault();</span><br><span class="line">	        <span class="type">CtClass</span> <span class="variable">aa</span> <span class="operator">=</span> cp.get(<span class="string">&quot;cn.vgbhfive.bytecodedemo.A&quot;</span>);</span><br><span class="line">	        <span class="type">CtMethod</span> <span class="variable">m</span> <span class="operator">=</span> aa.getDeclaredMethod(<span class="string">&quot;operation&quot;</span>);</span><br><span class="line">	        m.insertBefore(<span class="string">&quot;&#123; System.out.println(\&quot;start\&quot;); &#125;&quot;</span>);</span><br><span class="line">	        m.insertAfter(<span class="string">&quot;&#123; System.out.println(\&quot;end\&quot;); &#125;&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> aa.toBytecode();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在新的类文件转换器有了之后，我们还需要一个 <code>Agent</code>，借助 <code>Agent</code> 的力量将 <code>Instrument</code> 注入到 <code>JVM</code> 中去。当 <code>Agent</code> 被 <code>Attach</code> 到一个 <code>JVM</code> 中时，就会执行类字节码替换并重载入 <code>JVM</code> 的操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestAgent</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">agentmain</span><span class="params">(String args, Instrumentation inst)</span> &#123;</span><br><span class="line">        inst.addTransformer(<span class="keyword">new</span> <span class="title class_">TestTransformer</span>(), <span class="literal">true</span>); <span class="comment">// 指定我们自己定义的 Transformer，在其中利用 Javassist 做字节码替换</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            inst.retransformClasses(Base.class); <span class="comment">// 重定义类并载入新的字节码</span></span><br><span class="line">            System.out.println(<span class="string">&quot;Agent Load Done.&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;agent load failed!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>JVMTI</code>（<code>JVM TOOL INTERFACE</code>，<code>JVM</code> 工具接口）是 <code>JVM</code> 提供的一套对 <code>JVM</code> 进行操作的工具接口。<br>通过 <code>JVMTI</code> 可以实现对 <code>JVM</code> 的多种操作。例如通过接口注册各种事件勾子函数，在 <code>JVM</code> 事件触发时，同时触发预定义的勾子函数，以实现对各个 <code>JVM</code> 事件的响应，事件包括类文件加载、 异常产生与捕获、线程启动和结束、进入和退出临界区、 成员变量修改、 GC 开始和结束、 方法调用进入和退出、 临界区竞争与等待、 VM 启动与退出等等。</p>
+<p><code>Attach API</code> 的作用是提供 <code>JVM</code> 进程间通信的能力。</p>
+<p><small>这里并不是本章的重点，所以就不说明了，想看的可以自己去<a target="_blank" rel="noopener" href="https://blog.csdn.net/hosaos/article/details/102931887">看看</a>！</small></p>
+<hr>
+
+<h2 id="常用场景"><a href="#常用场景" class="headerlink" title="常用场景"></a>常用场景</h2><ul>
+<li>热部署: 不部署服务而对线上服务做修改，可以做打点、增加日志等操作。</li>
+<li><code>Mock</code>: 测试时候对某些服务做 <code>Mock</code> 。</li>
+<li>性能诊断工具: 比如 <code>bTrace</code> 就是利用 <code>Instrument</code> ，实现无侵入地跟踪一个正在运行的 <code>JVM</code> ，监控到类和方法级别的状态信息。</li>
+</ul>
+<hr>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于编程需要时刻 <strong>保持谦恭</strong> 之心，善于提出问题，也能根据问题找到对应的解决思路，形成 <strong>闭环</strong> 。这样不断地闭环就会构建出自己的知识体系。<br>还有一点就是需要善于总结自己已经掌握的知识，达到 <strong>产出产能平衡</strong> 。</p>
+<hr>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2019/09/05/java-bytecode-enhancement.html">字节码增强技术探索</a><br>《深入理解Java虚拟机》 第三部分<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hosaos/article/details/102931887">Java字节码技术(二)字节码增强之ASM、JavaAssist、Agent、Instrumentation</a></p>
+<hr>
+
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/" title="Java-字节码增强技术">https://blog.vgbhfive.cn/Java-字节码增强技术/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E7%AE%97%E6%B3%95-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E4%BC%98%E5%8C%96/" rel="prev" title="算法-动态规划优化">
+      <i class="fa fa-chevron-left"></i> 算法-动态规划优化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/MySQL-Specified-key-was-too-long/" rel="next" title="MySQL-Specified key was too long">
+      MySQL-Specified key was too long <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.1.1.</span> <span class="nav-text">字节码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA"><span class="nav-number">1.1.2.</span> <span class="nav-text">字节码增强</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.3.</span> <span class="nav-text">实现机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">字节码格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">2.2.</span> <span class="nav-text">字节码常用工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA-1"><span class="nav-number">3.</span> <span class="nav-text">字节码增强</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">JDK 动态代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASM"><span class="nav-number">3.2.</span> <span class="nav-text">ASM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83-API"><span class="nav-number">3.2.1.</span> <span class="nav-text">核心 API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-ASM-%E5%AE%9E%E7%8E%B0-AOP"><span class="nav-number">3.2.2.</span> <span class="nav-text">使用 ASM 实现 AOP</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Javassist"><span class="nav-number">3.3.</span> <span class="nav-text">Javassist</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83-API-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">核心 API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo"><span class="nav-number">3.3.2.</span> <span class="nav-text">Demo</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E7%B1%BB%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">4.</span> <span class="nav-text">运行时类的重载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Instrument"><span class="nav-number">4.1.</span> <span class="nav-text">Instrument</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">5.</span> <span class="nav-text">常用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

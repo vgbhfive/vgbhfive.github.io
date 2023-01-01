@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述风控模型是风控系统的核心，应用模型进行风险决策是识别风险的主要途径，也是控制风险的重要方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能风控-风控模型体系">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="概述风控模型是风控系统的核心，应用模型进行风险决策是识别风险的主要途径，也是控制风险的重要方法。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/12/01/fRUOPIwSEZQNMJp.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/01/k7Jb3ACYBSRyLFK.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/22/vb27ckLozjX4q6Z.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/29/kpjbL4DmU7XnZ6C.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/29/NMKFmT1eAP6fxSI.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/04/XzvGq4ukioealpN.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/22/DMNZFGvq5iTQen8.png">
+<meta property="og:image" content="https://s2.loli.net/2022/12/22/1AXbaVD75ieRCBp.png">
+<meta property="article:published_time" content="2022-11-25T14:00:04.000Z">
+<meta property="article:modified_time" content="2023-01-01T15:27:16.556Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Risk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/12/01/fRUOPIwSEZQNMJp.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>智能风控-风控模型体系 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          智能风控-风控模型体系
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-11-25 22:00:04" itemprop="dateCreated datePublished" datetime="2022-11-25T22:00:04+08:00">2022-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-01-01 23:27:16" itemprop="dateModified" datetime="2023-01-01T23:27:16+08:00">2023-01-01</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><strong>风控模型</strong>是风控系统的核心，应用模型进行风险决策是识别风险的主要途径，也是控制风险的重要方法。</p>
+<span id="more"></span>
+
+<p>在信贷风控领域中 <strong>模型</strong>主要是指预测风险的方法，通常以数学公式或行数的方式存在。<br>这其中<strong>模型</strong>和<strong>算法</strong>不可混为一谈，算法通常是指各种数学、统计或人工智能方法，而模型是指基于这些方法得到的具体实例；因此才会出现使用了某种算法构建多个风险模型。假设两者相比较的话，可以将算法比作<strong>类</strong>，而模型则是 <strong>实例对象</strong>。</p>
+<p>构建风控模型并不是 <em>必须</em> 使用机器学习算法，如策略人员基于人工经验和统计分析，利用 <em>评分卡模型</em> 来汇总各类风险指标，赋予各类风险指标一个分数之后，最后汇总即可。但这种方法也存在弊端，即无法处理更多维度的数据，也很难处理不同维度数据之间的关联信息，评估准确性较低、局限性很大。因此随着技术的发展，机器学习方法逐渐成为主要的建模方法。</p>
+<p><strong>机器学习</strong>是一种从历史数据中学习潜在规律，同时预测未来行为的方法。其核心的三要素：<strong>数据</strong>、<strong>模型</strong>、<strong>算法</strong>。其中数据和算法是搭建机器学习模型的 <em>必要条件</em>，每种算法都包含多个待定的参数或结构，模型是算法在数据上运算得到特定的参数或结构的 <em>结果</em>。<br><img src="https://s2.loli.net/2022/12/01/fRUOPIwSEZQNMJp.png" alt="risk_3_1.jpg"><br>其中根据数据集中是否已知样本标签，机器学习任务又可以分为：<strong>有监督学习</strong>是指从有标签的训练数据中学习；<strong>无监督学习</strong>是指从无标签的训练数据中学习。<br><small>有标签的训练数据是指每个训练样本都包含输入和期望的输出；相反无标签则是指每个训练样本只包含输入不包含输出。</small></p>
+<p>采用多种机器学习算法搭建风控模型的主要步骤都是相同的，主要包含以下几个步骤：</p>
+<ul>
+<li>问题定义</li>
+<li>样本的选择与划分</li>
+<li>模型架构设计</li>
+<li>数据准备与描述分析</li>
+<li>数据清洗</li>
+<li>特征选择</li>
+<li>模型训练与效果评估</li>
+<li>部署上线</li>
+<li>模型监控与异常处理</li>
+<li>模型调优</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/12/01/k7Jb3ACYBSRyLFK.png" alt="risk_3_2.jpg"></p>
+<hr>
+
+<h3 id="开发方法论"><a href="#开发方法论" class="headerlink" title="开发方法论"></a>开发方法论</h3><p>开发好样本是开发好模型的基础。构建好样本是指从项目需求中<strong>定义问题</strong>、<strong>定义标签</strong>、<strong>选择合适的建模数据集</strong>以及<strong>分析和预处理数据</strong>的过程。<br>构建好模型是指在经过预处理的数据中进行<strong>特征选择</strong>、<strong>特征提取</strong>、<strong>模型训练</strong>、<strong>分数转化</strong>和<strong>效果评估</strong>。</p>
+<hr>
+
+<h3 id="开发方法论-立项分析"><a href="#开发方法论-立项分析" class="headerlink" title="开发方法论-立项分析"></a>开发方法论-立项分析</h3><h4 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h4><p>问题定义旨在明确项目的背景和目标，根据背景和目标将业务问题转化为机器学习建模问题，包括定义预测目标、设计模型方案等。<br>在实际业务中开始分析目标时需要先了解<strong>预测对象粒度</strong>、<strong>标签定义</strong>和<strong>细分客群</strong>。</p>
+<ol>
+<li><p>预测对象粒度<br>在实际业务中会遇到不同层次的问题，基于不同层次的问题，需要将预测对象定义为不同的粒度。因此在实际业务中，需要根据业务模式和模型应用策略来选择合适的粒度进行建模。</p>
+<ul>
+<li><strong>渠道粒度</strong>，某些场景下借款申请人来自于同一个渠道，即一个渠道一条记录。</li>
+<li><strong>客户粒度</strong>，借款人存在多笔借款，从借款人角度考虑风险即任何一笔借款出现逾期都表示风险事件，即一个人是一条记录。</li>
+<li><strong>借款粒度</strong>，借款人的每次申请借款考虑风险，该笔借款出现逾期则表现出风险事件，即一次借款就是一条记录。</li>
+<li><strong>还款粒度</strong>，每个借款人得到每一次借款可能都有不同的还款期限，预测每笔还款是否出现风险，即一次还款就是一条记录。</li>
+</ul>
+</li>
+<li><p>标签定义<br>风控模型用来预测未来的风险是典型的<strong>有监督学习模式</strong>，因此需要定义<strong>样本标签</strong>。<br> <strong>标签</strong>是模型所要预测的结果，可以是二分类结果，例如“好”&#x2F;“坏”、“响应”&#x2F;“不响应”等；也可以是连续变量，例如收益、损失等。风险评估模型通常用来预测未来的表现是好是坏，其中标签定义需要明确的是在什么时间点预测未来多久发生的什么事件。<br>观测点前后分别是<strong>观察窗口</strong>和<strong>表现窗口</strong>。</p>
+<ul>
+<li><strong>观察窗口</strong>，用来观察客户行为的时间区间。观察窗口也称为观察期。</li>
+<li><strong>表现窗口</strong>，用来考察客户的表现，从而确定标签定义的时间区间。表现窗口也称为表现期。</li>
+</ul>
+<p> 在风险标签定义中，对于如何确定好坏程度和表现窗口的长度，需要结合<strong>滚动率分析（<code>roll rate analysis</code>）</strong>和<strong>账龄分析（<code>vintage analysis</code>）</strong>。</p>
+<ul>
+<li><strong>滚动率分析</strong>，通过滚动率分析来确定客户的“好坏”程序。滚动率是指客户从某个观测点之前的一段时间的逾期状态向观测点之后的一段时间的逾期状态转化的比例。</li>
+<li><strong>账龄分析</strong>，信贷行业经常使用 <code>Vintage</code> 曲线分析账户的成熟期、变化规律等。<code>Vintage</code> 曲线是根据账龄绘制的不同时间放款样本的逾期率变化曲线。逾期率有金额逾期和账单逾期两种口径。</li>
+</ul>
+<p> 综上所述，滚动率分析用于分析客户的“好坏”程度；账龄分析用于确定合适的表现期，可以尽可能多地覆盖“坏”客户。</p>
+</li>
+<li><p>细分客群<br>在建模任务中如果客群差异较大则需要进一步<strong>细分客群</strong>。根据不同产品拆分客群时，不同的<strong>进件渠道</strong>、<strong>借款期数</strong>、<strong>区域</strong>和<strong>借款金额</strong>等划分客群。除此之外还可以采用聚类等无监督学习方法划分客群。<br>至此细分客群建模还需要满足下列条件：</p>
+<ul>
+<li>细分客群之间的风险水平差异较大。</li>
+<li>细分客群可以获得的特征维度不同。</li>
+<li>每个细分客群的样本足够多。</li>
+</ul>
+<p> 通过细分客群建模可以使模型更加专注于细分客群风险模式的学习，从而提高模型效果。不过细分客群建模也存在弊端：细分客群建模会导致模型数量增多，需要投入的资源和时间增多，维护成本增加；细分客群将总样本分散到各个客群中，相比总样本量细分客群样本量减少，特别是细分客群的<strong>“坏”</strong>样本量不多，反而会降低模型的预测能力。</p>
+</li>
+</ol>
+<h4 id="样本的选择与划分"><a href="#样本的选择与划分" class="headerlink" title="样本的选择与划分"></a>样本的选择与划分</h4><ol>
+<li><p>样本选择<br>样本选择是指从业务数据选择部分合适的样本进行模型开发。<br>风控模型是一种预测模型，保证模型良好的预测效果的前提是客户未来的行为和过去相似，因此才可以从过去的数据中学习规律并预测未来的表现。其中选取的建模样本需要把握<strong>建模样本必须能够代表总体，与未来模型使用场景下的样本差异尽可能小</strong>，具体体现为以下四点：<strong>代表性</strong>；<strong>充分性</strong>；<strong>时效性</strong>；<strong>排除性</strong>。</p>
+</li>
+<li><p>样本集划分<br> <strong>数据是模型搭建的基础</strong>。<br>在模型开发过程中会将一部分数据划分用于训练模型，另一部分数据划分为验证模型效果。总体数据可以划分为<strong>训练集</strong>、<strong>验证集</strong>和<strong>测试集</strong>，其中训练集用于训练模型，验证集用来模型调参、训练过程中的参数选择或者模型选择，测试集用来验证模型最终表现（通常选用靠近当前时间的样本作为测试集，也称 <code>OOT（Out of Time sample）</code> 样本）。典型的训练样本、验证样本、<code>OOT</code> 样本划分比例是 <code>7:2:1</code>。<br><small>在特殊并且样本较少时，为了让更好的样本参与模型训练，可以将验证样本取消，保留训练样本和 <code>OOT</code> 样本，训练时采用交叉验证的方式进行模型参数选择。另外避免出现异常，可以先 <em>空跑</em> 一段时间观察模型情况。</small></p>
+</li>
+</ol>
+<h4 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h4><p>在明确问题定义、确定样本和样本集划分之后，模型搭建的基本任务已经清晰，关于如何更好的预测目标，需要首先从宏观上考虑模型的架构。<br>从模型数据源维度考虑，模型架构可以分为：</p>
+<ul>
+<li>单一模型架构<br> 不区分数据源，将所有数据源特征放在一起进行建模，输出最终模型。</li>
+<li>多子模型融合架构<br>将不同维度的数据源划分为若干个集合，先建立子模型，再将子模型进行二次融合，生成最终模型。<br><img src="https://s2.loli.net/2022/12/22/vb27ckLozjX4q6Z.png" alt="risk_3_6.jpg"></li>
+</ul>
+<p>模型架构除了可以从数据源维度进行划分之外，还可以：</p>
+<ul>
+<li>从目标逾期标签定义或表现期长短的角度，分别建立 <code>DPD10</code> 逾期模型、<code>DPD60</code> 逾期模型，长表现期子模型和短表现期子模型等。</li>
+<li>结合客群细分，建立基于不同细分客群的子模型，再进行二次融合。</li>
+<li>采用不同算法建立不同子模型，再进行二次融合。</li>
+</ul>
+<p>在实际业务条件下，面对的可变条件太多、数据量的大小、模型调参方法的差异和特征维度的差异都会导致模型结果出现偏差，因此在同等条件下可以采用<strong>如无必要，勿增实体</strong>的原则，即采用最简单的方案。</p>
+<hr>
+
+<h3 id="开发方法论-训练开发"><a href="#开发方法论-训练开发" class="headerlink" title="开发方法论-训练开发"></a>开发方法论-训练开发</h3><h4 id="数据的准备和描述"><a href="#数据的准备和描述" class="headerlink" title="数据的准备和描述"></a>数据的准备和描述</h4><ol>
+<li><p>数据准备<br>数据准备是将构造完整的建模数据集，数据集的每一列为一个特征。风控模型中的特征是根据预测目标的粒度，基于底层的原始数据，通过汇总等方式加工而成的。而由于底层数据的不同，特征一般会分为不同的模块，每个特征模块包含若干个特征。</p>
+<p> 在数据准备阶段将可用的特征模块逐一按照样本选择的范围和每个样本观测点计算出对应的特征。通常将事后计算以前某个时间点的特征的行为称为<strong>回溯</strong>。特别的需要确保特征数据是观测点时刻可以获取的当时状态，这样才能保证模型在应用时才能获取到相同的特征。当原始数据已经被修改，无法追溯到当时的特征时，特征就不能 <em>回溯</em>，因此也就无法使用此特征。</p>
+<p> 特征无法回溯而造成特征值中包含观测点之后的信息，这被称为<strong>特征穿越</strong>或<strong>信息泄露</strong>。这种问题通常导致的后果就是特征效果和模型效果异常好，当真实场景使用时并不能得到相同的效果。因此<strong>特征穿越</strong>问题需要尽可能在数据准备阶段尽力排除，排除此问题共有以下三种方法：</p>
+<ul>
+<li>回溯数据与线上实时计算数据的一致性检查。</li>
+<li>单个变量与预测标签的效果指标分析。</li>
+<li>单个样本特征计算逻辑分析。</li>
+</ul>
+</li>
+<li><p>数据描述<br>数据描述即<strong>探索性数据分析（<code>Exploratory Data Analysis, EDA</code>）</strong>是指对特征进行统计分析，统计每个特征的<strong>缺失率</strong>、<strong>唯一值个数</strong>、<strong>最大值</strong>、<strong>最小值</strong>、<strong>平均值</strong>和<strong>趋势性变化</strong>等指标，使模型开发人员对数据集有清晰、细致的了解。<br>数据描述的目的在于<strong>了解特征分布，确认数据质量</strong>，在得到所有特征的统计指标后，需要首先确认数据质量，分析每个指标是否合理，而非直接进行数据清洗。</p>
+<p> 数据问题通常包含两类：</p>
+<ul>
+<li>由于非正常因素导致的异常，如系统故障导致的数据缺失。</li>
+<li>业务调整导致的异常，业务调整对某些特征是否影响的，会造成特征分布偏移。</li>
+</ul>
+</li>
+</ol>
+<h4 id="数据预处理（清洗）"><a href="#数据预处理（清洗）" class="headerlink" title="数据预处理（清洗）"></a>数据预处理（清洗）</h4><p>在进行特征选择和构建模型之前需要对数据进行预处理，使得数据能够全面反映全体样本信息，以适用于机器学习模型。<br>数据预处理包含<strong>异常值处理</strong>、<strong>特征缺失值处理</strong>、<strong>特征无量纲化</strong>、<strong>连续特征离散化</strong>、<strong>类别特征数值化</strong>和<strong>特征交叉组合</strong>。</p>
+<ol>
+<li><p>异常值处理<br>在实际业务中由于种种因素，通常会遇到<strong>异常值</strong>，如果不处理这些异常值将会导致后续数据分析和模型训练出现严重误差。</p>
+<ul>
+<li><p>异常值检测<br> 异常值检测主要有三种方法：</p>
+<ul>
+<li>基于统计的方法。基于统计的方法一般会构建一个概率分布模型，并计算对象符合该模型的概率，把具有低概率的对象视为异常点。</li>
+<li>基于聚类的方法。基于聚类算法将训练样本划分为若干类，如果某一个类的样本数很少，而且类中心和其他类的距离都很远，那么这个类中的样本极有可能就是异常点。</li>
+<li>专业的异常点检测算法。孤立森林（<code>lsolation Forest</code>）是一种应用官方的异常点检测算法。</li>
+</ul>
+</li>
+<li><p>异常值处理<br> 在检测出异常值后，一般常见的处理方式有两种：</p>
+<ul>
+<li>直接删除包含异常值的样本。</li>
+<li>结合特征含义选择置空异常值，或者填充为其他值。</li>
+</ul>
+<p> 另外有两种<strong>“异常”</strong>是无法通过技术手段检测出来的，需要结合具体业务含义识别</p>
+<ul>
+<li>周期性变化的特征。这类特征会严重影响模型的稳定性，应予以剔除。</li>
+<li>具有明显缺陷的特征，如有些埋点后续不会再有，相关特征应予以剔除。</li>
+</ul>
+</li>
+</ul>
+<p> 需要强调的是处理异常值必须谨慎。通过算法筛选出的异常值是否真正异常，需要从业务含义角度再次确认，避免将正常数据过滤掉。</p>
+</li>
+<li><p>特征缺失值处理<br>在处理<strong>特征缺失值</strong>之前，需要先判断缺失的原因。在实际业务中，出现缺失的原因有两种：</p>
+<ul>
+<li>非正常缺失。是指由于原始数据存储、数据接口出现异常而导致的回溯的特征缺失。</li>
+<li>正常缺失。对于需要客户授权的数据，部分客户拒绝会导致数据缺失；另外特殊的特征计算也会造成特征缺失。特征缺失值是否需要填充，需要根据建模时使用的算法综合考虑。<ul>
+<li>使用线性回归算法时，可以根据特征含义使用均值、众数和中位数等填充。</li>
+<li>在使用逻辑斯谛回归建立传统评分卡模型时，由于模型训练前会对特征进行分箱处理，因此会将特征缺失值单独作为一箱。</li>
+<li>使用决策树建模时，例如 <code>XGBoost</code> 算法会自动处理特征缺失值，因此不需要填充。</li>
+</ul>
+</li>
+</ul>
+<p> 不同缺失的处理方案如下：</p>
+</li>
+</ol>
+<p><img src="https://s2.loli.net/2022/12/29/kpjbL4DmU7XnZ6C.png" alt="risk_3_7.jpg"></p>
+<ol start="3">
+<li><p>特征无量纲化<br>特征无量纲化主要是通过特征的标准化将<strong>特征“缩小”到同一量纲</strong>。<br>对于建模特征，如果特征的单位或大小相差较大，或者特征的方差比其他几个特征高几个数量级，那么就很容易影响目标结果，使得线性模型无法学习其他特征，此时有必要进行特征标准化处理。常见的标准化处理方式如下：</p>
+<ul>
+<li><code>max-min</code> 标准化<br> <strong><code>max-min</code> 标准化</strong>也称为“归一化”，是通过对原始特征进行变换，把特征值映射到 <code>[0, 1]</code>。其中 <code>Xmax</code> 表示特征最大值，<code>Xmin</code> 表示特征最小值，<code>X</code> 表示原始特征值，变换公式如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X&#x27; = (X - Xmin) / (Xmax - Xmin)</span><br></pre></td></tr></table></figure></li>
+<li><code>z-score</code> 标准化<br> <strong><code>z-score</code> 标准化</strong>是常见的特征预处理方式，线性模型在训练数据之前基本都会进行 <code>z-score</code> 标准化。对原始特征进行变换可以把特征分布变换到均值为 <code>0</code>，标准差为 <code>1</code>，变换公式如下所示，其中 <code>u</code> 为特征均值，<code>a</code> 为特征标准差。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X&#x27; = (X - u) / a</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> <small>在使用 <code>max-min</code> 标准化时，如果测试集里的特征存在小于 <code>Xmin</code> 或大于 <code>Xmac</code> 的值，就会导致 <code>Xmin</code> 和 <code>Xmax</code> 发生变化。</small></p>
+</li>
+<li><p>连续特征离散化<br>连续特征离散化也称特征分箱，是指将<strong>连续属性的特征进行分段，使其变成一个个离散的区间</strong>。<br>在使用逻辑斯谛回归建立风控评分卡模型时，通常会对来连续特征进行离散化分箱，离散化后的特征对异常值有很强的<strong>鲁棒性</strong>，降低模型过拟合的风险，模型会更加稳定。此外单个特征离散化为多个分箱之后，再对分箱进行数值转换（例如 <code>WOE</code> 转换），此过程可以对非线性的关系进行线性转化，提高线性模型的表达能力。当建模的样本量较少时，离散化特征就非常重要，经过离散化后可以丢弃数据的细节信息，有效降低过拟合风险。<br>常见的特征分箱如下：</p>
+<ul>
+<li><strong>等频分箱</strong>是指分箱后，每个箱内的样本量相等。等频分箱能够确保每箱有足够的样本量，更有统计意义且在实际种应用广泛。</li>
+<li><strong>等距分箱</strong>是指按照相同宽度将特征值分为若干等份，各箱的特征值跨度相同。等距分箱的缺点是受到异常值的影响比较大，各箱之间的样本量不均衡，甚至有可能出现箱的样本量为 <code>0</code> 的情况。</li>
+<li><strong>卡方分箱</strong>是依赖于卡方校验的分箱方法，其基本思想是判断相邻的两个区间是否有分布差异，基于卡方统计量的结果进行自下而上的合并，直到满足分箱的终止条件为止。终止条件包括分箱个数和卡方阈值。</li>
+<li><strong>决策树分箱</strong>是指利用决策树算法，根据树节点的分割点，将特征划分为不同的分箱区间，属于有监督的分箱方法。</li>
+</ul>
+<p> <small>特征是否需要分箱是跟建模算法有关。风控评分卡模型需要很强的业务可解释性，所以在使用逻辑斯谛回归建模时，通常需要分箱处理；然而在使用 <code>XGBoost</code>、<code>LightGBM</code> 等机器学习算法时，通常是不需要分箱。</small></p>
+</li>
+<li><p>类别特征离散化<br>逻辑斯谛回归和支持向量机等算法要求所有特征是<strong>数值型变量</strong>，但在实际业务中会存在部分特征是<strong>类别型变量</strong>（例如性别、身份和职业等）。类别型变量可以分为两种：第一种是没有任何先后顺序或等级关系的<strong>标称类别变量（<code>nominal category variable</code>）</strong>，例如性别、省份等；第二种则是有先后顺序或等级关系的<strong>有序类别型变量（<code>ordinal category variable</code>）</strong>，例如学历、满意程度等。<br>处理类别特征通常采用的方式是<strong>编码</strong>。编码分为两种：一种是<strong>无监督编码方式</strong>，主要有<strong>序数编码</strong>和 <strong><code>one-hot</code> 编码</strong>；另一种则是<strong>有监督编码方式</strong>，主要有 <strong><code>Binary</code> 编码</strong>、**<code>Hashing</code> 编码<strong>、</strong><code>CatBoost</code> 编码**等。<br><small>当特征类别取值较多时，通常是先进行分箱，合并一些类别后再对分箱进行编码处理。</small><br>无监督编码方式：</p>
+<ul>
+<li>序数编码<br>   <strong>序数编码（<code>ordinal encoding</code>）</strong>是一种简单的编码方式，直接对特征中的每个类别设置一个标号，<strong>将非数值特征转化为数值特征</strong>。一个有 <code>N</code> 种类别的特征可以与 <code>[0, N-1]</code> 中的整数一一对应。<br>   <small>需要注意的是，序数编码只是将类别型变量更换了一种表达方式，其本质上还是离散的，数值化后的大小关系没有实际意义。</small></li>
+<li><code>one-hot</code> 编码<br>   <code>one-hot</code> 编码（<code>one-hot encoding</code>）也称“独热”编码，是指<strong>对每一种分类单独创建一个列，用 <code>0</code> 或 <code>1</code> 填充</strong>。<br>   <img src="https://s2.loli.net/2022/12/29/NMKFmT1eAP6fxSI.png" alt="risk_3_8.jpg"><br>   <small>需要注意的是，对于类别特别多的类别型变量，<code>one-hot</code> 编码会导致特征维度激增，特征更加稀疏，影响模型效果。</small></li>
+</ul>
+<p> 有监督编码方式：</p>
+<ul>
+<li>目标编码<br> <strong>目标编码（<code>target encoding</code>）</strong>也称<strong>均值编码</strong>，是一种有效表示类别型变量的方法。<br> 该方法将<strong>类别型变量的值映射为和标签 <code>y</code> 相关的统计指标</strong>，属于有监督编码方式。具体是将特征中的每个字替换为该类别的标签 <code>y</code> 的均值。但该方法严重依赖因变量的分布，会导致大大减少生成编码后特征的数量。<ul>
+<li>在 <em>分类模型</em> 中，标签 <code>y</code> 的取值一般只有 <code>0</code> 和 <code>1</code> 两种，目标编码公式如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X&#x27; = p(y=1 | X=Xtarget)</span><br></pre></td></tr></table></figure>
+ 计算特征值等于类别 <code>Xtarget</code> 时 <code>y=1</code> 的概率。</li>
+<li>在 <em>回归模型</em> 中，标签 <code>y</code> 是连续数值，目标编码公式如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X&#x27; = sum(y | X=Xtarget) / sum(X=Xtarget)</span><br></pre></td></tr></table></figure>
+ <code>y | X=Xtarget</code> 表示特征值等于类别 <code>Xtarget</code> 是 <code>y</code> 的取值。</li>
+</ul>
+</li>
+<li><code>WOE</code> 编码<br> <strong><code>WOE</code>（<code>Weight of Evidence</code>，证据权重）</strong>是针对对原始特征的一种编码形式。<br> <strong><code>WOE</code> 编码（<code>WOE encoding</code>）</strong>适用于<strong>二分类问题的特征预处理</strong>。具体做法是使用特征中每种类别 <code>y=1</code> 的概率和 <code>y=0</code> 的概率的比值的对数替代每种类别的特征值。计算公式如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WOEi = ln(p(Badi)/p(Goodi)) = ln((Badi/BadT)/(Goodi/GoodT)) = ln(Badi/BadT) - ln(Goodi/GoodT)</span><br></pre></td></tr></table></figure>
+ 其中 <code>Badi</code> 为类别 <code>i</code> 中标签为 <code>1</code> 的样本数，<code>Goodi</code> 为类别 <code>i</code> 中标签为 <code>0</code> 的样本数，<code>BadT</code> 为所有样本中标签为 <code>1</code> 的样本数，<code>GoodT</code> 为所有样本中标签为 <code>0</code> 的样本数。因此 <code>WOE</code> 可以表示<strong>“当前类别中坏样本占所有坏样本的比例”</strong>和<strong>“当前类别中好样本占所有好样本的比例”</strong>的差异。<br> <small><code>WOE</code> 编码不仅可以处理类别特征，也可以处理连续特征。尤其是在评分卡模型中，使用逻辑斯谛回归算法拟合特征与逾期率的关系，首先会对连续特征进行分箱，然后利用各箱的 <code>WOE</code> 值代替特征值。</small></li>
+</ul>
+</li>
+<li><p>特征交叉组合<br>特征交叉组合是数据特征的一种处理方式，该方式可以<strong>增加特征的维度</strong>，组合的特征能够反映更多的非线性关系。<br><small>实践中，通常会对类别特征进行组合；而对于连续特征，可以先进行分箱，再进行组合，也可以直接进行特征交叉衍生。</small></p>
+<ul>
+<li>离散特征分类组合<br>   对于<strong>类别型变量</strong>特征的交叉组合，特征 <code>A</code> 取值类别有 <code>m</code> 种，特征 <code>B</code> 取值类别有 <code>n</code> 种，可以通过<strong>笛卡尔积</strong>的方式进行特征组合，可以重新得到组合后的 <code>m*n</code> 个组合特征。</li>
+<li>连续特征交叉衍生<br> 特征交叉衍生的方式有很多种，常用的方式有：<ul>
+<li>利用数值型特征之间的<strong>加、减、乘、除操作</strong>得到新特征；</li>
+<li>对已选定特征进行<strong>奇异值分解（<code>SVD</code>）</strong>，将奇异值作为新特征；</li>
+<li>根据已选特征进行<strong>聚类</strong>，将所在类别的平均目标值或出现最多的值作为新特征，或者将所在类别与其他类别的距离作为新特征等；</li>
+<li>此外还可以利用<strong>深度学习技术衍生新特征</strong>，利用神经网络中某层的数据作为新特征也是一种思路。</li>
+</ul>
+</li>
+</ul>
+<p> <small>特征交叉组合会导致特征维度激增，组合后的特征因此可能会很稀疏，因此在实践中，需要根据特征含义组合出具有业务含义的特征。</small></p>
+</li>
+</ol>
+<h4 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h4><p>特征选择（<code>feature selection</code>）是指选择能够使模型获得最佳性能的特征子集。特征的必要性包括：</p>
+<ul>
+<li><p>特征池中的特征并非都对模型有益，如果选取不稳定的的特征训练模型，那么最终生成的模型的稳定性较差。</p>
+</li>
+<li><p>线性模型要求特征间不能多重共线性，因此需要选择无严重共线性的特征建模。</p>
+</li>
+<li><p>选取尽可能对模型有增益的特征，剔除无用特征，从而降低特征维度缩短模型训练时间和减少对机器资源的损耗。</p>
+<p> 特征选择一般都是反复迭代、验证，并且和模型训练过程循环进行，最终可以得到性能优异的模型。特征选择可以从<strong>基于特征属性选择</strong>、<strong>基于特征效果选择</strong>和<strong>基于特征稳定性</strong>三个方面。</p>
+</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/12/04/XzvGq4ukioealpN.png" alt="risk_3_3.jpg"></p>
+<h5 id="基于特征属性选择"><a href="#基于特征属性选择" class="headerlink" title="基于特征属性选择"></a>基于特征属性选择</h5><p>基于特征属性选择特征，不需要任何标签信息，直接根据特征值分布或特征之间的关系进行选择，计算速度快，一般用于特征初筛。主要方法有<strong>缺失率选择法</strong>、<strong>变异系数选择法</strong>、<strong>相关性选择法</strong>和<strong>多重共线性选择法</strong>。</p>
+<ol>
+<li><p>缺失率选择法<br>一般情况下，当特征缺失率超过 <code>95%</code> 时就不再适合参与建模，首先要做的就是剔除特征。而当特征缺失率不超过 <code>95%</code> 时，可以采用缺失值处理方法进行处理。对于缺失率阈值，可以根据具体业务场景灵活调整。</p>
+</li>
+<li><p>变异系数选择法<br> <strong>变异系数（<code>coefficient of variation</code>）又称 <em>离散系数</em></strong> 是概率分布离散程度的一个归一化量度，其定义为标准差与均值之比。<br>变异系数反映了特征分布的离散程度，相比方差，变异系数是一个无量纲量，因此在比较两组量纲不同或均值不同的数据时，应该用变异系数而不是标准差。特征选择过程中会首先过滤变异系数为 <code>0</code> 的特征。<br><small>如果某个特征的变异系数很小，则表示样本在这个特征上没有差异，可能特征中的大多数值都是一样的，甚至整个特征取值全部相同。</small></p>
+</li>
+<li><p>相关性选择法<br>相关性是衡量<strong>两个特征之间依赖关系</strong>的指标。度量特征相关性的指标有很多，常见的有以下三种：</p>
+<ul>
+<li><strong><code>Person</code> 相关系数</strong><br>  用来度量特征的 <em>线性相关性</em>，取值范围为 <code>[-1, 1]</code>，大于 <code>0</code> 表示两个特征正相关，小于 <code>0</code> 表示两个特征负相关，等于 <code>0</code> 则表示两个特征非线性相关。</li>
+<li><strong><code>Spearman</code> 相关系数</strong><br>  用来度量特征 <em>单调相关性</em>，取值范围为 <code>[-1, 1]</code>，大于 <code>0</code> 表示两个特征正相关，小于 <code>0</code> 表示两个特征负相关，等于 <code>0</code> 则表示两个特征非单调相关。</li>
+<li><strong><code>Kendall</code> 相关系数</strong><br>  用来度量特征 <em>有序分类特征相关性</em>，取值范围为 <code>[-1, 1]</code>，大于 <code>0</code> 表示两个特征正相关，小于 <code>0</code> 表示两个特征负相关，等于 <code>0</code> 则表示两个特征排名独立。</li>
+</ul>
+<p>  <small>逻辑斯谛回归等算法要求特征之间不得具有很强的相关性，否则会导致无法用特征系数解释最终模型的入模特征（即模型使用的特征）与目标变量之间的关系。</small></p>
+</li>
+<li><p>多重共线性选择法<br>多重共线性描述的是<strong>一个自变量与其他自变量（可以多个）</strong>之间的完全线性关系。<strong>方差膨胀系数（<code>Variance Inflation Factor, VIF</code>）</strong>是一种衡量共线性程度的常用指标，表示回归系数估计量的方差与假设特征间不线性相关时的方差的比值。<br><code>VIF</code> 计算公式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VIF = 1 / (1 - R^2)</span><br></pre></td></tr></table></figure>
+<p> <code>R^2</code> 是某个特征对其余特征做回归分析的复相关系数。<code>VIF</code> 越大，该特征与其他特征的关系越复杂，多重共线性越严重。<code>VIF &lt; 10</code> 则认为不存在多重共线性；<code>10 &lt;= VIF &lt; 100</code> 则认为存在较强的多重共线性；<code>VIF &gt;= 100</code> 则认为存在严重的多重共线性。</p>
+</li>
+</ol>
+<h5 id="基于特征效果选择"><a href="#基于特征效果选择" class="headerlink" title="基于特征效果选择"></a>基于特征效果选择</h5><ol>
+<li><p><code>IV</code> 选择<br> <strong><code>IV</code>（<code>Information Value</code>，信息价值）</strong>是衡量特征预测能力的关键指标。<code>IV</code> 和 <code>WOE</code> 之间的关系可以描述为：<code>WOE</code> 描述了特征和目标变量之间的关系；<code>IV</code> 用来衡量这种关系的强弱程度。<br><code>WOE</code> 分析特征各个分箱对于目标变量的预测能力，<code>IV</code> 用来反映特征的总体预测能力。<code>IV</code> 的计算公式即在第 <code>i</code> 箱 <code>WOE</code> 的基础上乘以系数，该系数表示该分箱坏样本比例和好样本比例的差。</p>
+<table>
+<thead>
+<tr>
+<th><code>IV</code> 范围</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>iv &lt; 0.02</td>
+<td>无预测能力，需放弃</td>
+</tr>
+<tr>
+<td>[0.02, 0.1)</td>
+<td>较弱的预测能力</td>
+</tr>
+<tr>
+<td>[0.1, 0.3)</td>
+<td>预测能力一般</td>
+</tr>
+<tr>
+<td>[0.3, 0.5)</td>
+<td>预测能力较强</td>
+</tr>
+<tr>
+<td>iv &gt; 0.5</td>
+<td>预测能力极强，需检查</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>卡方校验<br>卡方校验是一种以<strong>卡方分布</strong>为基础的检验方法，主要用于类别变量，根据样本数据推断总体分布与期望分布是否有显著差异，或者推断两个类别变量是否相关或相互独立。其原假设为：观察频数与期望频数没有差别。</p>
+</li>
+<li><p>包裹法</p>
+<ul>
+<li><p>逐步回归<br>   <strong>逐步回归（<code>stepwise regression</code>）</strong>是一种筛选并剔除引起多重共线性变量的方法，广泛应用于逻辑谛斯回归模型。<br>  其基本思想是将解释变量逐个引入模型，每引入一个解释变量都进行统计性假设检验，当原来引入的解释变量由于后来解释变量的引入变得不再显著时则将其删除，以确保每次引入新变量之前，回归方程中只包含显著性变量。<br>  逐步回归共有三种方式：</p>
+<ul>
+<li>前向逐步回归，将特征逐步加入。</li>
+<li>后向逐步回归，从所有特征集中将特征逐步剔除。</li>
+<li>双向逐步回归，前向加入与后向剔除同时进行，即在每次加入新特征的同时，将显著性水平低于阈值的特征剔除。</li>
+</ul>
+<p>  <small>一般情况下，双向逐步回归的效果比前向逐步回归和后向逐步回归好。</small></p>
+</li>
+<li><p>递归特征消除<br>   <strong>递归特征消除（<code>Recursive Feature Elimination, RFE</code>）</strong>也是常用的包裹法特征选择方法，其基本思想是使用一个 <em>基模型</em> 进行多轮训练，每轮训练之后消除若干重要性低的特征（线性模型特征归一化后使用特征系数衡量其重要性），再基于特征集进行下一轮训练。</p>
+</li>
+</ul>
+</li>
+<li><p>嵌入法</p>
+<ul>
+<li>基于 <code>L1</code> 范数<br>  <strong>线性模型</strong>可以被看作是多项式模型，其中每一项的系数都可以表征这一维特征的重要性，越重要的特征在模型中对应的系数越大，而与输出变量相关性越小的特征，对应的系数越接近 <code>0</code>。<br>  <code>L1</code> 正则化将系数的 <code>L1</code> 范数作为 <em>惩罚</em> 项加到损失函数中，由于正则项非零，则会导致不重要的特征系数变为 <code>0</code>，因此使用 <code>L1</code> 正则化的模型往往稀疏，这使得 <code>L1</code> 正则化成为很好的特征选择方法。<br>  <small>在使用线性模型进行 <code>L1</code> 正则化特征选择时，应先消除多重共线性。</small></li>
+<li>基于树模型<br>  建立<strong>树模型</strong>的过程就是特征选择。基于树模型的特征选择会根据信息增益或基尼不纯度的准则来选择特征进行建模，输出各个特征的重要度，依此进行特征筛选。</li>
+</ul>
+</li>
+</ol>
+<h5 id="基于特征稳定性"><a href="#基于特征稳定性" class="headerlink" title="基于特征稳定性"></a>基于特征稳定性</h5><ol>
+<li><p><code>PSI</code> 选择<br><code>PSI</code> 指特征的<strong>稳定性指标</strong>，用于识别分布变化大的特征，充分了解其背后的特征分布变化的原因，判断是否可接受。其中稳定性是有参照的，在建模时将训练样本的分布作为<strong>预期分布（<code>expected distributiopn</code>）</strong>，将 <code>OOT</code> 样本作为作为<strong>实际分布（<code>actual distributiopn</code>）</strong>。<br>在计算 <code>PSI</code> 时需要先将特征值分箱。<code>PSI</code> 计算公式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PSI_i = (p(Actual_i) - p(Expected_i)) * ln(p(Actual_i)/p(Expected_i)) </span><br><span class="line">      = (Actual_i/Actual_t - Expected_i/Expected_t) * ln((Actual_i/Actual_t)/(Expected_i/Expected_t))</span><br></pre></td></tr></table></figure>
+<p>其中 <code>PSI_i</code> 表示第 <code>i</code> 个分箱稳定性指标的结果，<code>Actual_i</code> 为第 <code>i</code> 个分箱实际样本个数，<code>Expected_i</code> 为第 <code>i</code> 个分箱期望样本个数，<code>Actual_t</code> 为实际样本总数，<code>Expected_t</code> 为期望样本总数。</p>
+<p> <code>PSI</code> 表示实际样本分布和期望样本分布的差异。</p>
+<table>
+<thead>
+<tr>
+<th><code>PSI</code> 范围</th>
+<th>稳定性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>iv &lt; 0.1</td>
+<td>变化不太显著</td>
+</tr>
+<tr>
+<td>[0.1, 0.25]</td>
+<td>有比较显著的变化</td>
+</tr>
+<tr>
+<td>iv &gt; 0.25</td>
+<td>变化剧烈，需要特殊关注</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>逾期率变化选择<br>在风控业务中，有些特征的不稳定性表现在对逾期率排序的衰减上，随着时间的变化特征对预测变量的排序会发生颠倒，称之为<strong>“倒箱”</strong>。<br><small><code>PSI</code> 反映的主要是特征分布的不稳定性，而“倒箱”体现特征对预测变量区分能力的不稳定性。</small></p>
+</li>
+</ol>
+<h4 id="特征提取"><a href="#特征提取" class="headerlink" title="特征提取"></a>特征提取</h4><p>特征提取（<code>feature extraction</code>）是指从原有较多的特征中计算出较少的特征，用新特征替换原有特征，达到降维的目的，即通过从样本中学习一个映射函数 <code>f</code>，将原特征矩阵 <code>X1</code> 映射到 <code>X2</code>，其中 <code>X2</code> 的维度小于 <code>X1</code>。<br><small>特征选择和特征提取都是为了特征降维，二者实现效果相同，当采用的方法不同。特征提取采用的是通过属性间的关系，如组合不同属性得到新属性以此改变原有的特征空间；特征选择采用的是从原始特征数据集中选用子集，这是一种包含关系并没有改变原始特征空间。</small><br>特征提取方法分为两大类：</p>
+<ul>
+<li>线性特征提取方法<ul>
+<li><strong>主成分分析方法（<code>Principal Component Analysis, PCA</code>）</strong>，映射后的样本具有更大的发散性。</li>
+<li><strong>线性判别分析法（<code>Linear Discriminant Analysis, LDA</code>）</strong>，映射后的样本具有较好的的分类性能。</li>
+</ul>
+</li>
+<li>非线性特征提取方法<ul>
+<li><strong>局部线性嵌入（<code>Locally Linear Embedding, LLE</code>）</strong>，保持邻域内样本之间的线性关系。</li>
+<li><strong>多维尺度变换（<code>Multiple Dimensional Scaling, MDS</code>）</strong>，保持降维后的样本间距离不变。</li>
+</ul>
+</li>
+</ul>
+<h5 id="线性特征提取"><a href="#线性特征提取" class="headerlink" title="线性特征提取"></a>线性特征提取</h5><ol>
+<li><p><code>PCA</code><br><code>PCA</code> 将<strong>高维的特征向量合并为低维的特征向量</strong>，是一种<strong>无监督</strong>的特征提取方法。其基本原理是通过线性投影，将高维数据映射到低维空间中表示，并且期望在所投影的维度上数据的方差最大（最大方差理论），以此使用较少的数据维度，留存较多的原始数据特性。<br><code>PCA</code> 是我们常用的特征提取方法，其优点如下：</p>
+<ul>
+<li>仅需要以<strong>方差</strong>衡量信息量，不受数据集以外的因素影响。</li>
+<li>各主成分之间正交，可消除原始数据成分间相互影响的因素。</li>
+</ul>
+<p> 缺点如下：</p>
+<ul>
+<li>主成分各个特征维度的含义不如原始特征的解释性强。</li>
+<li>非主成分也可能含有重要信息，丢弃后会降低模型效果。</li>
+</ul>
+</li>
+<li><p><code>LDA</code><br><code>LDA</code> 是一种<strong>基于分类模型进行特征属性合并</strong>的操作，是一种<strong>有监督</strong>的特征提取方法。其基本原理是将带有标签的数据投影到维度更低的空间中，使得投影后的点按类别区分，相同类别的点会在投影后的空间中更接近，用一句话概括就是：投影后相同类间方差最小，不同类间方差最大。<br><code>LDA</code> 的优点如下：</p>
+<ul>
+<li>在特征提取的过程中，可以使用类别的先验知识。</li>
+<li>在分类过程中，依赖<strong>均值</strong>而不是方差的时候，其优于 <code>PCA</code> 之类的算法。</li>
+</ul>
+<p> 缺点如下：</p>
+<ul>
+<li>不适合对<strong>非高斯分布样本</strong>进行特征提取。</li>
+<li>可能过度拟合数据。</li>
+</ul>
+<p> 除了 <code>PCA</code> 和 <code>LDA</code> 之外，线性特征提取方法还有因子分析（<code>Factor Analysis, FA</code>）、奇异值分解（<code>Singular Value Decomposition, SVD</code>）和独立成分分析（<code>Independent Component Analysis, ICA</code>）等。</p>
+</li>
+</ol>
+<h5 id="非线性特征提取"><a href="#非线性特征提取" class="headerlink" title="非线性特征提取"></a>非线性特征提取</h5><ol>
+<li><p><code>LLE</code><br><code>LLE</code> 是一种基于 <em><strong>流形学习</strong></em> 的方法（流形学习假设所处理的数据点分布在嵌入外围欧氏空间的一个潜在的流形体上，或者说这些数据点可以构成这样的一个潜在的流形体），其能够使特征提取后的数据较好地保存原有流形结构。<code>LLE</code> 假设数据在较小的局部是线性的，即每一个数据点都可以由其近邻点线性表示。<br><code>LLE</code> 主要分为三步，首先寻找每个样本点的 <code>k</code> 个近邻点；然后由每个样本点的近邻点计算出该样本点的权重；最后由该样本点的权重在低维空间中重构样本数据。至此就可以将特征映射到低维空间中。<br><code>LLE</code> 的优点如下：</p>
+<ul>
+<li>可以学习任意维度局部线性的低维流形。</li>
+<li>该方法归结为<strong>稀疏矩阵特征分解</strong>，计算复杂度较小且实现容易。</li>
+</ul>
+<p> 缺点如下：</p>
+<ul>
+<li>学习的流形只能是不闭合的，且样本集是稠密、均匀的。</li>
+<li>该方法对最近邻接样本数的选择敏感，不同近邻数对最终结果有很大影响。</li>
+</ul>
+</li>
+<li><p><code>MDS</code><br><code>MDS</code> 是将<strong>高维空间中的样本点投影到低维空间</strong>中，让样本彼此之间的距离尽可能不变。其基本原理是首先计算得到高维空间中样本之间的<strong>距离矩阵</strong>，接着计算得到低维空间的<strong>内积矩阵</strong>，然后对低维空间的内积矩阵进行特征值分解，并按照从大到小的顺序取前 <code>d</code> 个（<code>d</code> 表示低维空间的维度）特征值和特征向量，最后得到在 <code>d</code> 维空间中的距离矩阵。<br><code>MDS</code> 的优点如下：</p>
+<ul>
+<li>不需要先验知识，计算简单。</li>
+<li>保留样本在原始空间的相对关系，可视化效果较好。</li>
+</ul>
+<p> 缺点如下：</p>
+<ul>
+<li>当有样本的先验知识时，他无法被充分利用，因此无法得到预期效果。</li>
+<li>该方法认为各维度对目标的贡献相同，忽略了维度间的差剧。</li>
+</ul>
+<p> 除了 <code>LLE</code> 和 <code>MDS</code> 之后，非线性特征提取方法还有等度量映射（<code>Isometric Feature Mapping, ISOMAP</code>）和 <code>t-SNE</code> 等。</p>
+</li>
+</ol>
+<h4 id="训练、概率转化和效果评估"><a href="#训练、概率转化和效果评估" class="headerlink" title="训练、概率转化和效果评估"></a>训练、概率转化和效果评估</h4><p>特征选择和特征提取之后就是关键的模型训练环节，首先<strong>模型训练基础知识</strong>，其次<strong>概率转化方法</strong>，最后<strong>评价模型效果</strong>以及<strong>选择合适的模型</strong>。</p>
+<h5 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h5><p>机器学习的模型训练其本质是<strong>参数优化过程</strong>。其参数可以分为两种：一种是<strong>模型参数（<code>parameter</code>）</strong>；另一种是<strong>超参数（<code>typerparameter</code>）</strong>。<br><strong>模型参数</strong>是可以直接通过数据估计得到的，如线性回归模型中的回归参数。<strong>超参数</strong>是用来定义模型结构或优化策略的，通常需要在模型训练前根据经验给定，如正则化系数。因此模型训练的目标是找到使得最终模型最好的超参数组合。</p>
+<p>模型调参是寻找最优超参数组合的过程。常见的模型调参方法有以下几种：<strong>网格搜索（<code>grid search</code>）</strong>；<strong>随机搜索（<code>random search</code>）</strong>；<strong>贝叶斯优化（<code>bayesian optimization</code>）</strong>。</p>
+<p>交叉验证的方法有以下几种：<strong>留 <code>p</code> 法交叉验证</strong>；<strong>留一法交叉验证</strong>；**<code>K</code> 折交叉验证**。</p>
+<h5 id="概率转化"><a href="#概率转化" class="headerlink" title="概率转化"></a>概率转化</h5><p>风控模型（如 <code>XGBoost</code> 模型、<code>LighrGBM</code> 模型、<code>LR</code> （逻辑斯谛回归）模型）直接输出的是客户逾期概率，在风控信贷场景中，需要<strong>将概率转化为评分，通过分数量化客户的风险等级</strong>。<br>转换为评分的额方法如下：设 <code>p</code> 为客户逾期概率，那么客户逾期概率与未逾期概率的比值 <code>p/(1-p)</code> 记为 <code>oods</code>。转换为评分的计算公式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">score = A - B * log(odds) = A - B * log(p / 1-p)</span><br></pre></td></tr></table></figure>
+<p> 客户逾期概率越低，评分越高。在通常情况下，这是分值的变动方式，即高分值代表低风险，而低分子代表高风险。其中 <strong><code>A</code> 和 <code>B</code> 都是常数</strong>，在计算时通常需要做出两个假设：给定 <code>odds = Ratio</code> 时，预期分数为 <code>Base</code>；<code>odds</code> 翻倍时，分数减少值为 <code>PDO(Point of Double Odds)</code>。由此可以得到 <code>A = Base + B * log(2 * Ratio), B = PDO / log2</code>。</p>
+<h5 id="模型效果评估"><a href="#模型效果评估" class="headerlink" title="模型效果评估"></a>模型效果评估</h5><p>根据模型对样本的预测分数和样本的真实标签，可以通过不同角度的指标来评估模型的效果。<br>通过多种指标对模型性能进行评价，不同的评价指标往往产生不同的评价效果，这表明模型的 <em>好坏</em> 是相对的，具体使用何种指标取决于实际使用场景。<br>样本根据其<strong>真实类别和模型预测类别</strong>可形成以下四种组合：</p>
+<ul>
+<li><strong>真正例（<code>True Positive, TP</code>）</strong>：真实类别为正例，预测类别为正例。</li>
+<li><strong>假正例（<code>False Positive, FP</code>）</strong>：真实类别为负例，预测类别为正例。</li>
+<li><strong>假负例（<code>False Negative, FN</code>）</strong>：真实类别为正例，预测类别为负例。</li>
+<li><strong>真负例（<code>True Negative, TN</code>）</strong>：真实类别为负例，预测类别为负例。<br><img src="https://s2.loli.net/2022/12/22/DMNZFGvq5iTQen8.png" alt="risk_3_5.jpg"></li>
+</ul>
+<p>对于回归任务，常见的评价指标有 <code>RMSE</code>（平方根误差）、<code>MAE</code>（平均绝对误差）、<code>MSE</code>（平均平方误差）和 <code>coefficient of determination</code>（决定系数）。对于分类任务，常见的评价指标有准确率、精确率、召回率、<code>F1</code> 值、<code>AUC</code> 和 <code>KS</code> 等。</p>
+<ul>
+<li><strong>准确率</strong><br>  准确率（<code>accuracy</code>）是指正确预测的正负例样本数和总样本数的比值。<code>accuracy = (TP + TN) / (TP + FP + FN + TN)</code>。</li>
+<li><strong>精确率</strong><br>  准确率（<code>precision</code>）又称查准率，是指预测为正例的样本中真正是正例的样本比例。<code>precision = TP / (TP + FP)</code>。</li>
+<li><strong>召回率</strong><br>  召回率（<code>recall</code>）又称查全率，是指实际正例样本中模型预测为正例的样本比例。<code>recall = TP / (TP + FN)</code>。</li>
+<li><strong><code>F1</code> 值</strong><br>  <code>F1</code> 值是精确率和召回率的调和值，更接近于两个数中较小的那个，因此精确率和召回率接近时，<code>F1</code> 值更大。<code>F1 = (2 * precision * recall) / (precision + recall)</code>。</li>
+<li><strong><code>AUC</code></strong><br>  <code>AUC(Area Under Curve)</code> 为 <code>ROC</code> 曲线下的面积。<code>ROC(Receiver Operating Characterstic, 接收者工作特征)</code> 曲线源于雷达信号分析技术，<code>ROC</code> 曲线的横坐标为 <code>FPR</code>（假正率），<code>FPR = FP / (FP + TN)</code>，即被预测为正例的负样本数与真实负样本数的比值；纵坐标为 <code>TPR</code>（真正率），<code>TPR = TP / (TP + FN)</code>，即被预测为正例的正样本数与实际正样本数的比值。<code>AUC</code> 的取值范围为 <code>0~1</code>。</li>
+<li><strong><code>KS</code></strong><br>  <code>KS（Kolmogorov-Smirnov）</code> 指标主要用来验证模型对客户 <em>好坏</em> 的区分能力，用以检验两个经验分布是否不同，或者一个经验分布与一个理想分布是否不同。<br>  在计算风控模型 <code>KS</code> 指标时，通常是在模型对样本打分后，对分数进行分箱，然后分别统计每箱累积 <em>好</em> 客户和累积 <em>坏</em> 客户与 <em>好</em> 客户和 <em>坏</em> 客户总体的比值，累计 <em>坏</em> 客户比例与累计 <em>好</em> 客户比例的差值即为每箱对应的 <code>KS</code> 值。<br>  模型 <code>KS</code> 定义为各分箱 <code>KS</code> 值得最大值：<code>KS = max(Pcum(Bad) - Pcum(Good))</code>，<code>KS</code> 值越高，模型越好。但过高的 <code>KS</code> 值可能意味者过度拟合或特征 <em>穿越</em> 等。<br>  <small>相比 <code>KS</code>，<code>AUC</code> 更加稳健。而相比准确率、召回率、<code>F1</code> 值等指标，<code>AUC</code> 指标优势在于不需要设定分类阈值，只需要关注预测概率的排序，因此一般在二分类模型中主要将 <code>AUC</code> 作为模型效果的评价指标。</small></li>
+</ul>
+<hr>
+
+<h3 id="开发方法论-上线和维护"><a href="#开发方法论-上线和维护" class="headerlink" title="开发方法论-上线和维护"></a>开发方法论-上线和维护</h3><p>模型训练通常在本地环境中进行，训练完成后，首先选择最优模型并部署到线上环境，然后验证模型在线上环节运行是否准确无误，确认无误后，才会使用。</p>
+<h4 id="部署及上线验证"><a href="#部署及上线验证" class="headerlink" title="部署及上线验证"></a>部署及上线验证</h4><ol>
+<li>模型部署<br>模型部署是将训练完成的模型部署到线上环境。考虑其是否可以跨语言部署，模型文件通常可以选择保存为以下两种方式：</li>
+</ol>
+<ul>
+<li><code>pickle</code> 格式<br>  <code>pickle</code> 是 <code>Python</code> 语言独有的格式。若线上为 <code>Python</code> 环境，那么就可以通过 <code>pickle</code> 格式实现模型的快速读取。  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 pickle 格式保存和读取模型</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">save_model_as_pkl</span>(<span class="params">model, path</span>):</span><br><span class="line">	<span class="keyword">import</span> pickle</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">		pickle.dump(model, f, protocol=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_model_from_pkl</span>(<span class="params">path</span>):</span><br><span class="line">	<span class="keyword">import</span> pickle</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">		model = pickle.load(f)</span><br><span class="line">	<span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+  <small>保存模型时设置 <code>protocol=2</code> ，表示以二进制协议对模型内容进行序列化存储，以此解决 <code>Python3</code> 环境中保存的模型在 <code>Python2</code> 环境中部署。</small></li>
+<li><code>PMML</code> 格式<br>  预测模型标记语言（<code>Predictive Model Markup Language, PMML</code>）是一套与平台和环境无关的模型标记语言，可实现跨平台的机器学习模型部署。</li>
+</ul>
+<ol start="2">
+<li>上线验证<br>模型部署到线上环境后，通常先作为<strong>空跑</strong>一段时间使用，当积累一定样本量时可以进行上线验证。上线验证的目的在于确认模型在线上环境中按照预期运行。验证方式主要有以下三种：<strong>预测分数的一致性</strong>；<strong>模型分分布的差异性</strong>；<strong>模型效果的一致性</strong>。</li>
+</ol>
+<h4 id="监控和异常处理"><a href="#监控和异常处理" class="headerlink" title="监控和异常处理"></a>监控和异常处理</h4><p>模型上线之后，为了保证模型有效运行，需要对模型相关指标进行监控。当遇到异常状况时，可以通过多种途径发出预警。</p>
+<h5 id="模型监控"><a href="#模型监控" class="headerlink" title="模型监控"></a>模型监控</h5><p>模型监控主要以报表方式展示各项监控指标。</p>
+<ul>
+<li>模型监控内容<br>  模型监控包含<strong>准确性</strong>、<strong>稳定性</strong>和<strong>有效性</strong>三个方面。<ul>
+<li>准确性是模型有效运行的基础。模型打分准确性监控是要确保<strong>线上模型的结果与线下模型计算的结果一致</strong>。</li>
+<li>稳定性是模型有效运行的保障。稳定性监控主要是监测模型分和特征是否稳定，可以从以下两个方面来判断：<strong>模型分布变化</strong>；<strong>特征值的分布变化</strong>。</li>
+<li>有效性是模型运行的目标。模型有效性监控是指持续监控模型的预测能力，识别其是否有衰减。监控指标主要依赖于 <strong><code>KS</code></strong> 和 <strong><code>AUC</code></strong> 指标，以及特征的 <strong><code>IV</code></strong> 指标。</li>
+</ul>
+</li>
+<li>模型监控形式<br>  模型监控可以按照<strong>日报</strong>、<strong>周报</strong>和<strong>月报</strong>形式，采用<strong>邮件</strong>或<strong>可视化页面</strong>的方式展示监控结果。</li>
+</ul>
+<h5 id="模型预警"><a href="#模型预警" class="headerlink" title="模型预警"></a>模型预警</h5><p>模型预警主要是根据预警条件触发预警信息，提示模型异常，因此需要定义预警指标触发条件和预警形式。<br>对每一项监控设定预警指标并定义预警阈值，当监控的指标值偏离该范围时就会发出预警。对应模型的<strong>准确性</strong>、<strong>稳定性</strong>和<strong>有效性</strong>监控，预警指标有<strong>一致性</strong>、**<code>PSI</code>** 和 **<code>KS</code>**，然后进一步根据指标的风险程度划分预警等级。<br>预警指标阈值没有统一的设置规范，不同业务场景对风险的容忍度有所差别，因此需要结合具体场景和业务相关人员共同确定阈值。</p>
+<h5 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h5><p>模型异常处理是指模型发生异常时，需要快速分析问题和解决问题，将影响尽可能降到最低。导致模型的准确性、稳定性和有效性异常的原因有很多，下面为常见的原因：</p>
+<ul>
+<li>模型准确性异常处理<br>  导致模型准确性异常的原因通常有以下两种：<strong>运行环境发生改变</strong>；<strong>特征预处理逻辑发生改变</strong>。</li>
+<li>模型稳定性异常处理<br>  导致模型稳定性异常的原因通常有以下两种：<strong>数据源异常</strong>；<strong>客群变化</strong>。</li>
+<li>模型有效性异常处理<br>  导致模型有效性异常的原因通常有：<strong>数据源异常</strong>；<strong>客群变化</strong>；<strong>模型自身效果衰减</strong>。</li>
+</ul>
+<h4 id="迭代优化"><a href="#迭代优化" class="headerlink" title="迭代优化"></a>迭代优化</h4><p>模型上线之后，客群的变化、数据维度的增加、业务调整某些数据无法使用等都可能导致模型效果出现波动。面对这些情况对模型的迭代和优化就显得格外重要，当然模型迭代优化的目的在于提升线上模型效果，使得模型在近期样本上表现更好。<br>模型的迭代优化可以从<strong>模型融合</strong>、<strong>建模时效</strong>和<strong>拒绝推断</strong>三个方面进行。</p>
+<h5 id="模型融合"><a href="#模型融合" class="headerlink" title="模型融合"></a>模型融合</h5><p>模型融合角度优化是指将多个模型的结果相互组合或再训练，以提升最终模型效果。<br>不同样本之间的信息千差万别，不同算法从样本中学到的信息也各不相同，因此可以利用这些差异结合不同类型、不同时间段模型相互融合，提炼出更加丰富的客群信息。融合模型突破了以往单一模型的局限性，具有多个子模型的优点，比单一模型具有更好的效果。</p>
+<ol>
+<li><p>模型融合方法<br>模型融合的方法有很多种，常用的有以下三种：</p>
+<ul>
+<li><strong>模型结果简单加权</strong>是指直接给各个子模型分配权重，通过加权求和得到融合模型的输出。</li>
+<li><strong>模型结果再训练</strong>是指将各个子模型的结果作为特征，采用机器学习算法再次建模，最终得到融合模型。</li>
+<li><strong>集成学习</strong>通过构建多个学习器来完成建模任务。集成学习中常用的四种模型融合方法：<ul>
+<li><strong><code>Bagging</code></strong> 是在多轮采样获取的数据子集上训练多个个体学习器，然后通过投票法或平均法对个体学习其进行集成的方法。</li>
+<li><strong><code>Boosting</code></strong> 是一种在训练过程中，不断对训练样本分布进行调整，基于调整后的样本分布训练下一轮个体学习器的集成学习方法。</li>
+<li><strong><code>Stacking</code></strong> 是一种将多种个体学习器整合在一起来取得更好表现的集成学习方法。一般情况下，<code>Stacking</code> 的训练过程分为两步，第一步训练第一层的多个不同模型，第二部以第一层各个模型的输出来训练得到最终模型。</li>
+<li><strong><code>Blending</code></strong> 与 <code>Stacking</code> 类似，区别体现在于：第一步在训练集上，<code>Blending</code> 不是通过 <code>K</code> 折交叉验证策略得到预测值，而是采用 <code>Hold-Out</code> 策略，即保留固定比例的样本并将其作为验证集，在其余样本上训练出多个模型，分别在验证集和测试集上进行预测，将预测值作为新特征；第二步基于验证集和测试集的新特征，训练得到最终模型。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>模型融合方式<br>模型融合方式有很多，包括<strong>不同标签模型融合</strong>、<strong>不同样本模型融合</strong>和<strong>不同数据源模型融合</strong>。</p>
+<ul>
+<li>不同标签模型融合是指将<strong>不同样本标签</strong>开发模型继续宁融合。基于不同样本标签，模型能够学到样本不同维度的信息，融合后的模型学到的信息更加丰富。</li>
+<li>不同样本模型融合是指将<strong>不同样本</strong>开发的模型进行融合。根据产品、时间等信息，将样本分群，分别训练子模型，再将子模型融合。</li>
+<li>不同数据源模型融合是指先根据<strong>不同数据源特征</strong>分别建立子模型，再将不同数据源子模型融合。</li>
+</ul>
+</li>
+</ol>
+<h5 id="建模时效"><a href="#建模时效" class="headerlink" title="建模时效"></a>建模时效</h5><p>从建模时效角度优化是指快速迭代模型，及时根据线上客群变化做出调整。因为通常情况下在模型上线后，模型更新周期会较长，不能快速反映客群变化，即使发现了线上模型效果衰减，再次开发新的模型也需要一段时间。为此解决建模时效问题的常见做法是应用<strong>模型自动快速迭代</strong>和<strong>在线学习</strong>。</p>
+<ol>
+<li><p>模型自动快速迭代<br><strong>模型自动快速迭代</strong>是指加入最新有表现样本，快速更新迭代模型。<br>核心部分主要包含样本选择、数据准备、数据预处理、特征选择、模型训练和效果评估。为此可以构建一套完整的模型自动化平台，将样本选择、数据准备、自动测试和部署上线也实现自动化，这样就构建了完整的模型自动快速迭代体系。该模型自动快速迭代体系主要包括 <em>特征自动回溯系统</em>、<em>自动建模系统</em>、<em>自动测试系统</em> 和 <em>自动上线系统</em> 四个部分。</p>
+</li>
+<li><p>在线学习<br><strong>在线学习（<code>online learning</code>）</strong>是指根据线上的实时数据，快速进行模型调整，使得模型及时反映线上的变化，提高线上模型的效果。<br>在线学习种具有代表性的算法：**<code>Bayesian Online Learning</code>** 和 **<code>Follow The Regularized Leader(FTRL)</code>**。<br><small>传统模型开发是使用离线数据处理方式进行开发的，开发完成后再部署到线上，这种模型上线后一般是静态的，不会与线上的业务数据有任何互动。</small><br><small>相比模型自动快速迭代，在线学习方法不需要每次使用全量样本重建模型，只需要使用新增样本更新模型参数，建模成本低。</small></p>
+</li>
+</ol>
+<h5 id="拒绝推断"><a href="#拒绝推断" class="headerlink" title="拒绝推断"></a>拒绝推断</h5><p>拒绝推断通常是基于放款样本，但贷前风险预测模型使用场景是所有的授信申请客户，其中包含拒绝样本，即训练模型使用的客群仅是预测人群中的一部分，存在<strong>“样本偏差”</strong>问题。如果能在建模样本中加入被拒绝的样本，那么模型的效果可以得到保障，但是问题在于，被拒绝的样本没有标签，而推测被拒绝样本的标签就是<strong>“拒绝推断”</strong>的主要内容。</p>
+<ol>
+<li><p>使用场景<br>拒绝推断经常使用的场景：<strong>总体风险异质</strong>；<strong>风险通过率很低</strong>；<strong>历史数据与当前数据显著不同</strong>。<br><strong>已知推断比（<code>known-to-inferred odds ratio, KI</code>）</strong>常用来衡量拒绝推断的风险是否合理，定义式如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KI = (Gk/Bk)/(Gi/Bi)</span><br></pre></td></tr></table></figure>
+<p>其中 <code>Gk</code>、<code>Bk</code>、<code>Gi</code>、<code>Bi</code> 分别表示已知好客户、已知不良客户、推断好客户、推断不良客户的样本数量。<code>KI</code> 值越高，说明推断人群中不良客户的比例越高，推断人群的风险也就越高。通常<strong>合理的 <code>KI</code> 值在 <code>2 ~ 4</code> 之间</strong>，而业界倾向于更大的值。</p>
+<p> 拒绝推断场景中常见的三种模型如下：</p>
+<ul>
+<li><strong><code>AR(Accept Reject)</code> 模型</strong>：以是否放贷为标签，是在全量样本上构建的模型。</li>
+<li><strong><code>KGB(known Good Bad)</code> 模型</strong>：以逾期表现为标签，是在已知好坏标签的样本上构建的模型。</li>
+<li><strong><code>AGB(All Good Bad)</code> 模型</strong>：以逾期表现为标签，是在全部授信申请样本上构建的模型。建模样本包含已知好坏标签（真实标签）的样本和推断出“伪标签”的样本。</li>
+</ul>
+</li>
+<li><p>常用方法<br>解决样本偏差问题的方法有两类：</p>
+<ul>
+<li>数据法<ul>
+<li><strong>增量下探法</strong><br> 增量下探法是指从本该拒绝的样本中，随机选取部分样本授信通过，以便获取该部分样本的真实标签。</li>
+<li><strong>同生表现法</strong><br> 同生表现法是指通过客户在其他产品或机构的贷后表现，推断出本产品上的伪标签。</li>
+</ul>
+</li>
+<li>推断法<ul>
+<li><strong>硬截断法</strong><br> 硬截断法（<code>hard cutoff</code>）也称简单展开法（<code>simple augmentation</code>），是指根据通过样本构建 <code>KGB</code> 模型，利用 <code>KGB</code> 模型对拒绝样本预测打分，设置截断阈值，高于该阈值的样本认定为正样本，低于该阈值的样本认定为负样本，最终将有真实标签的通过样本和推测得到的伪标签的拒绝样本合并，构建最终模型。</li>
+<li><strong>模糊展开法</strong><br> 模糊展开法（<code>fuzzy augmentation</code>）是指根据通过样本构建 <code>KGB</code> 模型，利用 <code>KGB</code> 模型预测拒绝样本的逾期概率，然后将每条拒绝样本复制为不同类别、不同权重的两条，每条通过样本的权重为 <code>1</code>，最终将有真实标签的通过样本和推断得到伪标签的决绝样本合并，考虑不同样本的权重，构建最终模型。</li>
+<li><strong>重新加权法</strong><br> 重新加权法（<code>reweighting</code>）是指根据通过样本构建 <code>KGB</code> 模型，利用 <code>KGB</code> 模型对全部样本预测打分，然后分箱统计不同分数段的通过样本数和拒绝样本数，计算每箱的权重，添加通过样本不同分数段的权重，然后利用通过样本构建最终模型。<br> 权重方式计算如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">weight = (Accepti + Rejecti) / Accepti</span><br></pre></td></tr></table></figure>
+ 其中 <code>Accepti</code> 表示第 <code>i</code> 分箱通过样本数，<code>Rejecti</code> 表示第 <code>i</code> 分箱拒绝样本数。</li>
+<li><strong>外推法</strong><br> 外推法（<code>extrapolation</code>）是指根据通过样本构建 <code>KGB</code> 模型，利用 <code>KGB</code> 模型对拒绝样本预测打分，然后对通过样本模型分等频分箱，统计每箱的逾期率，将逾期率的 <code>KI</code> 倍数设为拒绝样本相同分箱的期望逾期率，并按照期望逾期率对拒绝样本随机标记伪标签，最终和通过样本一起构建最终模型。</li>
+<li><strong>迭代再分类法</strong><br> 迭代再分类法（<code>iterative reclassification</code>）是指通过多次迭代，使得最终模型参数逐步趋于稳定。迭代再分类的具体做法：首先利用硬截断法获得拒绝样本的伪标签，然后训练得到最终模型，并利用最终模型重新给拒绝样本预测打分，更新伪标签，直到任何一个有价值的指标收敛。<br> 迭代再分类法利用启发式思想，经过多次迭代，可以保证修正偏差后的最终模型的效果。其中设置的迭代终止条件可以是任何一个有价值的指标收敛。</li>
+<li><strong>双变量推断法</strong><br> 双变量推断法（<code>bivariate inference</code>）是指首先分别利用通过样本构建 <code>KGB</code> 模型和全部样本构建 <code>AR</code> 模型，然后利用两个模型分别对拒绝样本预测打分，并将加权求和的结果作为最终预测打分，然后利用 <em>“外推法”</em> 设置伪标签，最终和通过样本一起构建模型。<br> 拒绝样本的模型分计算公式如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Rejects = a * ARs + (1-a) * KGBs</span><br></pre></td></tr></table></figure>
+ 其中 <code>ARs</code> 是 <code>AR</code> 模型的打分，<code>KGBs</code> 是 <code>KGB</code> 模型的打分，<code>0 &lt; a &lt; 1</code> 表示权重。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+
+<h3 id="模型体系搭建"><a href="#模型体系搭建" class="headerlink" title="模型体系搭建"></a>模型体系搭建</h3><p>信贷产品生命周期主要包括<strong>营销</strong>、<strong>贷前</strong>、<strong>贷中</strong>和<strong>贷后</strong>四个阶段，每个阶段都有风险控制的需求。</p>
+<ul>
+<li>贷前阶段主要获取并筛选客户流量，以营销响应模型和流量筛选模型为主。</li>
+<li>贷前阶段一般会通过部署多种风控规则和模型来识别风险，风控规则可以识别小部分高风险客户，大部分仍然需要模型预测。贷前阶段的模型主要有反欺诈模型、信用风险模型。</li>
+<li>贷中阶段会通过贷中行为预测客户的风险情况，制订账户管理等策略，同时利用交易风险模型对客户贷中的提现、消费等交易行为进行风险判断。</li>
+<li>贷后阶段通过还款预估模型预测客户的还款可能性，制订合理的催收策略，提升还款率；利用失联预估模型预测客户的失联概率，优化催收策略。</li>
+</ul>
+<p>完整的风控体系需要对信贷产品生命周期的每一个阶段进行有效的风险控制，以下为信贷产品生命周期的不同阶段包含的主要风控模型。<br><img src="https://s2.loli.net/2022/12/22/1AXbaVD75ieRCBp.png" alt="risk_3_4.jpg"></p>
+<h4 id="营销阶段"><a href="#营销阶段" class="headerlink" title="营销阶段"></a>营销阶段</h4><p>营销是业务开展的第一步，获取优质客群是营销阶段得到重要目标，通常是利用营销响应模型评估客户的响应概率，再利用流量筛选模型选择目标客群。</p>
+<ol>
+<li><p>营销响应模型<br>营销响应模型是通过营销时对客户进行评估来预测客户响应概率的模型。营销场景主要包含<strong>纯新客户名单营销</strong>、<strong>流失客户营销召回</strong>和<strong>存量客户的交叉销售</strong>等，采用营销响应模型将客户分级，对于响应概率高的客群，业务人员可以重点营销，即可以大幅提升营销效率，降低营销成本。</p>
+</li>
+<li><p>流量筛选模型<br>流量筛选模型也称前筛模型，用来识别资质明显差的客群。拦截这部分高风险客群是风险控制的第一项任务同时节省后续申请授信环节的数据成本。其中流量筛选模型一般用于与其他流量提供方合作的场景中。</p>
+</li>
+</ol>
+<h4 id="贷前阶段"><a href="#贷前阶段" class="headerlink" title="贷前阶段"></a>贷前阶段</h4><p>贷前是有效控制风险的重要阶段，因为一旦高风险客户通过贷前授信，后期在贷中和贷后阶段会面临被动局面，因此贷前阶段一般通过部署多种模型来尽可能多识别风险。</p>
+<ol>
+<li><p>反欺诈模型<br>反欺诈模型用于识别欺诈风险高的客户。常见的欺诈类型有：<strong>第一方欺诈</strong>，即利用不实信息欺诈，欺诈者故意提供虚假申请信息以获得授信审批；<strong>第三方欺诈</strong>，即冒用他人身份欺诈，欺诈者偷取他人信息，以他人名义申请。<br>因此在实践中可通过<strong>身份验证</strong>、<strong>活体识别</strong>和<strong>第三方数据验证</strong>等方式识别欺诈，并且可以通过反欺诈模型综合多维度信息进行识别。</p>
+</li>
+<li><p>信用风险模型<br>信用风险模型是通过对信贷申请人的信用状况进行评估来预测其未来逾期概率的模型，即<strong>申请评分卡</strong>，也称 <strong><code>A</code> 卡（<code>Application scorecard</code>）</strong>。信用风险模型有重要作用，该模型的预测评分不仅可以审批准入，还可以用于额度和费率的设定。</p>
+</li>
+</ol>
+<h4 id="贷中阶段"><a href="#贷中阶段" class="headerlink" title="贷中阶段"></a>贷中阶段</h4><p>贷中阶段可以获得客户交易、还款和 <code>APP</code> 使用等行为数据，通过这些数据可以全面、客观、准确地预测客户的未来表现，从而制订有针对性的贷中管理策略。</p>
+<ol>
+<li><p>贷中行为模型<br>贷中行为模型即<strong>行为评分卡</strong>，也称 <strong><code>B</code> 卡（<code>Behavior scorecard</code>）</strong>是根据客户借款后的行为表现，预测其未来逾期概率的模型。</p>
+</li>
+<li><p>交易风险模型<br>交易行为模型是在已经获得授信的客户发生支用或消费交易等行为时进行风险预估的模型。该模型用于拦截高风险交易，及时止损，交易风险模型与信用风险模型类似，只是交易风险模型在获得的特征维度上会包含更多的贷中行为数据。</p>
+</li>
+</ol>
+<h4 id="贷后阶段"><a href="#贷后阶段" class="headerlink" title="贷后阶段"></a>贷后阶段</h4><p>贷后阶段的模型根据客户放贷后的行为表现，预测客户的还款概率。原始催收表现为尽可能多地联系客户，然后依靠客户近期的逾期行为调整策略。</p>
+<ol>
+<li><p>还款预估模型<br>还款预估模型即<strong>催收评分卡</strong>，也称 <strong><code>C</code> 卡（<code>Collection scorecard</code>）</strong>是预测已逾期的客户在未来一段时间的还款概率的模型。通常逾期客户在早期还款的可能性较大，越往后还款越困难，因此可以利用还款预估模型制订差异化的催收策略，提高还款率。</p>
+</li>
+<li><p>失联预估模型<br>失联预估模型预测已逾期的借款人在未来一段时间是否会失联。在催收后期，通常会出现无法联系到客户的情况出现，这对催收有很大的影响，如果可以在早期获得客户失联的可能性，即可以对催收工作的开展提供指导。</p>
+</li>
+</ol>
+<hr>
+
+<h3 id="术语介绍"><a href="#术语介绍" class="headerlink" title="术语介绍"></a>术语介绍</h3><ol>
+<li><p>样本、特征、标签<br>样本是构建机器学习模型时需要一个数据集。<br>特征是用来表征关注对象的特点或属性的一系列数据。<br> <strong>标签</strong>是机器学习模型将要学习和预测的目标。</p>
+</li>
+<li><p>账龄<br><strong>账龄（<code>Month on Book, MOB</code>）</strong>是指多期信贷产品从首次放款起所经历的月数。<br>通常使用 <code>MOBn</code> 表示账龄，以月末时间点来看放款日经历 <code>n</code> 个完整的月数，具体如下：</p>
+<ul>
+<li><code>MOB0</code>：放款日到当月月底，观察时间点为放款当月月末。</li>
+<li><code>MOB1</code>：放款后第二个月，观察时间点为放款第二个月月末。</li>
+<li>以此类推 <code>MOB</code> 的最大值取决于信贷产品的 <em>账期</em>。</li>
+</ul>
+</li>
+<li><p>逾期<br>逾期的概念有以下几种：</p>
+<ul>
+<li><strong>逾期天数（<code>Days Past Due, DPD</code>）</strong>：实际还款日与应还款日的相差天数。</li>
+<li><strong>首期逾期天数（<code>First Payment Deliquency, FPD</code>）</strong>：分期产品中第一期实际还款日与应还款日的相差天数。</li>
+<li><strong>逾期期数</strong>：贷款产品中客户的逾期期数，也指将逾期期数按区间划分后的逾期状态。<br>  通常以 <code>30</code> 天为区间划分，英文字母 <code>M</code> 来表示，具体如下：<ul>
+<li><code>M0</code>：当前未逾期。</li>
+<li><code>M1</code>：逾期一期，或逾期 <code>1~30</code> 天。</li>
+<li><code>M2</code>：逾期两期，或逾期 <code>31~60</code> 天。</li>
+<li>以此类推，<code>M2+</code> 表示逾期两期以上，或逾期天数未 <code>61</code> 天以上，和 <code>DPD60+</code> 含义一致。</li>
+</ul>
+</li>
+<li><strong>逾期率</strong>：分为订单逾期率和金额逾期率。订单逾期率是指逾期订单数与总放款订单数的比值。金额逾期率是指逾期金额与总放款金额的比值。</li>
+</ul>
+</li>
+</ol>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB/" title="智能风控-风控模型体系">https://blog.vgbhfive.cn/智能风控-风控模型体系/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Risk/" rel="tag"># Risk</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB/" rel="prev" title="智能风控-特征画像体系">
+      <i class="fa fa-chevron-left"></i> 智能风控-特征画像体系
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">开发方法论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E7%AB%8B%E9%A1%B9%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">开发方法论-立项分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">问题定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E7%9A%84%E9%80%89%E6%8B%A9%E4%B8%8E%E5%88%92%E5%88%86"><span class="nav-number">3.2.</span> <span class="nav-text">样本的选择与划分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.3.</span> <span class="nav-text">架构设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E8%AE%AD%E7%BB%83%E5%BC%80%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">开发方法论-训练开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%86%E5%A4%87%E5%92%8C%E6%8F%8F%E8%BF%B0"><span class="nav-number">4.1.</span> <span class="nav-text">数据的准备和描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%88%E6%B8%85%E6%B4%97%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">数据预处理（清洗）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.1.</span> <span class="nav-text">基于特征属性选择</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%95%88%E6%9E%9C%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.2.</span> <span class="nav-text">基于特征效果选择</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">4.3.3.</span> <span class="nav-text">基于特征稳定性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.</span> <span class="nav-text">特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.1.</span> <span class="nav-text">线性特征提取</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.2.</span> <span class="nav-text">非线性特征提取</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E3%80%81%E6%A6%82%E7%8E%87%E8%BD%AC%E5%8C%96%E5%92%8C%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.5.</span> <span class="nav-text">训练、概率转化和效果评估</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.5.1.</span> <span class="nav-text">模型训练</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E8%BD%AC%E5%8C%96"><span class="nav-number">4.5.2.</span> <span class="nav-text">概率转化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.5.3.</span> <span class="nav-text">模型效果评估</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E4%B8%8A%E7%BA%BF%E5%92%8C%E7%BB%B4%E6%8A%A4"><span class="nav-number">5.</span> <span class="nav-text">开发方法论-上线和维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%8F%8A%E4%B8%8A%E7%BA%BF%E9%AA%8C%E8%AF%81"><span class="nav-number">5.1.</span> <span class="nav-text">部署及上线验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">监控和异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%9B%91%E6%8E%A7"><span class="nav-number">5.2.1.</span> <span class="nav-text">模型监控</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AD%A6"><span class="nav-number">5.2.2.</span> <span class="nav-text">模型预警</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.3.</span> <span class="nav-text">异常处理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E4%BC%98%E5%8C%96"><span class="nav-number">5.3.</span> <span class="nav-text">迭代优化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88"><span class="nav-number">5.3.1.</span> <span class="nav-text">模型融合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E6%97%B6%E6%95%88"><span class="nav-number">5.3.2.</span> <span class="nav-text">建模时效</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%92%E7%BB%9D%E6%8E%A8%E6%96%AD"><span class="nav-number">5.3.3.</span> <span class="nav-text">拒绝推断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB%E6%90%AD%E5%BB%BA"><span class="nav-number">6.</span> <span class="nav-text">模型体系搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%90%A5%E9%94%80%E9%98%B6%E6%AE%B5"><span class="nav-number">6.1.</span> <span class="nav-text">营销阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%89%8D%E9%98%B6%E6%AE%B5"><span class="nav-number">6.2.</span> <span class="nav-text">贷前阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E4%B8%AD%E9%98%B6%E6%AE%B5"><span class="nav-number">6.3.</span> <span class="nav-text">贷中阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%90%8E%E9%98%B6%E6%AE%B5"><span class="nav-number">6.4.</span> <span class="nav-text">贷后阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E4%BB%8B%E7%BB%8D"><span class="nav-number">7.</span> <span class="nav-text">术语介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

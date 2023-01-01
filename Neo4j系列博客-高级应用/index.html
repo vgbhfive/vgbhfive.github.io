@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引入在之前的学习中，大致明白了 Neo4j 的基本操作、程序开发、数据库管理等操作，对于一些基本的操作已经足够，而现在则是通过一些高级的使用来探索其他功能的启发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-高级应用">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="引入在之前的学习中，大致明白了 Neo4j 的基本操作、程序开发、数据库管理等操作，对于一些基本的操作已经足够，而现在则是通过一些高级的使用来探索其他功能的启发。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/05/08/KowAQnDE1r4s9xP.png">
+<meta property="article:published_time" content="2022-04-29T14:14:23.000Z">
+<meta property="article:modified_time" content="2022-05-10T14:49:05.912Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/08/KowAQnDE1r4s9xP.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-高级应用 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-高级应用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-04-29 22:14:23" itemprop="dateCreated datePublished" datetime="2022-04-29T22:14:23+08:00">2022-04-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-10 22:49:05" itemprop="dateModified" datetime="2022-05-10T22:49:05+08:00">2022-05-10</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>在之前的学习中，大致明白了 <code>Neo4j</code> 的基本操作、程序开发、数据库管理等操作，对于一些基本的操作已经足够，而现在则是通过一些高级的使用来探索其他功能的启发。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="高级索引"><a href="#高级索引" class="headerlink" title="高级索引"></a>高级索引</h3><p>主要介绍空间索引和中文全文索引两个部分。</p>
+<h4 id="空间索引"><a href="#空间索引" class="headerlink" title="空间索引"></a>空间索引</h4><p>空间索引的程序库是 <code>Neo4j Spatial</code>，他的主要作用是对数据进行<strong>空间</strong>操作，开发人员可以向已经具有位置信息的数据添加<strong>空间索引</strong>，并且对数据进行空间计算操作。另外 <code>Neo4j Spatial</code> 提供了数据导入 <code>GeoTools</code> （<code>Java</code> 编写的开源 <code>GIS</code> 工具包），从而启用 <code>GeoTools</code> 的应用程序，比如 <code>GeoServer</code> （共享空间地理数据的开源服务器）和 <code>uDig</code> （开源地理桌面数据访问、编辑、呈现框架）。</p>
+<p><code>Neo4j Spatial</code> 的主要功能包括：</p>
+<ul>
+<li>可以将 <code>RESI Shapefile (SHP)</code> 和 <code>Open Street Map (OSM)</code> 文件导入 <code>Neo4j</code> 的应用程序。</li>
+<li>支持常见的几何图形：点、线、多边形等。</li>
+<li>用于快速搜索几何形状的 <code>RTree</code> 结构。</li>
+<li>支持搜索期间的拓扑操作（包含、属于、相交、覆盖等）。</li>
+<li>只要提供从图形映射到几何形状的适配器，就可以对任何图形进行空间操作，而不负责其数据的存储方式。</li>
+<li>能够使用预配置的过滤器将单个图层或数据拆分成多个之图层或视图。</li>
+</ul>
+<h5 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h5><p>使用 <code>Neo4j Spatial</code> 最简单的方法就是获取 <code>neo4j-spatial-*.**-neo4j-*.*.*-server-plugin</code>，然后将其复制到 <code>plugin</code> 目录下，重新启动 <code>Neo4j</code> 服务即可使用。<br>使用 <code>Cypher</code> 查询一样调用 <code>Neo4j</code> 空间过程，为节点添加空间索引，并且执行多个空间点的距离、交叉查询等操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 创建 geom 的点图层</span><br><span class="line">CALL spatial.addPointLayer(&#x27;geom&#x27;)</span><br><span class="line">CALL spatial.layers()</span><br><span class="line">// 建立经度为 15.2 ，维度为 60.1 的空间点</span><br><span class="line">CREATE (n:Node &#123;latitude: 60.1, longitude: 15.2&#125;) WITH n</span><br><span class="line">// 将创建的点加入到 geom 的点图层中</span><br><span class="line">CALL spatial.addNode(&#x27;geom&#x27;, n) YIELD node RETURN node</span><br><span class="line">// 查询精度在 60.0 到 60.1 之间，纬度在 15.0 到 15.3 之间的空间点</span><br><span class="line">CALL spatial.bbox(&#x27;geom&#x27;, &#123;lon: 15.0, lat: 60.0&#125;. &#123;lon: 15.3, lat: 60.1&#125;)</span><br></pre></td></tr></table></figure>
+
+<h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><p><code>Neo4j</code> 空间索引是 <code>RTree</code> 索引，它是以扩展的方式开发的，允许在必要的时候添加其他索引。空间索引可以在数据生成的过程中添加，也可以为现有的空间数据添加索引，并且实际上可以导致不同的图结构。<br>需要在数据生产的过程中添加索引，最简单的方法就是创建合适的数据图层，最常用的两种：</p>
+<ul>
+<li><code>SimplePointLayer</code>：一个可编辑的数据图层，仅允许向数据库添加点数据。</li>
+<li><code>Editablelayer(Impl)</code>：默认的可编辑图层实现，可以处理任何简单的集合类型。存储格式为 <code>WKB</code>，专门用于几何地理的二进制格式。</li>
+</ul>
+<p><small>定义几何图形的集合叫图层，其中包含可用于查询的索引，如果在图层中添加和修改图形，则这个图层就是可编辑图层。</small></p>
+<h5 id="空间索引查询类型"><a href="#空间索引查询类型" class="headerlink" title="空间索引查询类型"></a>空间索引查询类型</h5><p><code>RTree</code> 索引可以实现的查询方式有：</p>
+<ul>
+<li>包含（<code>Contian</code>）。</li>
+<li>覆盖（<code>Cover</code>）。</li>
+<li>被覆盖（<code>Covered By</code>）。</li>
+<li>交叉（<code>Cross</code>）。</li>
+<li>不相交（<code>Disjoint</code>）。</li>
+<li>相交（<code>Intersect</code>）。</li>
+<li>交叠（<code>Oberlap</code>）。</li>
+<li>接触（<code>Touch</code>）。</li>
+<li>包含（<code>Within</code>）。</li>
+<li>在一定距离内（<code>With Distance</code>）。</li>
+</ul>
+<h5 id="Java-构建-Neo4j-空间索引"><a href="#Java-构建-Neo4j-空间索引" class="headerlink" title="Java 构建 Neo4j 空间索引"></a><code>Java</code> 构建 <code>Neo4j</code> 空间索引</h5><p><code>Neo4j</code> 自带一个用于导入 <code>ESRI Shapefile</code> 数据的程序，<code>ShapeFileImporter</code> 将为每个导入的 <code>Shapefile</code> 创建一个新的图层，并将每个几何图形作为 <code>WKB</code> 存储在单个节点的单个属性中。</p>
+<ol>
+<li><p>导入 <code>shape</code> 文件<br>下面的代码将 <code>roads.shp</code> 导入到 <code>layer_roads</code> 图层中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">storeDir</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dbPath);</span><br><span class="line"><span class="type">GraphDatabaseService</span> <span class="variable">database</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GraphDatabaseFactory</span>().newEmbeddedDatabase(storeDir);</span><br><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> database.beginTx()) &#123;</span><br><span class="line">	<span class="type">ShapefileImporter</span> <span class="variable">importer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ShapefileImporter</span>(database);</span><br><span class="line">	importer.importFile(<span class="string">&quot;roads.shp&quot;</span>, <span class="string">&quot;layer_roads&quot;</span>);</span><br><span class="line">	tx.success();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	database.shutdown();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Neo4j Spatial</code> 过程调用，可以达到同样的效果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CALL spatial.addWKTLayer(&#x27;layer_roads&#x27;, &#x27;geometry&#x27;)</span><br><span class="line">CALL spatial.importShapefileToLayer(&#x27;layer_roads&#x27;, &#x27;roads.shp&#x27;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入开放街道地图文件（<code>OSM</code>）<br>导入 <code>OSM</code> 文件要比 <code>SHP</code> 文件复杂很多，因为导入 <code>OSM</code> 文件需要分两个过程进行，而第一个过程需要批处理导入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">dir</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dbPath);</span><br><span class="line"><span class="comment">// 设置图层名称</span></span><br><span class="line"><span class="type">OSMImporter</span> <span class="variable">importer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OSMImporter</span>(<span class="string">&quot;OSM&quot;</span>);</span><br><span class="line"><span class="comment">// 批量导入配置</span></span><br><span class="line">Map&lt;String, String&gt; config = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, String&gt;();</span><br><span class="line">config.put(<span class="string">&quot;neostore.nodestore.db.mapped_memory&quot;</span>, <span class="string">&quot;90M&quot;</span>);</span><br><span class="line">config.put(<span class="string">&quot;dump_configuration&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">config.put(<span class="string">&quot;use_memory_mapped_buffers&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line"><span class="type">BatchInserter</span> <span class="variable">batchInserter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BatchInserterImpl</span>(dir, config);</span><br><span class="line">importer.importFile(batchInserter, <span class="string">&quot;map.osm&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">BatchInserter.shutdown();</span><br><span class="line"><span class="type">GraphDatabaseService</span> <span class="variable">db</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GraphDatabaseFactory</span>().newEmbeddedDatabase(dir);</span><br><span class="line">importer.reIndex(db, <span class="number">10000</span>);</span><br><span class="line">db.shutdown();</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="常见的-Cypher-查询"><a href="#常见的-Cypher-查询" class="headerlink" title="常见的 Cypher 查询"></a>常见的 <code>Cypher</code> 查询</h5><ol>
+<li><p><code>WithinDistance</code> 查询<br><code>WithinDistance</code> 查询是空间查询中最常用的一种方式，使用的是球面距离，计算采用 <code>OrthodromicDistance</code> 算法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start n = node:geom(&#x27;WithinDistance:[21.331937, 120.638154, 0.1]&#x27;) return n limit 10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>WithinWKTGeometry</code> 查询<br>查询由点 <code>(120.678966, 31.300864)</code> 与点 <code>(120.978966, 31.330864)</code> 构成的 <code>Ploygon</code> 多边形范围内的点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start n = node.geoindex(&#x27;WithinWKTGeometry:PLOYGON ((120.678966, 31.300864, 120.978966, 31.330864, 120.978966, 31.300864, 120.678966, 31.300868))&#x27;) return n limit 10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>bbox</code> 矩形查询<br>查询由点 <code>(120.678966, 31.300864)</code> 与点 <code>(120.978966, 31.330864)</code> 构成的 <code>BBox</code> 矩形范围内的点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start n = node.geom(&#x27;bbox:[120.678966, 120.978966, 31.300864, 31.330864]&#x27;) return n limit 10</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="中文全文索引"><a href="#中文全文索引" class="headerlink" title="中文全文索引"></a>中文全文索引</h4><p><code>Neo4j</code> 也提供了全文索引机制，并且是基于 <code>Lucene</code> 实现的，但是在默认情况下 <code>Lucene</code> 只提供了基于英文的分词器，如果将之用于中文，则会将中文分割成单个的字，这样就破坏了中文的语义结构，而且针对特定领域的中文分词，可能还需要自定义词典。</p>
+<h5 id="IKAnalyzer-分词器"><a href="#IKAnalyzer-分词器" class="headerlink" title="IKAnalyzer 分词器"></a><code>IKAnalyzer</code> 分词器</h5><p><code>IKAnalyzer</code> 是一个开源的、基于 <code>Java</code> 开发的轻量级中文分词工具包，但是目前官方仅支持 <code>Luence 3.0</code> 版本。 </p>
+<h5 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h5><ol>
+<li><p>自定义词典<br>词典文件：自定义词典文件后缀名为 <code>.dic</code> 的词典文件，必须使用 <code>UTF-8</code> 编码保存。<br>词典配置： <code>IKAnalyzer.cfg.xml</code> 必须在 <code>src</code> 目录下。词典文件可以放置在任意位置，但是在配置文件中必须配置正确。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCUTYPE <span class="keyword">properties</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;http://java.sun.com/dtd/properties.dtd&quot;</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">commnet</span>&gt;</span>IK Analyzer 扩展配置<span class="tag">&lt;/<span class="name">commnet</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;ext_dict&quot;</span>&gt;</span>ext.dic;<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;ext_stopwords&quot;</span>&gt;</span>stopwords.dic;<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>嵌入式模式下的中文全文索引<br>指定 <code>IKAnalyzer</code> 作为 <code>Luence</code> 分词的 <code>Analyzer</code>，并对一个 <code>Label</code> 下的所有 <code>Node</code> 指定属性新建全文索引。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> database.beginTx()) &#123;</span><br><span class="line">    Map&lt;String, String&gt; config = <span class="keyword">new</span> <span class="title class_">stringMap</span>(IndexManager.PROVIDER, <span class="string">&quot;luence&quot;</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;fulltext&quot;</span>, <span class="string">&quot;analyzer&quot;</span>, IKAnalyzer.class.getName());</span><br><span class="line">    IndexManager index= database.index();</span><br><span class="line">    Index&lt;Node&gt; newFullTextIndex = index.forNodes(<span class="string">&quot;FullTextIndex&quot;</span>, config);</span><br><span class="line">    ResourceIterator&lt;Node&gt; nodes = database.findNodes(DynamicLabel.label(LabelName));</span><br><span class="line">    <span class="keyword">while</span> (nodes.hasNext()) &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> nodes.next();</span><br><span class="line">        <span class="type">Object</span> <span class="variable">text</span> <span class="operator">=</span> node.getProperty(<span class="string">&quot;text&quot;</span>, <span class="literal">null</span>);</span><br><span class="line">        newFullTextIndex.add(node, <span class="string">&quot;text&quot;</span>, text);</span><br><span class="line">    &#125;</span><br><span class="line">    tx.success();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+
+<h3 id="Docker-部署-Neo4j"><a href="#Docker-部署-Neo4j" class="headerlink" title="Docker 部署 Neo4j"></a><code>Docker</code> 部署 <code>Neo4j</code></h3><h4 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h4><p>默认情况下 <code>Neo4j</code> 的镜像开放了三个用于远程访问的端口：</p>
+<ul>
+<li><code>7474</code> 用于 <code>HTTP</code> 协议。</li>
+<li><code>7473</code> 用于 <code>HTTPS</code> 协议。</li>
+<li><code>7687</code> 用于 <code>BOLT</code> 协议。</li>
+</ul>
+<p>此外还指定了两个位置用于存放数据文件和日志文件：</p>
+<ul>
+<li><code>/data</code> 用于数据库在容器的外部持久化。</li>
+<li><code>/logs</code> 用于允许访问 <code>Neo4j</code> 的日志文件。</li>
+</ul>
+<p>在 <code>Docker</code> 中运行 <code>Neo4j</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs neo4j:3.1</span><br></pre></td></tr></table></figure>
+
+<p><small>可通过 <code>-env NEO$J_AUTH=neo4j/&lt;password&gt;</code> 指令设置容器的登录密码。</small></p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>有三种方式可以修改 <code>Neo4j</code> 容器的配置：</p>
+<ul>
+<li>设置环境变量。</li>
+<li>指定 <code>/conf</code> 存储位置。</li>
+<li>构建新的镜像。</li>
+</ul>
+<ol>
+<li>环境变量</li>
+</ol>
+<ul>
+<li><code>NEO4J_AUTH</code>：控制身份验证。</li>
+<li><code>NEO4J_dbms_memory_pagecache_size</code>：本地内存缓存的大小。</li>
+<li><code>NEO4J_dbms_memory_heap_maxSize</code>：堆大小。</li>
+<li><code>NEO4J_dbms_txLog_rotation_retentionPolicy</code>：保留逻辑日志的大小。</li>
+<li><code>NEO4J_dbms_allowFormatMigration</code>：是否启用升级。</li>
+<li><code>NEO4J_dbms_mode</code>：数据库模式。</li>
+<li><code>NEO4J_causalClustering_expectedCoreClusterSize</code>：启动时的集群初始大小。</li>
+<li><code>NEO4J_causalClustering_initialDiscoveryMembers</code>：集群核心成员的初始网络地址&#x2F;端口号。</li>
+<li><code>NEO4J_causalClustering_discoveryAdvertisedAddress</code>：成员发现地址&#x2F;端口号。</li>
+<li><code>NEO4J_causalClustering_transactionAdvertisedAddress</code>：广播事务处理地址&#x2F;端口号。</li>
+<li><code>NEO4J_causalClustering_raftAdvertisedAddress</code>：广播集群通信地址&#x2F;端口号。</li>
+<li><code>NEO4J_ha_serverId</code>：服务器的唯一标识。</li>
+<li><code>NEO4J_ha_host_corrdination</code>：<code>HA</code> 模式下集群协调通信的地址。</li>
+<li><code>NEO4J_ha_host_data</code>：<code>HA</code> 模式下用于数据传输的地址。</li>
+<li><code>NEO4J_ha_initialHosts</code>：集群的其他成员的地址&#x2F;端口列表。</li>
+</ul>
+<ol start="2">
+<li><p><code>/conf</code> 配置文件配置<br><code>/conf</code> 中的配置都会覆盖镜像中的配置文件，包括已经生效的、为容器提供环境变量。如果要修改文件中的一个值则必须保证其他部分都是正确的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --detach --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/conf:/conf neo4j:3.1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>因果集群<br>每个容器必须有一个与其他容器通信的网路路由，核心服务器必须要设置 <code>NEO4J_causalClustering_initialDiscoveryMembers</code> 和 <code>NEO4J_causalClustering_scpectedCoreClusterSize</code>，而只读副本则只需要设置 <code>NEO4J_causalClustering_initialDiscoveryMembers</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker network create --driver=bridge cluster</span><br><span class="line">docker run --name=core1 --detach --network=cluster --publish=7474:7474 --publish=7687:7687 --env=NEO4J_dbms_mode=CORE --env=NEO4J_causalClustering_scpectedCoreClusterSize=3 \</span><br><span class="line">    --env=NEO4J_causalClustering_initialDiscoveryMembers=core1:5000,core2:5000.core3:5000 neo4j:3.1-enterprise</span><br><span class="line">docker run --name=core2 --detach --network=cluster --env=NEO4J_dbms_mode=CORE --env=NEO4J_causalClustering_scpectedCoreClusterSize=3 \</span><br><span class="line">    --env=NEO4J_causalClustering_initialDiscoveryMembers=core1:5000,core2:5000.core3:5000 neo4j:3.1-enterprise</span><br><span class="line">docker run --name=core3 --detach --network=cluster --env=NEO4J_dbms_mode=CORE --env=NEO4J_causalClustering_scpectedCoreClusterSize=3 \</span><br><span class="line">    --env=NEO4J_causalClustering_initialDiscoveryMembers=core1:5000,core2:5000.core3:5000 neo4j:3.1-enterprise</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>高可用性集群<br>运行高可用性集群则每个容器必须具有可以连接到其他容器的网络路由 <code>NEO4J_ha_host_corrdination</code> 和 <code>NEO4J_ha_host_data</code> 和 <code>NEO4J_ha_initialHosts</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker network create --driver=bridge cluster</span><br><span class="line">docker run --name=instance1 --detach --network=cluster --hostname=instance1 --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/logs:/logs --env=NEO4J_dbms_mode=CORE \</span><br><span class="line">    --env=NEO4J_ha_host_corrdination=HA --env=NEO4J_ha_serverId=1 --env=NEO4J_ha_host_corrdination=insatnce1:5001 --env=NEO4J_ha_host_data=instance1:6001 \</span><br><span class="line">    --env=NEO4J_ha_initialHosts=instance1:5001,instance2:5001,instance3:5001 neo4j:3.1-enterprise</span><br><span class="line">docker run --name=instance2 --detach --network=cluster --hostname=instance2 --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/logs:/logs --env=NEO4J_dbms_mode=CORE \</span><br><span class="line">    --env=NEO4J_ha_host_corrdination=HA --env=NEO4J_ha_serverId=2 --env=NEO4J_ha_host_corrdination=insatnce2:5001 --env=NEO4J_ha_host_data=instance2:6001 \</span><br><span class="line">    --env=NEO4J_ha_initialHosts=instance1:5001,instance2:5001,instance3:5001 neo4j:3.1-enterprise</span><br><span class="line">docker run --name=instance3 --detach --network=cluster --hostname=instance3 --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/logs:/logs --env=NEO4J_dbms_mode=CORE \</span><br><span class="line">    --env=NEO4J_ha_host_corrdination=HA --env=NEO4J_ha_serverId=3 --env=NEO4J_ha_host_corrdination=insatnce3:5001 --env=NEO4J_ha_host_data=instance3:6001 \</span><br><span class="line">    --env=NEO4J_ha_initialHosts=instance1:5001,instance2:5001,instance3:5001 neo4j:3.1-enterprise</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>Cypher-Shell</code><br><code>Cypher-Shell</code> 可以在容器内使用以下命令在本地运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec --interactive --tty &lt;container&gt; bin/cypher-shell</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+
+<h3 id="Neo4j-与图计算"><a href="#Neo4j-与图计算" class="headerlink" title="Neo4j 与图计算"></a><code>Neo4j</code> 与图计算</h3><p><code>Apache Spark</code> 是一种集群内数据处理的解决方案，可以轻松地在多个机器上进行大规模数据处理，此外还有 <code>GraphX</code> 和 <code>GraphFrames</code> 两个框架，可以专门用于对数据进行图计算操作。<br><code>Spark</code> 可以与 <code>Neo4j</code> 搭配进行外部数据处理解决方案，处理过程如下：</p>
+<ul>
+<li>所需要分析的子图从 <code>Neo4j</code> 导出到 <code>Spark</code>。</li>
+<li>利用 <code>Spark</code> 集群进行图计算。</li>
+<li>将计算结果返回到 <code>Neo4j</code> 中。</li>
+<li>用 <code>Cypher</code> 语言或者其他操作工具进行查询。</li>
+</ul>
+<h4 id="Neo4j-Spark-Connector"><a href="#Neo4j-Spark-Connector" class="headerlink" title="Neo4j-Spark-Connector"></a><code>Neo4j-Spark-Connector</code></h4><p><code>Neo4j-Spark-Connector</code> 使用二进制 <code>Bolt</code> 协议从 <code>Neo4j</code> 中导入和导出数据，同时提供了 <code>Spark-2.0</code> 的 <code>RDD</code>、<code>DataFrame</code>、<code>GraphX Graph</code> 和 <code>GraphFrames</code> 等，可以自由地选择如何使用 <code>Spark</code> 处理数据。<br>一般的分析过程如下：</p>
+<ul>
+<li>创建 <code>org.neo4j.spark.Neo4j(sc)</code>。</li>
+<li>设置 <code>cypher(query, [params], nodes(query, [params]), rels(query, [params])</code> 作为直接查询或者 <code>pattern(&quot;Label&quot;, Seq(&quot;REL&quot;), &quot;Label2&quot;)</code> 或 <code>pattern((&quot;Label1&quot;, &quot;prop1&quot;), (&quot;REL&quot;, &quot;prop&quot;), (&quot;Label2&quot;, &quot;prop2&quot;))</code>。</li>
+<li>为并行计算定义 <code>partitions(n), batch(size), rows(count)</code>。</li>
+<li>选择返回的数据类型。<ul>
+<li><code>loadRowRdd, loadNodeRdds, loadRelRdd, loadRdd[T]</code></li>
+<li><code>loadDataFrame, loadDataFrame(schema)</code></li>
+<li><code>loadGraph[VD, ED]</code></li>
+<li><code>loadGraphFrame[VD, ED]</code></li>
+</ul>
+</li>
+</ul>
+<p>下面实现一个简单地从 <code>Neo4j</code> 中加载数据并且使用 <code>Spark</code> 分析的流程：</p>
+<ol>
+<li><p>在 <code>Neo4j</code> 中添加数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UNWIND range(1, 100) as id</span><br><span class="line">CREATE (p:Person &#123;id: id&#125;) WITH collect(p) as people</span><br><span class="line">UNWIND people as p1</span><br><span class="line">UNWIND range(1, 10) as friend</span><br><span class="line">WITH p1, people[(p1.id + friend) % size(people)] as p2</span><br><span class="line">CREATE (p1)-&gt;[:KNOWS &#123;years: abs(p2.id - p1.id)&#125;]-&gt;(p2)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 <code>Spark</code> 中配置 <code>Neo4j</code> 的连接方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spark.neo4j.bolt.url = bolt://&lt;host&gt;:&lt;port&gt;</span><br><span class="line">spark.neo4j.bolt.user = &lt;username&gt;</span><br><span class="line">spark.neo4j.bolt.password = &lt;password&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开 <code>Spark</code> 添加 <code>jar</code> 包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-shell --packages neo4j-contrib:neo4j-spark-connector:2.0.0-M2</span><br></pre></td></tr></table></figure>
+<p><small>如果还需要添加其他依赖的 <code>jar</code> 包，在后面依次添加即可，用逗号分隔。</small></p>
+</li>
+<li><p>加载数据转换为 <code>Spark</code> 的 <code>RDD</code> 类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import org.neo4j.spark._</span><br><span class="line">val neo = Neo4j(sc)</span><br><span class="line">val rdd = neo.cypher(&quot;MATCH (n:Person) RETURN id(n) as id&quot;).loadRowRdd</span><br><span class="line">rdd.count // 1000</span><br><span class="line">rdd.first.schema.fieldNames // [&quot;id&quot;] </span><br><span class="line">rdd.first.schema(&quot;id&quot;) // StructField(id, LongType, true)</span><br><span class="line">neo.cypher(&quot;MATCH (n:Person) WHERE n.id &lt;= &#123;maxId&#125; RETURN n.id&quot;).param(&quot;maxId&quot;, 10).loadRowRdd.count // 10</span><br><span class="line">// 设置分区和批处理大小</span><br><span class="line">neo.nodes(&quot;MATCH (n:Person) RETURN id(n) SKIP &#123;_skip&#125; LIMIT &#123;_limit&#125;&quot;).partitions(4).batch(25).loadRowRdd.count // 100 == 4 * 25</span><br><span class="line">// 通过 pattern 加载数据</span><br><span class="line">neo.pattern(&quot;Person&quot;, Seq(&quot;KNOWS&quot;), &quot;Person&quot;).rows(80).batch(21).loadNodeRdds.count // 80</span><br><span class="line">// 通过 pattern 加载关系</span><br><span class="line">neo.pattern(&quot;Person&quot;, Seq(&quot;KNOWS&quot;), &quot;Person&quot;).partitions(12).batch(100).loadRelRdds.count // 1000</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载数据转换为 <code>Spark</code> 的 <code>DataFrame</code> 类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import org.neo4j.spark._</span><br><span class="line">val neo = Neo4j(sc)</span><br><span class="line">neo.nodes(&quot;MATCH (n:Person) RETURN id(n) as id SKIP &#123;_skip&#125; LIMIT &#123;_limit&#125;&quot;).partitions(4).batch(25).loadDataFrame.count</span><br><span class="line">var df = neo.pattern(&quot;Person&quot;, Seq(&quot;KNOWS&quot;), &quot;Person&quot;).rows(12).batch(100).loadDataFrame // [id: gigint]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载数据转换为 <code>Spark</code> 的 <code>GraphX Graph</code> 类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import org.neo4j.spark._</span><br><span class="line">import org.apache.spark.graphx._</span><br><span class="line">import org.apache.spark.graphx.lib._</span><br><span class="line">val neo = Neo4j(sc)</span><br><span class="line">val graphQuery = &quot;MATCH (n:Person)-[:KNOWS]-(m:Person) RETURN id(n) as source, id(m) as target, type(r) as value SKIP &#123;_skip&#125; LIMIT &#123;_limit&#125;&quot;</span><br><span class="line">val graph: Graph[Long, String] = neo.rels(graphQuery).partitions(7).batch(200).loadGraph</span><br><span class="line">graph.vertices.count // 100</span><br><span class="line">graph.edges.count // 1000</span><br><span class="line">// 通过 pattern 加载 graph</span><br><span class="line">val graph = neo.patttern((&quot;Person&quot;, &quot;id&quot;), (&quot;KNOWS&quot;, &quot;since&quot;), (&quot;Person&quot;. &quot;id&quot;)).partitions(7).batch(200).loadGraph[Long, Long]</span><br><span class="line">val graph2 = PageRank.run(graph, 5)</span><br><span class="line">graph2.vertices.sort(_._2).take(3)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载数据转换为 <code>Spark</code> 的 <code>GraphFrames</code> 类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import org.neo4j.spark._</span><br><span class="line">import org.graphframes._</span><br><span class="line">val neo = Neo4j(sc)</span><br><span class="line">val graphFrame = neo.pattern((&quot;Person&quot;, &quot;id&quot;), (&quot;KNOWS&quot;, null), (&quot;Person&quot;. &quot;id&quot;)).partitions(3).rows(1000).loadGraphFrame</span><br><span class="line">graphFrame.vertices.count // 100</span><br><span class="line">graphFrame.edges.count // 1000</span><br><span class="line">val pageRankFrame = graphFrame.pageRank.maxIter(5).run()</span><br><span class="line">val ranked = pageRankFrame.vertices</span><br><span class="line">ranked.printSchema()</span><br><span class="line">val top3 = ranked.orderBy(ranked.col(&quot;pagerank&quot;).desc).take(3)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+
+<h3 id="Neo4j-与自然语言处理"><a href="#Neo4j-与自然语言处理" class="headerlink" title="Neo4j 与自然语言处理"></a><code>Neo4j</code> 与自然语言处理</h3><p>自然语言处理技术在挖掘文本数据时使用的关键技术之一是本体的挖掘词关联。词关联在语言处理标记、解析、实体提取等自然语言处理任务中非常有用，<code>Neo4j</code> 由于其关联数据的能力，为自然语言处理中词关联的处理提供了一种新的解决方案。<br>在自然语言中最常见的词关联就是聚合关系和组合关系。</p>
+<h4 id="计算聚合相关性"><a href="#计算聚合相关性" class="headerlink" title="计算聚合相关性"></a>计算聚合相关性</h4><p>计算聚合关系的基本步骤分为三步：</p>
+<ul>
+<li>通过一个单词的上下文表示每个单词。<br> 考虑一个简单的文档，其中包含这样的单词： <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">My cat eats fish on Saturday.</span><br><span class="line">His dog eats turkey on Tuesday.</span><br></pre></td></tr></table></figure>
+ 至此要分析两个词之间是否存在关联，那就需要使用一定的方法来表示给定单词的上下文。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Right1(&quot;cat&quot;) = &#123;&quot;eats&quot;, &quot;ate&quot;, &quot;is&quot;, &quot;has&quot;, ...&#125;</span><br><span class="line">Left1(&quot;cat&quot;) = &#123;&quot;my&quot;, &quot;his&quot;, &quot;big&quot;, &quot;a&quot;, &quot;the&quot;, ...&#125;</span><br></pre></td></tr></table></figure></li>
+<li>计算上下文相关性<br> 为了计算聚合关系的度量，可以采用相对上下文相似性的和来表示，使用 <code>Jaccard</code> 指数作为相似性的度量。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sim(&quot;Cat&quot;, &quot;Dog&quot;) = Sim(Left1(&quot;Cat&quot;), Left1(&quot;Dog&quot;)) + Sim(Right1(&quot;Cat&quot;), Right1(&quot;Dog&quot;))</span><br></pre></td></tr></table></figure></li>
+<li>具有上下文高度相似性的词可能具有聚合关系<br> 一旦有了这种计算相似度的方式，就可以寻找具有高相似度的词对。其中可以通过扩大上下文窗口的大小，处理停止词来调整相似性得分。</li>
+</ul>
+<h4 id="将文本数据建模为邻接图"><a href="#将文本数据建模为邻接图" class="headerlink" title="将文本数据建模为邻接图"></a>将文本数据建模为邻接图</h4><p>可以将文本数据建模为邻接图，其中每个单词是一个节点，两个节点之间的边表示这些单词在文本语料库中彼此相邻。<br><img src="https://s2.loli.net/2022/05/08/KowAQnDE1r4s9xP.png" alt="neo4j-9-1.jpg"></p>
+<h4 id="挖掘单词之间的关系"><a href="#挖掘单词之间的关系" class="headerlink" title="挖掘单词之间的关系"></a>挖掘单词之间的关系</h4><p>根据插入的数据来发现单词之间的关系。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">LEFT1_QUERY = <span class="string">&#x27;MATCH (s:Word &#123;word: &#123;word&#125;&#125;) MATCH (w:Word)-[:NEXT_WORD]-&gt;(s) RETURN w.word as word&#x27;</span></span><br><span class="line">RIGHT1_QUERY = <span class="string">&#x27;MATCH (s:Word &#123;word: &#123;word&#125;&#125;) MATCH (w:Word)&lt;-[:NEXT_WORD]-(s) RETURN w.word as word&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">left1</span>(<span class="params">word</span>):</span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">&#x27;word&#x27;</span>: word.lower()</span><br><span class="line">    &#125;</span><br><span class="line">    tx = graphdb.cypher.begin()</span><br><span class="line">    tx.append(LEFT1_QUERY, params)</span><br><span class="line">    results = tx.commit()</span><br><span class="line">    words = []</span><br><span class="line">    <span class="keyword">for</span> result <span class="keyword">in</span> results:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> result:</span><br><span class="line">            words.append(line.word)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">set</span>(words)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">right1</span>(<span class="params">word</span>):</span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">&#x27;word&#x27;</span>: word.lower()</span><br><span class="line">    &#125;</span><br><span class="line">    tx = graphdb.cypher.begin()</span><br><span class="line">    tx.append(RIGHT1_QUERY, params)</span><br><span class="line">    results = tx.commit()</span><br><span class="line">    words = []</span><br><span class="line">    <span class="keyword">for</span> result <span class="keyword">in</span> results:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> result:</span><br><span class="line">            words.append(line.word)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">set</span>(words)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">jaccard</span>(<span class="params">a, b</span>):</span><br><span class="line">    intSize = <span class="built_in">len</span>(a.intersection(b))</span><br><span class="line">    unionSize = <span class="built_in">len</span>(a.union(b))</span><br><span class="line">    <span class="keyword">return</span> intSize / unionSize</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">paradingSimilarity</span>(<span class="params">w1, w2</span>):</span><br><span class="line">    <span class="keyword">return</span> (jeccard(left1(w1), left1(w2)) + jaccard(right1(w1), right1(w2))) / <span class="number">2.0</span></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的代码我们就可以计算单词之间的相似性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paradingSimilarity(&quot;school&quot;, &quot;university&quot;) // 0.2153846153846154</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong> </p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/" title="Neo4j系列博客-高级应用">https://blog.vgbhfive.cn/Neo4j系列博客-高级应用/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E9%9B%86%E7%BE%A4/" rel="prev" title="Neo4j系列博客-集群">
+      <i class="fa fa-chevron-left"></i> Neo4j系列博客-集群
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E5%85%A5%E9%97%A8/" rel="next" title="特征工程入门">
+      特征工程入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E7%B4%A2%E5%BC%95"><span class="nav-number">2.</span> <span class="nav-text">高级索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.</span> <span class="nav-text">空间索引</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95%E6%9F%A5%E8%AF%A2%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.1.3.</span> <span class="nav-text">空间索引查询类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-%E6%9E%84%E5%BB%BA-Neo4j-%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.4.</span> <span class="nav-text">Java 构建 Neo4j 空间索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-Cypher-%E6%9F%A5%E8%AF%A2"><span class="nav-number">2.1.5.</span> <span class="nav-text">常见的 Cypher 查询</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95"><span class="nav-number">2.2.</span> <span class="nav-text">中文全文索引</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#IKAnalyzer-%E5%88%86%E8%AF%8D%E5%99%A8"><span class="nav-number">2.2.1.</span> <span class="nav-text">IKAnalyzer 分词器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">基本使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-%E9%83%A8%E7%BD%B2-Neo4j"><span class="nav-number">3.</span> <span class="nav-text">Docker 部署 Neo4j</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E8%A7%88"><span class="nav-number">3.1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Neo4j-%E4%B8%8E%E5%9B%BE%E8%AE%A1%E7%AE%97"><span class="nav-number">4.</span> <span class="nav-text">Neo4j 与图计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Neo4j-Spark-Connector"><span class="nav-number">4.1.</span> <span class="nav-text">Neo4j-Spark-Connector</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Neo4j-%E4%B8%8E%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">Neo4j 与自然语言处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E8%81%9A%E5%90%88%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="nav-number">5.1.</span> <span class="nav-text">计算聚合相关性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E6%96%87%E6%9C%AC%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1%E4%B8%BA%E9%82%BB%E6%8E%A5%E5%9B%BE"><span class="nav-number">5.2.</span> <span class="nav-text">将文本数据建模为邻接图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%96%E6%8E%98%E5%8D%95%E8%AF%8D%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.3.</span> <span class="nav-text">挖掘单词之间的关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

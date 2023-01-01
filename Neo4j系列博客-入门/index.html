@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Neo4j 安装Neo4j 数据库支持安装部署的操作系统非常广泛，如 Windows、Mac、CentOS、Ubuntu 等操作系统均可安装。 其中可以访问 Neo4j 官方网站 ，找到下载链接，然后下载对应的版本。 Mac在 Mac 系统自带的 brew 包管理器中可以直接安装 Neo4j。 1brew install neo4j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j系列博客-入门">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="Neo4j 安装Neo4j 数据库支持安装部署的操作系统非常广泛，如 Windows、Mac、CentOS、Ubuntu 等操作系统均可安装。 其中可以访问 Neo4j 官方网站 ，找到下载链接，然后下载对应的版本。 Mac在 Mac 系统自带的 brew 包管理器中可以直接安装 Neo4j。 1brew install neo4j">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/01/08/Hgt6iSGU9VcYzZs.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/11/s7bF3ISGe9rEAHi.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/11/Iz96iK1hbAqVUJF.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/11/4rRwLq7NTXKjVFC.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/11/gj4zsnbAyO9vpQc.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/11/2GwmhJMvAx4QiaX.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/11/lKqJhMBnRzfYG2a.png">
+<meta property="article:published_time" content="2022-01-08T14:24:40.000Z">
+<meta property="article:modified_time" content="2022-01-11T14:39:32.572Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/08/Hgt6iSGU9VcYzZs.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Neo4j系列博客-入门 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Neo4j系列博客-入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-08 22:24:40" itemprop="dateCreated datePublished" datetime="2022-01-08T22:24:40+08:00">2022-01-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-11 22:39:32" itemprop="dateModified" datetime="2022-01-11T22:39:32+08:00">2022-01-11</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Neo4j-安装"><a href="#Neo4j-安装" class="headerlink" title="Neo4j 安装"></a>Neo4j 安装</h3><p><code>Neo4j</code> 数据库支持安装部署的操作系统非常广泛，如 <code>Windows</code>、<code>Mac</code>、<code>CentOS</code>、<code>Ubuntu</code> 等操作系统均可安装。</p>
+<p>其中可以访问 <code>Neo4j</code> <a target="_blank" rel="noopener" href="https://neo4j.com/">官方网站</a> ，找到下载链接，然后下载对应的版本。</p>
+<h4 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h4><p>在 <code>Mac</code> 系统自带的 <code>brew</code> 包管理器中可以直接安装 <code>Neo4j</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install neo4j</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>运行 <code>neo4j</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ neo4j start/stop/restart</span><br><span class="line">Directories in use:</span><br><span class="line">home:         /usr/local/Cellar/neo4j/4.4.2/libexec</span><br><span class="line">config:       /usr/local/Cellar/neo4j/4.4.2/libexec/conf</span><br><span class="line">logs:         /usr/local/var/log/neo4j</span><br><span class="line">plugins:      /usr/local/Cellar/neo4j/4.4.2/libexec/plugins</span><br><span class="line">import:       /usr/local/Cellar/neo4j/4.4.2/libexec/import</span><br><span class="line">data:         /usr/local/var/neo4j/data</span><br><span class="line">certificates: /usr/local/Cellar/neo4j/4.4.2/libexec/certificates</span><br><span class="line">licenses:     /usr/local/Cellar/neo4j/4.4.2/libexec/licenses</span><br><span class="line">run:          /usr/local/Cellar/neo4j/4.4.2/libexec/run</span><br><span class="line">Starting Neo4j.</span><br><span class="line">Started neo4j (pid:64455). It is available at http://localhost:7474</span><br><span class="line">There may be a short delay until the server is ready.</span><br></pre></td></tr></table></figure>
+<p>之后即可以在本地访问 <code>http://localhost:7474</code> 来进行下一步的操作。</p>
+<h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><p>在 <code>Neo4j</code> 官方网站下载对应的安装包后双击即可安装。</p>
+<p>在安装完成后，首先需要使用管理员身份启动命令行工具，然后导航到 <code>Neo4j</code> 的安装目录下，运行相关的指令即可（指令都是一样的）。</p>
+<h4 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h4><p>下载操作系统对应的安装包后，在命令行下将 <code>tar</code> 文件进行解压。<br>然后修改 <code>conf/neo4j-server.properties</code> 配置文件，将 <code>org.neo4j.server.webserver.address=0.0.0.0</code> 注释字符去掉。<br>最后，进入到 <code>bin</code> 目录下，运行 <code>Neo4j</code> 指令启动数据库即可。</p>
+<hr>
+
+<h3 id="基本元素及概念"><a href="#基本元素及概念" class="headerlink" title="基本元素及概念"></a>基本元素及概念</h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a>节点（<code>Node</code>）</h4><p>节点是图数据库中的一个基本元素，用以表示一个实体记录，就像关系数据库中的一条记录一样，在 <code>Neo4j</code> 中节点可以包含多个属性（<code>Property</code>）和多个标签（<code>Label</code>）。<br><img src="https://s2.loli.net/2022/01/08/Hgt6iSGU9VcYzZs.png" alt="neo4j-5.jpg"></p>
+<h4 id="关系（Relationship"><a href="#关系（Relationship" class="headerlink" title="关系（Relationship)"></a>关系（<code>Relationship</code>)</h4><p>关系同样是图数据中的基本元素。当数据中已经存在节点后，需要将节点连接起来构成图。关系就是用来连接两个节点，关系也称为图的边（<code>Edge</code>），其始端和末端都必须是节点，关系不能指向空也不能由空发起。关系和节点一样可以包含多个属性，但关系只能有一个类型（<code>Type</code>）。<br><img src="https://s2.loli.net/2022/01/11/s7bF3ISGe9rEAHi.png" alt="neo4j-5.jpg"><br><img src="https://s2.loli.net/2022/01/11/Iz96iK1hbAqVUJF.png" alt="neo4j-6.jpg"></p>
+<p>一个节点可以被多个关系指向或作为关系的起始节点。<br><img src="https://s2.loli.net/2022/01/11/4rRwLq7NTXKjVFC.png" alt="neo4j-7.jpg"></p>
+<p>关系必须要开始节点(<code>Start node</code>)和结束节点（<code>End node</code>），两头不能为空。<br>节点可以被串联或并联起来。由于关系是可以有方向的，所以可以在由节点、关系组成的图中进行遍历操作。<br><img src="https://s2.loli.net/2022/01/11/gj4zsnbAyO9vpQc.png" alt="neo4j-8.jpg"></p>
+<p>在图的遍历操作中我们可以指定关系遍历的方向或者指定为无方向的，因此在创建关系时不必为两个节点创建相互指向的关系，而是在遍历时不指定遍历方向即可。<br>特别需要注意的是一个节点存在指向自己的关系。<br><img src="https://s2.loli.net/2022/01/11/2GwmhJMvAx4QiaX.png" alt="neo4j-9.jpg"></p>
+<h4 id="属性（Property）"><a href="#属性（Property）" class="headerlink" title="属性（Property）"></a>属性（<code>Property</code>）</h4><p>节点和关系都可以有多个属性。属性由键值对组成，属性名类似于变量名，属性值类似于变量值。属性值可以是基本的数据类型，或者由基本数据组成的数组。<br>属性值没有 <code>null</code> 的概念，如果一个属性值不需要了，可以将整个键值对都移除，在使用 <code>Cypher</code> 或者 <code>Java API</code> 时可以用 <code>IS NULL</code> 关键字来判断属性是否存在。</p>
+<h4 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h4><p>当使用节点和关系创建了一个图之后，在此图中任意选择两个节点都是可能存在路径的。<br>图中任意节点都存在由节点和关系组成的路径，路径也有长度的概念，也就是路径中的关系数。当然也可以说单独一个节点就可以组成长度为 <code>0</code> 的路径。<br><img src="https://s2.loli.net/2022/01/11/lKqJhMBnRzfYG2a.png" alt="neo4j-10.jpg"></p>
+<p>如果是两个简单的节点，中间只存在一个关系，那这条路径的长度就是 <code>1</code>。</p>
+<h4 id="遍历（Traversal）"><a href="#遍历（Traversal）" class="headerlink" title="遍历（Traversal）"></a>遍历（<code>Traversal</code>）</h4><p>遍历一张图就是按照一定的规则，根据他们之间的关系，依次访问所有的相关联的节点的操作。</p>
+<p>遍历规则可以是广度优先也可以是深度优先。</p>
+<hr>
+
+
+<h3 id="批量工具使用"><a href="#批量工具使用" class="headerlink" title="批量工具使用"></a>批量工具使用</h3><p>目前，导入到 <code>Neo4j</code> 的工具有两种：</p>
+<ul>
+<li><code>load csv</code> 指令</li>
+<li><code>neo4j-import</code> 工具</li>
+</ul>
+<p>这两种都是基于 <code>CSV</code> 文件的，既然需要 <code>CSV</code> 文件，那么我们就需要考虑一下如何从其他数据库中获取 <code>CSV</code> 文件。</p>
+<h4 id="获取-CSV-文件"><a href="#获取-CSV-文件" class="headerlink" title="获取 CSV 文件"></a>获取 <code>CSV</code> 文件</h4><h5 id="SQL-Server"><a href="#SQL-Server" class="headerlink" title="SQL Server"></a><code>SQL Server</code></h5><ol>
+<li>打开一个查询窗口，输入 <code>SQL</code> 语句查询出需要导出的数据列表。</li>
+<li>在查询出来的结果中，复制所有查询出来的数据。然后右键选择“将结果另存为”。</li>
+<li>之后就可以选择保存为 <code>CSV</code> 文件，之后用 <code>Excel</code> 打开文件就是对应的内容了。</li>
+</ol>
+<h5 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a><code>MySQL</code></h5><p><code>MySQL</code> 支持将查询结果直接导出为 <code>CSV</code> 文本格式，在使用 <code>select</code> 语句查询数据时，在语句后面加上导出指令即可，格式如下：</p>
+<ul>
+<li><code>into outfile</code>： 指定导出的目录和文件名。</li>
+<li><code>fields terminated by</code>： 定义字段间的分隔符。</li>
+<li><code>optionally enclosed by</code>： 定义包围字段的字符（数值型字段无效）。</li>
+<li><code>lines terminated by</code>： 定义每行的分隔符。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from mytable where mytag like &#x27;E1%&#x27; into outfile &#x27;E:/E1.csv&#x27; fields terminated by &#x27;,&#x27; optionally enclosed by &#x27;&quot;&#x27; lines terminated by &#x27;\r\n&#x27;; </span><br></pre></td></tr></table></figure>
+<p>此条语句执行后，会讲表中匹配到的数据导出到 <code>E1.csv</code> 文件中。其中每个字段以逗号分隔，字段内容是以双引号包围的字符串，每条记录使用 <code>\r\n</code> 换行。</p>
+<h5 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a><code>Oracle</code></h5><p>可以使用 <code>sqlplus</code> 导出 <code>CSV</code> 文件，这是一种很方便的方式。</p>
+<p>首先需要创建 <code>sqlplus.sql</code> 文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set colsep ,</span><br><span class="line">set feddback off</span><br><span class="line">set heading off</span><br><span class="line">set trimout on</span><br><span class="line">spool E:\user.csv</span><br><span class="line">select &#x27;&quot;&#x27; || user_name || &#x27;&quot;,&quot;&#x27; || user_age || &#x27;&quot;,&quot;&#x27; || user_card || &#x27;&quot;,&quot;&#x27; || user_sex || &#x27;&quot;,&quot;&#x27; || user_address || &#x27;&quot;,&quot;&#x27; || user_tel || &#x27;&quot;,&quot;&#x27; || &#x27;&quot;&#x27; from user_b1;</span><br><span class="line">spool off</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+<p>然后运行 <code>sqlplus</code> 命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlplus -s user_naem/passwd@db @spool.sql</span><br></pre></td></tr></table></figure>
+<p>这样就从 <code>Oracle</code> 中将表中的数据导出到 <code>user.csv</code> 文件中。</p>
+<h5 id="CSV-内容格式注意事项"><a href="#CSV-内容格式注意事项" class="headerlink" title="CSV 内容格式注意事项"></a><code>CSV</code> 内容格式注意事项</h5><p><code>CSV</code> 文件内容格式常见错误如下：</p>
+<ul>
+<li>在 <code>CSV</code> 文件开始之处存在 <code>BOM</code> 字节顺序标记（两个 <code>UTF-8</code> 字符），如果存在需要删除他们。</li>
+<li>文件内存在非文本类型的字符，如果存在则删除他们。</li>
+<li>存在不规则换行符。如混用 <code>Windows</code> 和 <code>UNIX</code> 换行符，如果需要请确保他们一致，最好选择 <code>UNIX</code> 风格。</li>
+<li><code>CSV</code> 文件头与数据不一致，如此情况需要修复头部。</li>
+<li>带引号和不带引号的文本字段中出现换行符，如存在就删除换行符。</li>
+<li>存在杂散的引号，非文本中存在独立双引号或单引号，如存在就转义或删除杂散引号。</li>
+</ul>
+<h4 id="使用-Load-CSV-指令导入文件"><a href="#使用-Load-CSV-指令导入文件" class="headerlink" title="使用 Load CSV 指令导入文件"></a>使用 <code>Load CSV</code> 指令导入文件</h4><p><code>Neo4j</code> 提供了 <code>Load CSV</code> 命令帮助我们将 <code>CSV</code> 数据文件导入到 <code>Neo4j</code> 中。</p>
+<h5 id="简单导入数据"><a href="#简单导入数据" class="headerlink" title="简单导入数据"></a>简单导入数据</h5><p><code>Load CSV</code> 读取但不存入数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 查看前 CSV 文件行数</span><br><span class="line">LOAD CSV FROM &quot;file-url&quot; AS line</span><br><span class="line">RETURN count(*);</span><br><span class="line"></span><br><span class="line">// 查看前 CSV 文件前 5 行</span><br><span class="line">LOAD CSV FROM &quot;file-url&quot; AS line WITH line</span><br><span class="line">RETURN line</span><br><span class="line">LIMIT 5;</span><br><span class="line"></span><br><span class="line">// 查看前 CSV 文件，并带有头部数据</span><br><span class="line">LOAD CSV WITH HEADERS FROM &quot;file-url&quot; AS line WITH line</span><br><span class="line">RETURN line</span><br><span class="line">LIMIT 5;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>file-url</code> 是文件的地址，可以是本地地址也可以是网址，只要能地址中读出 <code>CSV</code> 文件即可。<br>对于 <code>RETURN</code> 语句，是用来返回并显示结果到结果显示区的语句。<br>对于 <code>LIMIT</code> 语句，用来限制返回的行数。</p>
+<p>要导入文件到 	<code>Neo4j</code> 数据库中需要使用相应的 <code>Create</code> 语句。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LOAD CSV FROM &quot;file-url&quot; AS line</span><br><span class="line">CREATE (:Movie &#123; title: line[0], released: line[1], tag: line[2] &#125;)</span><br></pre></td></tr></table></figure>
+<p>执行完上述语句，就能在结果显示区看到创建节点的数量。</p>
+<p>接着使用以下语句查看数据库是否已经有导入的数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n:Movie) RETURN n</span><br></pre></td></tr></table></figure>
+<p>此时结果就会在结果展示区展示。</p>
+<h5 id="导入-CSV-时附带表头"><a href="#导入-CSV-时附带表头" class="headerlink" title="导入 CSV 时附带表头"></a>导入 <code>CSV</code> 时附带表头</h5><p>下面介绍导入 <code>CSV</code> 时附带上表头：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LOAD CSV WITH HEADERS FROM &quot;file-url&quot; AS line</span><br><span class="line">CREATE (:Track &#123; TrackId: line.Id, Name: line.Name, Length: line.Length &#125; )</span><br></pre></td></tr></table></figure>
+<p>上述语句使用 <code>WITH HEADERS</code> 子句，它的功能在于导入 <code>CSV</code> 时附带上头部，头部由 <code>line.Id</code> 和 <code>line.Name</code> 制定。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n:Track) RETURN n</span><br></pre></td></tr></table></figure>
+<p>在结果展示区就可以看到每个元素都带有 <code>TrackId</code>、<code>Name</code>、<code>Length</code> 头部元素。</p>
+<h5 id="导入-CSV-大文件"><a href="#导入-CSV-大文件" class="headerlink" title="导入 CSV 大文件"></a>导入 <code>CSV</code> 大文件</h5><p>如果要导入包含大量数据的 <code>CSV</code> 文件，则可以使用 <code>PERODIC COMMIT</code> 子句。<br>使用 <code>PERODIC COMMIT</code> 指示 <code>Neo4j</code> 在执行完一定行数后提交数据再继续，这样减少了内存开销。<br>使用 <code>PERODIC COMMIT</code> 默认值为 <code>1000</code> 行，因此数据将每一千行提交一次。<br>要使用 <code>PERODIC COMMIT</code>，只需在 <code>LOAD CSV</code> 语句之前插入 <code>USING PERODIC COMMIT</code> 语句。</p>
+<p>具体使用方法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">USING PERODIC COMMIT [line_num]</span><br><span class="line">LOAD CSV WITH HEADERS FROM &quot;file-url&quot; AS line</span><br><span class="line">CREATE (:Track &#123; TrackId: line.Id, Name: line.Name, Length: line.Length &#125; )</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-neo4j-import-工具导入文件"><a href="#使用-neo4j-import-工具导入文件" class="headerlink" title="使用 neo4j-import 工具导入文件"></a>使用 <code>neo4j-import</code> 工具导入文件</h4><p>从 <code>Neo4j 2.2</code> 版本开始，系统自带的一个大数据量的导入工具： <code>eno4j-import</code>，可支持并行、可扩展的大规模 <code>CSV</code> 数据导入。</p>
+<p>使用示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bin/neo4j-import --into retail.db --id-type string \</span><br><span class="line">				--nodes:Customer customers.csv --nodes products.csv \</span><br><span class="line">				--nodes:orders_header.csv,orders1.csv,orders2.csv \</span><br><span class="line">				--relationships:CONTAINS order_details.csv \</span><br><span class="line">				--relationships:ORDERED customer_orders_header.csv,orders1.csv,orders2.csv</span><br></pre></td></tr></table></figure>
+<p>上述中 <code>--into</code> 子句指明了导入的 <code>Neo4j</code> 数据库名称；<code>--id-type</code> 子句指明了生成节点、关系的主键类型为 <code>string</code> 类型；<code>--nodes:</code> 子句开头的 <code>CSV</code> 文件是节点 <code>csv</code> 文件；<code>--relationships:</code> 开头的是关系 <code>CSV</code> 文件。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/" title="Neo4j系列博客-入门">https://blog.vgbhfive.cn/Neo4j系列博客-入门/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%89%8D%E8%A8%80%E5%9F%BA%E7%A1%80/" rel="prev" title="Neo4j系列博客-前言基础">
+      <i class="fa fa-chevron-left"></i> Neo4j系列博客-前言基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/" rel="next" title="Neo4j系列博客-Cypher-1">
+      Neo4j系列博客-Cypher-1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Neo4j-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">Neo4j 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mac"><span class="nav-number">1.1.</span> <span class="nav-text">Mac</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows"><span class="nav-number">1.2.</span> <span class="nav-text">Windows</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ubuntu"><span class="nav-number">1.3.</span> <span class="nav-text">Ubuntu</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%85%83%E7%B4%A0%E5%8F%8A%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">基本元素及概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%EF%BC%88Node%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">节点（Node）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%EF%BC%88Relationship"><span class="nav-number">2.2.</span> <span class="nav-text">关系（Relationship)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%EF%BC%88Property%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">属性（Property）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84"><span class="nav-number">2.4.</span> <span class="nav-text">路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%EF%BC%88Traversal%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">遍历（Traversal）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">批量工具使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-CSV-%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">获取 CSV 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SQL-Server"><span class="nav-number">3.1.1.</span> <span class="nav-text">SQL Server</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MySQL"><span class="nav-number">3.1.2.</span> <span class="nav-text">MySQL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Oracle"><span class="nav-number">3.1.3.</span> <span class="nav-text">Oracle</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CSV-%E5%86%85%E5%AE%B9%E6%A0%BC%E5%BC%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.1.4.</span> <span class="nav-text">CSV 内容格式注意事项</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Load-CSV-%E6%8C%87%E4%BB%A4%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">使用 Load CSV 指令导入文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">3.2.1.</span> <span class="nav-text">简单导入数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5-CSV-%E6%97%B6%E9%99%84%E5%B8%A6%E8%A1%A8%E5%A4%B4"><span class="nav-number">3.2.2.</span> <span class="nav-text">导入 CSV 时附带表头</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5-CSV-%E5%A4%A7%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.3.</span> <span class="nav-text">导入 CSV 大文件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-neo4j-import-%E5%B7%A5%E5%85%B7%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.</span> <span class="nav-text">使用 neo4j-import 工具导入文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

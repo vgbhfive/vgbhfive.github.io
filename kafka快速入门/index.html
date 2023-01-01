@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前提什么是消息系统消息系统负责将数据从一个应用程序传输到另一个应用程序，因此应用程序可以专注于数据，但不担心如何共享它。 而分布式消息传递是基于可靠消息队列的概念，消息在客户端应用程序和消息传递系统之间异步排队。 有两种类型的消息模式可用 - 一种是点对点，另一种是发布 - 订阅(pub-sub)消息系统。 他们大多数消息模式都遵循 pub-sub 模式。 点对点消息系统在点对点系统中，消息被保留">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka快速入门">
+<meta property="og:url" content="https://blog.vgbhfive.cn/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="前提什么是消息系统消息系统负责将数据从一个应用程序传输到另一个应用程序，因此应用程序可以专注于数据，但不担心如何共享它。 而分布式消息传递是基于可靠消息队列的概念，消息在客户端应用程序和消息传递系统之间异步排队。 有两种类型的消息模式可用 - 一种是点对点，另一种是发布 - 订阅(pub-sub)消息系统。 他们大多数消息模式都遵循 pub-sub 模式。 点对点消息系统在点对点系统中，消息被保留">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/22/JYLBx1.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/22/JNw2C9.jpg">
+<meta property="article:published_time" content="2020-04-21T08:55:08.000Z">
+<meta property="article:modified_time" content="2021-06-05T03:25:43.318Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="MQ">
+<meta property="article:tag" content="kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/04/22/JYLBx1.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>kafka快速入门 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          kafka快速入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-21 16:55:08" itemprop="dateCreated datePublished" datetime="2020-04-21T16:55:08+08:00">2020-04-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-05 11:25:43" itemprop="dateModified" datetime="2021-06-05T11:25:43+08:00">2021-06-05</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><h3 id="什么是消息系统"><a href="#什么是消息系统" class="headerlink" title="什么是消息系统"></a>什么是消息系统</h3><p>消息系统负责将数据从一个应用程序传输到另一个应用程序，因此应用程序可以专注于数据，但不担心如何共享它。 而分布式消息传递是基于可靠消息队列的概念，消息在客户端应用程序和消息传递系统之间异步排队。 有两种类型的消息模式可用 - 一种是点对点，另一种是发布 - 订阅(pub-sub)消息系统。 他们大多数消息模式都遵循 pub-sub 模式。</p>
+<h4 id="点对点消息系统"><a href="#点对点消息系统" class="headerlink" title="点对点消息系统"></a>点对点消息系统</h4><p>在点对点系统中，消息被保留在队列中。 一个或多个消费者可以消耗队列中的消息，但是特定消息只能由最多一个消费者消费。 一旦消费者读取队列中的消息，它就从该队列中消失。 该系统的典型示例是订单处理系统，其中每个订单将由一个订单处理器处理，但多个订单处理器也可以同时工作。</p>
+<h4 id="发布-订阅消息系统"><a href="#发布-订阅消息系统" class="headerlink" title="发布 - 订阅消息系统"></a>发布 - 订阅消息系统</h4><p>在发布 - 订阅系统中，消息被保留在主题中。 与点对点系统不同，消费者可以订阅一个或多个主题并使用该主题中的所有消息。 在发布 - 订阅系统中，消息生产者称为发布者，消息使用者称为订阅者。 一个现实生活的例子是Dish电视，它发布不同的渠道，如运动，电影，音乐等，任何人都可以订阅自己的频道集，并获得他们订阅的频道时可用。</p>
+<span id="more"></span>
+
+<hr>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Kafka 是一个分布式发布 - 订阅消息系统和一个强大的队列，可以处理大量的数据，并使您能够将消息从一个端点传递到另一个端点。 </p>
+<p>Kafka 适合离线和在线消息消费。 Kafka 消息保留在磁盘上，并在群集内复制以防止数据丢失。 Kafka 构建在ZooKeeper 同步服务之上。 它与Apache Storm 和Spark 非常好地集成，用于实时流式数据分析。</p>
+<p>Apache Kafka 起源于LinkedIn，后来于2011年成为开源Apache 项目，然后于2012年成为First-class Apache 项目。Kafka 是用Scala 和Java 编写的。 Apache Kafka 是基于发布订阅的容错消息系统。 它是快速，可扩展和设计分布。</p>
+<p>Kafka专为分布式高吞吐量系统而设计。 Kafka 往往工作得很好，作为一个更传统的消息代理的替代品。 与其他消息传递系统相比，Kafka 具有更好的吞吐量，内置分区，复制和固有的容错能力，这使得它非常适合大规模消息处理应用程序。</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>高吞吐量、低延迟: kafka 每秒可以处理几十万条消息，它的延迟最低只有几毫秒</li>
+<li>持久性、可靠性: Kafka 是分布式、分区、复制和容错的。</li>
+<li>可扩展性: Kafka 消息传递系统轻松缩放，无需停机。</li>
+<li>耐用性: Kafka 使用分布式提交日志，这意味着消息会尽可能快地保留在磁盘上，因此它是持久的。</li>
+<li>性能: Kafka 对于发布和订阅消息都具有高吞吐量。 即使存储了许多TB的消息，它也保持稳定的性能。Kafka 非常快，并保证零停机和零数据丢失。</li>
+</ul>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
+<li>指标: Kafka 通常用于操作监控数据。 这涉及聚合来自分布式应用程序的统计信息，以产生操作数据的集中馈送。</li>
+<li>日志聚合解决方案: Kafka 可用于跨组织从多个服务收集日志，并使它们以标准格式提供给多个服务器。</li>
+<li>流处理: 流行的框架(如Storm和Spark Streaming) 从主题中读取数据，对其进行处理，并将处理后的数据写入新主题，供用户和应用程序使用。 Kafka的强耐久性在流处理的上下文中也非常有用。</li>
+</ul>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><ul>
+<li>Topics（主题）: 属于特定类别的消息流称为主题。 数据存储在主题中。 主题被拆分成分区。 对于每个主题，Kafka 保存一个分区的数据。 每个这样的分区包含不可变有序序列的消息。</li>
+<li>Partition（分区）: 主题可能有许多分区，因此它可以处理任意数量的数据。</li>
+<li>Partition offset（分区偏移）: 每个分区消息具有称为 offset 的唯一序列标识。</li>
+<li>Replicas of partition（分区备份）: 副本只是一个分区的备份。 副本从不读取或写入数据。 它们用于防止数据丢失。</li>
+<li>Brokers（经纪人）: <ul>
+<li>代理是负责维护发布数据的简单系统。 每个代理中的每个主题可以具有零个或多个分区。 假设，如果在一个主题和N 个代理中有N 个分区，每个代理将有一个分区。</li>
+<li>假设在一个主题中有N个分区并且多于N 个代理(n + m) ，则第一个N 代理将具有一个分区，并且下一个M 代理将不具有用于该特定主题的任何分区。</li>
+<li>假设在一个主题中有N个分区并且小于N 个代理(n - m) ，每个代理将在它们之间具有一个或多个分区共享。 由于代理之间的负载分布不相等，不推荐使用此方案。</li>
+</ul>
+</li>
+<li>Kafka Cluster（Kafka 集群）: Kafka 有多个代理被称为Kafka 集群。 可以扩展Kafka 集群，无需停机。 这些集群用于管理消息数据的持久性和复制。</li>
+<li>Producers（生产者）: 生产者是发送给一个或多个Kafka 主题的消息的发布者。</li>
+<li>Consumers（消费者）: 消费者订阅一个或多个主题，并通过从代理中提取数据来使用已发布的消息。</li>
+<li>Leader（领导者）: Leader 是负责给定分区的所有读取和写入的节点。 每个分区都有一个服务器充当Leader 。 </li>
+<li>Follower（追随者）: 跟随领导者指令的节点被称为Follower。 如果领导失败，一个追随者将自动成为新的领导者。 跟随者作为正常消费者，拉取消息并更新其自己的数据存储。</li>
+</ul>
+<hr>
+
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p>Kafka 是分为一个或多个分区的主题的集合。 Kafka 分区是消息的线性有序序列，其中每个消息由它们的索引(称为偏移)来标识。 Kafka 集群中的所有数据都是不相连的分区联合。 传入消息写在分区的末尾，消息由消费者顺序读取。 通过将消息复制到不同的代理提供持久性。</p>
+<p>Kafka 以快速，可靠，持久，容错和零停机的方式提供基于 pub-sub 和队列的消息系统。 在这两种情况下，生产者只需将消息发送到主题，消费者可以根据自己的需要选择任何一种类型的消息传递系统。 </p>
+<p><img src="https://s1.ax1x.com/2020/04/22/JYLBx1.png" alt="JYLBx1.png"> </p>
+<h3 id="发布-订阅消息的工作流程"><a href="#发布-订阅消息的工作流程" class="headerlink" title="发布 - 订阅消息的工作流程"></a>发布 - 订阅消息的工作流程</h3><ul>
+<li>生产者定期向主题发送消息。</li>
+<li>Kafka 代理存储为该特定主题配置的分区中的所有消息。 它确保消息在分区之间平等共享。 如果生产者发送两个消息并且有两个分区，Kafka 将在第一分区中存储一个消息，在第二分区中存储第二消息。</li>
+<li>消费者订阅特定主题。</li>
+<li>一旦消费者订阅主题，Kafka 将向消费者提供主题的当前偏移，并且还将偏移保存在Zookeeper 系综中。</li>
+<li>消费者将定期请求Kafka (如100 Ms)新消息。</li>
+<li>一旦Kafka 收到来自生产者的消息，它将这些消息转发给消费者。</li>
+<li>消费者将收到消息并进行处理。</li>
+<li>一旦消息被处理，消费者将向Kafka 代理发送确认。</li>
+<li>一旦Kafka 收到确认，它将偏移更改为新值，并在Zookeeper 中更新它。 由于偏移在Zookeeper 中维护，消费者可以正确地读取下一封邮件，即使在服务器暴力期间。</li>
+<li>以上流程将重复，直到消费者停止请求。</li>
+<li>消费者可以随时回退&#x2F;跳到所需的主题偏移量，并阅读所有后续消息。</li>
+</ul>
+<h3 id="队列消息-x2F-用户组的工作流"><a href="#队列消息-x2F-用户组的工作流" class="headerlink" title="队列消息&#x2F;用户组的工作流"></a>队列消息&#x2F;用户组的工作流</h3><p>在队列消息传递系统而不是单个消费者中，具有相同组ID 的一组消费者将订阅主题。 简单来说，订阅具有相同 Group ID 的主题的消费者被认为是单个组，并且消息在它们之间共享。</p>
+<p>实际工作流程: </p>
+<ul>
+<li>生产者以固定间隔向某个主题发送消息。</li>
+<li>Kafka 存储在为该特定主题配置的分区中的所有消息，类似于前面的方案。</li>
+<li>单个消费者订阅特定主题，假设 Topic-01 为 Group ID 为 Group-1 。</li>
+<li>Kafka 以与发布 - 订阅消息相同的方式与消费者交互，直到新消费者以相同的组ID 订阅相同主题 Topic-01  1 。</li>
+<li>一旦新消费者到达，Kafka 将其操作切换到共享模式，并在两个消费者之间共享数据。 此共享将继续，直到用户数达到为该特定主题配置的分区数。</li>
+<li>一旦消费者的数量超过分区的数量，新消费者将不会接收任何进一步的消息，直到现有消费者取消订阅任何一个消费者。 出现这种情况是因为Kafka      中的每个消费者将被分配至少一个分区，并且一旦所有分区被分配给现有消费者，新消费者将必须等待。</li>
+<li>此功能也称为使用者组。 同样，Kafka 将以非常简单和高效的方式提供两个系统中最好的。</li>
+</ul>
+<h3 id="Zookeeper-的作用"><a href="#Zookeeper-的作用" class="headerlink" title="Zookeeper 的作用"></a>Zookeeper 的作用</h3><p>Apache Kafka 的一个关键依赖是Apache Zookeeper，它是一个分布式配置和同步服务。 Zookeeper 是Kafka 代理和消费者之间的协调接口。 Kafka 服务器通过Zookeeper 集群共享信息。 Kafka 在Zookeeper 中存储基本元数据。 例如关于主题，代理，消费者偏移(队列读取器)等的信息。</p>
+<p>由于所有关键信息存储在Zookeeper 中，并且它通常在其整体上复制此数据，因此Kafka 代理&#x2F; Zookeeper 的故障不会影响Kafka 集群的状态。 Kafka 将恢复状态，一旦Zookeeper 重新启动。 这为Kafka 带来了零停机时间。 同时Kafka 代理之间的领导者选举也通过使用Zookeeper 在领导者失败的情况下完成。</p>
+<hr>
+
+<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><h3 id="安装Kafka"><a href="#安装Kafka" class="headerlink" title="安装Kafka"></a>安装Kafka</h3><ol>
+<li>下载并安装Zookeeper</li>
+</ol>
+<ul>
+<li>要在您的计算机上安装ZooKeeper框架，请访问以下链接并下载最新版本的ZooKeeper。<a target="_blank" rel="noopener" href="http://zookeeper.apache.org/releases.html">http://zookeeper.apache.org/releases.html</a></li>
+<li>解压提取文件</li>
+<li>修改配置</li>
+<li>启动Zookeeper 服务<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh start</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>下载并安装Kafka</li>
+</ol>
+<ul>
+<li>要在您的机器上安装Kafka，请点击以下链接。 <a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.cgi?path=/kafka/0.9.0.0/kafka_2.11-0.9.0.0.tgz">https://www.apache.org/dyn/closer.cgi?path=/kafka/0.9.0.0/kafka_2.11-0.9.0.0.tgz</a></li>
+<li>解压提取文件</li>
+</ul>
+<ol start="3">
+<li>启动Kafka (Kafka Broker)<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-server-start.sh config/server.properties</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="简单生产者与消费者示例"><a href="#简单生产者与消费者示例" class="headerlink" title="简单生产者与消费者示例"></a>简单生产者与消费者示例</h3><p>这里我们仅使用<strong>单节点单代理</strong>的配置，首先我们需要安装Java 并启动Zookeeper 、和Kafka 。</p>
+<ul>
+<li><p>启动Zookeeper</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动Kafka Broker</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-server-start.sh config/server.properties</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建Topic 主题</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic topic-name <span class="comment"># 语法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Hello-Kafka</span><br></pre></td></tr></table></figure>
+<p> 创建了一个名为Hello-Kafka 的主题，其中包含一个分区和一个副本因子。</p>
+</li>
+<li><p>查看已存在的注意列表</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --list --zookeeper localhost:2181</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动生产者产生消息</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name <span class="comment"># 语法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">bin/kafka-console-producer.sh --broker-list localhost:9092 --topic Hello-Kafka</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动消费者消费消息</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --zookeeper localhost:2181 —topic topic-name --from-beginning <span class="comment"># 语法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">bin/kafka-console-consumer.sh --zookeeper localhost:2181 —topic Hello-Kafka --from-beginning</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>结果展示<br> 生产者：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Hello</span><br><span class="line">My first message</span><br><span class="line">My second message</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> 消费者：<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Hello</span><br><span class="line">My first message</span><br><span class="line">My second message</span><br></pre></td></tr></table></figure></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><h3 id="消息事务"><a href="#消息事务" class="headerlink" title="消息事务"></a>消息事务</h3><p>在Kafka 中设计事务的目的主要是为了满足<strong>读取-处理-写入</strong>这种模式的应用程序。这种模式下数据的读写是异步的，比如Kafka 的Topics ，这种应用程序更广泛的被称之为流处理应用程序。</p>
+<h4 id="多分区原子写入"><a href="#多分区原子写入" class="headerlink" title="多分区原子写入"></a>多分区原子写入</h4><p>事务能够保证Kafka topic 下每个分区的原子写入。 事务中所有的消息都将被成功写入或者丢弃。 </p>
+<p>在Kafka中，我们通过写入一个名为offsets topic 的内部Kafka topic 来记录offset commit 。消息仅在其offset 被提交给offsets topic 时才被认为成功消费。</p>
+<p>由于offset commit 只是对Kafka topic 的另一次写入，并且由于消息仅在提交偏移量时被视为成功消费，所以跨多个主题和分区的原子写入也启用原子“读取-处理-写入”循环：提交偏移量X到offset topic和消息B到tp1的写入将是单个事务的一部分，所以整个步骤都是原子的。</p>
+<h4 id="僵尸实例"><a href="#僵尸实例" class="headerlink" title="僵尸实例"></a>僵尸实例</h4><p>我们通过为每个事务Producer 分配一个称为transactional.id 的唯一标识符来解决僵尸实例的问题。在进程重新启动时能够识别相同的Producer 实例。</p>
+<h4 id="读事务消息"><a href="#读事务消息" class="headerlink" title="读事务消息"></a>读事务消息</h4><p>Kafka 保证Consumer 最终只能提供非事务性消息或提交事务性消息。它将保留来自未完成事务的消息，并过滤掉已中止事务的消息。</p>
+<h3 id="零拷贝（备份机制）"><a href="#零拷贝（备份机制）" class="headerlink" title="零拷贝（备份机制）"></a>零拷贝（备份机制）</h3><p>Kafka 的备份的单元是Partition ，也就是每个Partition 都都会有leader Partiton 和follow Partiton 。其中leader Partition 是用来进行和Producer 进行写交互，follow 从leader 副本进行拉数据进行同步，从而保证数据的冗余，防止数据丢失的目的。</p>
+<p>这同时也是Kafka 高可靠性的原因之一，在leader Partition 出现异常之后，follow 之间会重新选举出一个leader Partition 接替之前异常的leader Partition继续提供服务，并且由于备份机制的存在，follow 和leader 之间的数据也不会存在差异。</p>
+<p>关于标题为什么是零拷贝，这是因为Kafka 在实现leader 和follow 之间备份的时候采用了零拷贝的技术。</p>
+<p>传统的读取文件并发送到网络的步骤：</p>
+<ul>
+<li>操作系统将数据从磁盘文件中读取到内核空间的页面缓存；</li>
+<li>应用程序将数据从内核空间读入用户空间缓冲区；</li>
+<li>应用程序将读到数据写回内核空间并放入socket缓冲区；</li>
+<li>操作系统将数据从socket缓冲区复制到网卡接口，此时数据才能通过网络发送。</li>
+</ul>
+<p>零拷贝技术：<br><img src="https://s1.ax1x.com/2020/04/22/JNw2C9.jpg" alt="JNw2C9.jpg"><br><strong>零拷贝技术</strong>只用将磁盘文件的数据复制到页面缓存中一次，然后将数据从页面缓存直接发送到网络中（发送给不同的订阅者时，都可以使用同一个页面缓存），避免了重复复制操作。</p>
+<hr>
+
+<h2 id="高级操作"><a href="#高级操作" class="headerlink" title="高级操作"></a>高级操作</h2><h3 id="整合Storm"><a href="#整合Storm" class="headerlink" title="整合Storm"></a>整合Storm</h3><h3 id="Spark-集成"><a href="#Spark-集成" class="headerlink" title="Spark 集成"></a>Spark 集成</h3><h3 id="官方工具"><a href="#官方工具" class="headerlink" title="官方工具"></a>官方工具</h3><p>官方工具分为系统工具和复制工具。</p>
+<h4 id="系统工具"><a href="#系统工具" class="headerlink" title="系统工具"></a>系统工具</h4><p>可以使用运行类脚本从命令行运行系统工具。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-run-class.sh package.class - - options</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Kafka迁移工具: 此工具用于将代理从一个版本迁移到另一个版本。</li>
+<li>Mirror Maker: 此工具用于向另一个Kafka集群提供镜像。</li>
+<li>消费者偏移检查器: 此工具显示指定的主题和使用者组的消费者组，主题，分区，偏移量，日志大小，所有者</li>
+</ul>
+<h4 id="复制工具"><a href="#复制工具" class="headerlink" title="复制工具"></a>复制工具</h4><p>Kafka复制是一个高级设计工具。 添加复制工具的目的是为了更强的耐用性和更高的可用性。</p>
+<ul>
+<li>创建主题工具: 这将创建一个带有默认分区数，复制因子的主题，并使用Kafka的默认方案进行副本分配。</li>
+<li>列表主题工具: 此工具列出了指定主题列表的信息。 如果命令行中没有提供主题，该工具将查询Zookeeper以获取所有主题并列出它们的信息。 工具显示的字段是主题名称，分区，leader，replicas，isr。</li>
+<li>添加分区工具: 创建主题，必须指定主题的分区数。 稍后，当主题的卷将增加时，可能需要用于主题的更多分区。 此工具有助于为特定主题添加更多分区，还允许手动复制分配已添加的分区。</li>
+</ul>
+<hr>
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><h3 id="使用Kafka-应用"><a href="#使用Kafka-应用" class="headerlink" title="使用Kafka 应用"></a>使用Kafka 应用</h3><p>Kafka支持许多当今最好的工业应用。 </p>
+<ul>
+<li><p>Twitter<br>Twitter是一种在线社交网络服务，提供发送和接收用户推文的平台。 注册用户可以阅读和发布tweet，但未注册的用户只能阅读tweets。 Twitter使用Storm-Kafka作为其流处理基础架构的一部分。</p>
+</li>
+<li><p>LinkedIn<br>Apache Kafka在LinkedIn中用于活动流数据和操作度量。 Kafka消息系统帮助LinkedIn的各种产品，如LinkedIn Newsfeed，LinkedIn今天的在线消息消费，以及离线分析系统，如Hadoop。 Kafka的强耐久性也是与LinkedIn相关的关键因素之一。</p>
+</li>
+<li><p>Netflix<br>Netflix是美国跨国公司的按需流媒体提供商。 Netflix使用Kafka进行实时监控和事件处理。</p>
+</li>
+<li><p>Mozilla<br>Mozilla是一个自由软件社区，由Netscape成员于1998年创建。 Kafka很快将更换Mozilla当前生产系统的一部分，以从最终用户的浏览器收集性能和使用数据，如遥测，测试试验等项目。</p>
+</li>
+<li><p>Oracle<br>Oracle通过其名为OSB(Oracle Service Bus)的Enterprise Service Bus产品提供与Kafka的本地连接，该产品允许开发人员利用OSB内置中介功能实现分阶段的数据管道。</p>
+</li>
+</ul>
+<h3 id="官方资源"><a href="#官方资源" class="headerlink" title="官方资源"></a>官方资源</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://kafka.apache.org/">Apache Kafka官方网站</a> - Apache Kafka官方网站</li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Apache_Kafka">Apache Kafka Wiki</a> - Apache Kafka的维基百科参考</li>
+</ul>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/apache_kafka/apache_kafka_introduction.html">https://www.w3cschool.cn/apache_kafka/apache_kafka_introduction.html</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/likehua/p/3999538.html">https://www.cnblogs.com/likehua/p/3999538.html</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>学习，学习，还是学习。</p>
+<hr>
+
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" title="kafka快速入门">https://blog.vgbhfive.cn/kafka快速入门/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/MQ/" rel="tag"># MQ</a>
+              <a href="/tags/kafka/" rel="tag"># kafka</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/RPC%E8%AF%A6%E8%A7%A3/" rel="prev" title="RPC详解">
+      <i class="fa fa-chevron-left"></i> RPC详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Spring%E4%BA%8B%E5%8A%A1%E8%AF%A6%E8%A7%A3/" rel="next" title="Spring事务详解">
+      Spring事务详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%8F%90"><span class="nav-number">1.</span> <span class="nav-text">前提</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是消息系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">点对点消息系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E5%B8%83-%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">发布 - 订阅消息系统</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">2.1.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.2.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD"><span class="nav-number">2.3.</span> <span class="nav-text">术语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83-%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">发布 - 订阅消息的工作流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E6%B6%88%E6%81%AF-x2F-%E7%94%A8%E6%88%B7%E7%BB%84%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">3.2.</span> <span class="nav-text">队列消息&#x2F;用户组的工作流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">Zookeeper 的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">4.</span> <span class="nav-text">基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Kafka"><span class="nav-number">4.1.</span> <span class="nav-text">安装Kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.2.</span> <span class="nav-text">简单生产者与消费者示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.3.</span> <span class="nav-text">代码示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E4%BA%8B%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">消息事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%88%86%E5%8C%BA%E5%8E%9F%E5%AD%90%E5%86%99%E5%85%A5"><span class="nav-number">4.4.1.</span> <span class="nav-text">多分区原子写入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%83%B5%E5%B0%B8%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.4.2.</span> <span class="nav-text">僵尸实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF"><span class="nav-number">4.4.3.</span> <span class="nav-text">读事务消息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D%EF%BC%88%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%88%B6%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">零拷贝（备份机制）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">高级操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E5%90%88Storm"><span class="nav-number">5.1.</span> <span class="nav-text">整合Storm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-%E9%9B%86%E6%88%90"><span class="nav-number">5.2.</span> <span class="nav-text">Spark 集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E5%B7%A5%E5%85%B7"><span class="nav-number">5.3.</span> <span class="nav-text">官方工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7"><span class="nav-number">5.3.1.</span> <span class="nav-text">系统工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%B7%A5%E5%85%B7"><span class="nav-number">5.3.2.</span> <span class="nav-text">复制工具</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">6.</span> <span class="nav-text">后记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Kafka-%E5%BA%94%E7%94%A8"><span class="nav-number">6.1.</span> <span class="nav-text">使用Kafka 应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E8%B5%84%E6%BA%90"><span class="nav-number">6.2.</span> <span class="nav-text">官方资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">6.3.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

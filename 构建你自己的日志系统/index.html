@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引入在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。 控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建你自己的日志系统">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="引入在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。 控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-12-24T08:40:14.000Z">
+<meta property="article:modified_time" content="2020-02-26T06:54:09.002Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Utils">
+<meta property="article:tag" content="Spring Boot">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>构建你自己的日志系统 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          构建你自己的日志系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-24 16:40:14" itemprop="dateCreated datePublished" datetime="2019-12-24T16:40:14+08:00">2019-12-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-26 14:54:09" itemprop="dateModified" datetime="2020-02-26T14:54:09+08:00">2020-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。</p>
+<p>控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是分布式的系统，界面上还会输出关于RPC 相关的信息，那个日子真的是不能看。</p>
+<p>所以在我完成任务后，我找了这个时间来总结一把我的辛酸泪。</p>
+<p>主要的目的：</p>
+<ul>
+<li>了解日志的作用</li>
+<li>学习在什么时候为什么要打印日志</li>
+<li>日志的展示内容</li>
+<li>如何定位并说明日志所要表达的意义</li>
+</ul>
+<span id="more"></span>
+
+<hr>
+
+<h2 id="日志的基础知识"><a href="#日志的基础知识" class="headerlink" title="日志的基础知识"></a>日志的基础知识</h2><h3 id="日志的作用"><a href="#日志的作用" class="headerlink" title="日志的作用"></a>日志的作用</h3><p>日志本身是没有价值的，只有对日志进行分析加以利用的时候才会有价值，日志中包含非常多的有用的信息，不光包括运维层面，还包括业务层面、安全层面。<br>很多时候运维系统最需要的是一个统一告警平台，但是告警的依据绝大多数是对日志等进行自动化分析所得出的结论，所以说日志是非常重要的。</p>
+<h3 id="日志级别"><a href="#日志级别" class="headerlink" title="日志级别"></a>日志级别</h3><p>日志的级别通常有以下几种：</p>
+<ul>
+<li>all 最低等级，打开所有的日志输出。</li>
+<li>debug 指出细粒度信息事件，主要用于开发过程中打印一些运行信息。</li>
+<li>trace 很少使用。</li>
+<li>info 在粗粒度上强调应用程序的运行过程，可以用于在生产环境中打印出一些重要信息，但是不要滥用。</li>
+<li>warn 表明一些潜在的错误内容，有时候不是错误信息，但也是给程序员一些提示。 </li>
+<li>error 指出发生错误事件，但是不影响系统的继续运行。</li>
+<li>fatal 指出严重的错误事件，可能会导致应用程序的崩溃。</li>
+<li>off 最高等级，用于关闭所有的日志输出。</li>
+</ul>
+<p>日志输出采用的调用链控制的思路，高等级的输出低等级可以控制，但是低等级的输出高等级不能控制。</p>
+<h3 id="日志文件命名"><a href="#日志文件命名" class="headerlink" title="日志文件命名"></a>日志文件命名</h3><p>通常来说，日志文件的命名必须包含以下信息：</p>
+<ul>
+<li>类型标识 用于标明日志的用途或者功能。</li>
+<li>日志级别 区分不同级别的运行缺陷。</li>
+<li>日志生成时间 方便查询进行排查。</li>
+<li>日志备份编号 在进行日志切割时，可以加上编号进行区分。</li>
+</ul>
+<h3 id="日志滚动"><a href="#日志滚动" class="headerlink" title="日志滚动"></a>日志滚动</h3><p>通常情况下，项目都会在每天打一次日志，并且存库，那么就有了日志滚动，通常情况下有以下模式:</p>
+<ul>
+<li>时间滚动 即按照每天或者每12 小时滚动一次。</li>
+<li>单个日志文件大小滚动 即当日志文件的大小进行滚动。</li>
+<li>同时按照时间和文件大小进行滚动 同时按照时间和文件大小进行滚动日志。</li>
+</ul>
+<p>对于日志滚动策略来说，有2个比较关键的参数：<strong>最大保留日志数量</strong>和<strong>最大磁盘占用空间</strong>。 这2个参数切记一定要设置，如果没有设置，则很有可能会出现把线上机器磁盘打满的情况。</p>
+<h3 id="日志的打印时机"><a href="#日志的打印时机" class="headerlink" title="日志的打印时机"></a>日志的打印时机</h3><p>日志是为了开发人员在遇到开发问题可以快速地定位问题，并且根据输出的信息，判断如何快速修复的主要内容。所以日志的输出时机就很重要了，日志输出的少了，开发人员很难找到关键的问题，输出日志太多，就容易需要花费大量的时间筛选需要的日志信息。</p>
+<p>下面就是常见日志的打印时机：</p>
+<ul>
+<li>http、rpc 调用 在程序调用其他服务或者系统的时候，需要打印接口调用参数和调用结果(成功&#x2F;失败)。</li>
+<li>程序异常 在程序出现exception的时候，要么选择向上抛出异常，要么必须在catch块中打印异常堆栈信息。</li>
+<li>特殊的条件分支 程序进入到一些特殊的条件分支时，观察输出内容。</li>
+<li>关键执行路径及中间状态 在一些关键的执行路径以及中间状态也需要记录下关键日志信息，方便后续定位跟踪执行状态。</li>
+<li>请求入口和出口 方便后续进行日志统计，同时也更加方便进行系统运行状态的监控。</li>
+</ul>
+<h3 id="日志的内容与格式"><a href="#日志的内容与格式" class="headerlink" title="日志的内容与格式"></a>日志的内容与格式</h3><p>日志打印时机决定了能够根据日志去进行问题定位，而日志的内容决定了是否能够根据日志快速找出问题原因，因此日志内容也是至关重要的。</p>
+<p>通常来说，一行日志应该至少包括以下几个组成部分：</p>
+<ul>
+<li>RequestId</li>
+<li>date</li>
+<li>thread</li>
+<li>level</li>
+<li>logTag</li>
+<li>param</li>
+<li>exceptionStacktrace</li>
+</ul>
+<hr>
+
+<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><p>在应用程序运行过程中，就会产生日志，那么开发人员通过这些日志就可以判断出对应的问题点了，然后就可以解决。<br>在日志回滚之后，就会得到许多的日志文件了，那么对于运维人员来说，如何解析这些日志文件就是比较头疼的问题了，现在的做法都是通过自动化的解析来显示应用程序运行期间的日志输出信息。</p>
+<p><strong>良好的日志书写使用将为开发和运维提供便利；良好的日志级别定义和配置，在为快速定位问题的前提上，将可以有效地提升性能。</strong></p>
+<h3 id="Web-日志挖掘分析"><a href="#Web-日志挖掘分析" class="headerlink" title="Web 日志挖掘分析"></a>Web 日志挖掘分析</h3><p>这是一个比较深的东西，我需要研究一下再写。</p>
+<p>可以看看这些，我觉得比较好：<br><a target="_blank" rel="noopener" href="https://www.kancloud.cn/alicloud/log_management/574513">https://www.kancloud.cn/alicloud/log_management/574513</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1066751">https://cloud.tencent.com/developer/article/1066751</a></p>
+<hr>
+
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><p>我会自己搭建一个项目，跑出来真正的线上运行日志文件，然后进行日志分析，结果会在后期展示出来。</p>
+<hr>
+
+<h2 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h2><p><strong>此博客内容均为作者学习与官方文档所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" title="构建你自己的日志系统">https://blog.vgbhfive.cn/构建你自己的日志系统/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Utils/" rel="tag"># Utils</a>
+              <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/" rel="prev" title="Jib构建Java镜像">
+      <i class="fa fa-chevron-left"></i> Jib构建Java镜像
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%AE%89%E8%A3%85-vue-cli-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" rel="next" title="安装@vue/cli 遇到的问题">
+      安装@vue/cli 遇到的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">日志的基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">日志的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%BA%A7%E5%88%AB"><span class="nav-number">2.2.</span> <span class="nav-text">日志级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D"><span class="nav-number">2.3.</span> <span class="nav-text">日志文件命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%BB%9A%E5%8A%A8"><span class="nav-number">2.4.</span> <span class="nav-text">日志滚动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%9A%84%E6%89%93%E5%8D%B0%E6%97%B6%E6%9C%BA"><span class="nav-number">2.5.</span> <span class="nav-text">日志的打印时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%9A%84%E5%86%85%E5%AE%B9%E4%B8%8E%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.6.</span> <span class="nav-text">日志的内容与格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-%E6%97%A5%E5%BF%97%E6%8C%96%E6%8E%98%E5%88%86%E6%9E%90"><span class="nav-number">3.1.</span> <span class="nav-text">Web 日志挖掘分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">使用案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

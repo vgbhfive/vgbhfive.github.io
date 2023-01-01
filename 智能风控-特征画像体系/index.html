@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述特征挖掘是从原始数据构造特征的过程。特征是数据和模型之间的纽带，数据和特征决定机器学习的上限，而模型和算法只是无限逼近这个上限。特征挖掘的完整流程包含原始数据分析、数据清洗、中间数据集构建、特征设计和生成、特征评估和特征的上线、监控、维护和下线。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能风控-特征画像体系">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="概述特征挖掘是从原始数据构造特征的过程。特征是数据和模型之间的纽带，数据和特征决定机器学习的上限，而模型和算法只是无限逼近这个上限。特征挖掘的完整流程包含原始数据分析、数据清洗、中间数据集构建、特征设计和生成、特征评估和特征的上线、监控、维护和下线。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/11/13/WMcXFUxuZ9lzKtL.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/21/9gY8OB56MhuiHKZ.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/21/QcKxwOSaJUI1YfZ.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/20/QNg4hixtTEmZycs.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/20/nIjHyJu2vapd1b7.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/20/XR56qJrCynM2hBu.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/20/dJknRCaK4Y1shfM.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/20/GXLlVS8JsRxYfFa.png">
+<meta property="og:image" content="https://s2.loli.net/2022/11/20/deDc1bOEYiUxT5l.png">
+<meta property="article:published_time" content="2022-11-12T15:07:59.000Z">
+<meta property="article:modified_time" content="2022-12-04T14:56:12.627Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Risk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/11/13/WMcXFUxuZ9lzKtL.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>智能风控-特征画像体系 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          智能风控-特征画像体系
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-11-12 23:07:59" itemprop="dateCreated datePublished" datetime="2022-11-12T23:07:59+08:00">2022-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-12-04 22:56:12" itemprop="dateModified" datetime="2022-12-04T22:56:12+08:00">2022-12-04</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>特征挖掘是从原始数据构造特征的过程。<br>特征是数据和模型之间的纽带，数据和特征决定机器学习的上限，而模型和算法只是无限逼近这个上限。<br>特征挖掘的完整流程包含<strong>原始数据分析</strong>、<strong>数据清洗</strong>、<strong>中间数据集构建</strong>、<strong>特征设计和生成</strong>、<strong>特征评估</strong>和<strong>特征的上线、监控、维护和下线</strong>。</p>
+<span id="more"></span>
+<p><small>在实际运行中，特征挖掘不一定是严格线性的，某些环节可能存在反复多次进行的情形。</small><br><img src="https://s2.loli.net/2022/11/13/WMcXFUxuZ9lzKtL.png" alt="risk_2_1.jpg"></p>
+<hr>
+
+<h3 id="挖掘方法论"><a href="#挖掘方法论" class="headerlink" title="挖掘方法论"></a>挖掘方法论</h3><p>业务中的数据类型繁多，不同的数据类型需要采用不同的方法进行挖掘，下面是通用的特征挖掘方法。</p>
+<h4 id="原始数据分析"><a href="#原始数据分析" class="headerlink" title="原始数据分析"></a>原始数据分析</h4><p>原始数据分析是为了提取原始数据中有用的信息而对其加以分析的过程。原始数据分析的目的是对数据价值进行初步判断，避免错误使用数据，为后续的数据清洗与处理提供依据，最大化利用原始数据。<br>原始数据分析可以利用从<strong>数据流转分析</strong>、<strong>数据质量分析</strong>和<strong>数据时效性分析</strong>方面进行。</p>
+<ol>
+<li>数据流转分析<br>数据流转分析是指对数据来源、中间处理和最终存储环节的数据进行分析。通过数据流转分析，可以了解数据在业务流程中的演变过程，从而全面认识数据并发现潜在问题。数据流转分析可以从<strong>业务逻辑角度</strong>和<strong>实际数据角度</strong>分别进行：</li>
+</ol>
+<ul>
+<li>业务逻辑角度<br>  从业务逻辑角度分析是基于业务梳理出数据的产生、中间处理、最终存储和数据的更新机制。业务逻辑分析主要是为了整体把控底层数据的完整生命周期变化情况，也是为了补充数据层面分析无法获知的信息。</li>
+<li>实际数据角度<br>  从实际数据角度分析是指利用业务中产生的实际数据与理解的业务逻辑进行交叉比对，并且对其变化进行详细分析。这样就可以发现实际数据和业务逻辑中不一致的地方并加以确认和纠正，同时可以发现数据源的稳定性问题、计算问题和存储问题等异常，以此来保证数据的准确性和完整性。</li>
+</ul>
+<ol start="2">
+<li>数据质量分析<br>数据质量分析可以从数据的<strong>覆盖率</strong>、<strong>规范性</strong>和<strong>准确性</strong>方面进行。</li>
+</ol>
+<ul>
+<li>覆盖率是指数据中非空记录的占比。</li>
+<li>规范性是指数据取值是否符合一定的规范。</li>
+<li>准确性是指数据接近真实值的程度。</li>
+</ul>
+<ol start="3">
+<li>数据时效性分析<br>数据时效性分为<strong>采集时效性</strong>和<strong>获取时效性</strong>两个方面。获取时效性不仅受采集时效性影响，而且数据传输、中间处理和存储都会影响。</li>
+</ol>
+<ul>
+<li>采集时效性是指数据从产生到采集的时间间隔。</li>
+<li>获取时效性是指从数据产生到风控生产系统中实际获取的时间间隔。</li>
+</ul>
+<h4 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h4><p>数据清洗一般包含<strong>重复数据处理</strong>、<strong>缺失数据处理</strong>、<strong>异常值处理</strong>和<strong>时间数据处理</strong>。数据清洗是为了数据质量达到特征挖掘使用的标准，避免因数据质量问题而导致特征挖掘阶段，甚至建模阶段的返工。</p>
+<ol>
+<li><p>重复数据处理<br>业务流程中产生的数据一般都需要完整保存，在维持数据完整性的同时，可能会引入重复数据，至此需要判断重复数据是否有业务含义，如果有业务含义则需要挖掘与业务含义相关的特征；若没有业务意义则需要冗余处理。<br>冗余数据处理包括直接过滤和整合应用：直接过滤是指随机选取一条数据，丢弃其他；整合应用则是将多条数据整合或校准之后形成完整和可靠的记录，之后记录并使用。<br><img src="https://s2.loli.net/2022/11/21/9gY8OB56MhuiHKZ.png" alt="risk_2_8.jpg"></p>
+</li>
+<li><p>缺失数据处理<br>在特征挖掘阶段根据数据确实情况，尽早发现隐藏的数据问题，有很多的机会采取措施以降低甚至消除数据缺失的影响，产出稳定的特征。<br>缺失数据处理需要先判断数据是否未正常缺失，再根据判断结果采取合适的处理方式，如填充缺失值、修复数据和丢弃数据等。<br><img src="https://s2.loli.net/2022/11/21/QcKxwOSaJUI1YfZ.png" alt="risk_2_9.jpg"></p>
+</li>
+<li><p>异常值处理<br>异常值即数据中存在的不合理的值，同时异常值也称为<strong>离群点</strong>。对于发现的异常值，一方面可以及时研究数据是否可以修复；另一方面在特征开发阶段，可以增加对应处理逻辑，降低特征异常值出现的概率。<br>异常值的处理方式通常如下：</p>
+</li>
+</ol>
+<ul>
+<li>删除含有异常值的记录。</li>
+<li>将异常值视为缺失，使用缺失值填充的方式来处理。</li>
+<li>用特定值（如平均值、中位数或固定值等）来填充。</li>
+</ul>
+<ol start="4">
+<li>时间数据处理<br>特征挖掘通常使用时间窗口来切分数据，而时间切分错误就会导致整个模块绝大部分特征无法使用。<br>时间数据处理主要包含两个方面：<strong>对时间格式做统一的规范化处理</strong>；<strong>对数据进行时间维度上的过滤</strong>。<br>时间格式的规范化需要注意以下三个方面：</li>
+</ol>
+<ul>
+<li>统一时区。</li>
+<li>统一时间格式。</li>
+<li>选择合适的时间跨度。</li>
+</ul>
+<p> 数据在时间维度上的过滤主要从两个方面进行：</p>
+<ul>
+<li>避免引入未来数据。</li>
+<li>避免时间未对齐问题。</li>
+</ul>
+<h4 id="中间数据集构建"><a href="#中间数据集构建" class="headerlink" title="中间数据集构建"></a>中间数据集构建</h4><p>中间数据集构建是将清洗完成的原始数据初步处理成结构化的数据或者适用于某些特定算法的数据格式。<br>结构化数据是高度组织、格式整齐的数据，通常是可以用统一的结构（二维表）来表达的数据。结构化数据一般使用关系型数据库且以行为单位表示，与之对应的是非结构化数据，非结构化数据是数据结构不规则或不完整，没有预定义的数据模型，不方便用数据库二维逻辑表来表达的数据，通常存储在非关系型数据库中。</p>
+<ol>
+<li>结构化数据<br>结构化数据本身是适合特征计算的，但是需要注意数据本身的粒度。风控业务中的原始数据按照粒度从大到小依次为渠道、客户、借款、还款等，另外在不同的场景下特征挖掘需要不同的数据粒度。<br>结构化数据应用时一般会遇到两种情况：一种情况是假设数据是合适的粒度，那就可以直接作为特征在模型或规则中应用；另一种情况则是数据需要经过聚合汇总才能转换成建模可用的粒度。</li>
+</ol>
+<ul>
+<li>客户行为埋点数据<br>  同一个客户存在多条埋点数据，并且客户每次登录的操作序列可能不同，业务通常以客户每次登录的维度来生成客户行为埋点数据，以客户 <code>ID</code> 作为本次登录的所有埋点行为数据的唯一标识。</li>
+<li>客户历史订单数据<br>  业务一般以订单维度保存订单数据，每个客户可能存在多个订单数据。将历史订单数据整理成包含客户 <code>ID</code> 的中间数据集，后续挖掘特征时可以基于中间数据集进行对比、分组、聚合等。</li>
+<li>客户账单数据<br>  挖掘贷后特征应用于贷后 <code>C</code> 卡模型需要订单粒度的特征，中间数据集为账单粒度的数据。</li>
+</ul>
+<ol start="2">
+<li>文本数据<br>文本数据就是用文本形式表示的数据。文本数据的特征挖掘方法常用的有以下三种：</li>
+</ol>
+<ul>
+<li>提取关键字并将文本数据转化为结构化数据，再进行特征挖掘。<br>  具体做法是构建关键字集合，再根据关键字在每条文本中出现的次数构建中间数据集。关键字集合的构建一般是基于业务经验，并结合原始数据的分析。</li>
+<li>基于机器学习或深度学习算法从文本中提取特征。<br>  首先对每条文本做清洗和预处理，包括过滤标点符号、特殊字符、删除停用词；然后做分词形成文本序列；最后合并一个客户的多条文本序列并作为输入。</li>
+<li>使用文本分类算法训练文本模型，然后将模型输出的概率值作为特征使用。</li>
+</ul>
+<ol start="3">
+<li>关系网络数据<br>关系网络数据通常是指用来描述实体之间关系的数据。关系网络数据中的实体可能存在多种类型，实体之间也可能存在多种关系。处理关系网络数据通常分为以下两步：</li>
+</ol>
+<ul>
+<li>从复杂的现实关系网络中抽取有价值的实体和关系并将其表达为图结构。<br> <img src="https://s2.loli.net/2022/11/20/QNg4hixtTEmZycs.png" alt="risk_2_2.jpg"></li>
+<li>构建中间数据集，转化为结构化数据或者构建适用于图算法的中间数据。<br>  在将关系网络数据用于传统特征挖掘时，构建中间数据集通常需要三步：计算所有节点的特征，可以使用结构化数据特征挖掘的办法；针对每个节点抽取子图结构，基于计算效率的考虑，抽取子图结构目前只针对一度和二度邻居节点进行；将所有节点的特征按照子图中心节点来整理，形成中间数据集。</li>
+</ul>
+<h4 id="特征设计与生成"><a href="#特征设计与生成" class="headerlink" title="特征设计与生成"></a>特征设计与生成</h4><p>在特征的设计与生成阶段会完成从原始数据到特征的转化，对于那些取自规范、含义清晰、汇总力度符合需求的字段可以直接当作特征输出，其他的需要进行汇总计算以产生新特征。<br>在风控业务中特征设计最重要的点在于客户风险的区分度上，而特征设计通过采用不同的方法：<strong>基于业务逻辑生成特征</strong>；<strong>半自动化方法生成特征</strong>；<strong>基于智能算法生成特征</strong>。<br><img src="https://s2.loli.net/2022/11/20/nIjHyJu2vapd1b7.png" alt="risk_2_3.jpg"></p>
+<h4 id="特征评估"><a href="#特征评估" class="headerlink" title="特征评估"></a>特征评估</h4><p>特征评估是指选取特定的数据集对特征进行综合评估，以决定对特征模块的下一步处理方式。特征评估一般包括<strong>覆盖率</strong>、<strong>离散度</strong>、<strong>时间相关性</strong>、<strong>稳定性</strong>和<strong>效果</strong>等方面。</p>
+<ol>
+<li><p>特征覆盖率<br>特征覆盖率检查首先可以检查出覆盖率较低的特征，避免输出；其次可以发现覆盖率异常的特征，进而反推出检查原始数据字段是否有之前的问题。<br>特征覆盖率检查的实现一般是比较简单的，直接计算样本集中非空特征占比即可。</p>
+</li>
+<li><p>特征离散度<br>特征离散度是指特征值分布的离散程度。<br>计算特征离散程度时通常使用变异系数，与极差、方差和标准差相比，变异系数不受数据量纲的影响，但是只在平均值不为 <code>0</code> 时才有意义。</p>
+</li>
+<li><p>特征时间相关性<br>特征时间相关性衡量特征值与时间的相关性。特征时间相关性检查能发现一些与时间强相关当无意义的特征。<br><small>实际中 <strong><code>Pearson</code> 相关系数</strong>大于 <code>0.8</code>，表明特征与时间存在强相关性，应当谨慎使用。</small></p>
+</li>
+<li><p>特征稳定性<br>特征稳定性主要使用 <strong><code>PSI</code>（<code>Population Stability Index</code>，群体稳定性指标）</strong>来表示。<br>在实际风控业务中，对于 <code>PSI &gt; 0.1</code> 的特征需要关注并分析原因，然后根据原因是否可接受来决定特征是否继续使用。<br><small>在样本量很小的时候，<code>PSI</code> 的波动情况可能会因为随机情况导致不能表示真实的业务情况。</small></p>
+<table>
+<thead>
+<tr>
+<th><code>PSI</code> 范围</th>
+<th>稳定性</th>
+<th>表现&#x2F;建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code> ~ <code>0.1</code></td>
+<td>好</td>
+<td>特征基本稳定</td>
+</tr>
+<tr>
+<td><code>0.1</code> ~ <code>0.25</code></td>
+<td>略不稳定</td>
+<td>持续监控后续变化</td>
+</tr>
+<tr>
+<td>大于 <code>0.25</code></td>
+<td>不稳定</td>
+<td>剧烈变化，分析原因，找到应对方案</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>特征效果<br>特征效果通常使用 <code>IV</code> 值来衡量。<br>在评价特征区分度时，为了消除样本数据本身差异的影响，可以预先选择基准特征作为参考。基准特征有两种选择方式：</p>
+</li>
+</ol>
+<ul>
+<li>选择效果已知的特征，在同一个数据集上对比两个特征的效果。</li>
+<li>在特征子模型中引入随机变量，查看随机变量的重要性排序，方便评估特征模块的整体效果。<br>  <small>重要性排在随机变量之后的特征可以被视为无区分度而不输出。</small></li>
+</ul>
+<h4 id="特征上下线"><a href="#特征上下线" class="headerlink" title="特征上下线"></a>特征上下线</h4><p>特征开发完成并评估有效后会部署上线，在上线运行期间需要持续监控，当数据源不可用或者特征版本更新时，就会涉及到特征下线操作。</p>
+<ol>
+<li>特征上线<br>特征上线一般分为两种方式：</li>
+</ol>
+<ul>
+<li>实时计算部署，即接受计算请求后在线获得原始数据并实时计算特征。实时计算的特征需要同时在线上系统和离线回溯系统中部署。</li>
+<li>离线批量计算方式部署，即离线计算好所有客户的特征，并推送到线上等待调用。为此需要保证特征更新机制正常运行，上线前需要进行充分的测试。</li>
+</ul>
+<p> 特征上线之后通常需要先<strong>空跑</strong>，而不先应用于模型或规则。在线上积累足够多的样本之后，此时需要进行线上验证。上线验证通常包含三个方面：</p>
+<ul>
+<li>数据源接入验证<br>  首先确认特征依赖的数据源是否已上线或同时上线；其次检查所有数据是否已正常接入且数据格式正确；接下来确认数据调用位置是否正确；最后确认数据源的更新频率是否符合预期。</li>
+<li>特征统计分析<br>  主要包含三个方面：特征线上维度、覆盖率、缺失值填充方式和分布是否符合预期；特征监控配置是否正确；特征离线回溯是否正常运行。</li>
+<li>特征稳定性验证<br>  取近期的线下样本计算特征，然后与线上样本特征计算 <code>PSI</code>。</li>
+</ul>
+<ol start="2">
+<li>特征下线<br>特征下线通常发生在数据不可用或特征升级后新版本特征已经覆盖旧版本时，及时下线特征可以节省线上资源。<br>特征的下线需要注意以下几点：</li>
+</ol>
+<ul>
+<li>无策略或特征引用此特征。</li>
+<li>不影响原始数据落表。</li>
+<li>若后续评估特征效果，则需要判断是否积累足够的样本。</li>
+</ul>
+<hr>
+
+<h3 id="挖掘特征"><a href="#挖掘特征" class="headerlink" title="挖掘特征"></a>挖掘特征</h3><h4 id="特征衍生"><a href="#特征衍生" class="headerlink" title="特征衍生"></a>特征衍生</h4><p>在现有特征的基础之上，可以使用 <code>GBDT</code>、神经网络等算法构建模型，而模型的中间产出或输出结果作为新的特征。</p>
+<ol>
+<li><p>树模型算法<br>使用已有特征训练 <code>GBDT</code> 模型，再利用模型中的树的叶子节点构造新特征，此思路源于 <code>Facebook</code> 发表的 <code>Practical Lessons from Predicting CLicks on Ads at Facebook</code> 论文。<br>按照这种思路构造的新特征向量取值是 <code>0</code> 或 <code>1</code>，向量中的每个元素对应 <code>GBDT</code> 模型中的树的叶子节点，特征长度等于集成模型中所有树的叶子节点之和。当一个样本点通过某棵树最终落在其一个叶子节点上时，新特征向量中的这个叶子节点对应的元素取值为 <code>1</code>，而这棵树的其他叶子节点对应的元素取值为 <code>0</code>。</p>
+</li>
+<li><p>聚类算法<br>聚类算法在特征挖掘中的主要应用是基于已有特征进行样本聚类，并将聚类结果作为新特征。<br>算法原理：聚类算法是一种无监督算法。<code>K-means</code> 是典型的聚类算法，原理如下：</p>
+</li>
+</ol>
+<ul>
+<li>初始时，随机选择 <code>k</code> 个质心。</li>
+<li>把每个观测划分到离他最近的质心，并与质心形成新的类。</li>
+<li>重新计算每个类的质心。</li>
+<li>重复第二、三步骤。迭代停止条件为质心不变或达到最大迭代次数。</li>
+</ul>
+<p> 聚类完成之后，可以针对最终生成的 <code>N</code> 个聚类算法，输出样本 <em>是否属于聚类 <code>X</code></em> 特征或样本 <em>与聚类质心得距离</em> 特征。</p>
+<h4 id="文本特征挖掘"><a href="#文本特征挖掘" class="headerlink" title="文本特征挖掘"></a>文本特征挖掘</h4><p>文本特征挖掘是指把文本数据转换为特征。文本数据加工成特征的方法包括常规的提取关键词和直接使用文本挖掘类算法将文本转换为向量。</p>
+<ol>
+<li><p>文本特征提取方法<br>词袋（<code>bag of words</code>）模型是最初的将文本表示成向量的方法。<br>词袋模型将文本看作一系列单词的集合，即把一段文本当作一个 <em>袋子</em>，里面装的是 <em>单词</em>。词袋模型一般需要收集一些文本，并将它们作为模型建立的基础，而这些文本被称为语料（<code>corpus</code>），经过筛选、加工和标注等处理后，大批语料构成的数据库称为 <strong>语料库</strong>。<br>词袋模型的基本原理是先构建词典，再根据文本中的单词在词典中出现的频率生成文本的向量，生成的向量与单词在原文本中出现的次序没有关系。生成向量主要有两种方法：基于词频统计的方法和基于 <code>TF_IDF</code>（<code>Term Frequency - Inverse Document Frequency</code>）算法的方法。前者简单统计文本中的单词出现的次数，后者综合 <em>考虑</em> 单词出现的频率和在整个语料库中的 <em>稀有程度</em>。<br><small><code>TF_IDF</code> 等于 <code>TF</code> 和 <code>IDF</code> 的乘积，其中 <code>TF</code> 表示单词出现的频率，即某个单词在当前文本中出现的次数；<code>IDF</code> 是逆文档频率，<code>DF</code> 表示语料库中包含某个单词的文档的数目，<code>IDF</code> 即反映某个单词在整个语料库中的重要性。</small></p>
+</li>
+<li><p>文本分类算法<br>再除了将文本表达为向量方式外，还有一些直接基于文本进行分类的算法，算法会输出一个概率，这个概率可以在后续的模型中使用。</p>
+</li>
+</ol>
+<ul>
+<li>朴素贝叶斯算法</li>
+<li><code>fastText</code> 算法</li>
+</ul>
+<h4 id="图特征挖掘"><a href="#图特征挖掘" class="headerlink" title="图特征挖掘"></a>图特征挖掘</h4><p>之前介绍了使用邻接矩阵表示图结构，当邻接矩阵通常是 <em>高维且稀疏</em> 的，为了利用图的优势并构建有效的机器学习模型，需要得到高效的关系网络数据表示方法，这正是<strong>图表示学习</strong>的范畴。<br><small><strong>表示学习</strong>是指机器学习模型自动学习数据中隐含的有效特征。</small></p>
+<p>图表示学习也称<strong>图嵌入（<code>graph embedding</code>）</strong>，其主要目标是将图转换为 <em>低维且稠密</em> 的向量，并近可能保持图原有的拓扑关系。图表示学习生成的图特征向量可以作为图任务学习的输入。<br>图表示学习主要包含三种方法：</p>
+<ul>
+<li>基于矩阵分解的方法<br>  通过对邻接矩阵进行矩阵分解，将节点转换到低维向量空间，同时保留图结构。</li>
+<li>基于随机游走的方法<br>  借鉴词向量的表示方法将图的节点看作词，将在图中随机游走而产生的序列看作句子，然后借助 <code>Word2Vec</code> 算法学习得到图节点的表示，该方法使用的典型算法有 <code>DeepWalk</code> 和 <code>Node2Vec</code>。</li>
+<li>基于深度学习的方法<br>  基于图神经网络的图表示学习，可以用于图表示学习的图神经网络算法有图卷积神经网络、图自编码器和图注意力网络。</li>
+</ul>
+<ol>
+<li>基于随机游走的方法<br>基于随机游走（<code>random walk</code>）的方法将在图中随机游走而产生的序列看作句子，之后借助 <code>Word2Vec</code> 算法学习得到图节点的表示。在随机游走序列的生成方面，共有两种不同的思路：</li>
+</ol>
+<ul>
+<li><code>DeepWalk</code> 算法。</li>
+<li><code>Node2Vec</code> 算法。</li>
+</ul>
+<ol start="2">
+<li>图卷积神经网络<br>图卷积神经网络是图神经网络（<code>Graph Neural Network, GNN</code>）的一种，是将卷积神经网络应用于图表示学习而得到的。<br>卷积神经网络处理的图像数据是整齐的矩阵格式，转换成关系网络结构来看其节点的邻居数量是固定的；而图网络属于非欧几里得空间结构，节点的邻居数量不固定。因此在欧几里得空间内，不能直接将用固定大小的卷积核抽象图像像素特征的操作迁移到图结构，其本质是找到适用于图的可学习卷积核；而图卷积神经网络则是以图卷积层为主体，堆叠多层的神经网络模型。</li>
+</ol>
+<hr>
+
+<h3 id="特征画像体系"><a href="#特征画像体系" class="headerlink" title="特征画像体系"></a>特征画像体系</h3><p>风控特征画像是从多个角度描述客户风险的工具。为了描述客户风险需要对客户有全面准确的认识，其中风控特征画像可以从多个维度尽量全面地描述客户在多个维度的风险属性，其中维度的细分更加有助于准确地刻画每个具体维度的差异，从而达到准确认识客户的目的。</p>
+<h4 id="营销阶段"><a href="#营销阶段" class="headerlink" title="营销阶段"></a>营销阶段</h4><p>在营销特征数据中，对于历史存量客户，包含有客户基本信息、历史申请信息和多头借贷信息；对于新客户，数据较少，当包含有浏览行为数据、客户的基本部分信息和第三方数据。<br>客户基本信息主要是客户在历史申请时自填的信息，通常包含客户本人的学历、年龄、性别、从事行业和居住地等；对于多头借贷信息，通常包含从第三方数据中的客户在多个机构的申请、放款和预期情况；历史申请记录是指客户在本机构的历史申请情况。<br><img src="https://s2.loli.net/2022/11/20/XR56qJrCynM2hBu.png" alt="risk_2_4.jpg"></p>
+<h4 id="贷前阶段"><a href="#贷前阶段" class="headerlink" title="贷前阶段"></a>贷前阶段</h4><p>贷前特征画像主要应用在反欺诈、信用风险评估和风险定价阶段，主要考虑的目标是客户的还款能力、守约概率等。<br><img src="https://s2.loli.net/2022/11/20/dJknRCaK4Y1shfM.png" alt="risk_2_5.jpg"></p>
+<h4 id="贷中阶段"><a href="#贷中阶段" class="headerlink" title="贷中阶段"></a>贷中阶段</h4><p>在数据维度上，贷中特征画像可以使用贷前特征画像的所有数据，另外还能使用当前未完结（或已完结）订单的数据、贷中行为埋点数据、审批结果和还款提醒数据等。<br><img src="https://s2.loli.net/2022/11/20/GXLlVS8JsRxYfFa.png" alt="risk_2_6.jpg"></p>
+<h4 id="贷后阶段"><a href="#贷后阶段" class="headerlink" title="贷后阶段"></a>贷后阶段</h4><p>贷后特征画像主要反映客户在贷后的违约风险（主要体现客户还款的意愿和能力），可以将其应用于贷后风险模型或规则中。<br><img src="https://s2.loli.net/2022/11/20/deDc1bOEYiUxT5l.png" alt="risk_2_7.jpg"></p>
+<hr>
+
+<h3 id="监控和异常处理"><a href="#监控和异常处理" class="headerlink" title="监控和异常处理"></a>监控和异常处理</h3><p>特征监控是指监控特征的准确性、有效性、稳定性和一致性，以及特征依赖的原始字段的分布情况。通过特征监控能够及时发现原始字段或特征分布的偏移，以便分析原因并采取合理的方式来处理，避免特征异常带来的损失。</p>
+<h4 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h4><ol>
+<li>一致性<br>特征的一致性监控是指监测<strong>特征离线回溯与线上调用是否一致</strong>，以及线上不同时间点的调用是否一致，其通常包括特征的<strong>线上与线下一致性</strong>，以及特征的<strong>前后一致性</strong>。</li>
+</ol>
+<ul>
+<li>特征的线上与线下不一致是指对同一个客户，基于相同业务时间，离线回溯计算的特征值和线上调用特征计算的结果不一致。</li>
+<li>特征前后不一致是指对于同一个客户，基于相同业务时间点，在不同时间点回溯计算特征时会得到不同结果。</li>
+<li>特征的一致性监控方法通常定期采样一定比例的客户离线回溯特征，并将其与线上调用特征进行对比。</li>
+</ul>
+<p> <small>特征监控以小时、天、周或月为周期，监控结果可采用邮件方式反馈和可视化报表方式展示。</small></p>
+<ol start="2">
+<li>原始字段分布<br>原始字段分布监控是指监测原始字段分布的变化情况。原始字段的分布变化通常会带来相关特征取值分布的变化，对原始字段监控可以进行监控可以直接、迅速地发现潜在的数据问题。<br>原始字段分布监控包含覆盖度监控和取值分布监控。覆盖度监控即将最近一段时间的客户按天汇总，监控空值占比的变化。<br>原始字段的覆盖率可以用偏差率 <code>r</code> 来表示：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r = |x - base| / base</span><br></pre></td></tr></table></figure>
+<small><code>x</code> 为监控时段覆盖度，<code>base</code> 为基准覆盖度。通常设置 <code>r &gt; 0.1</code> 时触发预警。</small></li>
+</ol>
+<h4 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h4><p>特征异常处理是指在发现特征异常时，需要快速分析原因并给出解决方案，尽量减少异常对线上业务的影响。</p>
+<ol>
+<li>特征不一致<br>特征不一致的原因通常包含三种：</li>
+</ol>
+<ul>
+<li>在线数据和离线数据不一致。</li>
+<li>在线特征和离线特征的处理逻辑不同。</li>
+<li>数据状态曾发生变化。</li>
+</ul>
+<ol start="2">
+<li>原始字段异常<br>原始字段的覆盖率及取值分布出现异常的原因会有多种，通常数据采集、处理、存储和应用环节都有可能出现上述异常，业务团队需要和技术团队配合，具体问题具体分析。</li>
+</ol>
+<hr>
+
+<h3 id="术语介绍"><a href="#术语介绍" class="headerlink" title="术语介绍"></a>术语介绍</h3><ol>
+<li><p>原始数据<br>原始数据是业务中产生的各类数据，通常是为了业务目的而组织和保存的底层数据，相对于建模使用的特征，原始数据一般是<strong>未经汇总处理的数据</strong>。</p>
+</li>
+<li><p>特征工程<br>特征工程是在给定数据、模型和任务的额情况下设计合适特征的过程。特征工程包含<strong>特征挖掘</strong>、<strong>特征筛选</strong>、<strong>特征组合应用</strong>等。</p>
+</li>
+<li><p><code>IV</code> 值<br><code>IV</code> 即信息价值（<code>Information Value</code>）也可称为信息量。 <code>IV</code> 值是用来衡量变量的预测能力，IV值越大，表示该变量的预测能力越强。</p>
+<table>
+<thead>
+<tr>
+<th><code>IV</code> 范围</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>iv &lt; 0.02</td>
+<td>无预测能力，需放弃</td>
+</tr>
+<tr>
+<td>0.02 &lt;&#x3D; iv &lt; 0.1</td>
+<td>较弱的预测能力</td>
+</tr>
+<tr>
+<td>0.1 &lt;&#x3D; iv &lt; 0.3</td>
+<td>预测能力一般</td>
+</tr>
+<tr>
+<td>0.3 &lt;&#x3D; iv &lt; 0.5</td>
+<td>预测能力较强</td>
+</tr>
+<tr>
+<td>iv &gt; 0.5</td>
+<td>预测能力极强，需检查</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>WOE</code> 值<br><code>WOE</code> 即证据权重（<code>Weight of Evidence</code>），<code>WOE</code> 是对原始自变量的一种编码形式。要对一个变量进行 <code>WOE</code> 编码，需要首先把这个变量进行分组处理（也叫离散化、分箱），分组后，对于第 <code>i</code> 组 <code>WOE</code> 的计算公式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WOEi = ln((Yi/Yt) / (Ni/Nt)) = ln(Pyi/Pni)</span><br></pre></td></tr></table></figure>
+<p><small><code>Pyi</code> 是该组中响应客户在该组中的比例。<code>Pni</code> 是该组中未响应客户在该组中的比例。<code>Yi</code> 是该组中响应客户数据量。<code>Ni</code> 是该组中该组中未响应客户数据量。<code>Yt</code> 是该组中响应客户总数据量。<code>Nt</code> 是该组中未响应客户总数据量。响应客户指正样本，未响应客户指负样本。</small></p>
+</li>
+<li><p><code>PSI</code> 值<br>特征稳定性主要使用 <strong><code>PSI</code>（<code>Population Stability Index</code>，群体稳定性指标）</strong>来表示。<br>在实际风控业务中，对于 <code>PSI &gt; 0.1</code> 的特征需要关注并分析原因，然后根据原因是否可接受来决定特征是否继续使用。<br><small>在样本量很小的时候，<code>PSI</code> 的波动情况可能会因为随机情况导致不能表示真实的业务情况。</small></p>
+<table>
+<thead>
+<tr>
+<th><code>PSI</code> 范围</th>
+<th>稳定性</th>
+<th>表现&#x2F;建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code> ~ <code>0.1</code></td>
+<td>好</td>
+<td>特征基本稳定</td>
+</tr>
+<tr>
+<td><code>0.1</code> ~ <code>0.25</code></td>
+<td>略不稳定</td>
+<td>持续监控后续变化</td>
+</tr>
+<tr>
+<td>大于 <code>0.25</code></td>
+<td>不稳定</td>
+<td>剧烈变化，分析原因，找到应对方案</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>vgbhfive
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB/" title="智能风控-特征画像体系">https://blog.vgbhfive.cn/智能风控-特征画像体系/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Risk/" rel="tag"># Risk</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%AD%96%E7%95%A5%E4%BD%93%E7%B3%BB/" rel="prev" title="智能风控-策略体系">
+      <i class="fa fa-chevron-left"></i> 智能风控-策略体系
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB/" rel="next" title="智能风控-风控模型体系">
+      智能风控-风控模型体系 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%96%E6%8E%98%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">挖掘方法论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">原始数据分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="nav-number">2.2.</span> <span class="nav-text">数据清洗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E6%95%B0%E6%8D%AE%E9%9B%86%E6%9E%84%E5%BB%BA"><span class="nav-number">2.3.</span> <span class="nav-text">中间数据集构建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%94%9F%E6%88%90"><span class="nav-number">2.4.</span> <span class="nav-text">特征设计与生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E8%AF%84%E4%BC%B0"><span class="nav-number">2.5.</span> <span class="nav-text">特征评估</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E4%B8%8A%E4%B8%8B%E7%BA%BF"><span class="nav-number">2.6.</span> <span class="nav-text">特征上下线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%96%E6%8E%98%E7%89%B9%E5%BE%81"><span class="nav-number">3.</span> <span class="nav-text">挖掘特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E8%A1%8D%E7%94%9F"><span class="nav-number">3.1.</span> <span class="nav-text">特征衍生</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%89%B9%E5%BE%81%E6%8C%96%E6%8E%98"><span class="nav-number">3.2.</span> <span class="nav-text">文本特征挖掘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E7%89%B9%E5%BE%81%E6%8C%96%E6%8E%98"><span class="nav-number">3.3.</span> <span class="nav-text">图特征挖掘</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB"><span class="nav-number">4.</span> <span class="nav-text">特征画像体系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%90%A5%E9%94%80%E9%98%B6%E6%AE%B5"><span class="nav-number">4.1.</span> <span class="nav-text">营销阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%89%8D%E9%98%B6%E6%AE%B5"><span class="nav-number">4.2.</span> <span class="nav-text">贷前阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E4%B8%AD%E9%98%B6%E6%AE%B5"><span class="nav-number">4.3.</span> <span class="nav-text">贷中阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%90%8E%E9%98%B6%E6%AE%B5"><span class="nav-number">4.4.</span> <span class="nav-text">贷后阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">监控和异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7"><span class="nav-number">5.1.</span> <span class="nav-text">监控</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">异常处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E4%BB%8B%E7%BB%8D"><span class="nav-number">6.</span> <span class="nav-text">术语介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
