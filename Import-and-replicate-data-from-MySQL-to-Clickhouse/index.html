@@ -29,7 +29,7 @@
 <meta property="og:description" content="引入本次将数据从 MySQL 备份到 ClickHouse 采用的是 MinervaDB ClickHouse MySQL Data Reader ，该项目基础版本来自于 Alitinity&#x2F;clickhouse-mysql-data-reader。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-06-12T04:22:05.000Z">
-<meta property="article:modified_time" content="2022-11-03T15:56:17.935Z">
+<meta property="article:modified_time" content="2023-01-05T13:58:46.164Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="MySQL">
 <meta property="article:tag" content="ClickHouse">
@@ -201,7 +201,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-11-03 23:56:17" itemprop="dateModified" datetime="2022-11-03T23:56:17+08:00">2022-11-03</time>
+                <time title="Modified: 2023-01-05 21:58:46" itemprop="dateModified" datetime="2023-01-05T21:58:46+08:00">2023-01-05</time>
               </span>
 
           
@@ -251,15 +251,16 @@
 </ul>
 <hr>
 
-<h3 id="运行同步"><a href="#运行同步" class="headerlink" title="运行同步"></a>运行同步</h3><p>在完成上面的内容之后，下面就可以将历史数据导入到 <code>ClickHouse</code> 中。下面就是运行导入的脚本：</p>
+<h3 id="运行同步历史数据"><a href="#运行同步历史数据" class="headerlink" title="运行同步历史数据"></a>运行同步历史数据</h3><p>在完成上面的内容之后，下面就可以将历史数据导入到 <code>ClickHouse</code> 中。下面就是运行导入的脚本：</p>
 <p><small>建议在确定表结构的实例上进行导入，以避免可能发生数据损坏。另外建议使用 MySQL 从机作为数据源。</small></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clickhouse-mysql --src-server-id=200 --src-wait --nice-pause=1 --src-host=192.168.56.101 --src-user=clickhousereader --src-password=MDB@2019 --src-tables=wiki.pageviews --dst-host=127.0.0.1 --dst-create-table --migrate-table</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clickhouse-mysql --src-host=127.0.0.1 --src-user=mysql_user --src-password=password --src-tables=wiki.pageviews --dst-host=127.0.0.1 --dst-port=9000 --dst-user=ck_user --dst-password=password --dst-schema=risk_engine --dst-create-table --migrate-table</span><br></pre></td></tr></table></figure>
 <p>上面的脚本连接主机 <code>192.168.56.101</code> 上的 <code>MySQL</code>，他会迁移 <code>wiki</code> 库的 <code>pageviews</code> 表中的数据到主机 <code>127.0.0.1</code> 上的 <code>ClickHouse</code> 中，并且会自动建表和迁移数据。</p>
+<p><small>需要对迁移数据做筛选时，可使用 <code>--src-tables-where-clauses</code> 参数。</small></p>
 <p>剩下的就是验证同步数据前后的数量是否一致即可。</p>
 <hr>
 
 <h3 id="监听-bin-log-同步实时数据"><a href="#监听-bin-log-同步实时数据" class="headerlink" title="监听 bin log 同步实时数据"></a>监听 <code>bin log</code> 同步实时数据</h3><p>另外还可以在 <code>bin log</code> 日志文件中指定<code>clickhouse-mysql</code> 工具开始同步的位置同步数据。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clickhouse-mysql --src-server-id=200 --src-resume --src-binlog-file=<span class="string">&#x27;binlog.000713&#x27;</span> --src-binlog-position=638 --src-wait --nice-pause=1 --src-host=192.168.56.101 --src-user=clickhousereader --src-password=MDB@2019 --src-tables=wiki.pageviews --dst-host=127.0.0.1 --pump-data --csvpool</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clickhouse-mysql --src-host=127.0.0.1 --src-user=mysql_user --src-password=password --src-tables=db.table1,db.table2 --dst-host=127.0.0.1 --dst-port=9000 --dst-user=ck_user --dst-password=password --dst-schema=db --dst-create-table --src-resume --src-wait --nice-pause=1 --log-level=info --csvpool --mempool-max-flush-interval=60 --mempool-max-events-num=1 --pump-data --src-server-id=222 --log-file=clickhouse-mysql.log --binlog-position-file=/tmp/ck</span><br></pre></td></tr></table></figure>
 
 <hr>
 
@@ -382,7 +383,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">优点和限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%90%8C%E6%AD%A5"><span class="nav-number">5.</span> <span class="nav-text">运行同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC-bin-log-%E5%90%8C%E6%AD%A5%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">监听 bin log 同步实时数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8"><span class="nav-number">7.</span> <span class="nav-text">常见异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">8.</span> <span class="nav-text">参数解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">10.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">优点和限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%90%8C%E6%AD%A5%E5%8E%86%E5%8F%B2%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">运行同步历史数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC-bin-log-%E5%90%8C%E6%AD%A5%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">监听 bin log 同步实时数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8"><span class="nav-number">7.</span> <span class="nav-text">常见异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">8.</span> <span class="nav-text">参数解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">10.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -398,14 +399,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">121</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">44</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

@@ -37,9 +37,9 @@
 <meta property="og:image" content="https://s2.loli.net/2022/12/22/DMNZFGvq5iTQen8.png">
 <meta property="og:image" content="https://s2.loli.net/2022/12/22/1AXbaVD75ieRCBp.png">
 <meta property="article:published_time" content="2022-11-25T14:00:04.000Z">
-<meta property="article:modified_time" content="2023-01-01T15:27:16.556Z">
+<meta property="article:modified_time" content="2023-01-02T11:26:20.169Z">
 <meta property="article:author" content="vgbhfive">
-<meta property="article:tag" content="Risk">
+<meta property="article:tag" content="Risk Control">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s2.loli.net/2022/12/01/fRUOPIwSEZQNMJp.png">
 
@@ -209,7 +209,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-01 23:27:16" itemprop="dateModified" datetime="2023-01-01T23:27:16+08:00">2023-01-01</time>
+                <time title="Modified: 2023-01-02 19:26:20" itemprop="dateModified" datetime="2023-01-02T19:26:20+08:00">2023-01-02</time>
               </span>
 
           
@@ -709,6 +709,40 @@
 </ol>
 <hr>
 
+<h3 id="常见风控建模算法"><a href="#常见风控建模算法" class="headerlink" title="常见风控建模算法"></a>常见风控建模算法</h3><p>风控建模可用的算法有很多种，但是所有算法遵循的原则都是类似的，即从数据中提取一种无限接近于<strong>数据内部真实联系的映射关系</strong>。换言之就是给定特征集 <code>x</code> 和标签 <code>y</code>，存在某种未知的映射关系 <code>f</code>，使得 <code>x</code> 和 <code>y</code> 能够一一对应，即 <code>y = f(x)</code>。抽象出来映射关系 <code>f</code> 是数据内部存在的真实联系。<br>预测结果 <code>h(x)</code> 和标签 <code>y</code> 之间的误差用损失函数来衡量。其中<strong>损失函数</strong>、<strong>代价函数</strong>和<strong>目标函数</strong>是三个非常容易混淆的概念，其含义分别如下：</p>
+<ul>
+<li>损失函数（<code>loss function</code>）：定义在单个样本上，是指<strong>一个样本的误差</strong>。</li>
+<li>代价函数（<code>cost function</code>）：定义在整个训练集上，是指<strong>所有样本误差的平均</strong>，也就是所有损失函数值的平均。</li>
+<li>目标函数（<code>object function</code>）：是指<strong>最终需要优化的函数</strong>，一般来说在代价函数的基础上，增加了正则项。</li>
+</ul>
+<p>各种算法通过构造不同的假设空间定义目标函数，通过优化目标函数在假设空间中寻找最优的映射关系 <code>h</code>，其本质还是<strong>最优化问题</strong>。</p>
+<p><small>这里对下面的算法不会有太深的研究，有兴趣的可以自行学习。</small></p>
+<h4 id="基础学习算法"><a href="#基础学习算法" class="headerlink" title="基础学习算法"></a>基础学习算法</h4><ol>
+<li><p>逻辑斯谛回归</p>
+</li>
+<li><p>支持向量机</p>
+</li>
+<li><p>决策树</p>
+</li>
+</ol>
+<h4 id="集成学习算法"><a href="#集成学习算法" class="headerlink" title="集成学习算法"></a>集成学习算法</h4><ol>
+<li><p>随机森林</p>
+</li>
+<li><p><code>GBDT</code></p>
+</li>
+<li><p><code>XGBoost</code></p>
+</li>
+<li><p><code>LightGBM</code></p>
+</li>
+</ol>
+<h4 id="深度学习算法"><a href="#深度学习算法" class="headerlink" title="深度学习算法"></a>深度学习算法</h4><ol>
+<li><p>深度神经网络</p>
+</li>
+<li><p>卷积神经网络</p>
+</li>
+</ol>
+<hr>
+
 <h3 id="模型体系搭建"><a href="#模型体系搭建" class="headerlink" title="模型体系搭建"></a>模型体系搭建</h3><p>信贷产品生命周期主要包括<strong>营销</strong>、<strong>贷前</strong>、<strong>贷中</strong>和<strong>贷后</strong>四个阶段，每个阶段都有风险控制的需求。</p>
 <ul>
 <li>贷前阶段主要获取并筛选客户流量，以营销响应模型和流量筛选模型为主。</li>
@@ -786,7 +820,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Risk/" rel="tag"># Risk</a>
+              <a href="/tags/Risk-Control/" rel="tag"># Risk Control</a>
           </div>
 
         
@@ -798,7 +832,10 @@
     <a href="/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E7%89%B9%E5%BE%81%E7%94%BB%E5%83%8F%E4%BD%93%E7%B3%BB/" rel="prev" title="智能风控-特征画像体系">
       <i class="fa fa-chevron-left"></i> 智能风控-特征画像体系
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/Hadoop-%E5%9F%BA%E7%A1%80/" rel="next" title="Hadoop-基础">
+      Hadoop-基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -857,7 +894,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">开发方法论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E7%AB%8B%E9%A1%B9%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">开发方法论-立项分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">问题定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E7%9A%84%E9%80%89%E6%8B%A9%E4%B8%8E%E5%88%92%E5%88%86"><span class="nav-number">3.2.</span> <span class="nav-text">样本的选择与划分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.3.</span> <span class="nav-text">架构设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E8%AE%AD%E7%BB%83%E5%BC%80%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">开发方法论-训练开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%86%E5%A4%87%E5%92%8C%E6%8F%8F%E8%BF%B0"><span class="nav-number">4.1.</span> <span class="nav-text">数据的准备和描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%88%E6%B8%85%E6%B4%97%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">数据预处理（清洗）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.1.</span> <span class="nav-text">基于特征属性选择</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%95%88%E6%9E%9C%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.2.</span> <span class="nav-text">基于特征效果选择</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">4.3.3.</span> <span class="nav-text">基于特征稳定性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.</span> <span class="nav-text">特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.1.</span> <span class="nav-text">线性特征提取</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.2.</span> <span class="nav-text">非线性特征提取</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E3%80%81%E6%A6%82%E7%8E%87%E8%BD%AC%E5%8C%96%E5%92%8C%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.5.</span> <span class="nav-text">训练、概率转化和效果评估</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.5.1.</span> <span class="nav-text">模型训练</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E8%BD%AC%E5%8C%96"><span class="nav-number">4.5.2.</span> <span class="nav-text">概率转化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.5.3.</span> <span class="nav-text">模型效果评估</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E4%B8%8A%E7%BA%BF%E5%92%8C%E7%BB%B4%E6%8A%A4"><span class="nav-number">5.</span> <span class="nav-text">开发方法论-上线和维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%8F%8A%E4%B8%8A%E7%BA%BF%E9%AA%8C%E8%AF%81"><span class="nav-number">5.1.</span> <span class="nav-text">部署及上线验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">监控和异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%9B%91%E6%8E%A7"><span class="nav-number">5.2.1.</span> <span class="nav-text">模型监控</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AD%A6"><span class="nav-number">5.2.2.</span> <span class="nav-text">模型预警</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.3.</span> <span class="nav-text">异常处理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E4%BC%98%E5%8C%96"><span class="nav-number">5.3.</span> <span class="nav-text">迭代优化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88"><span class="nav-number">5.3.1.</span> <span class="nav-text">模型融合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E6%97%B6%E6%95%88"><span class="nav-number">5.3.2.</span> <span class="nav-text">建模时效</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%92%E7%BB%9D%E6%8E%A8%E6%96%AD"><span class="nav-number">5.3.3.</span> <span class="nav-text">拒绝推断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB%E6%90%AD%E5%BB%BA"><span class="nav-number">6.</span> <span class="nav-text">模型体系搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%90%A5%E9%94%80%E9%98%B6%E6%AE%B5"><span class="nav-number">6.1.</span> <span class="nav-text">营销阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%89%8D%E9%98%B6%E6%AE%B5"><span class="nav-number">6.2.</span> <span class="nav-text">贷前阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E4%B8%AD%E9%98%B6%E6%AE%B5"><span class="nav-number">6.3.</span> <span class="nav-text">贷中阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%90%8E%E9%98%B6%E6%AE%B5"><span class="nav-number">6.4.</span> <span class="nav-text">贷后阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E4%BB%8B%E7%BB%8D"><span class="nav-number">7.</span> <span class="nav-text">术语介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">开发方法论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E7%AB%8B%E9%A1%B9%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">开发方法论-立项分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">问题定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E7%9A%84%E9%80%89%E6%8B%A9%E4%B8%8E%E5%88%92%E5%88%86"><span class="nav-number">3.2.</span> <span class="nav-text">样本的选择与划分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.3.</span> <span class="nav-text">架构设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E8%AE%AD%E7%BB%83%E5%BC%80%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">开发方法论-训练开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%86%E5%A4%87%E5%92%8C%E6%8F%8F%E8%BF%B0"><span class="nav-number">4.1.</span> <span class="nav-text">数据的准备和描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%88%E6%B8%85%E6%B4%97%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">数据预处理（清洗）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.1.</span> <span class="nav-text">基于特征属性选择</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%95%88%E6%9E%9C%E9%80%89%E6%8B%A9"><span class="nav-number">4.3.2.</span> <span class="nav-text">基于特征效果选择</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">4.3.3.</span> <span class="nav-text">基于特征稳定性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.</span> <span class="nav-text">特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.1.</span> <span class="nav-text">线性特征提取</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">4.4.2.</span> <span class="nav-text">非线性特征提取</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E3%80%81%E6%A6%82%E7%8E%87%E8%BD%AC%E5%8C%96%E5%92%8C%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.5.</span> <span class="nav-text">训练、概率转化和效果评估</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.5.1.</span> <span class="nav-text">模型训练</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E8%BD%AC%E5%8C%96"><span class="nav-number">4.5.2.</span> <span class="nav-text">概率转化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.5.3.</span> <span class="nav-text">模型效果评估</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA-%E4%B8%8A%E7%BA%BF%E5%92%8C%E7%BB%B4%E6%8A%A4"><span class="nav-number">5.</span> <span class="nav-text">开发方法论-上线和维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%8F%8A%E4%B8%8A%E7%BA%BF%E9%AA%8C%E8%AF%81"><span class="nav-number">5.1.</span> <span class="nav-text">部署及上线验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">监控和异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%9B%91%E6%8E%A7"><span class="nav-number">5.2.1.</span> <span class="nav-text">模型监控</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AD%A6"><span class="nav-number">5.2.2.</span> <span class="nav-text">模型预警</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.2.3.</span> <span class="nav-text">异常处理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E4%BC%98%E5%8C%96"><span class="nav-number">5.3.</span> <span class="nav-text">迭代优化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88"><span class="nav-number">5.3.1.</span> <span class="nav-text">模型融合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E6%97%B6%E6%95%88"><span class="nav-number">5.3.2.</span> <span class="nav-text">建模时效</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%92%E7%BB%9D%E6%8E%A8%E6%96%AD"><span class="nav-number">5.3.3.</span> <span class="nav-text">拒绝推断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%A3%8E%E6%8E%A7%E5%BB%BA%E6%A8%A1%E7%AE%97%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">常见风控建模算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95"><span class="nav-number">6.1.</span> <span class="nav-text">基础学习算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95"><span class="nav-number">6.2.</span> <span class="nav-text">集成学习算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95"><span class="nav-number">6.3.</span> <span class="nav-text">深度学习算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB%E6%90%AD%E5%BB%BA"><span class="nav-number">7.</span> <span class="nav-text">模型体系搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%90%A5%E9%94%80%E9%98%B6%E6%AE%B5"><span class="nav-number">7.1.</span> <span class="nav-text">营销阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%89%8D%E9%98%B6%E6%AE%B5"><span class="nav-number">7.2.</span> <span class="nav-text">贷前阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E4%B8%AD%E9%98%B6%E6%AE%B5"><span class="nav-number">7.3.</span> <span class="nav-text">贷中阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%B7%E5%90%8E%E9%98%B6%E6%AE%B5"><span class="nav-number">7.4.</span> <span class="nav-text">贷后阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E4%BB%8B%E7%BB%8D"><span class="nav-number">8.</span> <span class="nav-text">术语介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">10.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -873,14 +910,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">121</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">44</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
