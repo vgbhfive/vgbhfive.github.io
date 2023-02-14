@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HDFS当数据集的大小超过一台计算机的存储上限时，就有必要对数据进行分区然后存储到其他的计算机上。管理网络中跨多台计算机存储的文件系统被称为分布式文件系统（distributed filesystem），该架构于网络之上，势必会引起网络编程的复杂性，因此分布式文件系统比普通磁盘文件系统更为复杂。Hadoop 自带一个称为 HDFS 的分布式文件系统，也是 Hadoop 的旗舰级文件系统，即 Had">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop-HDFS">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Hadoop-HDFS/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="HDFS当数据集的大小超过一台计算机的存储上限时，就有必要对数据进行分区然后存储到其他的计算机上。管理网络中跨多台计算机存储的文件系统被称为分布式文件系统（distributed filesystem），该架构于网络之上，势必会引起网络编程的复杂性，因此分布式文件系统比普通磁盘文件系统更为复杂。Hadoop 自带一个称为 HDFS 的分布式文件系统，也是 Hadoop 的旗舰级文件系统，即 Had">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/02/09/wFOC1HuLXivtez2.png">
+<meta property="og:image" content="https://s2.loli.net/2023/02/09/q8SQF3xibR9dgnM.png">
+<meta property="og:image" content="https://s2.loli.net/2023/02/14/jRGN2T9HokPLAtr.png">
+<meta property="og:image" content="https://s2.loli.net/2023/02/14/moECnxvVA2uWPpq.png">
+<meta property="article:published_time" content="2023-02-04T08:02:34.000Z">
+<meta property="article:modified_time" content="2023-02-14T15:56:55.269Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/02/09/wFOC1HuLXivtez2.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Hadoop-HDFS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Hadoop-HDFS | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hadoop-HDFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hadoop-HDFS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-02-04 16:02:34" itemprop="dateCreated datePublished" datetime="2023-02-04T16:02:34+08:00">2023-02-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-02-14 23:56:55" itemprop="dateModified" datetime="2023-02-14T23:56:55+08:00">2023-02-14</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a><code>HDFS</code></h3><p>当数据集的大小超过一台计算机的存储上限时，就有必要对数据进行分区然后存储到其他的计算机上。管理网络中跨多台计算机存储的文件系统被称为<strong>分布式文件系统（<code>distributed filesystem</code>）</strong>，该架构于网络之上，势必会引起网络编程的复杂性，因此分布式文件系统比普通磁盘文件系统更为复杂。<br><code>Hadoop</code> 自带一个称为 <code>HDFS</code> 的分布式文件系统，也是 <code>Hadoop</code> 的旗舰级文件系统，即 <code>Hadoop Distributed Filesystem</code>。</p>
+<span id="more"></span>
+
+<p><code>HDFS</code> 以流式数据访问模式来存储超大文件，运行于商业硬件集群上。</p>
+<ul>
+<li><strong>超大文件</strong>。这里指的是具有几百 <code>MB</code>、几百 <code>GB</code>或者以上大小的文件。</li>
+<li><strong>流式数据访问</strong>。<code>HDFS</code> 采用的是一次写入、多次读写的高效访问模式。</li>
+<li><strong>商业硬件</strong>。运行于各种商业硬件上即可，不需要专业的硬件。</li>
+</ul>
+<hr>
+
+<h3 id="HDFS-相关概念"><a href="#HDFS-相关概念" class="headerlink" title="HDFS 相关概念"></a><code>HDFS</code> 相关概念</h3><h4 id="数据块"><a href="#数据块" class="headerlink" title="数据块"></a>数据块</h4><p>每个磁盘都有默认的数据块大小，这是磁盘进行<strong>数据读&#x2F;写的最小单位</strong>。构建于单个磁盘之上的文件系统通过磁盘块来管理该文件系统中的块，该文件系统块的大小可以是磁盘块的整数倍，文件系统块一般为几千个字节，而磁盘块一般为 <code>512</code> 字节。<br><code>HDFS</code> 也同样存在类似<strong>块（<code>block</code>）</strong>的概念，默认为 <code>128MB</code>。与单一磁盘上的文件系统类似，<code>HDFS</code> 上的文件也会被划分为块大小的多个分块（<code>chunk</code>），作为独立的存储单元。<br><small>与单一磁盘文件系统不同之处在于 <code>HDFS</code> 中小于一个块大小的文件不会占据整个块的空间。</small></p>
+<p>那么 <code>HDFS</code> 中的块为什么这么大？有何好处？</p>
+<ol>
+<li><p><code>HDFS</code> 中的块比磁盘的块大，其目的在于<strong>最小化寻址开销</strong>。如果块足够大，那么从磁盘传输数据的时间会明显大于定位这个块开始位置所需的时间，因此传输一个由多个块组成的大文件的时间取决于磁盘传输速率。<br>默认的块大小为 <code>128MB</code>，但是很多情况下 <code>HDFS</code> 安装时会使用更大的块，并且随着新一代磁盘驱动器传输速率的提升，块的大小会被设置的更大。但是这个参数也不能被设置的太大，<code>MapReduce</code> 中的 <code>map</code> 任务通常一次只处理一个块中的数据，因此如果任务数太少（小于集群中的节点数量），作业的运行速度就会很慢。</p>
+</li>
+<li><p>对分布式文件系统中的块进行抽象带来的好处如下：</p>
+<ul>
+<li>一个文件的大小可以<strong>大于网络中任意一个磁盘的容量</strong>。文件的所有块并不需要存储在同一块磁盘上，可以利用集群中任意一个磁盘进行存储。</li>
+<li>使用抽象块而非整个文件作为存储单元，大大<strong>简化存储子系统的设计</strong>。将存储子系统的处理对象设置为块，可简化存储管理（块大小已经固定，因此计算存储容量相对容易），同时也消除了对元数据的顾虑（块只需要存储数据即可，并不需要存储文件的元数据，例如权限信息等，这样其它系统可以单独管理这些元数据）。</li>
+<li>块非常适用于数据备份进而提供<strong>数据容错能力</strong>和<strong>提高可用性</strong>。</li>
+</ul>
+</li>
+</ol>
+<p><code>HDFS</code> 中的 <code>fsck</code> 指令可以展示块信息。用法：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs fsck / -files -blocks</span><br></pre></td></tr></table></figure>
+
+<h4 id="namenode-和-datanode"><a href="#namenode-和-datanode" class="headerlink" title="namenode 和 datanode"></a><code>namenode</code> 和 <code>datanode</code></h4><p><code>HDFS</code> 集群由两类节点以<strong>管理节点-工作节点模式</strong>运行，即<strong>一个 <code>namenode</code>（管理节点）</strong>和<strong>多个 <code>datanode</code>（工作节点）</strong>。</p>
+<p><code>namenode</code> 管理文件系统的命名空间，他维护着文件系统树及整颗树内所有的文件和目录，这些信息以两个文件形式永久保存在本地磁盘上：<strong>命名空间镜像文件</strong>和<strong>编辑日志文件</strong>。同时 <code>namenode</code> 也负责记录每个文件中各个块所在的节点信息，但是并不会永久保存块的位置信息，因为这些信息会在系统启动时根据数据节点信息重建。<br><code>datanode</code> 是文件系统的工作节点，根据需要<strong>存储并检索数据块</strong>（受客户端或者 <code>namenode</code> 调度），并且还需要定期向 <code>namenode</code> 发送所存储块的列表和心跳请求。<br>客户端代表用户通过与 <code>namenode</code> 和 <code>datanode</code> 交互来访问整个文件系统，客户端通过提供一个<strong>类似于 <code>POSIX</code> 的文件系统接口</strong>来实现功能，而不需要知道 <code>namenode</code> 和 <code>datanode</code> 的存在。</p>
+<p>细心的人会发现<strong>一个 <code>namenode</code> 不会存在单点故障</strong>吗？那么 <code>Hadoop</code> 提供了两种机制：</p>
+<ul>
+<li><strong>备份组成文件系统元数据持久状态的文件</strong>。<code>Hadoop</code> 可以通过配置使 <code>namenode</code> 在多个文件系统上保存元数据的持久状态，这些写操作都是实时同步的，并且还是原子操作。一般的配置都是在持久化本地磁盘时同时写入远程挂载的网络文件系统（<code>NFS</code>）。</li>
+<li><strong>运行一个辅助 <code>namenode</code>，</strong>但是他不能被用作 <code>namenode</code>。这个辅助 <code>namenode</code> 的作用在于<strong>定期</strong>合并编辑日志与命名空间镜像，以防止镜像日志过大。另外辅助 <code>namenode</code> 通常部署在另外一台机器上，需要占用大量 <code>CPU</code> 时间和内存来执行合并操作。由于辅助 <code>namenode</code> 是定期同步主节点 <code>namenode</code>，因此会存在保存的状态滞后于主节点，难免会丢失部分数据，这种情况下都是将远程挂载的 <code>NFS</code> 复制到辅助 <code>namenode</code> 作为新的主节点 <code>namenode</code> 运行。</li>
+</ul>
+<h4 id="块缓存"><a href="#块缓存" class="headerlink" title="块缓存"></a>块缓存</h4><p>通常 <code>datanode</code> 从磁盘中读取块，但是对于频繁访问的块，该块可能会被显式地存储在 <code>datanode</code> 的内存中，以<strong>堆外缓存（<code>off-heap block cache</code>）</strong>的形式存在。默认情况下一个块仅缓存在一个 <code>datanode</code> 的内存中（可以针对文件修改 <code>datanode</code> 的数量）。</p>
+<p>通过<strong>块缓存</strong>作业调度器在缓存块的 <code>datanode</code> 上执行任务，可以提高读操作的性能。当然用户可以通过在缓存池（<code>cache pool</code>）中增加一个 <code>cache directive</code> 来告诉 <code>namenode</code> 需要缓存哪些文件缓存多久。<br><small>缓存池是一个用于管理缓存权限和资源使用的管理性分组。</small></p>
+<h4 id="联邦-HDFS"><a href="#联邦-HDFS" class="headerlink" title="联邦 HDFS"></a>联邦 <code>HDFS</code></h4><p><code>namenode</code> 在内存中保存着文件系统中每个文件和每个数据块的引用关系，这也意味着对于一个超大集群来说，<strong>内存将成为限制系统横向扩展的瓶颈</strong>。不过联邦 <code>HDFS</code> 允许系统通过添加多个 <code>namenode</code> 来实现横向扩展，即每个 <code>namenode</code> 管理文件系统命名空间中的一部分。<br><small>例如 <code>A</code> <code>namenode</code> 负责管理 <code>/home/a</code> 下的所有文件，而 <code>B</code> <code>namenode</code> 负责管理 <code>/home/b</code> 下的所有文件。</small></p>
+<p>在联邦环境下<strong>每个 <code>namenode</code> 维护一个命名空间卷（<code>namespace volume</code>）</strong>，由<strong>命名空间的元数据</strong>和<strong>一个数据块池（<code>block pool</code>）</strong>组成，数据块池包含该命名空间下文件的所有数据块。<br>命名空间卷之间是相互独立的，两两之间并不相互通信，甚至某一个 <code>namenode</code> 失效也不会影响到其他 <code>namenode</code> 的可用性；另外命名空间卷下的数据块池不能再切分，这就意味着集群中的 <code>datanode</code> 需要注册到每个 <code>namenode</code> 中，<code>namenode</code> 存储来自多个数据块池中的数据块。</p>
+<p>客户端通过使用<strong>挂载数据表将文件路径映射到 <code>namenode</code></strong> 来访问联邦 <code>HDFS</code>，通过 <code>ViewFileSystem</code> 和 <code>viewfa://URI</code> 进行配置和管理。 </p>
+<h4 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h4><p>通过联合使用在多个文件系统中备份 <code>namenode</code> 的元数据和通过备用 <code>datanode</code> 创建监测点防止数据丢失，但这依然无法解决文件系统的高可用性，<code>namenode</code> 依然存在<strong>单点失效（<code>SPOF，single point of failure</code>）</strong>的问题，如果 <code>namenode</code> 失效则 <code>MapReduce</code> 作业均无法读、写文件。<br>在这种情况下从一个失效的 <code>namenode</code> 恢复，管理员需要启动一个拥有文件系统元数据副本的新的 <code>namenode</code> ，并配置 <code>datanode</code> 和客户端以便使用新的 <code>namenode</code>，而新的 <code>namenode</code> 需要达到以下情形才能响应服务：</p>
+<ul>
+<li><strong>将命名空间的镜像导入内存中</strong>。</li>
+<li><strong>重演编辑日志</strong>。</li>
+<li><strong>接收到足够多的来自 <code>datanode</code> 的数据块报告并退出安全模式</strong>。</li>
+</ul>
+<p><small>对于一个大型集群 <code>namenode</code> 的冷启动需要 <code>30</code> 分钟以上，甚至更久。</small></p>
+<p>为了解决上述遇到的问题，<code>HDFS</code> 支持在 <code>2.x</code> 版本支持<strong>高可用性</strong>，即通过配置一对<strong>活动-备用（<code>active-standby</code>）</strong><code>namenode</code>。当活动 <code>namenode</code> 失效，备用 <code>namenode</code> 会接管它的任务并开始服务来自客户端的请求，不会有任何明显中断。不过要支持高可用性还需要以下几个方面的支持：</p>
+<ul>
+<li><code>namenode</code> 之间通过<strong>高可用性共享存储</strong>实现编辑日志的共享。</li>
+<li><code>datanode</code> 需要<strong>同时向两个 <code>namenode</code> 发送数据块处理报告</strong>。</li>
+<li>客户端需要使用<strong>特定的机制</strong>来处理 <code>namenode</code> 失效的问题，不过该机制对用户是透明的。</li>
+<li>辅助 <code>namenode</code> 的角色被备用 <code>namenode</code> 所包含，备用 <code>namenode</code> 为活动 <code>namenode</code> 命令空间<strong>设置周期性检查点</strong>。</li>
+</ul>
+<hr>
+
+<h3 id="命令行接口"><a href="#命令行接口" class="headerlink" title="命令行接口"></a>命令行接口</h3><h4 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h4><p>现在通过命令行交互来进一步了解 <code>HDFS</code>，在设置伪分布配置时，有两个属性需要着重说明：</p>
+<ul>
+<li><code>fs.defaultFS</code>：设置为 <code>hdfs://localhost/</code>，用于设置 <code>Hadoop</code> 的默认文件系统。<br> <small>文件系统由 <code>URI</code> 指定，使用 <code>hdfs URI</code> 来配置 <code>HDFS</code> 为 <code>Hadoop</code> 的默认文件系统，<code>HDFS</code> 的守护程序通过该属性项来确定 <code>HDFS namenode</code> 的主机及端口。</small></li>
+<li><code>dfs.replication</code>：默认值为 <code>3</code>，修改配置值设置为 <code>1</code>，不然会出现副本不足的警告，因为 <code>HDFS</code> 无法将数据块复制到三个 <code>datanode</code> 上。</li>
+</ul>
+<p>至此文件系统已经配置完毕，接下来就可以执行常见的文件系统操作。（相关命令行的内容可以看前一篇文章）</p>
+<h5 id="文件访问权限"><a href="#文件访问权限" class="headerlink" title="文件访问权限"></a>文件访问权限</h5><p>针对文件和目录，<code>HDFS</code> 的权限模式和 <code>POSIX</code> 的权限模式非常相似。共提供三类权限模式：</p>
+<ul>
+<li><strong>只读权限（<code>r</code>）</strong>：读取文件或列出目录内容时需要该权限。</li>
+<li><strong>写入权限（<code>w</code>）</strong>：写入一个文件或是在一个目录上新建及删除文件或目录需要该权限。</li>
+<li><strong>可执行权限（<code>x</code>）</strong>：该权限对于文件而言可以忽略，不过在访问目录的子项时需要该权限。</li>
+</ul>
+<p>每个文件和目录都有所属用户（<code>owner</code>）、所属组别（<code>group</code>）及模式（<code>mode</code>），这个模式是由所有用户的权限、组内用户的权限及其他用户的权限组成。</p>
+<h4 id="distcp"><a href="#distcp" class="headerlink" title="distcp"></a><code>distcp</code></h4><p><code>DistCp</code>（分布式拷贝）是用于<strong>大规模集群内部和集群之间拷贝的工具</strong>，使用 <strong><code>Map/Reduce</code> 实现文件分发、错误处理和恢复以及报告生成</strong>。通过把文件和目录的列表作为 <code>map</code> 任务的输入，每个任务会完成源列表中部分文件的拷贝。用法：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/hadoop distcp [-p [rbugp]] [-i] [-<span class="built_in">log</span> &lt;logdir&gt;] [-m &lt;num_maps&gt;] [-overwrite] [-update] [-f &lt;urilist_uri&gt;] &lt;source-path&gt; &lt;dest-path&gt;</span><br></pre></td></tr></table></figure>
+<p><small>上述命令仅限于相同版本的 <code>HDFS</code> 之间拷贝数据。</small></p>
+<ol>
+<li><p><code>p</code><br>保存文件信息。<code>rbugp</code> 分别表示 <em>副本数量</em>、<em>块大小</em>、<em>用户</em>、<em>组</em>、<em>权限</em>。</p>
+</li>
+<li><p><code>i</code><br>忽略失败</p>
+</li>
+<li><p><code>log</code><br>记录日志到 <code>&lt;logdir&gt;</code></p>
+</li>
+<li><p><code>m</code><br>同时拷贝的最大数目。</p>
+</li>
+<li><p><code>overwrite</code><br>是否覆盖目标。</p>
+</li>
+<li><p><code>update</code><br>如果源和目标的大小不一样则进行覆盖。</p>
+</li>
+<li><p><code>f</code><br>使用 <code>&lt;urilist_uri&gt;</code> 作为源文件列表。</p>
+</li>
+</ol>
+<hr>
+
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><p><code>Hadoop</code> 有一个<strong>抽象的文件系统概念</strong>，而 <code>HDFS</code> 只是其中的一个实现。<code>Java</code> 抽象类 <code>org.apache.hadoop.fs.FileSystem</code> 定义了 <code>Hadoop</code> 文件系统的客户端接口，并且该抽象类也有几个具体的实现：</p>
+<table>
+<thead>
+<tr>
+<th>文件系统</th>
+<th><code>URI</code></th>
+<th><code>Java</code> 实现</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Local</code></td>
+<td><code>file</code></td>
+<td><code>fs.LocalFileSystem</code></td>
+<td><div style="width: 300px">使用客户端校验和的本地磁盘文件系统。其中使用 <code>RawLocalFileSystem</code> 表示无校验和的本地磁盘文件系统</div></td>
+</tr>
+<tr>
+<td><code>HDFS</code></td>
+<td><code>hdfs</code></td>
+<td><code>hdfs.DistributedFileSystem</code></td>
+<td><code>Hadoop</code> 的分布式文件系统。将 <code>HDFS</code> 设计成与 <code>MapReduce</code> 结合使用，可以实现高性能。</td>
+</tr>
+<tr>
+<td><code>WebHDFS</code></td>
+<td><code>Webhdfs</code></td>
+<td><code>Hdfs.web.WebHdfsFileSystem</code></td>
+<td>基于 <code>HTTP</code> 的文件系统，提供对 <code>HDFS</code> 的认证读&#x2F;写访问。</td>
+</tr>
+<tr>
+<td><code>Secure</code> <code>WebHdfs</code></td>
+<td><code>swebhdfs</code></td>
+<td>hdfs.web.SWebHdfsFileSystem</td>
+<td><code>WebHDFS</code> 的 <code>HTTPS</code> 版本</td>
+</tr>
+<tr>
+<td><code>HAR</code></td>
+<td><code>har</code></td>
+<td><code>fa.HarFileSystem</code></td>
+<td>一个构建在其他文件系统之上用于文件存档的文件系统。<code>Hadoop</code> 存档文件通常用于将 <code>HDFS</code> 中的多个文件打包成一个存档文件，以减少 <code>namenode</code> 内存的使用。使用 <code>hadoop</code> 的 <code>achive</code> 命令来创建 <code>HAR</code> 文件。</td>
+</tr>
+<tr>
+<td><code>View</code></td>
+<td><code>viewfs</code></td>
+<td><code>viewfs.ViewFileSystem</code></td>
+<td>针对其他 <code>Hadoop</code> 文件系统的客户端挂载表。通常用于为联邦 <code>namenode</code> 创建挂载点。</td>
+</tr>
+<tr>
+<td><code>FTP</code></td>
+<td><code>ftp</code></td>
+<td><code>fa.ftp.FTPFileSystem</code></td>
+<td>由 <code>FTP</code> 服务器支持的文件系统</td>
+</tr>
+<tr>
+<td><code>S3</code></td>
+<td><code>S3a</code></td>
+<td><code>fa.s3a.S3AFileSystem</code></td>
+<td>由 <code>Amazon S3</code> 支持的文件系统。替代老版的 <code>s3n</code> 实现。</td>
+</tr>
+<tr>
+<td><code>Azure</code></td>
+<td><code>wasb</code></td>
+<td><code>fs.azure.NativeAzureFileSystem</code></td>
+<td>由 <code>Microsoft Azure</code> 支持的文件系统。</td>
+</tr>
+<tr>
+<td><code>Swift</code></td>
+<td><code>swift</code></td>
+<td><code>fs.swift.snative.SwiftNativeFileSystem</code></td>
+<td>由 <code>OpenStack Swift</code> 支持的文件系统。</td>
+</tr>
+</tbody></table>
+<p><code>Hadoop</code> 对文件系统提供了许多接口，一般使用 <code>URI</code> 方案来选取合适的文件系统实例进行交互。例如列出本地文件系统根目录下的文件：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/hadoop fs -<span class="built_in">ls</span> file:///</span><br></pre></td></tr></table></figure>
+
+<h4 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h4><p><code>Hadoop</code> 是用 <code>Java</code> 写的，通过 <code>Java API</code> 可以调用大部分 <code>Hadoop</code> 文件系统的交互操作。</p>
+<ol>
+<li><p><code>HTTP</code><br>非 <code>Java</code> 开发的应用访问 <code>HDFS</code> 会很不方便，因此由 <code>WebHDFS</code> 协议提供的 <code>HTTP REST API</code> 则使得其他语言开发的应用能够更方便地与 <code>HDFS</code> 交互。<br><small><code>HTTP</code> 接口比原生 <code>Java</code> 客户端要慢，因此尽量不要传输特大数据。</small></p>
+<p> 通过 <code>HTTP</code> 访问 <code>HDFS</code> 有两种方法：</p>
+<ul>
+<li>直接访问，<code>HDFS</code> 守护进程直接服务于来住客户端的 <code>HTTP</code> 请求。<br> <img src="https://s2.loli.net/2023/02/09/wFOC1HuLXivtez2.png" alt="hadoop_1_3.jpg"><br> <code>namenode</code> 和 <code>datanode</code> 内嵌的 <strong><code>web</code> 服务器</strong>作为 <code>WebHDFS</code> 的端节点运行。文件元数据操作由 <code>namenode</code> 管理，文件读&#x2F;写操作首先被发往 <code>namenode</code>，由 <code>namenode</code> 发送一个 <code>HTTP</code> 重定向至某个客户端，指示以流方式传输文件数据的目的或源 <code>datanode</code>。（由于 <code>dfs.webhdfs.enabled</code> 被设置为 <code>true</code>，<code>WebHDFS</code> 默认是启用状态）</li>
+<li>通过代理（一个或多个）访问，客户端通常使用 <code>DistributedFileSystem API</code> 访问 <code>HDFS</code>。<br> <img src="https://s2.loli.net/2023/02/09/q8SQF3xibR9dgnM.png" alt="hadoop_1_4.jpg"><br> 依靠一个或多个<strong>独立代理服务器</strong>通过 <code>HTTP</code> 访问 <code>HDFS</code>。所有到集群的网路通信都需要经过代理，因此客户端从不直接访问 <code>namenode</code> 和 <code>datanode</code>。<code>HttpFS</code> 代理提供和 <code>WebHDFS</code> 相同的 <code>HTTP</code> 和 <code>HTTPS</code> 接口，这样客户端能够通过 <code>webhdfs URI</code> 协议访问这类接口。<br> <code>httpFS</code> 代理的启动独立于 <code>namenode</code> 和 <code>datanode</code> 的守护进程，使用 <code>httpfs.sh</code> 脚本启动，默认在一个不同的端口上监听（端口号为 <code>14000</code>）。</li>
+</ul>
+<p> <small>上述两者都使用了 <strong><code>WebHDFS</code></strong> 协议。</small></p>
+</li>
+<li><p><code>C</code><br><code>Hadoop</code> 提供了一个名为 <strong><code>libhdfs</code></strong> 的 <code>C</code> 语言库，该语言库是 <code>Java FileSystem</code> 接口类的一个镜像，使用 <strong><code>Java</code> 原生接口（<code>JNI, Java Native Interface</code>）</strong>调用 <code>Java</code> 文件系统客户端。同时还有一个 <code>libwebhdfs</code> 库，该库是 <code>WebHDFS</code> 接口的实现。</p>
+</li>
+<li><p><code>NFS</code><br>使用 <code>Hadoop</code> 的 <strong><code>NFSv3</code></strong> 网关将 <code>HDFS</code> 挂载为本地客户端的文件系统的想法是可行的。可以通过使用 <code>Unix</code> 程序与该文件系统交互，通过任意一种编程语言调用 <code>POSIX</code> 库来访问文件系统，由于 <code>HDFS</code> 仅能以 <em>追加模式</em> 写文件，因此可以往文件末尾添加数据，但不能随即修改文件。</p>
+</li>
+<li><p><code>FUSE</code><br><strong>用户空间文件系统（<code>FUSE, FileSystem in Userspace</code>）</strong>允许将用户空间实现的文件系统作为 <code>Unix</code> 文件系统进行集成。通过使用 <code>Hadoop</code> 的 <code>Fuse-DFS</code> 功能模块，<code>HDFS</code> 或者任何一个 <code>Hadoop</code> 文件系统均可以作为一个标准的本地文件系统进行挂载。<br><code>Fuse-DFS</code> 是用 <code>C</code> 语言实现的，使用 <code>libhdfs</code> 作为访问 <code>HDFS</code> 的接口。<br><small>对于挂载 <code>HDFS</code> 的解决方案，<code>Hadoop NFS</code> 相比 <code>Fuse-DFS</code> 更优先选择。</small></p>
+</li>
+</ol>
+<hr>
+
+<h3 id="Java-接口"><a href="#Java-接口" class="headerlink" title="Java 接口"></a><code>Java</code> 接口</h3><p>该部分主要探索 <code>Hadoop</code> 的 <code>FileSystem</code> 类，该类是与 <code>Hadoop</code> 的某一个文件系统进行交互的 <code>API</code>。</p>
+<h4 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h4><h5 id="Hadoop-URL"><a href="#Hadoop-URL" class="headerlink" title="Hadoop URL"></a><code>Hadoop URL</code></h5><p>从 <code>Hadoop</code> 文件系统读取文件，最简单的办法就是使用 <code>java.net.URL</code> 对象打开数据流，然后从中读取数据。示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CatURL</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        URL.setURLStreamHandlerFactory(<span class="keyword">new</span> <span class="title class_">FsUrlStreamHandlerFactory</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="literal">null</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            in = <span class="keyword">new</span> <span class="title class_">URL</span>(args[<span class="number">0</span>]).openStream();</span><br><span class="line">            IOUtils.cpoyBytes(in, System.out, <span class="number">4096</span>, <span class="literal">false</span>);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            IOUtils.closeStream(in);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行示例：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% bin/hadoop CatURL hdfs://localhost/user/vgbh/test.txt</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p><code>Java</code> 程序要想识别 <code>Hadoop</code> 的 <code>hdfs URL</code>，需要通过 <code>FsUrlStreamHandlerFactory</code> 实例调用 <code>java.net.URL</code> 对象的 <code>setURLStreamHandlerFactory</code> 方法。另外可以调用 <code>Hadoop</code> 中的 <code>IOUtils</code> 类，并在 <code>finally</code> 子句中关闭数据流，同时在输入流和输出流之间复制数据。<br><small><code>setURLStreamHandlerFactory</code> 方法在每一个虚拟机中只能被调用一次，通常在静态方法中调用，该限制则意味着如果程序的其他组件已经声明了 <code>FsUrlStreamHandlerFactory</code> 实例，那么就不能使用该方法从 <code>Hadoop</code> 中读取数据。</small></p>
+<h5 id="FileSystem-API"><a href="#FileSystem-API" class="headerlink" title="FileSystem API"></a><code>FileSystem API</code></h5><p>前一个部分有时候会遇到不能设置 <code>FsUrlStreamHandlerFactory</code> 实例，那么这种情况下可以使用 <strong><code>FileSystem API</code></strong> 来打开一个文件的输入流。<br><code>Hadoop</code> 文件系统通过 <strong><code>Hadoop Path</code> 对象来表示一个文件</strong>，因此可以将<strong>路径视为一个文件系统 <code>URI</code></strong> 。</p>
+<p><code>FileSystem</code> 是一个通用的文件系统 <code>API</code>，那么第一步就是获取对应的文件系统实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> FileSystem <span class="title function_">get</span><span class="params">(Configuration conf [,URI uri] [,String user])</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>conf</code>：<code>Configuration</code> 对象封装了客户端或服务器的配置，通过配置文件读取类路径来实现（<code>etc/hadoop/core-site.xml</code>）。</li>
+<li><code>uri</code>：根据给定的 <code>URI</code> 确定使用的文件系统。</li>
+<li><code>user</code>：给定用户来访问文件系统。</li>
+</ul>
+<p>在某些情况下希望获得本地文件系统的运行实例，此时使用 <code>getLocal</code> 方法会更加方便：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> LocalFileSystem <span class="title function_">getLocal</span><span class="params">(Configuration conf)</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+
+<p>接下来的第二部就是在获取到 <code>FileSystem</code> 之后，就可以调用 <code>open()</code> 函数来获取文件的输入流：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> FSDataInputStream <span class="title function_">open</span><span class="params">(Path f [,<span class="type">int</span> bufferSize])</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+<p><code>bufferSize</code> 表示可设置缓冲区的大小，不设置时默认大小为 <code>4KB</code>。</p>
+<p>完整代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CatFileSystem</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Configuration</span> <span class="variable">conf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>();</span><br><span class="line">        <span class="type">FileSystem</span> <span class="variable">fs</span> <span class="operator">=</span> FileSystem.get(URI.create(args[<span class="number">0</span>]), conf);</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="literal">null</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            in = fs.open(<span class="keyword">new</span> <span class="title class_">Path</span>(args[<span class="number">0</span>]));</span><br><span class="line">            IOUtils.cpoyBytes(in, System.out, <span class="number">4096</span>, <span class="literal">false</span>);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            IOUtils.closeStream(in);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行示例：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% bin/hadoop CatFileSystem hdfs://localhost/user/vgbh/test.txt</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p><small>关于更多的使用方法可以了解下 <code>FileSystem</code> 的接口类 <strong><code>Seekable</code></strong> 和 <strong><code>PositionedReadable</code></strong> </small></p>
+<h4 id="写入数据"><a href="#写入数据" class="headerlink" title="写入数据"></a>写入数据</h4><p><code>FileSystem</code> 类有一系列新建文件的方法。</p>
+<ol>
+<li><p>最简单的方法就是给准备创建的文件一个 <code>Path</code> 对象，然后返回一个用于写入数据的输出流：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> FSDataOutputStream <span class="title function_">create</span><span class="params">(Path f)</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+<p>此方法有多个重载版本，允许指定是否强制覆盖现有文件、文件备份数量、写入文件时缓冲区大小、文件块大小以及文件权限。还有一个<strong>重载方法 <code>Progressable</code> 用于传递回调接口</strong>，可以将数据写入 <code>datanode</code> 的进度通知给应用。<br><small><code>create()</code> 方法能够为需要写入当当前并不存在的文件创建父目录。如果不希望这样，可以在写入时先调用 <code>exist()</code> 方法检查父目录是否存在。</small></p>
+</li>
+<li><p>使用 <code>append()</code> 方法在一个现有文件的末尾追加数据，追加操作允许一个 <code>writer</code> 打开文件后在访问该文件的最后偏移量处追加数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> FSDataOutputStream <span class="title function_">append</span><span class="params">(Path f)</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><small><code>FSDataOutputStream</code> 与 <code>FSDataInputStream</code> 不同之处在于，前者不允许在文件中定位。因为 <code>HDFS</code> 只允许对一个已打开的文件顺序写入或者在末尾添加数据。</small></p>
+<p>完整示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileCopyWithProgress</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">loc</span> <span class="operator">=</span> args[<span class="number">0</span>];</span><br><span class="line">        <span class="type">String</span> <span class="variable">dst</span> <span class="operator">=</span> args[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedInputStream</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(loc));</span><br><span class="line">        <span class="type">Configuration</span> <span class="variable">conf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>();</span><br><span class="line">        <span class="type">FileSystem</span> <span class="variable">fs</span> <span class="operator">=</span> FileSystem.get(URI.create(dst), conf);</span><br><span class="line"></span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">out</span> <span class="operator">=</span> fs.create(<span class="keyword">new</span> <span class="title class_">Path</span>(dst), <span class="keyword">new</span> <span class="title class_">Progressable</span>() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">progress</span><span class="params">()</span> &#123;</span><br><span class="line">                System.out.print(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        IOUtils.cpoyBytes(in, out, <span class="number">4096</span>, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行示例：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% bin/hadoop FileCopyWithProgress input/vgbh/a.txt hdfs://localhost/user/vgbh/test_1.txt</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+
+<h4 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h4><p><code>FileSystem</code> 实例提供了创建目录的方法，该方法可以一次性创建所有必要但还没有的目录，均创建成功后返回 <code>true</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">mkdirs</span><span class="params">(Path f)</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询文件"><a href="#查询文件" class="headerlink" title="查询文件"></a>查询文件</h4><h5 id="文件元数据"><a href="#文件元数据" class="headerlink" title="文件元数据"></a>文件元数据</h5><p>任何文件系统的重要特征其中之一都是提供其<strong>目录结构浏览</strong>和<strong>检索所存文件和目录相关信息</strong>的功能。<code>FileStatus</code> 类封装了文件系统中文件和目录的元数据，包括文件长度、块大小、复本、修改时间、所有者以及权限信息。<br><code>FileSystem</code> 的 <strong><code>getFileStatus()</code></strong> 方法用于获取文件或目录的 <code>FileStatus</code> 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> FileStatus <span class="title function_">getFileStatus</span><span class="params">(Path f)</span> <span class="keyword">throws</span> FileNotFoundException</span><br></pre></td></tr></table></figure>
+
+<h5 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h5><p>在查找到文件或目录的相关信息后，那么就下来就是列出目录中的内容。<code>FileSystem</code> 的 <strong><code>listStatus()</code></strong> 方法可以实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> FileStatus[] listStatus(Path f [,PathFilter filter]) <span class="keyword">throws</span> IOException</span><br><span class="line"><span class="keyword">public</span> FileStatus[] listStatus(Path[] f [,PathFilter filter]) <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+<p>当 <code>f</code> 传入的参数为一个文件时，那么就会返回数组长度为 <code>1</code> 的 <code>FileStatus</code> 对象；但若是一个目录时，则返回多个 <code>FileStatus</code> 对象，表示此目录中包含的目录和文件。另外<strong>重载方法允许使用 <code>PathFilter</code> 来限制匹配的文件和目录</strong> 。</p>
+<h5 id="文件模式"><a href="#文件模式" class="headerlink" title="文件模式"></a>文件模式</h5><p>偶尔会出现在单个操作中处理一批文件的需求。因此在一个<strong>表达式中使用通配符来匹配多个文件</strong>正是解决办法，无需列举每个文件和目录来指定输入。<br><code>Hadoop</code> 为执行通配符提供了 <strong><code>globStatus()</code></strong> 方法，该方法返回路径格式与指定模式匹配的所有 <code>FileStatus</code> 组成的数组，并按路径排序。<code>PathFilter</code> 参数作为可选项进一步对匹配结果进行限制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> FileStatus[] globStatus(Path pathPattern [,PathFilter filter]) <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+<p>另外 <code>Hadoop</code> 支持的通配符与 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/chengmo/archive/2010/10/17/1853344.html"><code>Unix bash shell</code></a> 支持的相同。</p>
+<h5 id="PathFilter-对象"><a href="#PathFilter-对象" class="headerlink" title="PathFilter 对象"></a><code>PathFilter</code> 对象</h5><p>通配符模式有时并不能够精确地描述想要的文件集。因此 <code>FileSystem</code> 的 <code>listStatus()</code> 和 <code>globStatus()</code> 方法均提供了可选的 <strong><code>PathFilter</code> 对象来控制通配符</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PathFilter</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">accept</span><span class="params">(Path path)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h4><p><code>FileSystem</code> 的 <code>delete()</code> 方法可以永久性删除文件或目录。如果 <code>f</code> 是一个文件或空目录，则 <code>recursive</code> 值就会被忽略，只有值为 <code>true</code> 时非空目录及其内容才会被删除，否则会抛出 <code>IOException</code> 异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">delete</span><span class="params">(Path f, <span class="type">boolean</span> recursive)</span> <span class="keyword">throws</span> IOException</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="数据读取和写入"><a href="#数据读取和写入" class="headerlink" title="数据读取和写入"></a>数据读取和写入</h3><p>了解客户端如何与 <code>HDFS</code>、<code>datanode</code>、<code>namenode</code> 进行交互，明白如何读取和写入文件。</p>
+<h4 id="剖析读取"><a href="#剖析读取" class="headerlink" title="剖析读取"></a>剖析读取</h4><p>下图展示在读取文件时事件的发生顺序：<br><img src="https://s2.loli.net/2023/02/14/jRGN2T9HokPLAtr.png" alt="hadoop_1_6.jpg"></p>
+<ol>
+<li><p><code>open</code><br>客户端通过调用 <code>FileSystem</code> 对象的 <code>open()</code> 方法来打开需要读取的文件，对于 <code>HDFS</code> 来说该文件就是一个 <strong><code>DistributedFileSystem</code></strong> 实例。</p>
+</li>
+<li><p><code>get block locations</code><br><code>DistributedFileSystem</code> 实例通过远程过程调用（<code>RPC</code>）来调用 <code>namenode</code>，以确定文件起始块的位置。<code>DistributedFileSystem</code> 类返回一个 <strong><code>FSDataInputStream</code></strong> 对象（支持文件定位的输入流）给客户端以便读取数据。<br><code>FSDataInputStream</code> 类内部封装 <code>DFSInputStream</code> 对象，该对象管理 <code>datanode</code> 和 <code>namenode</code> 的 <code>I/O</code>。<br>对于每一个数据块，<code>namenode</code> 会返回存有该块副本的 <code>datanode</code> 地址，该地址根据距离客户端的距离进行排序。</p>
+</li>
+<li><p><code>read</code><br>接着客户端对输入流调用 <code>read()</code> 方法，存储着文件起始几个块的 <code>datanode</code> 地址的 <code>DFSInputStream</code> 随即连接距离最近的文件中第一个块所在的 <strong><code>datanode</code></strong> 。<br><small>在读取数据时如果遇到异常（例如通信异常或者检查校验和未通过），会尝试从这个块的另一个邻近的 <code>datanode</code> 读取数据，然后标记这个 <code>datanode</code>，之后不会再在这个 <code>datanode</code> 上读取数据。</small></p>
+</li>
+<li><p><code>read</code><br>通过对数据流反复调用 <code>read()</code> 方法，就可以将数据从 <code>datanode</code> 传输到客户端。</p>
+</li>
+<li><p><code>read</code><br>在读取到数据的末端时，<code>DFSInputStream</code> 关闭与该 <code>datanode</code> 的连接，然后寻找下一个块的最佳 <code>datanode</code>。这些内部操作对于客户端都是透明的，对客户端来说一直在读取一个连续的数据流。<br>客户端从流中读取数据时，块是按照打开 <code>DFSInputStream</code> 与 <code>datanode</code> 新建连接的顺序读取的，同时也会根据需要询问 <code>namenode</code> 来检索下一批数据块的 <code>datanode</code> 的位置。</p>
+</li>
+<li><p><code>close</code><br>一旦客户端读取数据完成，<code>FSDataInputStream</code> 就会调用 <code>close()</code> 方法。</p>
+</li>
+</ol>
+<p><small>关于距离客户端最近的 <code>datanode</code> 的<strong>网络拓扑</strong>可以自行了解。</small></p>
+<h4 id="剖析写入"><a href="#剖析写入" class="headerlink" title="剖析写入"></a>剖析写入</h4><p>下图展示文件是如何写入 <code>HDFS</code><br><img src="https://s2.loli.net/2023/02/14/moECnxvVA2uWPpq.png" alt="hadoop_1_5.jpg"></p>
+<ol>
+<li><p><code>create</code><br>客户端通过对 <code>DistributedFileSystem</code> 对象调用 <code>create()</code> 方法来新建文件。</p>
+</li>
+<li><p><code>create</code><br><code>DistributedFileSystem</code> 对象对 <code>namenode</code> 发起一个 <code>RPC</code> 调用，在文件系统的命名空间中新建一个空文件（还没有相应的数据块），<code>namenode</code> 在收到请求后开始执行各种不同的检查以确保该文件不存在且客户端有创建该文件的权限。接着 <code>DistributedFileSystem</code> 向客户端返回一个 <strong><code>FSDataOutputStream</code></strong> 对象，然后客户端开始写入数据。<br><code>FSDataOutputStream</code> 内部封装了一个 <code>DFSOutputStream</code> 对象，该对象负责处理 <code>datanode</code> 和 <code>namenode</code> 之间的通信。</p>
+</li>
+<li><p><code>write</code><br>在客户端写入数据时，<code>DFSOutputStream</code> 将它分成一个个的数据包，并写入内部队列，称为<strong>数据队列（<code>data queue</code>）</strong>。</p>
+</li>
+<li><p><code>write packet</code><br><code>DataStreamer</code> 处理数据队列，挑选出适合存储数据副本的一组 <code>datanode</code>，并据此来<strong>要求 <code>namenode</code> 分配新的数据块</strong>；一组 <code>datanode</code> 组成一个管线，<code>DataStreamer</code> 将数据包以流式传输到管线中第一个 <code>datanode</code>，该 <code>datanode</code> 存储数据包并将它发送到下一个管线中，以此类推知道 <code>datanode</code> 数量达到设置的复本数量。</p>
+</li>
+<li><p><code>ack packet</code><br><code>DFSOutputStream</code> 内部也维护着一个内部数据包队列来等待 <code>datanode</code> 的收到确认回执，称为<strong>确认队列（<code>ack queue</code>）</strong>。收到管道中所有 <code>datanode</code> 确认信息后，该数据包才会从确认队列中被删除。</p>
+</li>
+<li><p><code>close</code><br>客户端完成数据的写入后，对数据流调用 <code>close()</code> 方法。</p>
+</li>
+<li><p><code>complete</code><br>该操作将剩余的所有数据包写入 <code>datanode</code> 管线，并在联系到 <code>namenode</code> 告知其文件写入完成之前等待确认。<code>namenode</code> 此时已知写入文件有哪些块组成（<code>DataStreamer</code> 请求分配数据块），因此最终只需要等待数据块完成最小量的复制就会返回成功。</p>
+</li>
+</ol>
+<h4 id="一致模型"><a href="#一致模型" class="headerlink" title="一致模型"></a>一致模型</h4><p>文件系统的<strong>一致模型（<code>coherency mode</code>）</strong>描述了<strong>文件读&#x2F;写的数据可见性</strong>。<code>HDFS</code> 为了满足性能牺牲了一些 <code>POSIX</code> 要求，具体如下：</p>
+<ul>
+<li>新建文件后能立即在文件系统的<strong>命名空间中可见</strong>，但是写入<strong>文件的内容并不能立即可见</strong>。</li>
+<li>当写入的数据超过一个块后，第一个<strong>数据块对于新的 <code>reader</code> 是可见的，总之当前正在写入的块对于其他 <code>reader</code> 不可见</strong>。</li>
+<li><code>HDFS</code> 中的 <code>FSDataOutputStream</code> 类使用 <strong><code>hflush()</code> 方法可以将所有缓存刷新到 <code>datanode</code> 中</strong>；<code>hflush()</code> 方法执行成功后，对于所有新的 <code>reader</code> 而言，<code>HDFS</code> 可以保证目前已写入到文件中的数据均到达 <code>datanode</code> 的管道且对所有的 <code>reader</code> 都是可见的。</li>
+<li>注意 <code>hflush()</code> 方法不能保证 <code>datanode</code> 已经将数据写到磁盘上，仅确保数据保存在 <code>datanode</code> 的内存中。 <strong><code>hsync()</code> 方法可以确保将数据写入到磁盘</strong>上，类似于 <code>POSIX</code> 中的 <code>fsync()</code> 系统调用。</li>
+</ul>
+<p><small>关于在何时调用 <code>hflush()</code> 和 <code>hsync()</code> 需要在应用程序和性能之间做平衡，选择最合适的调用频率。</small></p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a href="https://blog.vgbhfive.cn/Hadoop-%E5%9F%BA%E7%A1%80/">Hadoop-基础</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jagel-95/p/10945317.html">Hadoop源生实用工具之distcp</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chengmo/archive/2010/10/17/1853344.html">Unix bash shell</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Hadoop-%E5%9F%BA%E7%A1%80/" rel="prev" title="Hadoop-基础">
+      <i class="fa fa-chevron-left"></i> Hadoop-基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Lombok-constructor-is-already-defined/" rel="next" title="Lombok-constructor is already defined">
+      Lombok-constructor is already defined <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#HDFS"><span class="nav-number">1.</span> <span class="nav-text">HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HDFS-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">HDFS 相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%9D%97"><span class="nav-number">2.1.</span> <span class="nav-text">数据块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#namenode-%E5%92%8C-datanode"><span class="nav-number">2.2.</span> <span class="nav-text">namenode 和 datanode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9D%97%E7%BC%93%E5%AD%98"><span class="nav-number">2.3.</span> <span class="nav-text">块缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%94%E9%82%A6-HDFS"><span class="nav-number">2.4.</span> <span class="nav-text">联邦 HDFS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="nav-number">2.5.</span> <span class="nav-text">高可用性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">命令行接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">3.1.</span> <span class="nav-text">命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="nav-number">3.1.1.</span> <span class="nav-text">文件访问权限</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#distcp"><span class="nav-number">3.2.</span> <span class="nav-text">distcp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.</span> <span class="nav-text">文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">4.1.</span> <span class="nav-text">接口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-%E6%8E%A5%E5%8F%A3"><span class="nav-number">5.</span> <span class="nav-text">Java 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">5.1.</span> <span class="nav-text">读取数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Hadoop-URL"><span class="nav-number">5.1.1.</span> <span class="nav-text">Hadoop URL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FileSystem-API"><span class="nav-number">5.1.2.</span> <span class="nav-text">FileSystem API</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">5.2.</span> <span class="nav-text">写入数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">5.3.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%87%E4%BB%B6"><span class="nav-number">5.4.</span> <span class="nav-text">查询文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%85%83%E6%95%B0%E6%8D%AE"><span class="nav-number">5.4.1.</span> <span class="nav-text">文件元数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%97%E8%A1%A8"><span class="nav-number">5.4.2.</span> <span class="nav-text">列表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.4.3.</span> <span class="nav-text">文件模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PathFilter-%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.4.4.</span> <span class="nav-text">PathFilter 对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="nav-number">5.5.</span> <span class="nav-text">删除数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E5%86%99%E5%85%A5"><span class="nav-number">6.</span> <span class="nav-text">数据读取和写入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%96%E6%9E%90%E8%AF%BB%E5%8F%96"><span class="nav-number">6.1.</span> <span class="nav-text">剖析读取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%96%E6%9E%90%E5%86%99%E5%85%A5"><span class="nav-number">6.2.</span> <span class="nav-text">剖析写入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.3.</span> <span class="nav-text">一致模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : 'f0a5665027081a0a8b1617e9d68caa2a',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
