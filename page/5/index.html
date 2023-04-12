@@ -165,6 +165,158 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/" class="post-title-link" itemprop="url">算法-链表中都有哪些套路</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-05-25 20:53:41 / Modified: 22:10:55" itemprop="dateCreated datePublished" datetime="2021-05-25T20:53:41+08:00">2021-05-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近这两天在看牛客网上链表这块的算法题，一番苦战总结下来就是那些个套路，只要熟知一些常见的套路，碰见链表一类的算法题都会有个大概的思路。<br>全文包含的套路如下：</p>
+<ul>
+<li><a href="#1">快慢指针</a></li>
+<li><a href="#2">链表删除节点</a></li>
+<li><a href="#3">链表反转</a></li>
+<li><a href="#4">临时头节点</a></li>
+<li><a href="#5">破坏当前节点</a></li>
+</ul>
+<p><small>不过还有一些小细节就需要你自己在做题的过程中发现了，这里只是一些比较常见的套路，希望对你有所帮助。</small></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-title-link" itemprop="url">算法-二叉树的序列化与反序列化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-23 22:16:47" itemprop="dateCreated datePublished" datetime="2021-05-23T22:16:47+08:00">2021-05-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-24 22:59:17" itemprop="dateModified" datetime="2021-05-24T22:59:17+08:00">2021-05-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看算法这块的东西，算法这东西就是需要时不时的拿起来看一看，这样才会有思考，时常更新自己的知识库。</p>
+<p>这篇文章主要包含两种解法：</p>
+<ul>
+<li>前序遍历</li>
+<li>后序遍历</li>
+</ul>
+<p><small>至于为什么中序遍历不能，看到最后你就明白了。</small></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/NC144-%E4%B8%8D%E7%9B%B8%E9%82%BB%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%88%97%E5%92%8C-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E4%BC%98%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -743,143 +895,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Go-64-bit-mode-not-compiled-in/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Go-64-bit-mode-not-compiled-in/" class="post-title-link" itemprop="url">Go 64-bit mode not compiled in</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-02-27 15:41:10 / Modified: 16:06:09" itemprop="dateCreated datePublished" datetime="2021-02-27T15:41:10+08:00">2021-02-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h2><p>最近在 PR 朋友的一个项目 <a target="_blank" rel="noopener" href="https://github.com/vgbhfive/go-drive">go-drive</a> 。</p>
-<p>按照往常的套路一贯，首先 fork ，其次 clone 到本地，然后就是在本地测试项目、熟悉代码和系统架构，然后进行开发。</p>
-<p>那么问题就随之而来了，在运行 <code>go run .</code> 在之后就抛出了错误：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cc1.exe: sorry, unimplemented: 64-bit mode not compiled in</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Go-64-bit-mode-not-compiled-in/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Linux-hosts%E4%B9%8B%E5%9D%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Linux-hosts%E4%B9%8B%E5%9D%91/" class="post-title-link" itemprop="url">Linux-hosts之坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-02-24 19:00:32 / Modified: 19:25:06" itemprop="dateCreated datePublished" datetime="2021-02-24T19:00:32+08:00">2021-02-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>今天在生产上线时遇到了一个很奇怪的问题，前述就不讲了，直接开始重点吧。</p>
-<p>需要在服务器上修改 <code>hosts</code> 文件，让配置的域名生效。</p>
-<p>那么问题就来了，共有两台服务器，其中一台生效，另一台没有生效。（<small>放心，不会是什么粗心大意而导致的问题！</small>）</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Linux-hosts%E4%B9%8B%E5%9D%91/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -951,7 +966,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">125</span>
+          <span class="site-state-item-count">127</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
