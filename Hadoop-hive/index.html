@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/mmexport1684155646915.jpg">
 <meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/hadoop_hive_driver.jpg">
 <meta property="article:published_time" content="2023-04-12T14:31:45.000Z">
-<meta property="article:modified_time" content="2023-05-21T15:49:08.855Z">
+<meta property="article:modified_time" content="2023-05-21T15:50:22.420Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="Hadoop">
 <meta name="twitter:card" content="summary">
@@ -206,7 +206,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-21 23:49:08" itemprop="dateModified" datetime="2023-05-21T23:49:08+08:00">2023-05-21</time>
+                <time title="Modified: 2023-05-21 23:50:22" itemprop="dateModified" datetime="2023-05-21T23:50:22+08:00">2023-05-21</time>
               </span>
 
           
@@ -428,10 +428,10 @@
 
 <h5 id="Driver-运行器"><a href="#Driver-运行器" class="headerlink" title="Driver 运行器"></a><code>Driver</code> 运行器</h5><p><code>Driver</code> 组件完成 <code>HQL</code> 查询语句从词法分析，语法分析，编译，优化，以及生成逻辑执行计划的生成。生成的逻辑执行计划存储在 <code>HDFS</code> 中，并随后由 <code>MapReduce</code> 调用执行。<br><code>Hive</code> 的核心是驱动引擎， 驱动引擎由四部分组成：</p>
 <ul>
-<li>解释器：解释器的作用是将 HiveSQL 语句转换为抽象语法树（<code>AST</code>）。</li>
-<li>编译器：编译器是将语法树编译为逻辑执行计划。</li>
-<li>优化器：优化器是对逻辑执行计划进行优化。</li>
-<li>执行器：执行器是调用底层的运行框架执行逻辑执行计划。</li>
+<li><strong>解释器</strong>：解释器的作用是将 <code>HiveSQL</code> 语句转换为抽象语法树（<code>AST</code>）。</li>
+<li><strong>编译器</strong>：编译器是将语法树编译为逻辑执行计划。</li>
+<li><strong>优化器</strong>：优化器是对逻辑执行计划进行优化。</li>
+<li><strong>执行器</strong>：执行器是调用底层的运行框架执行逻辑执行计划。</li>
 </ul>
 <h5 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h5><p><code>HiveQL</code> 通过命令行或者客户端提交，经过 <code>Compiler</code> 编译器，运用 <code>MetaStore</code> 中的元数据进行类型检测和语法分析，生成一个逻辑方案(<code>Logical Plan</code>)，然后通过的优化处理，产生一个 <code>MapReduce</code> 任务。</p>
 <img src="/Hadoop-Hive/hadoop_hive_driver.jpg" class="" title="hadoop_hive_driver">
