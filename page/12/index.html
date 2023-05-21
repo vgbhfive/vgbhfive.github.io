@@ -165,6 +165,228 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Java-transient%E7%9E%AC%E6%80%81%E5%85%B3%E9%94%AE%E5%AD%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Java-transient%E7%9E%AC%E6%80%81%E5%85%B3%E9%94%AE%E5%AD%97/" class="post-title-link" itemprop="url">Java-transient瞬态关键字</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-05-20 23:11:42" itemprop="dateCreated datePublished" datetime="2019-05-20T23:11:42+08:00">2019-05-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:26:37" itemprop="dateModified" datetime="2020-02-05T14:26:37+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>当一个类的对象需要被序列化时，但是某些属性不需要被序列化，这时不需要序列化的属性可以使用关键字transient 修饰。<br>只要被关键字transient 修饰了，序列化时这个属性就不会被序列化了。同时静态修饰也不会被序列化，因为序列化是把对象数据进行持久化存储，而静态的属于类加载时的数据，不会被序列化。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Java-transient%E7%9E%AC%E6%80%81%E5%85%B3%E9%94%AE%E5%AD%97/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">Dubbo-快速入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-05-11 20:35:05" itemprop="dateCreated datePublished" datetime="2019-05-11T20:35:05+08:00">2019-05-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-06-29 21:49:02" itemprop="dateModified" datetime="2020-06-29T21:49:02+08:00">2020-06-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Dubbo是阿里巴巴在2011年开源的的分布式服务框架，是SOA服务化治理方案的核心框架。<br>Dubbo的整体架构如下：<br><img src="https://i.loli.net/2019/05/15/5cdbcdc4cb5d890370.png"><br>Dubbo主要提供三个方面的功能：</p>
+<ul>
+<li>远程接口调用。</li>
+<li>负载均衡和容错。</li>
+<li>自动服务注册与发现。</li>
+</ul>
+<p>首先准备环境，需要安装Zookeeper。详细的Zookeeper信息可以看我的另一篇<a target="_blank" rel="noopener" href="https://vgbhfive.github.io/Zookeeper-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">博客</a>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Dubbo-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Zookeeper-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Zookeeper-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">Zookeeper-快速入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-04-28 21:54:04" itemprop="dateCreated datePublished" datetime="2019-04-28T21:54:04+08:00">2019-04-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:26:07" itemprop="dateModified" datetime="2020-02-05T14:26:07+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>ZooKeeper 是一种用于分布式应用程序的分布式开源协调服务。<br>Zookeeper 公开了一组简单的原语，分布式应用程序可以构建这些原语，以实现更高级别的服务，以实现同步，配置维护以及组和命名。<br>Zookeeper 被设计为易于编程，并使用在熟悉的文件系统目录树结构之后设计的数据模型。<br>它在Java 中运行，并且具有Java 和C 的绑定。<br>众所周知，协调服务很难做到。他们特别容易出现比赛条件和死锁等错误。<br>ZooKeeper 背后的动机是减轻分布式应用程序从头开始实施协调服务的责任</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Zookeeper-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/GraphQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -688,233 +910,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Vue.js-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Vue.js-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">Vue.js 快速入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-03-04 22:20:29" itemprop="dateCreated datePublished" datetime="2019-03-04T22:20:29+08:00">2019-03-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:23:41" itemprop="dateModified" datetime="2020-02-05T14:23:41+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h3><h4 id="使用Vue-js"><a href="#使用Vue-js" class="headerlink" title="使用Vue.js"></a>使用Vue.js</h4><ol>
-<li><p>下载<br>去<a target="_blank" rel="noopener" href="https://vuejs.org/js/vuejs">Vue.js</a>官网将其下载至本地，通过script 标签引入。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;js/vue.js&quot;</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用npm<br>npm 是一个非常有用的JavaScript 包管理工具，通过npm 可以非常迅速地使用、安装和升级Vue.js 。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 安装</span><br><span class="line">npm install --global vue-cli</span><br><span class="line">// 测试</span><br><span class="line">vue -V</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用CDN<br>这里推荐使用Bootstrap 的CDN 加速服务，地址为<a target="_blank" rel="noopener" href="https://www.bootcdn.cn/">https://www.bootcdn.cn</a>。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;https://cdn.bootcss.com/vue/2.6.10/vue.common.dev.js&quot;</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-<p> <small><strong>注:关于Vue的读法(读音 &#x2F;vjuː&#x2F;，类似于 view)。</strong></small></p>
-</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Vue.js-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%86%8A%E4%B8%8E%E5%85%94%E7%9A%84%E9%9A%8F%E6%89%8B%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/%E7%86%8A%E4%B8%8E%E5%85%94%E7%9A%84%E9%9A%8F%E6%89%8B%E8%AE%B0/" class="post-title-link" itemprop="url">熊与兔的随手记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-03-03 15:09:13" itemprop="dateCreated datePublished" datetime="2019-03-03T15:09:13+08:00">2019-03-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-06 20:46:46" itemprop="dateModified" datetime="2023-02-06T20:46:46+08:00">2023-02-06</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          。。。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/%E7%86%8A%E4%B8%8E%E5%85%94%E7%9A%84%E9%9A%8F%E6%89%8B%E8%AE%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/application-yml-%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E5%B1%9E%E6%80%A7%E6%BA%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/application-yml-%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E5%B1%9E%E6%80%A7%E6%BA%90/" class="post-title-link" itemprop="url">application.yml 无法加载数据属性源</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-03-02 20:53:56" itemprop="dateCreated datePublished" datetime="2019-03-02T20:53:56+08:00">2019-03-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:27:45" itemprop="dateModified" datetime="2020-02-05T14:27:45+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="毕设错误1"><a href="#毕设错误1" class="headerlink" title="毕设错误1"></a>毕设错误1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8080</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  thymeleaf:</span><br><span class="line">    cache: false</span><br><span class="line">    prefix: classpath:/templates/</span><br><span class="line">    suffix: .html</span><br><span class="line">    encoding: UTF-8</span><br><span class="line">    servlet:</span><br><span class="line">      content-type: text/html</span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    driver-class-name: com.mysql.jdbc.Driver</span><br><span class="line">    url: jdbc:mysql://localhost:3306/human</span><br><span class="line">    username: root</span><br><span class="line">    password: root</span><br><span class="line">  jpa:</span><br><span class="line">    hibernate:</span><br><span class="line">      ddl-auto: update</span><br><span class="line">    show-sql: true</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/application-yml-%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E5%B1%9E%E6%80%A7%E6%BA%90/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -986,14 +981,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">127</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1004,9 +999,6 @@
       </span>
       <span class="links-of-author-item">
         <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
   </div>
 

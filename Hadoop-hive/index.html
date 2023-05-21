@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基础Hive 是一个构建在 Hadoop 之上的数据仓库框架，其设计目的在于让精通 SQL 但编程技能较弱的运营人员能够对存放在 HDFS 中的大规模数据集执行查询。但是由于其底层依赖的 Hadoop 和 HDFS 设计本身约束和局限性，限制 Hive 不支持记录级别的更新、插入或者删除操作，不过可以通过查询生成新表或将查询结果导入文件中来实现。同时由于 MapReduce 任务的启动过程需要消耗">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop-Hive">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Hadoop-Hive/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="基础Hive 是一个构建在 Hadoop 之上的数据仓库框架，其设计目的在于让精通 SQL 但编程技能较弱的运营人员能够对存放在 HDFS 中的大规模数据集执行查询。但是由于其底层依赖的 Hadoop 和 HDFS 设计本身约束和局限性，限制 Hive 不支持记录级别的更新、插入或者删除操作，不过可以通过查询生成新表或将查询结果导入文件中来实现。同时由于 MapReduce 任务的启动过程需要消耗">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/mmexport1684155627591.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/hadoop_metastore_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/hadoop_mapreduce-tez.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/mmexport1684155646915.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/hadoop_hive_driver.jpg">
+<meta property="article:published_time" content="2023-04-12T14:31:45.000Z">
+<meta property="article:modified_time" content="2023-05-21T15:49:08.855Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/mmexport1684155627591.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Hadoop-Hive/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Hadoop-Hive | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hadoop-Hive/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hadoop-Hive
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-04-12 22:31:45" itemprop="dateCreated datePublished" datetime="2023-04-12T22:31:45+08:00">2023-04-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-21 23:49:08" itemprop="dateModified" datetime="2023-05-21T23:49:08+08:00">2023-05-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><p><strong><code>Hive</code></strong> 是一个构建在 <code>Hadoop</code> 之上的<strong>数据仓库框架</strong>，其设计目的在于让精通 <code>SQL</code> 但编程技能较弱的运营人员能够对存放在 <code>HDFS</code> 中的大规模数据集执行查询。<br>但是由于其底层依赖的 <code>Hadoop</code> 和 <code>HDFS</code> 设计本身约束和局限性，限制 <code>Hive</code> 不支持记录级别的更新、插入或者删除操作，不过可以通过查询生成新表或将查询结果导入文件中来实现。同时由于 <code>MapReduce</code> 任务的启动过程需要消耗较长的时间，所以查询延时比较严重。</p>
+<span id="more"></span>
+
+<img src="/Hadoop-Hive/mmexport1684155627591.jpg" class="" title="mmexport1684155627591">
+
+<p><code>Hive</code> 发行版本中包含 <strong><code>CLI</code></strong> 、 <strong><code>HWI</code></strong> （一个简单的网页界面）以及可通过 <strong><code>JDBC</code></strong> 、 <strong><code>ODBC</code></strong> 和一个 <strong><code>Thrift</code> 服务器</strong>进行编程访问的几个模块。<br>所有的命令和查询都会进入 <strong><code>Driver</code>（驱动模块）</strong>，通过该模块对输入进行解析编译，对需求的计算进行优化，然后按照指定的步骤执行（通常是启动多个 <code>MapReduce</code> 任务 <code>job</code> 来执行）。当需要启动启动 <code>MapReduce</code> 任务（<code>job</code>）时，<code>Hive</code> 本身是不会生成 <code>MapReduce</code> 算法程序，相反 <code>Hive</code> 会通过一个 <code>XML</code> 文件的 <strong><code>job</code> 执行计划</strong>驱动执行内置的、原生的 <code>Mapper</code> 和 <code>Reduce</code> 模块，即这些通用的模块函数类似于微型的语言翻译程序，而驱动此翻译程序的就是 <code>XML</code> 文件。<br><code>Hive</code> 通过和 <strong><code>JobTracker</code> 通信来初始化 <code>MapReduce</code> 任务</strong>，而不必部署在 <code>JobTracker</code> 所在的管理节点上执行。<br><strong><code>Metastore</code>（元数据存储）</strong>是一个独立的关系型数据库，<code>Hive</code> 会在其中保存表模式和其他系统元数据。</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p><code>Hive</code> 一般运行在工作站上，将 <code>SQL</code> 查询转换为一系列在 <code>Hadoop</code> 集群上运行的作业。<code>Hive</code> 把数据组织为表，通过这种方式为存储在 <code>HDFS</code> 上的数据结构赋予结构，元数据（表模式等）存储在 <code>metastore</code> 数据库中。</p>
+<p><code>Hive</code> 的安装非常简单，首先必须安装相同版本的 <code>Hadoop</code>。 接下来下载相同版本的 <code>Hive</code>，然后把压缩包解压缩到合适的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">% </span><span class="language-bash">tar xzf apache-hive-x.y.z-bin.tar.gz</span></span><br></pre></td></tr></table></figure>
+<p>接下来就是将 <code>Hive</code> 加入到全局文件中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">% </span><span class="language-bash"><span class="built_in">export</span> HIVE_HOME=~/apache-hive-x.y.z-bin</span></span><br><span class="line"><span class="meta prompt_">% </span><span class="language-bash"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HIVE_HOME</span>/bin</span></span><br></pre></td></tr></table></figure>
+<p>最后就是启动 <code>Hive</code> 的 <code>shell</code> 环境：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">% </span><span class="language-bash">hive</span></span><br><span class="line"><span class="meta prompt_">hive&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h4><p>与 <code>Hadoop</code> 类似，<code>Hive</code> 用 <code>XML</code> 配置进行设置，配置文件为 <code>hive-site.xml</code>，位于在 <code>Hive</code> 的 <code>conf</code> 目录下。通过该文件可以设置每次运行 <code>Hive</code> 时希望使用的配置项，该目录下还包含 <code>hive-default.xml</code> （其中记录着 <code>Hive</code> 的选项及默认值）。</p>
+<p><code>hive-site.xml</code> 文件最适合存放详细的集群连接信息，可以使用 <code>Hadoop</code> 属性 <code>fa.defaultFS</code> 和 <code>yarn.resourcemanager.address</code> 来指定文件系统和资源管理器。默认值为本地文件系统和本地作业运行器（<code>job runner</code>）。</p>
+<p>传递 <code>--config</code> 选项参数给 <code>hive</code> 命令，可以通过这种方式重新定义 <code>Hive</code> 查找 <code>hive-site.xml</code> 文件的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">% </span><span class="language-bash">hive --config /Users/home/hive-conf</span></span><br></pre></td></tr></table></figure>
+
+<p>传递 <code>-hiveconf</code> 选项来为单个会话（<code>pre-session</code>）设置属性。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">% </span><span class="language-bash">hive -hiveconf fs.defaultFS=hdfs://localhost -hiveconf mapper.framework.name=yarn</span></span><br></pre></td></tr></table></figure>
+
+<p>还可以在一个会话中使用 <code>SET</code> 命令更改设置，这对于某个特定的查询修改 <code>Hive</code> 设置非常有用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">SET mapper.framework.name=yarn</span></span><br><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">SET mapper.framework.name</span></span><br><span class="line">mapper.framework.name=yarn</span><br></pre></td></tr></table></figure>
+
+<p>设置属性有一个优先级层次，越小的值表示优先级越高：</p>
+<ul>
+<li><strong><code>Hive SET</code> 命令</strong> 。</li>
+<li><strong>命令行 <code>-hiveconf</code> 选项</strong> 。</li>
+<li><strong><code>hive-site.xml</code> 和 <code>Hadoop</code> 站点文件</strong>（<code>core-site.xml</code>、<code>hdfs-site.xml</code>、<code>mapper-site.xml</code>、<code>yarn-site.xml</code>）。</li>
+<li><strong><code>Hive</code> 默认值和 <code>Hadoop</code> 默认文件</strong>（<code>core-default.xml</code>、<code>hadfs-default.xml</code>、<code>mapper-default.xml</code>、<code>yarn-default.xml</code>）。</li>
+</ul>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><h5 id="用户接口"><a href="#用户接口" class="headerlink" title="用户接口"></a>用户接口</h5><ol>
+<li><p><strong><code>CLI</code></strong><br><code>Shell</code> 终端命令行（<code>Command Line Interface</code>），交互形式使用 <code>Hive</code> 命令行与 <code>Hive</code> 进行交互。</p>
+</li>
+<li><p><strong><code>JDBC/ODBC</code></strong><br><code>Hive</code> 基于 <code>JDBC</code> 操作提供的客户端，用户可以通过连接来访问 <code>Hive Server</code> 服务。</p>
+</li>
+<li><p><strong><code>Web UI</code></strong><br>通过浏览器访问 <code>Hive</code>。</p>
+</li>
+</ol>
+<h5 id="Thrift-Server"><a href="#Thrift-Server" class="headerlink" title="Thrift Server"></a><code>Thrift Server</code></h5><p>轻量级、跨语言的远程服务调用框架，<code>Hive</code> 集成该服务便于不同的编程语言调用 <code>Hive</code> 的接口。</p>
+<h5 id="Metastore"><a href="#Metastore" class="headerlink" title="Metastore"></a><code>Metastore</code></h5><p><code>Metastore</code> 是 <code>Hive</code> 元数据的集中存放地，通常包含两部分：服务和元数据的存储。元数据包含：<strong>表的名字</strong>、<strong>表的列和分区及属性</strong>、<strong>表的属性（内部表和外部表）</strong>、<strong>表数据所在目录</strong>。默认情况下，<code>metastore</code> 服务和 <code>Hive</code> 服务运行在同一个 <code>JVM</code> 中，包含一个内嵌的以本地磁盘作为存储的 <code>Derby</code> 数据库实例，被称为内嵌 <code>metastore</code> 配置（<code>embedded metastore configuration</code>）。</p>
+<p>如果要支持多会话（以及多用户），需要使用一个独立的数据库。这是因为 <code>MetaStore</code> 通常存储在其自带的 <code>Derby</code> 数据库中，缺点是跟随 <code>Hive</code> 部署，数据目录不固定，且不支持多用户操作。另外现在支持外部 <code>MySQL</code> 与 <code>Hive</code> 交互用于存储元数据信息。<br>可以通过把 <code>hive.metastore.uris</code> 设为 <code>metastore</code> 服务器 <code>URI</code>（如果有多个服务器，各个 <code>URI</code> 之间使用逗号分隔），把 <code>Hive</code> 服务设为使用远程 <code>metastore</code>。<code>metastore</code> 服务器 <code>URI</code> 的形式为 <code>thrift://host:port</code>。</p>
+<p><img src="/Hadoop-Hive/hadoop_metastore_1.jpg" alt="hadoop_metastore_1"></p>
+<p>重要的 <code>metastore</code> 配置属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>类型 <div style="width: 70px"></th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hive.metastore.warehouse.dir</code></td>
+<td><code>URI</code></td>
+<td><code>/user/hive/warehouse</code></td>
+<td>相当于 <code>fs.default.name</code> 的目录，托管表就存储在这里</td>
+</tr>
+<tr>
+<td><code>hive.metastore.uris</code></td>
+<td>逗号分隔的 <code>URI</code></td>
+<td>未设定</td>
+<td>如果未设置则使用当前的 <code>metastore</code>，否则连接到由 <code>URI</code> 列表指定要连接的远程 <code>metastore</code> 服务器。</td>
+</tr>
+<tr>
+<td><code>javax.jddo.option.ConnectionURL</code></td>
+<td><code>URI</code></td>
+<td><code>jdbc:derby:;databaseName=metastoredb;create=true</code></td>
+<td><code>metastore</code> 数据库的 <code>JDBC URL</code></td>
+</tr>
+<tr>
+<td><code>javax.jddo.option.ConnectionDriveName</code></td>
+<td>字符串</td>
+<td><code>org.apache.derby.jdbc.EmbeddedDriver</code></td>
+<td><code>JDBC</code> 驱动器的类名</td>
+</tr>
+<tr>
+<td><code>javax.jddo.option.ConnectionUserName</code></td>
+<td>字符串</td>
+<td><code>APP</code></td>
+<td><code>JDBC</code> 用户名</td>
+</tr>
+<tr>
+<td><code>javax.jddo.option.ConnectionPassword</code></td>
+<td>字符串</td>
+<td><code>mine</code></td>
+<td><code>JDBC</code> 密码</td>
+</tr>
+</tbody></table>
+<hr>
+
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><h4 id="计算引擎"><a href="#计算引擎" class="headerlink" title="计算引擎"></a>计算引擎</h4><p>目前 <code>Hive</code> 支持 <strong><code>MapReduce</code></strong> 、 <strong><code>Tez</code></strong> 和 <strong><code>Spark</code></strong> 三种计算引擎。</p>
+<ol>
+<li><p><strong><code>MapReduce</code></strong> 计算引擎<br>请参考之前的博客内容。</p>
+</li>
+<li><p><strong><code>Spark</code></strong> 计算引擎<br>请参考之前的博客内容。</p>
+</li>
+<li><p><strong><code>Tez</code></strong> 计算引擎<br><code>Apache Tez</code> 是进行大规模数据处理且支持 <code>DAG</code> 作业的计算框架，它直接源于 <code>MapReduce</code> 框架，除了能够支持 <code>MapReduce</code> 特性之外，还支持新的作业形式，并允许不同类型的作业能够在一个集群中运行。</p>
+<p> <code>Tez</code> 将原有的 <code>Map</code> 和 <code>Reduce</code> 两个操作简化为一个新的概念 **<code>Vertex</code>**，并将原有的计算处理节点拆分成多个组成部分： <strong><code>Vertex Input</code></strong> 、 <strong><code>Vertex Output</code></strong> 、 <strong><code>Sorting</code></strong>  <strong><code>Shuffling</code></strong> 和 <strong><code>Merging</code></strong> 。计算节点之间的数据通信被统称为 <strong><code>Edge</code></strong> ，这些分解后的元操作可以任意灵活组合，产生新的操作，这些操作经过一些控制程序组装后，可形成一个大的 <strong><code>DAG</code></strong> 作业。<br> 通过允许 <code>Apache Hive</code> 运行更加复杂的 <code>DAG</code> 任务，之前需要多个 <code>MR jobs</code>，但现在运行一个 <code>Tez</code> 任务中。</p>
+ <img src="/Hadoop-Hive/hadoop_mapreduce-tez.jpg" class="" title="hadoop_mapreduce-tez">
+
+<p> <code>Tez</code> 和 <code>MapReduce</code> 作业的比较：</p>
+<ul>
+<li><code>Tez</code> 绕过 <code>MapReduce</code> 很多不必要的中间的数据存储和读取的过程，直接在一个作业中表达了 <code>MapReduce</code> 需要多个作业共同协作才能完成的事情。</li>
+<li><code>Tez</code> 和 <code>MapReduce</code> 一样都使用 <code>YARN</code> 作为资源调度和管理。但与 <code>MapReduce on YARN</code> 不同，<code>Tez on YARN</code> 并不是将作业提交到 <code>ResourceManager</code>，而是提交到 <code>AMPoolServer</code> 的服务上，<code>AMPoolServer</code> 存放着若干个已经预先启动的 <code>ApplicationMaster</code> 服务。</li>
+<li>当用户提交一个 <code>Tez</code> 作业上来后，<code>AMPoolServer</code> 从中选择一个 <code>ApplicationMaster</code> 用于管理用户提交上来的作业，这样既可以节省 <code>ResourceManager</code> 创建 <code>ApplicationMaster</code> 的时间，而又能够重用每个 <code>ApplicationMaster</code> 的资源，节省了资源释放和创建时间。</li>
+</ul>
+<p> <code>Tez</code> 相比于 <code>MapReduce</code> 有以下几点重大改进：</p>
+<ul>
+<li>当查询需要有多个 <code>Reduce</code> 逻辑时，<code>Hive</code> 的 <code>MapReduce</code> 引擎会将计划分解，每个 <code>Redcue</code> 提交一个 <code>MapReduce</code> 作业。这个链中的所有 <code>MR</code> 作业都需要逐个调度，每个作业都必须从 <code>HDFS</code> 中重新读取上一个作业的输出并重新洗牌。而在 <code>Tez</code> 任务中，几个 <code>Reduce</code> 接收器可以直接连接，数据可以流水线传输，而不需要临时 <code>HDFS</code> 文件，这种模式称为 <strong><code>MRR（Map-reduce-reduce）</code></strong> 。</li>
+<li><code>Tez</code> 还允许一次发送整个查询计划，实现应用程序动态规划，从而使框架能够更智能地分配资源，并通过各个阶段流水线传输数据。对于更复杂的查询来说，这是一个巨大的改进，因为它消除了 <code>IO/sync</code> 障碍和各个阶段之间的调度开销。</li>
+<li>在 <code>MapReduce</code> 计算引擎中，无论数据大小，在洗牌阶段都以相同的方式执行，将数据序列化到磁盘，再由下游的程序去拉取，并反序列化。<code>Tez</code> 可以允许小数据集完全在内存中处理，而 <code>MapReduce</code> 中没有这样的优化。仓库查询经常需要在处理完大量的数据后对小型数据集进行排序或聚合，因此 <code>Tez</code> 的优化也能极大地提升效率。</li>
+</ul>
+</li>
+</ol>
+<h4 id="存储格式"><a href="#存储格式" class="headerlink" title="存储格式"></a>存储格式</h4><p><code>Hive</code> 支持的存储数的格式主要有： <strong><code>TEXTFILE</code>（行式存储）</strong>、 <strong><code>SEQUENCEFILE</code>（行式存储）</strong>、 <strong><code>ORC</code>（列式存储）</strong>、 <strong><code>PARQUET</code>（列式存储）</strong>。</p>
+<p>行存储的特点： 查询满足条件的<strong>一整行数据</strong>的时候，列存储则需要去每个聚集的字段找到对应的每个列的值，行存储只需要找到其中一个值，其余的值都在相邻地方，所以此时行存储查询的速度更快。</p>
+<p>列存储的特点： 因为每个字段的数据聚集存储，在查询只需要<strong>少数几个字段</strong>的时候，能大大减少读取的数据量；每个字段的数据类型一定是相同的，列式存储可以针对性的设计更好的设计压缩算法。</p>
+<h5 id="TEXTFILE"><a href="#TEXTFILE" class="headerlink" title="TEXTFILE"></a><code>TEXTFILE</code></h5><p>默认格式，数据不做压缩，磁盘开销大，数据解析也开销大。可结合 <code>Gzip</code>、<code>Bzip2</code> 使用（系统自动检查，执行查询时自动解压），但使用这种方式，<code>Hive</code> 就不会对数据进行切分，从而无法对数据进行并行操作。</p>
+<h5 id="ORC-格式"><a href="#ORC-格式" class="headerlink" title="ORC 格式"></a><code>ORC</code> 格式</h5><p><code>ORC (Optimized Row Columnar)</code> 是 <code>Hive 0.11</code> 引入的新的存储格式。其可以看到每个 <code>ORC</code> 文件由 <code>1</code> 个或多个 <code>Stripe</code> 组成，每个 <code>stripe</code> 为 <code>250MB</code> 大小。<br><small><code>Stripe</code> 实际相当于 <code>RowGroup</code> 概念，不过大小由 <code>4MB-&gt;250MB</code>，这样能提升顺序读的吞吐率。</small><br>每个 <code>Stripe</code> 里有三部分组成，分别是：</p>
+<ul>
+<li><code>Index Data</code><br> 一个轻量级的 <code>index</code>，默认是每隔 <code>1W</code> 行做一个索引。这里做的索引只是记录某行的各字段在 <code>Row Data</code> 中的 <code>offset</code> 偏移量。</li>
+<li><code>RowData</code><br> 存储的是具体的数据，先取部分行，然后对这些行按列进行存储。对每个列进行了编码，分成多个 <code>Stream</code> 来存储。</li>
+<li><code>Stripe Footer</code><br> 存的是各个stripe的元数据信息。每个文件有一个 <code>File Footer</code>，这里面存的是每个 <code>Stripe</code> 的行数，每个<code>Column</code> 的数据类型信息等；每个文件的尾部是一个 <code>PostScript</code>，记录了整个文件的压缩类型以及 <code>FileFooter</code> 的长度信息等。<br> 在读取文件时，会 <code>seek</code> 到文件尾部读 <code>PostScript</code>，从里面解析到 <code>File Footer</code> 长度，再读 <code>FileFooter</code>，从里面解析到各个 <code>Stripe</code> 信息，再读各个 <code>Stripe</code>，即从后往前读。</li>
+</ul>
+<h5 id="PARQUET-格式"><a href="#PARQUET-格式" class="headerlink" title="PARQUET 格式"></a><code>PARQUET</code> 格式</h5><p><code>Parquet</code> 是面向分析型业务的列式存储格式，以二进制方式存储的，因此是不可以直接读取的，文件中包括该文件的数据和元数据，所以 <code>Parquet</code> 格式文件是自解析的。</p>
+<p>通常情况下，在存储 <code>Parquet</code> 数据的时候会按照 <code>Block</code> 大小设置行组的大小，由于一般情况下每一个 <code>Mapper</code> 任务处理数据的最小单位是一个 <code>Block</code>，这样可以把每一个行组由一个 <code>Mapper</code> 任务处理，增大任务执行并行度。</p>
+<p>该 <code>Parquet</code> 文件的内容中：一个文件中可以存储多个行组，文件的首位都是该文件的 <code>Magic Code</code>，用于校验它是否是一个 <code>Parquet</code>文件；<code>Footer length</code> 记录了文件元数据的大小，通过该值和文件长度可以计算出元数据的偏移量；文件的元数据中包括每一个行组的元数据信息和该文件存储数据的 <code>Schema</code> 信息；除了文件中每一个行组的元数据，每一页的开始都会存储该页的元数据。</p>
+<p>在Parquet中，有三种类型的页：</p>
+<ul>
+<li><strong>数据页</strong><br>  数据页用于存储当前行组中该列的值。</li>
+<li><strong>字典页</strong><br>  字典页存储该列值的编码字典，每一个列块中最多包含一个字典页。</li>
+<li><strong>索引页</strong><br>  索引页用来存储当前行组下该列的索引，目前 <code>Parquet</code> 中还不支持索引页。</li>
+</ul>
+<h4 id="压缩格式"><a href="#压缩格式" class="headerlink" title="压缩格式"></a>压缩格式</h4><p>在 <code>Hive</code> 中处理数据，一般都需要经过压缩，通过压缩来节省网络带宽。</p>
+<table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>工具</th>
+<th>算法</th>
+<th>文件扩展名</th>
+<th>是否可切分</th>
+<th>对应的编解码器</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DEFAULT</code></td>
+<td>无</td>
+<td><code>DEFAULT</code></td>
+<td><code>.deflate</code></td>
+<td>否</td>
+<td><code>org.apache.hadoop.io.compress.DefaultCodec</code></td>
+</tr>
+<tr>
+<td><code>Gzip</code></td>
+<td><code>gzip</code></td>
+<td><code>DEFAULT</code></td>
+<td><code>.gz</code></td>
+<td>否</td>
+<td><code>org.apache.hadoop.io.compress.GzipCodec</code></td>
+</tr>
+<tr>
+<td><code>bzip2</code></td>
+<td><code>bzip2</code></td>
+<td><code>bzip2</code></td>
+<td><code>.bz2</code></td>
+<td>是</td>
+<td><code>org.apache.hadoop.io.compress.BZip2Codec</code></td>
+</tr>
+<tr>
+<td><code>LZO</code></td>
+<td><code>lzop</code></td>
+<td><code>LZO</code></td>
+<td><code>.lzo</code></td>
+<td>否</td>
+<td><code>com.hadoop.compression.lzo.LzopCodec</code></td>
+</tr>
+<tr>
+<td><code>LZ4</code></td>
+<td>无</td>
+<td><code>LZ4</code></td>
+<td><code>.lz4</code></td>
+<td>否</td>
+<td><code>org.apache.hadoop.io.compress.Lz4Codec</code></td>
+</tr>
+<tr>
+<td><code>Snappy</code></td>
+<td>无</td>
+<td><code>Snappy</code></td>
+<td><code>.snappy</code></td>
+<td>否</td>
+<td><code>org.apache.hadoop.io.compress.SnappyCodec</code></td>
+</tr>
+</tbody></table>
+<h4 id="底层执行原理"><a href="#底层执行原理" class="headerlink" title="底层执行原理"></a>底层执行原理</h4><img src="/Hadoop-Hive/mmexport1684155646915.jpg" class="" title="mmexport1684155646915">
+
+<h5 id="Driver-运行器"><a href="#Driver-运行器" class="headerlink" title="Driver 运行器"></a><code>Driver</code> 运行器</h5><p><code>Driver</code> 组件完成 <code>HQL</code> 查询语句从词法分析，语法分析，编译，优化，以及生成逻辑执行计划的生成。生成的逻辑执行计划存储在 <code>HDFS</code> 中，并随后由 <code>MapReduce</code> 调用执行。<br><code>Hive</code> 的核心是驱动引擎， 驱动引擎由四部分组成：</p>
+<ul>
+<li>解释器：解释器的作用是将 HiveSQL 语句转换为抽象语法树（<code>AST</code>）。</li>
+<li>编译器：编译器是将语法树编译为逻辑执行计划。</li>
+<li>优化器：优化器是对逻辑执行计划进行优化。</li>
+<li>执行器：执行器是调用底层的运行框架执行逻辑执行计划。</li>
+</ul>
+<h5 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h5><p><code>HiveQL</code> 通过命令行或者客户端提交，经过 <code>Compiler</code> 编译器，运用 <code>MetaStore</code> 中的元数据进行类型检测和语法分析，生成一个逻辑方案(<code>Logical Plan</code>)，然后通过的优化处理，产生一个 <code>MapReduce</code> 任务。</p>
+<img src="/Hadoop-Hive/hadoop_hive_driver.jpg" class="" title="hadoop_hive_driver">
+
+<h4 id="与传统数据库比较"><a href="#与传统数据库比较" class="headerlink" title="与传统数据库比较"></a>与传统数据库比较</h4><p><code>Hive</code> 在很多方面与传统的数据库类似，但由于需要支持 <code>MapReduce</code> 和 <code>HDFS</code> 就意味着其体系结构有别于传统数据库，而这些区别又影响着 <code>Hive</code> 所支持的特性。</p>
+<h5 id="读时模式和写时模式"><a href="#读时模式和写时模式" class="headerlink" title="读时模式和写时模式"></a>读时模式和写时模式</h5><p>在加载时发现数据不符合模式，则拒绝加载数据，因为数据是在写入数据库时对照模式进行检查，因此这一设计又被称为<strong>“写时模式”</strong> 。而 <code>Hive</code> 对数据的验证并不在加载数据时进行，而是在查询时进行，被称为<strong>“读时模式”</strong> 。</p>
+<p><strong>读时模式</strong>不需要读取数据来进行“解析”，再进行序列化并以数据库内部格式存入磁盘，因此可以使数据加载非常迅速。<strong>写时模式</strong>可以对列进行索引，并对数据进行压缩，但这也会导致加载数据会额外耗时，由此有利于提升查询性能。</p>
+<h5 id="更新、事务和索引"><a href="#更新、事务和索引" class="headerlink" title="更新、事务和索引"></a>更新、事务和索引</h5><p>更新、索引和事务这些是传统数据库最要的特性，但 <code>Hive</code> 并不支持这些，因为需要支持 <code>MapReduce</code> 操作 <code>HDFS</code> 数据，因此 <strong>“全表扫描”</strong> 是常态化操作，而表更新则是将数据变换后放入新表实现。</p>
+<ol>
+<li><p>更新<br><code>HDFS</code> 不提供就地文件更新，因此插入、更新、删除等一系列引起数据变化的操作都会被保存在一个较小的增量文件中，由 <code>metastore</code> 在后台运行的 <code>MapReduce</code> 任务定期将这些增量文件合并到基表文件中。<br><small>上述功能的支持必须启用事务，以保证对表进行读取操作时可以看到表的一致性快照。</small></p>
+</li>
+<li><p>锁<br><code>Hive</code> 引入了表级（<code>table-level</code>）和分区级（<code>partition-level</code>）的锁，因此可以防止一个进程删除正在被另一个进程读取的表。该锁由 <code>ZooKeeper</code> 透明管理，因此用户不必执行获取和释放锁的操作，但可以通过 <code>SHOW LOCKS</code> 语句获取已经获得了哪些锁的信息。默认情况下，未启用锁的功能。</p>
+</li>
+<li><p>索引<br><code>Hive</code> 的索引目前被分为两类：<strong>紧凑索引（<code>compact index</code>）</strong>和<strong>位图索引（<code>bitmap index</code>）</strong>。<br>紧凑索引存储每个值的 <code>HDFS</code> 块号，而不是存储文件内偏移量，因此存储不会占用过多的磁盘空间，并且对于值被聚簇（<code>clustered</code>）存储于相近行的情况，索引仍然能够有效。<br>位图索引使用压缩的位集合（<code>bitset</code>）来高效存储某个特殊值的行，而这种索引一般适用于较少取值的列（例如性别和国家）。</p>
+</li>
+</ol>
+<h5 id="其他-SQL-on-hadoop"><a href="#其他-SQL-on-hadoop" class="headerlink" title="其他 SQL-on-hadoop"></a>其他 <code>SQL-on-hadoop</code></h5><p>针对 <code>Hive</code> 的局限性，也有其他的 <code>SQL-on-Hadoop</code> 技术出现，那么 <strong><code>Cloudera Impala</code></strong> 就是其中的佼佼者，他是开源交互式 <code>SQL</code> 引擎，<code>Impala</code> 在性能上要强于 <code>MapReduce</code> 的 <code>Hive</code> 高一个数量级。<br><code>Impala</code> 使用专门的守护进程，这些守护进程运行在集群中的每个数据节点上，当客户端发起查询时，会首先联系任意一个运行了 <code>Impala</code> 守护进程的节点，该节点会被当作该查询的协调（<code>coordination</code>）节点。协调节点向集群中的其他 <code>Impala</code> 守护进程分发工作，并收集结果以形成该查询的完整结果集。<code>Impala</code> 使用 <code>Hive</code> 的 <code>Metastore</code> 并支持 <code>Hive</code> 格式和绝大多数的 <code>HiveQL</code> 结构，因此在实际中这两者可以直观地相互移植，或者运行在同一个集群上。</p>
+<p>当然也有 <code>Hortonworks</code> 的 <strong><code>Stinger</code></strong> 计划支持 <code>Tez</code> 作为执行引擎，再加上矢量化查询引擎等其他改进技术，使 <code>Hive</code> 在性能上得到很大的提升。</p>
+<p><strong><code>Apache phoenix</code></strong> 则采取了另一种完全不同的方式，提供基于 <code>HBase</code> 的 <code>SQL</code>，通过 <code>JDBC</code> 驱动实现 <code>SQL</code> 访问，<code>JDBC</code> 驱动将查询转换为 <code>HBase</code> 扫描，并利用 <code>HBase</code> 协同处理器来执行服务器端的聚合，当然数据也存储在 <code>HBase</code> 中。 </p>
+<hr>
+ 
+<h3 id="HiveQL"><a href="#HiveQL" class="headerlink" title="HiveQL"></a><code>HiveQL</code></h3><p><code>Hive</code> 的 <code>SQL</code> 被称为 <code>HiveQL</code>，是 <code>SQL-92</code>、 <code>MySQL</code>、 <code>Oracle SQL</code> 的混合体。其概要比较如下：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>SQL</code></th>
+<th><code>HiveQL</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>更新</td>
+<td><code>UPDATE</code>、 <code>INSERT</code>、 <code>DELETE</code></td>
+<td><code>UPDATE</code>、 <code>INSERT</code>、 <code>DELETE</code></td>
+</tr>
+<tr>
+<td>事务</td>
+<td>支持</td>
+<td>有限支持</td>
+</tr>
+<tr>
+<td>索引</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>亚秒级</td>
+<td>分钟级</td>
+</tr>
+<tr>
+<td>数据类型</td>
+<td>整数、浮点数、定点数、文本和二进制串、时间</td>
+<td>布尔型、整数、浮点数、文本和二进制串、时间戳、数组、映射、结构</td>
+</tr>
+<tr>
+<td>函数</td>
+<td>数百个内置函数</td>
+<td>数百个内置函数</td>
+</tr>
+<tr>
+<td>多表插入</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><code>CREATE TABLE AS SELECT</code></td>
+<td><code>SQL-92</code> 中不支持，但有些数据库支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><code>SELECT</code></td>
+<td><code>SQL-92</code></td>
+<td><code>SQL-92</code>。支持偏序的 <code>SORT BY</code>，可限制返回数量的 <code>LIMIT</code></td>
+</tr>
+<tr>
+<td>连接</td>
+<td><code>SQL-92</code> 支持或变相支持</td>
+<td>内连接、外连接、半连接、映射连接、交叉连接</td>
+</tr>
+<tr>
+<td>子查询</td>
+<td>在任何子句中支持的或不相关的</td>
+<td>只能在 <code>FROM</code>、 <code>WHERE</code> 或 <code>HAVING</code> 子句中</td>
+</tr>
+<tr>
+<td>视图</td>
+<td>可更新</td>
+<td>只读</td>
+</tr>
+<tr>
+<td>扩展点</td>
+<td>用户定义函数、存储过程</td>
+<td>用户定义函数、<code>MapReduce</code> 脚本</td>
+</tr>
+</tbody></table>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p><code>Hive</code> 支持原子和复杂数据类型。原子数据类型包括<strong>数值型</strong>、<strong>布尔型</strong>、<strong>字符串类型</strong>和<strong>时间戳类型</strong>。复杂数据类型包括<strong>数组</strong>、<strong>映射</strong>和<strong>结构</strong>。</p>
+<p><code>Hive</code> 提供了普通 <code>SQL</code> 操作符，包括：<strong>关系操作符</strong>、<strong>算术操作符</strong>和<strong>逻辑操作符</strong>。</p>
+<h4 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h4><p>用户自定义函数（<code>UDF</code>）是一个允许用户通过扩展 <code>HiveQL</code> 的强大功能，用户通过 <code>Java</code> 编写自己的 <code>UDF</code>，在将自定义函数加入用户会话后，就可以跟内置函数一样使用。<br><code>Hive</code> 提供了多种类型的用户自定义函数，每一种都会针对输入数据执行特定的转换过程，具体类型包含以下三种：</p>
+<ul>
+<li><strong><code>UDF (User Defined Function)</code></strong> ：一进一出。传入一个值，逻辑运算后返回一个值，如内置函数的 <code>floor</code>、<code>round</code> 等。</li>
+<li><strong><code>UDAF (User Defined Aggregation Funtion)</code></strong> ：多进一出。传入多行数据，根据选定的值 <code>group by</code> 后返回一行结果，类似 <code>sum</code>、<code>count</code>。</li>
+<li><strong><code>UDTF (User Defined Table Generating Functions)</code></strong> ：一进多出。基于特定的一行值输入，返回展开多行输出，类似内置函数 <code>explode</code>。</li>
+</ul>
+<p>创建自定义函数步骤如下：</p>
+<ul>
+<li><strong>编写自定义函数</strong><br>  引入依赖  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hive<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hive-exec<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>编译部署</strong><br>  自定义函数代码编写完成后，编译打包为 <code>jar</code> 文件。<br>  部署 <code>jar</code> 文件要根据部署模式进行调整，本地模式则是将 <code>jar</code> 文件采用本地模式部署，而非本地模式则是将 <code>jar</code> 文件放置到共享存储（<code>HHDFS</code>）上。  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">本地模式</span></span><br><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">ADD jar hive-jar-test-1.0.0.jar</span></span><br><span class="line">Added hive-jar-test-1.0.0.jar to class path</span><br><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">list jars;</span></span><br><span class="line">hive-jar-test-1.0.0.jar</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">非本地模式</span></span><br><span class="line">hadoop fs -put hive-jar-test-1.0.0.jar /usr/home/hive-jar-test-1.0.0.jar</span><br></pre></td></tr></table></figure></li>
+<li><strong><code>Hive</code> 中注册函数</strong><br>  注册函数也被分为两种：<strong>临时函数</strong>和<strong>永久函数</strong>，临时注册函数用于解决一些临时特殊的业务需求开发的函数，<code>Hive</code> 注册的临时函数只在当前会话中可用，注册函数时需要使用 <code>temporary</code> 关键字声明。注册函数时未使用临时关键字 <code>temporary</code> 的都为永久函数，在所有会话中都可用。  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE [temporary] FUNCTION [dbname.]function_name AS class_name [USING jar | file | archive &#x27;file_url&#x27;]</span><br></pre></td></tr></table></figure></li>
+<li><strong>使用自定义函数</strong><br>  函数全名使用 <code>dbname.function_name</code> 表示，使用的时候可以直接用函数全名，但查询如果在当前库下操作，则使用函数名即可。  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, test_udf_lower(content) <span class="keyword">FROM</span> test_table_1 LIMIT <span class="number">10</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>销毁自定义函数</strong>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP [temporary] FUNCTION [dbname.]function_name AS class_name;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="UDF"><a href="#UDF" class="headerlink" title="UDF"></a><code>UDF</code></h5><p>编写 <code>UDF</code>，需要继承 <code>org.apache.hadoop.hive.ql.exec.UDF</code> 并重写 <code>evaluate</code> 函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.exec.UDF;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestUDF</span> <span class="keyword">extends</span> <span class="title class_">UDF</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 这里接受参数的类型必须是 Hadoop 支持的输入输出类型</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> Test <span class="title function_">evaluate</span><span class="params">(<span class="keyword">final</span> Test x)</span> &#123;</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Text</span>(x.toString()).toLowerCase();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><small><code>UDF</code> 必须有返回类型，可以返回 <code>null</code>，但返回类型不能为 <code>void</code>。</small></p>
+<h5 id="UDAF"><a href="#UDAF" class="headerlink" title="UDAF"></a><code>UDAF</code></h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.exec.UDFArgumentTypeException;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.metadata.HiveException;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.parse.SemanticException;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.udf.generic.AbstractGenericUDAFResolver;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestUDAF</span> <span class="keyword">extends</span> <span class="title class_">AbstractGenericUDAFResolver</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> GenericUDAFEvaluator <span class="title function_">getEvaluator</span><span class="params">(TypeInfo[] parameters)</span></span><br><span class="line">            <span class="keyword">throws</span> SemanticException &#123;</span><br><span class="line">        <span class="keyword">if</span> (parameters.length != <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UDFArgumentTypeException</span>(parameters.length - <span class="number">1</span>, <span class="string">&quot;Exactly one argument is expected.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="type">ObjectInspector</span> <span class="variable">oi</span> <span class="operator">=</span> TypeInfoUtils.getStandardJavaObjectInspectorFromTypeInfo(parameters[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> (oi.getCategory() != ObjectInspector.Category.PRIMITIVE)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UDFArgumentTypeException</span>(<span class="number">0</span>, <span class="string">&quot;Argument must be PRIMITIVE, but &quot;</span> + oi.getCategory().name() + <span class="string">&quot; was passed.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="type">PrimitiveObjectInspector</span> <span class="variable">inputOI</span> <span class="operator">=</span> (PrimitiveObjectInspector) oi;</span><br><span class="line">        <span class="keyword">if</span> (inputOI.getPrimitiveCategory() != PrimitiveObjectInspector.PrimitiveCategory.STRING)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UDFArgumentTypeException</span>(<span class="number">0</span>, <span class="string">&quot;Argument must be String, but &quot;</span> + inputOI.getPrimitiveCategory().name() + <span class="string">&quot; was passed.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TotalNumOfLettersEvaluator</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">TotalNumOfLettersEvaluator</span> <span class="keyword">extends</span> <span class="title class_">GenericUDAFEvaluator</span> &#123;</span><br><span class="line">        PrimitiveObjectInspector inputOI;</span><br><span class="line">        ObjectInspector outputOI;</span><br><span class="line">        PrimitiveObjectInspector integerOI;</span><br><span class="line">        <span class="type">int</span> <span class="variable">total</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> ObjectInspector <span class="title function_">init</span><span class="params">(Mode m, ObjectInspector[] parameters)</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">            <span class="keyword">assert</span>(parameters.length == <span class="number">1</span>);</span><br><span class="line">            <span class="built_in">super</span>.init(m, parameters);</span><br><span class="line">           </span><br><span class="line">            <span class="comment">//map阶段读取sql列，输入为String基础数据格式</span></span><br><span class="line">            <span class="keyword">if</span> (m == Mode.PARTIAL1 || m == Mode.COMPLETE) &#123;</span><br><span class="line">                inputOI = (PrimitiveObjectInspector) parameters[<span class="number">0</span>];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//其余阶段，输入为Integer基础数据格式</span></span><br><span class="line">            	integerOI = (PrimitiveObjectInspector) parameters[<span class="number">0</span>];</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">// 指定各个阶段输出数据格式都为Integer类型</span></span><br><span class="line">            outputOI = ObjectInspectorFactory.getReflectionObjectInspector(Integer.class, ObjectInspectorOptions.JAVA);</span><br><span class="line">            <span class="keyword">return</span> outputOI;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 存储当前字符总数的类</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">LetterSumAgg</span> <span class="keyword">implements</span> <span class="title class_">AggregationBuffer</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> num)</span>&#123;</span><br><span class="line">            	sum += num;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> AggregationBuffer <span class="title function_">getNewAggregationBuffer</span><span class="params">()</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">            <span class="type">LetterSumAgg</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LetterSumAgg</span>();</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reset</span><span class="params">(AggregationBuffer agg)</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">        	<span class="type">LetterSumAgg</span> <span class="variable">myagg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LetterSumAgg</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">warned</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">iterate</span><span class="params">(AggregationBuffer agg, Object[] parameters)</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">            <span class="keyword">assert</span> (parameters.length == <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (parameters[<span class="number">0</span>] != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="type">LetterSumAgg</span> <span class="variable">myagg</span> <span class="operator">=</span> (LetterSumAgg) agg;</span><br><span class="line">                <span class="type">Object</span> <span class="variable">p1</span> <span class="operator">=</span> ((PrimitiveObjectInspector) inputOI).getPrimitiveJavaObject(parameters[<span class="number">0</span>]);</span><br><span class="line">                myagg.add(String.valueOf(p1).length());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Object <span class="title function_">terminatePartial</span><span class="params">(AggregationBuffer agg)</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">            <span class="type">LetterSumAgg</span> <span class="variable">myagg</span> <span class="operator">=</span> (LetterSumAgg) agg;</span><br><span class="line">            total += myagg.sum;</span><br><span class="line">            <span class="keyword">return</span> total;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">merge</span><span class="params">(AggregationBuffer agg, Object partial)</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">            <span class="keyword">if</span> (partial != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="type">LetterSumAgg</span> <span class="variable">myagg1</span> <span class="operator">=</span> (LetterSumAgg) agg;</span><br><span class="line">                <span class="type">Integer</span> <span class="variable">partialSum</span> <span class="operator">=</span> (Integer) integerOI.getPrimitiveJavaObject(partial);</span><br><span class="line">                <span class="type">LetterSumAgg</span> <span class="variable">myagg2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LetterSumAgg</span>();</span><br><span class="line">                </span><br><span class="line">                myagg2.add(partialSum);</span><br><span class="line">                myagg1.add(myagg2.sum);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Object <span class="title function_">terminate</span><span class="params">(AggregationBuffer agg)</span> <span class="keyword">throws</span> HiveException &#123;</span><br><span class="line">            <span class="type">LetterSumAgg</span> <span class="variable">myagg</span> <span class="operator">=</span> (LetterSumAgg) agg;</span><br><span class="line">            total = myagg.sum;</span><br><span class="line">            <span class="keyword">return</span> myagg.sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数执行过程：</p>
+<ul>
+<li><code>PARTIAL1</code>：从原始数据到部分聚合数据的过程，会调用 <code>iterate()</code> 和 <code>terminatePartial()</code> 方法。<code>iterate()</code> 函数负责解析输入数据，而 <code>terminatePartial()</code> 负责输出当前临时聚合结果。该阶段可以理解为对应 <code>MapReduce</code> 过程中的 <code>Map</code> 阶段。</li>
+<li><code>PARTIAL2</code>：从部分聚合数据到部分聚合数据的过程（多次聚合），会调用 <code>merge()</code> 和 <code>terminatePartial()</code> 方法。<code>merge()</code> 函数负责聚合 <code>Map</code> 阶段 <code>terminatePartial()</code> 函数输出的部分聚合结果，<code>terminatePartial()</code> 负责输出当前临时聚合结果。阶段可以理解为对应 <code>MapReduce</code> 过程中的 <code>Combine</code> 阶段。</li>
+<li><code>FINAL</code>: 从部分聚合数据到全部聚合数据的过程，会调用 <code>merge()</code> 和 <code>terminate()</code> 方法。<code>merge()</code> 函数负责聚合 <code>Map</code> 阶段或者 <code>Combine</code> 阶段 <code>terminatePartial()</code> 函数输出的部分聚合结果。<code>terminate()</code> 方法负责输出 <code>Reduce</code> 阶段最终的聚合结果。该阶段可以理解为对应 <code>MapReduce</code> 过程中的 <code>Reduce</code> 阶段。</li>
+<li><code>COMPLETE</code>: 从原始数据直接到全部聚合数据的过程，会调用 <code>iterate()</code> 和 <code>terminate()</code> 方法。可以理解为 <code>MapReduce</code> 过程中的直接 <code>Map</code> 输出阶段，没有 <code>Reduce</code> 阶段。</li>
+</ul>
+<p><small>还有另外一种实现方式是继承 <code>org.apache.hadoop.hive.ql.exec.UDAF</code>，并且包含一个或多个嵌套的、实现了 <code>org.apache.hadoop.hive.ql.UDAFEvaluator</code> 的静态类。</small></p>
+<hr>
+ 
+<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><h4 id="表"><a href="#表" class="headerlink" title="表"></a>表</h4><p><code>Hive</code> 的表在逻辑上由存储的数据和描述表中数据形式的相关元数据组成。数据一般存放在 <code>HDFS</code> 中，但它也可以放在其他任何 <code>Hadoop</code> 文件系统中，包括本地文件系统或 <code>S3</code>。<code>Hive</code> 把元数据存放在关系型数据库中，而不是放在 <code>HDFS</code> 中。</p>
+<h5 id="托管表和外部表"><a href="#托管表和外部表" class="headerlink" title="托管表和外部表"></a>托管表和外部表</h5><p>在 <code>Hive</code> 中创建表时，默认情况下由 <code>Hive</code> 负责管理数据，这也就意味着要将数据移入仓库目录，被称为<strong>内部表</strong>。而另外一种则是<strong>外部表</strong>，数据存放在仓库目录以外的地方。</p>
+<p>这两种表的区别在于 <code>LOAD</code> 和 <code>DROP</code> 命令的语义上：</p>
+<ul>
+<li><code>LOAD</code><br>  托管表：  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_table_1(content STRING);</span><br><span class="line">LOAD DATA INPATH <span class="string">&#x27;/usr/home/data.txt&#x27;</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> test_table_1;</span><br></pre></td></tr></table></figure>
+  加载数据到托管表时，会将数据文件移入到仓库目录下。<br>  外部表：  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> test_table_2 (content STRING) LOCATION <span class="string">&#x27;/usr/home/data.txt&#x27;</span>;</span><br><span class="line">LOAD DATA INPATH <span class="string">&#x27;/usr/home/data.txt&#x27;</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> test_table_2;</span><br></pre></td></tr></table></figure></li>
+<li><code>DROP</code><br>  托管表：  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> test_table_1;</span><br></pre></td></tr></table></figure>
+  执行上述操作，会将其元数据和数据一起被删除，这也就是 <strong>“托管数据”</strong> 的含义。<br>  外部表：  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> test_table_2;</span><br></pre></td></tr></table></figure>
+  删除外部表并不会删除数据，仅会删除元数据。</li>
+</ul>
+<p>那么如何选择并使用这两种类型的表呢？<br>有一个经验法则就是，如果需要所有的处理都由 <code>Hive</code> 完成，那么应该使用托管表。如果要使用其他的工具来处理数据集则使用外部表。</p>
+<h5 id="分区和桶"><a href="#分区和桶" class="headerlink" title="分区和桶"></a>分区和桶</h5><p><code>Hive</code> 将表组织成<strong>分区（<code>partition</code>）</strong>，这是一种根据<strong>分区列（<code>partition column</code>）</strong>的值对表进行粗略划分的机制。使用分区可以加快数据分片（<code>slice</code>）的查询速度。</p>
+<p>表或分区可以进一步分为<strong>桶（<code>bucket</code>）</strong>，会为数据提供额外的结构以获得更高效的查询处理。</p>
+<ol>
+<li><p>分区<br>一个表可以通过多个维度来进行分区。分区是在创建表的时候用 <code>PARTITIONED BY</code> 子句定义的，该子句需要定义列的列表。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_table_3 (ts <span class="type">INT</span>, line STRING)</span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (dt STRING, country STRING);</span><br></pre></td></tr></table></figure>
+<p>而在文件系统级别，分区只是表目录下嵌套的子目录，将更多的文件加载到表目录之后，目录结构如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/usr/home/warehouse/test_table_3</span><br><span class="line">	dt=2023-05-16</span><br><span class="line">		country=CN</span><br><span class="line">			file1</span><br><span class="line">			file2</span><br><span class="line">		country=EU</span><br><span class="line">			file5</span><br><span class="line">			file6</span><br><span class="line">	dt=2023-05-17</span><br><span class="line">		country=CN</span><br><span class="line">			file3</span><br><span class="line">			file4</span><br></pre></td></tr></table></figure>
+<p>之后使用 <code>SHOW PARTITIONS</code> 命令显示表中的分区列表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hive<span class="operator">&gt;</span> <span class="keyword">SHOW</span> PARTITIONS test_table_3</span><br><span class="line">dt<span class="operator">=</span><span class="number">2023</span><span class="number">-05</span><span class="number">-16</span><span class="operator">/</span>country<span class="operator">=</span>CN</span><br><span class="line">dt<span class="operator">=</span><span class="number">2023</span><span class="number">-05</span><span class="number">-16</span><span class="operator">/</span>country<span class="operator">=</span>EU</span><br><span class="line">dt<span class="operator">=</span><span class="number">2023</span><span class="number">-05</span><span class="number">-17</span><span class="operator">/</span>country<span class="operator">=</span>CN</span><br></pre></td></tr></table></figure>
+<p><small><code>PARTITIONED BY</code> 子句中的列定义是表中正式的列，称为<strong>分区列（<code>partition column</code>）</strong>，但数据中并不包含这些列的值，而是源于目录名。</small><br>在日常的查询中以通常的方式使用分区列，<code>Hive</code> 会对输入进行修剪，从而只扫描相关分区。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ts <span class="keyword">FROM</span> test_table_3 <span class="keyword">where</span> country <span class="operator">=</span> <span class="string">&#x27;CN&#x27;</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>桶<br>将表（或分区）组织成<strong>桶（<code>bucket</code>）</strong>有以下优点：</p>
+<ul>
+<li>获得更高的查询处理效率。桶为表增加了额外的结构，在处理查询时能够利用这个结构，具体为连接两个在相同列上划分了桶的表，可以使用 <code>map</code> 端连接高效地实现。</li>
+<li>使取样更加高效。在处理大规模数据集时，能使用数据的一部分进行查询，会带来很多方便。</li>
+</ul>
+<p> <code>Hive</code> 使用 <code>CLUSTERED BY</code> 子句来指定划分桶所用的列和要划分的桶的个数：<br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_table_4 (ts <span class="type">INT</span>, line STRING)</span><br><span class="line">CLUSTERED <span class="keyword">BY</span> (id) <span class="keyword">INTO</span> <span class="number">4</span> BUCKETS;</span><br></pre></td></tr></table></figure></p>
+<p> 在实际物理存储上，每个桶就是表（或分区）目录里的一个文件，其文件名并不重要，但桶 <code>n</code> 是按照字典序排列的第 <code>n</code> 个文件。事实上桶对应于 <code>MapReduce</code> 的输出文件分区：一个作业产生的桶和 <code>reduce</code> 任务个数相同。<br> 可以通过查看刚才创建的 <code>bucketed_users</code> 表的布局来了解这一情况：<br> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">dfs -<span class="built_in">ls</span> /usr/home/warehouse/bucketed_users;</span></span><br><span class="line">000000_0</span><br><span class="line">000001_0</span><br><span class="line">000002_0</span><br><span class="line">000003_0</span><br></pre></td></tr></table></figure></p>
+<p> 使用 <code>TABLESAMPLE</code> 子句对表进行取样，可以获得相同的结果，该子句会查询限定在表的一部分桶内，而不是整个表：<br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hive<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> bucketed_users <span class="keyword">TABLESAMPLE</span>(BUCKET <span class="number">1</span> <span class="keyword">OUT</span> <span class="keyword">OF</span> <span class="number">4</span> <span class="keyword">ON</span> id);</span><br><span class="line"><span class="number">4</span> Ann</span><br><span class="line"><span class="number">0</span> Nat</span><br><span class="line"><span class="number">2</span> Joe</span><br></pre></td></tr></table></figure></p>
+</li>
+</ol>
+<h5 id="导入数据"><a href="#导入数据" class="headerlink" title="导入数据"></a>导入数据</h5><p>前面已经使用 <code>LOAD DATA</code> 操作，通过把文件复制或移动到表的目录中，从而把数据导入到 <code>Hive</code> 的表（或分区）。也可以使用 <code>INSERT</code> 语句把数据从一个 <code>Hive</code> 表填充到另一个，或在新建表时使用 <strong><code>CTAS</code> （<code>CREATE TABLE ... AS SELECT</code>）</strong>结构。</p>
+<ol>
+<li><p><code>INSERT</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> target [<span class="keyword">PARTITION</span>(dt)] <span class="keyword">SELECT</span> col1, col2 <span class="keyword">FROM</span> source;</span><br></pre></td></tr></table></figure>
+<p><code>OVERWRITE</code> 关键字意味着目标表（分区）中的内容会被替换掉。</p>
+</li>
+<li><p>多表插入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> source</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> table_by_year <span class="keyword">SELECT</span> <span class="keyword">year</span>, <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> <span class="keyword">table</span>) <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">year</span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> table_by_month <span class="keyword">SELECT</span> <span class="keyword">month</span>, <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> <span class="keyword">table</span>) <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">month</span></span><br></pre></td></tr></table></figure>
+<p>这种<strong>多表插入</strong>比使用单独的 <code>INSERT</code> 效率更高，因为只需要扫描一遍源表就可以生成多个不相交的输出。</p>
+</li>
+<li><p><code>CTAS</code> 语句<br>将 <code>Hive</code> 查询的结果输出到一个新的表内是非常方便的，新表的列的定义是从 <code>SELECT</code> 子句所检索的列导出的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> target</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> col1, col2 <span class="keyword">FROM</span> source;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="表的修改和删除"><a href="#表的修改和删除" class="headerlink" title="表的修改和删除"></a>表的修改和删除</h5><p>由于 <code>Hive</code> 使用<em>读时模式（<code>schema on read</code>）</em>，所以表在创建之后可以非常灵活地支持对表定义的修改。使用 <code>ALTER TABLE</code> 语句来重命名表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> source RENAME <span class="keyword">TO</span> target;</span><br></pre></td></tr></table></figure>
+<p><small>此命令除更新元数据外，还会将表目录移动到对应的目录下。</small><br>另外也支持修改列的定义，添加新的列，甚至用一组新的列替换表内已有的列：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> target <span class="keyword">ADD</span> COLUMNS (col3 STRING);</span><br></pre></td></tr></table></figure>
+
+<p><code>DROP TABLE</code> 语句用于删除表的数据和元数据。如果是外部表则只删除元数据，数据不会受到影响。<br>但若是需要仅删除表内的数据，保留表的定义，则需要使用 <code>TRUNCATE TABLE</code> 语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">TRUNCATE</span> <span class="keyword">TABLE</span> target;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h4><h5 id="排序和聚集"><a href="#排序和聚集" class="headerlink" title="排序和聚集"></a>排序和聚集</h5><p><code>Hive</code> 中可以使用标准的 <code>ORDER BY</code> 子句对数据进行排序， <strong><code>ORDER BY</code></strong> 将对输入执行并行全排序。</p>
+<p>但是在很多情况下，并不需要对结果全局排序，那么可以使用 <code>Hive</code> 的非标准的扩展 <strong><code>SORT BY</code></strong> ，<code>SORT BY</code> 为每一个 <code>reducer</code> 文件产生一个排序文件。<br><strong><code>DISTRIBUTE BY</code></strong> 子句可以控制某个特定列到 <code>reducer</code>，通常是为了后续的聚集操作。如果 <code>SORT BY</code> 和 <code>DISTRIBUTE BY</code> 中所使用的列相同，可以缩写为 <strong><code>CLUSTER BY</code></strong> 以便同时指定两者所用的列。</p>
+<h5 id="MapReduce-脚本"><a href="#MapReduce-脚本" class="headerlink" title="MapReduce 脚本"></a><code>MapReduce</code> 脚本</h5><p>与 <code>Hadoop Streaming</code> 类似，<code>TRANSFORM</code>、 <code>MAP</code> 和 <code>REDUCE</code> 子句可以在 <code>Hive</code> 中调用外部脚本或程序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">	(year, temp, q) = line.strip().split()</span><br><span class="line">	<span class="keyword">if</span> (temp != <span class="string">&quot;9999&quot;</span> <span class="keyword">and</span> re.<span class="keyword">match</span>(<span class="string">&quot;[01459]&quot;</span>, q)):</span><br><span class="line">		<span class="built_in">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (year, temp)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">ADD FILE /usr/home/ ./is_year.py</span></span><br><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">FROM record SELECT TRANSFORM(year, temp, name) USING <span class="string">&#x27;is_year.py&#x27;</span> AS year, temp;</span></span><br><span class="line">1950 0</span><br><span class="line">1950 22</span><br><span class="line">1949 111</span><br></pre></td></tr></table></figure>
+
+<h5 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h5><p>子查询是内嵌在另一个 <code>SQL</code> 语句中的 <code>SELECT</code> 语句。<code>Hive</code> 对子查询的支持很有限，他只允许子查询出现在 <code>SELECT</code> 语句的 <code>FROM</code> 子句中 ，或者某些情况下的 <code>WHERE</code> 子句中。</p>
+<h5 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h5><p>视图是一种用 <code>SELECT</code> 语句定义的<strong>虚表（<code>virtual table</code>）</strong>。视图可以用来以一种不同于磁盘实际存储的形式把数据呈现给用户，视图也可以用来限制用户，使其只能访问被授权的可以看到的子表。</p>
+<p><code>Hive</code> 创建视图时并不把视图物化存储在磁盘上，相反视图的 <code>SELECT</code> 语句只是在执行引用视图的语句时才执行。<code>SHOW TABLES</code> 命令的输出结果里包含视图。还可以使用 <code>DESCRIBE EXTENDED view_name</code> 命令来查看某个视图的详细信息，包括用于定义它的那个查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> valid_table</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> col1, col3 <span class="keyword">FROM</span> target <span class="keyword">WHERE</span> <span class="keyword">year</span> <span class="operator">!=</span> <span class="string">&#x27;2022&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/MySQL-Could-not-find-first-log-file-name-in-binary-log-index-file/" rel="prev" title="MySQL-Could not find first log file name in binary log index file">
+      <i class="fa fa-chevron-left"></i> MySQL-Could not find first log file name in binary log index file
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/" rel="next" title="2023 低生产 PC 装机报告">
+      2023 低生产 PC 装机报告 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.1.</span> <span class="nav-text">用户接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Thrift-Server"><span class="nav-number">1.3.2.</span> <span class="nav-text">Thrift Server</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Metastore"><span class="nav-number">1.3.3.</span> <span class="nav-text">Metastore</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E"><span class="nav-number">2.1.</span> <span class="nav-text">计算引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">存储格式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#TEXTFILE"><span class="nav-number">2.2.1.</span> <span class="nav-text">TEXTFILE</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ORC-%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.2.2.</span> <span class="nav-text">ORC 格式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PARQUET-%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.2.3.</span> <span class="nav-text">PARQUET 格式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">压缩格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E6%89%A7%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">底层执行原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Driver-%E8%BF%90%E8%A1%8C%E5%99%A8"><span class="nav-number">2.4.1.</span> <span class="nav-text">Driver 运行器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">2.4.2.</span> <span class="nav-text">执行流程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8E%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AF%94%E8%BE%83"><span class="nav-number">2.5.</span> <span class="nav-text">与传统数据库比较</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AF%BB%E6%97%B6%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%86%99%E6%97%B6%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.5.1.</span> <span class="nav-text">读时模式和写时模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E3%80%81%E4%BA%8B%E5%8A%A1%E5%92%8C%E7%B4%A2%E5%BC%95"><span class="nav-number">2.5.2.</span> <span class="nav-text">更新、事务和索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B6%E4%BB%96-SQL-on-hadoop"><span class="nav-number">2.5.3.</span> <span class="nav-text">其他 SQL-on-hadoop</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HiveQL"><span class="nav-number">3.</span> <span class="nav-text">HiveQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">自定义函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#UDF"><span class="nav-number">3.2.1.</span> <span class="nav-text">UDF</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UDAF"><span class="nav-number">3.2.2.</span> <span class="nav-text">UDAF</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A8"><span class="nav-number">4.1.</span> <span class="nav-text">表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%98%E7%AE%A1%E8%A1%A8%E5%92%8C%E5%A4%96%E9%83%A8%E8%A1%A8"><span class="nav-number">4.1.1.</span> <span class="nav-text">托管表和外部表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%92%8C%E6%A1%B6"><span class="nav-number">4.1.2.</span> <span class="nav-text">分区和桶</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.3.</span> <span class="nav-text">导入数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A1%A8%E7%9A%84%E4%BF%AE%E6%94%B9%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">4.1.4.</span> <span class="nav-text">表的修改和删除</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="nav-number">4.2.</span> <span class="nav-text">查询数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E5%92%8C%E8%81%9A%E9%9B%86"><span class="nav-number">4.2.1.</span> <span class="nav-text">排序和聚集</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MapReduce-%E8%84%9A%E6%9C%AC"><span class="nav-number">4.2.2.</span> <span class="nav-text">MapReduce 脚本</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.2.3.</span> <span class="nav-text">子查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE"><span class="nav-number">4.2.4.</span> <span class="nav-text">视图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">6.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : 'e9db79a1c8602fc4573ac70e696e16c4',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -165,6 +165,225 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%B5%85%E8%B0%88Spring%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E6%B5%85%E8%B0%88Spring%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/" class="post-title-link" itemprop="url">浅谈Spring解决循环依赖</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-05-07 16:21:31 / Modified: 17:54:04" itemprop="dateCreated datePublished" datetime="2020-05-07T16:21:31+08:00">2020-05-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天在回顾之前做的支付的部分代码的时候，突然间发现了一个问题，那就是<strong>循环依赖</strong>。</p>
+<p>代码本身没有报错，系统也可以正常运行，但是对于理解这一块的业务来说不是很容易，所以准备仔细来看看这一块的东西。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="循环依赖"><a href="#循环依赖" class="headerlink" title="循环依赖"></a>循环依赖</h3><p>循环依赖其实就是循环引用，也就是两个或者两个以上的Bean 互相持有对方，最终形成闭环。	<small>这里有点类似于死锁的意思。</small></p>
+<p><img src="https://s1.ax1x.com/2020/05/07/Ye0C9K.jpg" alt="Ye0C9K.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E6%B5%85%E8%B0%88Spring%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Spring%E4%BA%8B%E5%8A%A1%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Spring%E4%BA%8B%E5%8A%A1%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">Spring事务详解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-23 15:01:19" itemprop="dateCreated datePublished" datetime="2020-04-23T15:01:19+08:00">2020-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-24 13:48:41" itemprop="dateModified" datetime="2020-04-24T13:48:41+08:00">2020-04-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>说到Spring 的事务，大部分可能都会想到数据库对事务的支持所以才有了Spring 的事务机制，同时通过使用JDBC 的事务管理，那么你就得到了可以在Spring 中使用事务。</p>
+<p>使用事务的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> DriverManager.getConnection();</span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">    conn.setAutoCommit(<span class="literal">false</span>);  <span class="comment">// 将自动提交设置为false                         </span></span><br><span class="line">    执行CRUD操作 </span><br><span class="line">    conn.commit();      <span class="comment">// 当两个操作成功后手动提交  </span></span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line">    conn.rollback();    <span class="comment">// 一旦其中一个操作出错都将回滚，所有操作都不成功</span></span><br><span class="line">    e.printStackTrace();  </span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    conn.colse();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的示例中，我们就能看出来，事务是一系列的操作的集合，当集合中的某一部操作失败或者失误，那么在这之前的操作要全部回滚，并且终止后边的所有操作，避免出现由于数据不一致导致的一系列的错误。<br>事务的出现就是为了数据的完整性和一致性，目前在大部分的计算流程中，事务管理都是必不可少的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Spring%E4%BA%8B%E5%8A%A1%E8%AF%A6%E8%A7%A3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">kafka快速入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-21 16:55:08" itemprop="dateCreated datePublished" datetime="2020-04-21T16:55:08+08:00">2020-04-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-05 11:25:43" itemprop="dateModified" datetime="2021-06-05T11:25:43+08:00">2021-06-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><h3 id="什么是消息系统"><a href="#什么是消息系统" class="headerlink" title="什么是消息系统"></a>什么是消息系统</h3><p>消息系统负责将数据从一个应用程序传输到另一个应用程序，因此应用程序可以专注于数据，但不担心如何共享它。 而分布式消息传递是基于可靠消息队列的概念，消息在客户端应用程序和消息传递系统之间异步排队。 有两种类型的消息模式可用 - 一种是点对点，另一种是发布 - 订阅(pub-sub)消息系统。 他们大多数消息模式都遵循 pub-sub 模式。</p>
+<h4 id="点对点消息系统"><a href="#点对点消息系统" class="headerlink" title="点对点消息系统"></a>点对点消息系统</h4><p>在点对点系统中，消息被保留在队列中。 一个或多个消费者可以消耗队列中的消息，但是特定消息只能由最多一个消费者消费。 一旦消费者读取队列中的消息，它就从该队列中消失。 该系统的典型示例是订单处理系统，其中每个订单将由一个订单处理器处理，但多个订单处理器也可以同时工作。</p>
+<h4 id="发布-订阅消息系统"><a href="#发布-订阅消息系统" class="headerlink" title="发布 - 订阅消息系统"></a>发布 - 订阅消息系统</h4><p>在发布 - 订阅系统中，消息被保留在主题中。 与点对点系统不同，消费者可以订阅一个或多个主题并使用该主题中的所有消息。 在发布 - 订阅系统中，消息生产者称为发布者，消息使用者称为订阅者。 一个现实生活的例子是Dish电视，它发布不同的渠道，如运动，电影，音乐等，任何人都可以订阅自己的频道集，并获得他们订阅的频道时可用。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/kafka%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/RPC%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -666,233 +885,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/" class="post-title-link" itemprop="url">Jib构建Java镜像</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2019-12-20 10:39:21 / Modified: 18:11:54" itemprop="dateCreated datePublished" datetime="2019-12-20T10:39:21+08:00">2019-12-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Jib-简介"><a href="#Jib-简介" class="headerlink" title="Jib 简介"></a>Jib 简介</h2><p>官方Github 库：<a target="_blank" rel="noopener" href="https://github.com/GoogleContainerTools/jib">https://github.com/GoogleContainerTools/jib</a></p>
-<p>示例Demo: <a target="_blank" rel="noopener" href="https://github.com/vgbhfive/SpringBootDemo/tree/master/jibtest">https://github.com/vgbhfive/SpringBootDemo/tree/master/jibtest</a></p>
-<p>如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。</p>
-<h2 id="构建Jib-镜像"><a href="#构建Jib-镜像" class="headerlink" title="构建Jib 镜像"></a>构建Jib 镜像</h2><h3 id="引入Jib"><a href="#引入Jib" class="headerlink" title="引入Jib"></a>引入Jib</h3><p>jib的引入非常简单，已maven plugin的方式集成到项目中，只需要在你的项目中引入下面代码即可。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.cloud.tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jib-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">from</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--base image--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>openjdk:alpine<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">to</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--目标镜像registry地址，为了方便测试，你需要换成自己的地址，如果你的网络不好，可以选用国内加速器，比如阿里云的--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>registry.hub.docker.com/vgbhfive/jibtest<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p> 这只是一个最简单的配置，详细的说明可以去看github jib<a target="_blank" rel="noopener" href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#from-object">详细说明</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/" class="post-title-link" itemprop="url">ES6的那些事</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-16 14:12:37" itemprop="dateCreated datePublished" datetime="2019-12-16T14:12:37+08:00">2019-12-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-26 14:52:15" itemprop="dateModified" datetime="2020-02-26T14:52:15+08:00">2020-02-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="let-和-const-命令"><a href="#let-和-const-命令" class="headerlink" title="let 和 const 命令"></a>let 和 const 命令</h2><p><a target="_blank" rel="noopener" href="https://vgbhfive.cn/JS%20%E4%B8%AD%E7%9A%84var%E3%80%81let%E5%92%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%9B%B8%E5%90%8C/">https://vgbhfive.cn/JS%20%E4%B8%AD%E7%9A%84var%E3%80%81let%E5%92%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%9B%B8%E5%90%8C/</a></p>
-<h2 id="变量的解构赋值"><a href="#变量的解构赋值" class="headerlink" title="变量的解构赋值"></a>变量的解构赋值</h2><h3 id="数组的解构赋值"><a href="#数组的解构赋值" class="headerlink" title="数组的解构赋值"></a>数组的解构赋值</h3><p>ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构（Destructuring）。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从前</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">let</span> c = <span class="number">3</span>;</span><br><span class="line"><span class="comment">// es6</span></span><br><span class="line"><span class="keyword">let</span> [a, b, c] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
-<p>本质上，这种写法属于“模式匹配”，只要等号两边的模式相同，左边的变量就会被赋予对应的值。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="post-title-link" itemprop="url">Spring-Cloud开发操作手册</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-10 20:14:11" itemprop="dateCreated datePublished" datetime="2019-12-10T20:14:11+08:00">2019-12-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-07 17:55:32" itemprop="dateModified" datetime="2020-05-07T17:55:32+08:00">2020-05-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="基础认知"><a href="#基础认知" class="headerlink" title="基础认知"></a>基础认知</h2><h3 id="Spring-Cloud-Config"><a href="#Spring-Cloud-Config" class="headerlink" title="Spring Cloud Config"></a>Spring Cloud Config</h3><p>Spring Cloud专注于提供良好的开箱即用经验的典型用例和可扩展性机制覆盖。</p>
-<ul>
-<li>分布式&#x2F;版本化配置</li>
-<li>服务注册和发现</li>
-<li>路由</li>
-<li>service - to - service调用</li>
-<li>负载均衡</li>
-<li>断路器</li>
-<li>分布式消息传递</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Spring-Cloud%E5%BC%80%E5%8F%91%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -964,14 +956,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">127</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -982,9 +974,6 @@
       </span>
       <span class="links-of-author-item">
         <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
   </div>
 

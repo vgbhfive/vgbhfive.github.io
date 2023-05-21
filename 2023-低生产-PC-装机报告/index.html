@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="配置列表CPU：Intel i5-12400 散片主板：微星 MAG B660 MORTAR WIFI DDR4内存：光威 天策系列 16G * 2 套条固态：宏基掠夺者 GM7000 PCIe4.0 NVMe电源：长城 650w 金牌全模散热：九州风神 玄冰 400V5（四热管）机箱：先马 平头哥 M2（五风扇位，侧头玻璃）系统：Windows 10 专业版">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023 低生产 PC 装机报告">
+<meta property="og:url" content="https://blog.vgbhfive.cn/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="配置列表CPU：Intel i5-12400 散片主板：微星 MAG B660 MORTAR WIFI DDR4内存：光威 天策系列 16G * 2 套条固态：宏基掠夺者 GM7000 PCIe4.0 NVMe电源：长城 650w 金牌全模散热：九州风神 玄冰 400V5（四热管）机箱：先马 平头哥 M2（五风扇位，侧头玻璃）系统：Windows 10 专业版">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-11T13:17:18.000Z">
+<meta property="article:modified_time" content="2023-05-11T13:27:16.484Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Electron">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>2023 低生产 PC 装机报告 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023 低生产 PC 装机报告
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-05-11 21:17:18 / Modified: 21:27:16" itemprop="dateCreated datePublished" datetime="2023-05-11T21:17:18+08:00">2023-05-11</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="配置列表"><a href="#配置列表" class="headerlink" title="配置列表"></a>配置列表</h3><p><code>CPU</code>：<code>Intel i5-12400</code> 散片<br>主板：微星 <code>MAG B660 MORTAR WIFI DDR4</code><br>内存：光威 天策系列 <code>16G * 2</code> 套条<br>固态：宏基掠夺者 <code>GM7000 PCIe4.0 NVMe</code><br>电源：长城 <code>650w</code> 金牌全模<br>散热：九州风神 玄冰 <code>400V5</code>（四热管）<br>机箱：先马 平头哥 <code>M2</code>（五风扇位，侧头玻璃）<br>系统：<code>Windows 10</code> 专业版</p>
+<span id="more"></span>
+
+<p>上面这台机器从购买组装完再到现在，已经有了半个月的时间，可以基本上满足类似 <code>DNF</code>、 原神、 <code>IDEA</code>、 <code>VS Code</code> 这类低生产、低游戏的日常 PC 机需求。</p>
+<hr>
+
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>没有显卡，使用核显，对于非游戏玩家来说完美适配。后续若想加显卡，电源、主板均可以完美适配。</li>
+<li>整体配置中规中矩，也就意味着不出错、不完美。</li>
+<li>主板和机箱支持多磁盘扩展，散热、颜值在线。</li>
+<li>支持国产品牌，发挥自己的一份力。</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>没有独显，对于中轻度游戏玩家不是很友好，游戏体验折扣较大。</li>
+<li>没有光污染，对于常年不关机玩家有较好的体验。</li>
+<li>如果没有后续扩展的需求，可以使用 <code>MATX-mini</code> 机箱进一步压缩占用面积。</li>
+</ol>
+<hr>
+
+<h3 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h3><p>机箱：小喆优品 <code>C2P</code><br>散热：乔思伯<code> CR-1400</code><br>机箱风扇：利民 <code>C12C * 3</code></p>
+<p><small>这里的优化配置倾向于压缩机箱占用面积，而不是减少花费的金额，毕竟一分钱一分货。</small></p>
+<hr>
+
+<h3 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h3><p>上面详细客观的描述了这台机器的情况和需要优化的地方，那下面就是吐槽的内容。<br>因为一直是 <code>JD</code> 的深度用户，基本上大大小小的电子产品都是在官方直营买的，但是我却在这次买主板的时候遇到了<strong>“大坑”</strong> 。店铺客服告诉我他们是官方客服，第一时间我还没有理解这个意思，然后我就问了一嘴，那是京东官方吗？（我想很多人在京东买电子产品都是对京东官方售后有保障才去的吧）<br>反转来了，客服说：他们不是！！！他们是官方、官方、官方客服，这是打着京东自营的招牌，而是主板官方旗舰店？？？</p>
+<p>至于我为什么会跟客服聊这么多呢？是因为装机之后，板子的蓝牙时断时续，用一会就自己断开连接了，我重新连接再过一会就又会断开；自己尝试过各种各样的解决方案：刷 <code>BIOS</code>、抠 <code>BIOS</code> 电池、重装蓝牙驱动，自己无法解决，就去找了店铺客服。<br>此时我看到一行小字<strong>“180天只换不修”</strong> ，我就问客服啊，是真的只换不修吗？我这情况可以只换不修吗？客服说：行，那你寄回来吧。<br>我又是一通折腾，主板拆了下来，我还专门录像了，特别是重要的地方：<code>CPU</code> 接口、零配件、盖板都搞的好好的，自我感觉都可以二次销售了（录像是担心有扯皮的事情出现）。第二天官方收到板子，速度很快另一块板子就上路了，好家伙！这速度杠杠的。第三天早上快递就打电话喊我去取快递，不过当时在上班就喊舍友帮忙取了一下，晚上我回家又是一通折腾，装机、整线、重装系统，一直搞到凌晨一点多。<br>这其中更有意思的来了，因为我录了开箱视频，就发现了几个问题：新的主板外包装没有塑封，感觉像是维修后的；我在找说明书的时候，发现他的保修卡被人撕了一角，这让我更加觉得是维修后的主板。当时由于当时着急装机，我就没管这些，板子能用就好啊，其他的都是小事。那么更大的反转又来了！<br>就在我写这篇博客的今天，感觉之前买的内存条不是很好，想看看板子支不支持 <code>DDR5</code>，我记得之前问过客服，就去翻了之前的聊天记录，此时我发现了<strong>大 <code>BUG</code></strong> ，店铺官方客服说<strong>“180天只换不修”</strong> ，更换的是<strong>良品</strong>；而我去咨询京东官方客服，她们说<strong>“180天只换不修”</strong> ，更换的是<strong>新品</strong>。<br>你品品这其中的差距，一字之差，就是天翻地覆的差距！而我现在呢，被客服留了联系方式，说是 <code>24</code>	小时内给我回电，<code>emmmm....</code> 怎么说呢？<br>我好像无话可说，反正我是基本告别 <code>JD</code> 了。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Electron/" rel="tag"># Electron</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Hadoop-Hive/" rel="prev" title="Hadoop-Hive">
+      <i class="fa fa-chevron-left"></i> Hadoop-Hive
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/to-2023-05-15/" rel="next" title="to_2023-05-15">
+      to_2023-05-15 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%88%97%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">配置列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">优化配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%90%E6%A7%BD"><span class="nav-number">4.</span> <span class="nav-text">吐槽</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">6.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '42c875c97d24c93b4bd33ec363dd1091',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -165,6 +165,218 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-Specified-key-was-too-long/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/MySQL-Specified-key-was-too-long/" class="post-title-link" itemprop="url">MySQL-Specified key was too long</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-21 22:38:16" itemprop="dateCreated datePublished" datetime="2021-10-21T22:38:16+08:00">2021-10-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-30 16:37:40" itemprop="dateModified" datetime="2021-10-30T16:37:40+08:00">2021-10-30</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>前段时间刚换了新的工作，然后之前也在一直准备面试，入职之后又需要适应新的工作内容、新的同事、新的项目，所以博客也一直没写，也没有学习新的东西，总的来说还是有点懈怠。😭 不过最近已经在慢慢变好了。</p>
+<h3 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h3><p>那么开始正题，这个问题是怎么来的呢？新的公司肯定要负责新的项目呀，那么遇到的第一个问题就向你走来了。</p>
+<p>我在负责一个新的项目时，要上线到测试的服务器，然后首先就是 <code>SQL</code> 的打包上线，这问题不就来了嘛。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes</span><br></pre></td></tr></table></figure>
+<p>字面意思如下：索引字段长度太长，最大长度是 <code>767</code> 字节。</p>
+<p>很有意思的是，本地数据库都是正常的，为什么测试数据库不行呢？</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/MySQL-Specified-key-was-too-long/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">Java-字节码增强技术</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-06-05 11:22:42 / Modified: 15:54:20" itemprop="dateCreated datePublished" datetime="2021-06-05T11:22:42+08:00">2021-06-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间在看算法这块的东西，看的我是头昏脑胀。所以这几天又捡起了 <strong>《深入理解Java虚拟机》</strong> 这本书，这次主要看的是书中的 <em>第三部分</em>，我一直崇尚知识是在不断的总结和不断地学习相互交叉，这样才能学以致用，用而有据。</p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="字节码"><a href="#字节码" class="headerlink" title="字节码"></a>字节码</h4><p>字节码指的是 <code>Java</code> 中的 <code>.java</code> 文件经过编译（ <code>javac</code> ）后生成的固定格式文件 <code>.class</code> 文件以供 <code>JVM</code> 使用。<br>之所以被称为字节码文件是因为字节码文件是由十六进制值组成，<code>JVM</code> 以两个十六进制值为一组，即一个字节进行读取。同时 <code>JVM</code> 也针对不同操作系统和平台进行优化，这也就是 <code>Java</code> 号称 <strong>一次编译，到处运行</strong> 的根本原因。</p>
+<p>由此又可以引出一个问题，由于 <code>JVM</code> 规范的存在，那么只要我们最终可以生成符合 <code>JVM</code> 规范的字节码文件那就可以在 <code>JVM</code> 上运行了，这也就产生了其他运行在 <code>JVM</code> 上的语言（如 Scale、Kotlin、Groovy ），可以通过其他语言可以扩展 <code>Java</code> 所没有的特性和语法糖。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Java-%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%AE%97%E6%B3%95-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E7%AE%97%E6%B3%95-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">算法-动态规划优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-05-27 20:20:36 / Modified: 21:43:19" itemprop="dateCreated datePublished" datetime="2021-05-27T20:20:36+08:00">2021-05-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近总是在断断续续的看动态规划相关的算法题，总感觉对于动态规划这个东西需要仔细琢磨一下，在本子上写写画画才能计算出 <strong>边界条件</strong> 和 <strong>状态转移方程</strong>，而这其中最难的就是状态转移方程。<br>所以今天这篇文章的核心也就是 <strong>基础状态转移方程</strong> 和 <strong>状态转移方程的优化</strong>。</p>
+<h3 id="动态规划简介"><a href="#动态规划简介" class="headerlink" title="动态规划简介"></a>动态规划简介</h3><p>动态规划就是把多阶段过程转化为一系列单阶段问题，利用各阶段之间的关系，逐个求解。同时动态规划是自底向上求解，通过循环来从最基础已知的答案逐步求解到想要的答案。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E7%AE%97%E6%B3%95-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E4%BC%98%E5%8C%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -663,238 +875,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ActiveMQ-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/ActiveMQ-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">ActiveMQ-快速入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-17 00:16:47" itemprop="dateCreated datePublished" datetime="2021-04-17T00:16:47+08:00">2021-04-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-20 20:52:44" itemprop="dateModified" datetime="2021-04-20T20:52:44+08:00">2021-04-20</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>ActiveMQ 是一种开源的基于 JMS（Java Message Servie）规范的一种消息中间件的实现，ActiveMQ的设计目标是提供标准的，面向消息的，能够跨越多语言和多系统的应用集成消息通信中间件。</p>
-<h3 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h3><p>消息中间件是指两个系统或者两个客户端之间进行消息传送，利用高效可靠的消息传递机制进行平台无关的数据交流，并基于数据通信来进行分布式系统的集成。</p>
-<p>通过提供消息传递和消息排队模型，他可以在分布式环境下扩展进程间的通信。</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9a3a206583294410b98c27af6e09d192~tplv-k3u1fbpfcp-zoom-1.image" alt="9a3a206583294410b98c27af6e09d192~tplv-k3u1fbpfcp-zoom-1"></p>
-<p>总结下来共有三个作用：异步化提升性能、降低耦合度、流量削峰。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/ActiveMQ-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-indexes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/MySQL-indexes/" class="post-title-link" itemprop="url">MySQL-indexes</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-15 22:08:09" itemprop="dateCreated datePublished" datetime="2021-04-15T22:08:09+08:00">2021-04-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-04 14:58:29" itemprop="dateModified" datetime="2021-05-04T14:58:29+08:00">2021-05-04</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>关于 MySQL 的优化，大部分人都听过这一条：避免使用 <code>select *</code> 来查找字段，而是要在 <code>select</code> 后面写上具体的字段。那么这么做的原因就是为了减少数据量的传输。</p>
-<p>其实还有更重要的一个原因就是：使用 <code>select *</code>，就基本上不可能使用到<strong>覆盖索引</strong>。</p>
-<p>而这样一个本应该使用覆盖索引的查询变成不能使用覆盖索引的查询，会导致<strong>随机 I&#x2F;O</strong> 和<strong>回表查询</strong>。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/MySQL-indexes/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">深度学习中的现代人脸识别（翻译）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-18 21:50:40" itemprop="dateCreated datePublished" datetime="2021-03-18T21:50:40+08:00">2021-03-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-20 00:08:02" itemprop="dateModified" datetime="2021-03-20T00:08:02+08:00">2021-03-20</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>原文地址：<a target="_blank" rel="noopener" href="https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78">Modern Face Recognition with Deep Learning</a></li>
-<li>原文作者: <a target="_blank" rel="noopener" href="https://medium.com/@ageitgey">Adam Geitgey</a></li>
-<li>本文永久链接：<a href="https://blog.vgbhfive.cn/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">深度学习中的现代人脸识别（翻译）</a></li>
-<li>译者：<a href="https://blog.vgbhfive.cn/">Vgbhfive</a></li>
-</ul>
-<hr>
-
-<p>我们学习现代人脸识别的工作原理如果仅仅是用来认识你的朋友那么就太简单了吧。现在我们可以将这项技术推向极限，已解决更重要的问题-<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Will_Ferrell">威尔·法雷尔 (著名演员)</a> 和 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Chad_Smith">查德·史密斯 (著名摇滚音乐家)</a>。</p>
-<p><img src="https://i.loli.net/2021/03/18/uQ6DoiXBKNbLeGs.jpg" alt="1_l7zNW_4-afEOfP_mXxs75w.jpeg"></p>
-<p style="text-align: center;"><small style="font-size: 40%;">这些人之一是威尔·法雷尔（Will Farrell）。另一个是查德·史密斯（Chad Smith）。我发誓他们是不同的人！</small></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%8E%B0%E4%BB%A3%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -966,14 +946,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">127</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -984,9 +964,6 @@
       </span>
       <span class="links-of-author-item">
         <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/5655843279" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5655843279" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
   </div>
 
