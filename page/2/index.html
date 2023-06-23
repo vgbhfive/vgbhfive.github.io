@@ -165,6 +165,222 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Lombok-constructor-is-already-defined/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Lombok-constructor-is-already-defined/" class="post-title-link" itemprop="url">Lombok-constructor is already defined</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-02-14 21:42:33 / Modified: 21:53:34" itemprop="dateCreated datePublished" datetime="2023-02-14T21:42:33+08:00">2023-02-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>今天工作的时候写了这么一段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ObjectA</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Lombok-constructor-is-already-defined/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hadoop-HDFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Hadoop-HDFS/" class="post-title-link" itemprop="url">Hadoop-HDFS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-02-04 16:02:34" itemprop="dateCreated datePublished" datetime="2023-02-04T16:02:34+08:00">2023-02-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-03-11 23:16:51" itemprop="dateModified" datetime="2023-03-11T23:16:51+08:00">2023-03-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a><code>HDFS</code></h3><p>当数据集的大小超过一台计算机的存储上限时，就有必要对数据进行分区然后存储到其他的计算机上。管理网络中跨多台计算机存储的文件系统被称为<strong>分布式文件系统（<code>distributed filesystem</code>）</strong>，该架构于网络之上，势必会引起网络编程的复杂性，因此分布式文件系统比普通磁盘文件系统更为复杂。<br><code>Hadoop</code> 自带一个称为 <code>HDFS</code> 的分布式文件系统，也是 <code>Hadoop</code> 的旗舰级文件系统，即 <code>Hadoop Distributed Filesystem</code>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Hadoop-HDFS/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hadoop-%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Hadoop-%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Hadoop-基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-01-15 13:42:34" itemprop="dateCreated datePublished" datetime="2023-01-15T13:42:34+08:00">2023-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-02-04 15:42:33" itemprop="dateModified" datetime="2023-02-04T15:42:33+08:00">2023-02-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><code>Hadoop</code> 是一个分布式计算开源框架，其提供一个分布式文件系统子项目（<code>HDFS</code>）和支持 <code>MapReduce</code> 分布式计算的软件架构。</p>
+<p>在有了大量数据之后，那么该如何进行存储和分析这些数据呢？<code>Hadoop</code> 需要解决的问题如下：</p>
+<ul>
+<li>硬件故障问题。一旦使用磁盘存储数据，就会遇到磁盘故障；但是为了避免数据丢失，最常见的做法就是复制（<code>replication</code>）；系统保存数据的副本（<code>replica</code>），一旦硬件系统出现故障，就立即使用另外保存的<strong>副本</strong>。</li>
+<li>以某种方式结合大部分数据来共同完成分析。各种分布式系统允许不同来源的数据进行分析，但其数据的正确性是无法保证的。因此 <code>MapReduce</code> 提出了一个编程模型，该模型抽象出这些硬盘读&#x2F;写问题并将其作为对一个数据集（由<strong>键值对</strong>组成）的计算。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Hadoop-%E5%9F%BA%E7%A1%80/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%99%BA%E8%83%BD%E9%A3%8E%E6%8E%A7-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%B3%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -665,227 +881,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ClickHouse-%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/ClickHouse-%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">ClickHouse-基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-07-05 23:10:59" itemprop="dateCreated datePublished" datetime="2022-07-05T23:10:59+08:00">2022-07-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-01 23:49:14" itemprop="dateModified" datetime="2023-01-01T23:49:14+08:00">2023-01-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>大家都说 <code>MySQL</code> 和 <code>ClickHouse</code> 很像，如果你不了解 <code>ClickHouse</code>，那我觉得你是对的，但若是你了解，那你更需要往下看看。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/ClickHouse-%E5%9F%BA%E7%A1%80/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ClickHouse-%E6%A6%82%E8%BF%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/ClickHouse-%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">ClickHouse-概述</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-06-25 19:16:55" itemprop="dateCreated datePublished" datetime="2022-06-25T19:16:55+08:00">2022-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-05 23:12:59" itemprop="dateModified" datetime="2022-07-05T23:12:59+08:00">2022-07-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><code>ClickHouse</code> 是一款 <code>MPP</code> 架构的列式存储数据库，拥有完备的管理功能，所以他称得上是一个 <code>DBMS</code> 数据库管理系统，而不仅仅是一个数据库。</p>
-<p>如果你想学习的话，那就一起来吧。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/ClickHouse-%E6%A6%82%E8%BF%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Import-and-replicate-data-from-MySQL-to-Clickhouse/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Import-and-replicate-data-from-MySQL-to-Clickhouse/" class="post-title-link" itemprop="url">Import and replicate data from MySQL to Clickhouse</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-06-12 12:22:05" itemprop="dateCreated datePublished" datetime="2022-06-12T12:22:05+08:00">2022-06-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-05 21:58:46" itemprop="dateModified" datetime="2023-01-05T21:58:46+08:00">2023-01-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>本次将数据从 <code>MySQL</code> 备份到 <code>ClickHouse</code> 采用的是 <a target="_blank" rel="noopener" href="https://github.com/MinervaDB/MinervaDB-ClickHouse-MySQL-Data-Reader">MinervaDB ClickHouse MySQL Data Reader</a> ，该项目基础版本来自于 <code>Alitinity/clickhouse-mysql-data-reader</code>。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Import-and-replicate-data-from-MySQL-to-Clickhouse/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -953,14 +952,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

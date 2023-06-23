@@ -165,6 +165,231 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">Neo4j系列博客-数据库管理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-26 10:54:48" itemprop="dateCreated datePublished" datetime="2022-02-26T10:54:48+08:00">2022-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-01-01 23:59:15" itemprop="dateModified" datetime="2023-01-01T23:59:15+08:00">2023-01-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>部署主要包括：容量规划、单实例或集群安装及安装后的相关处理。</p>
+<h4 id="系统需求"><a href="#系统需求" class="headerlink" title="系统需求"></a>系统需求</h4><p>运行一个 <code>Neo4j</code> 数据库实例所需的系统需求清单：</p>
+<ul>
+<li><code>CPU</code>：通常性能受限于内存容量和磁盘 <code>I/O</code> 容量。推荐配置：<code>Intel Core i7, IBM POWER8</code></li>
+<li>内存：图越大则所需内存越多。推荐配置：<code>16~32GB</code> 或更多。</li>
+<li>磁盘：磁盘性能是最重要的指标。推荐配置：<code>SSD w/ SATA</code>。</li>
+<li>文件系统：由于普通 <code>Linux / UNIX</code> 系统中存在的缓冲区高速缓存或页面高速缓存，大多数磁盘都是经过缓存进行的。因此当系统发生故障时，这种延迟可能会造成文件更新内容的丢失。推荐配置：<code>ext4 / ZFS</code>。</li>
+<li>软件：<code>Neo4j</code> 需要一个 <code>Java</code> 虚拟机，因此 <code>Neo4j</code> 中都会提前预装 <code>JVM</code>。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/" class="post-title-link" itemprop="url">Neo4j系列博客-Cypher-3</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-20 16:18:37" itemprop="dateCreated datePublished" datetime="2022-02-20T16:18:37+08:00">2022-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-06-22 16:00:28" itemprop="dateModified" datetime="2023-06-22T16:00:28+08:00">2023-06-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="查询调优"><a href="#查询调优" class="headerlink" title="查询调优"></a>查询调优</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-select%E6%9F%A5%E8%AF%A2%E4%B8%BA%E7%A9%BA%E4%BD%86%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E6%95%B0%E6%8D%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/MySQL-select%E6%9F%A5%E8%AF%A2%E4%B8%BA%E7%A9%BA%E4%BD%86%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E6%95%B0%E6%8D%AE/" class="post-title-link" itemprop="url">MySQL-select查询为空但数据库有数据</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-20 13:40:01" itemprop="dateCreated datePublished" datetime="2022-02-20T13:40:01+08:00">2022-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-01-01 23:59:53" itemprop="dateModified" datetime="2023-01-01T23:59:53+08:00">2023-01-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="问题复现"><a href="#问题复现" class="headerlink" title="问题复现"></a>问题复现</h3><p>年后又是一波需求狂潮，在经历了上一周的痛苦上班时间之后，这周一又开始了新的需求，新的 Code 生活也伴随而来重新开始。</p>
+<p>首先我先简略描述一下本次的需求，我这边负责的后台向服务端的接口推送一条信息，然后服务端会把接收到的信息处理后，同步推送到我们的另一个接口。<br>而在上一步的推送信息之后，我们这边会启动一个异步的任务会在特定的时间段内处理服务端返回的信息。<br>那么问题就来了，在这个异步任务中实时去查询 <code>SQL</code>，但是查询回来的<strong>结果是空的</strong>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/MySQL-select%E6%9F%A5%E8%AF%A2%E4%B8%BA%E7%A9%BA%E4%BD%86%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E6%95%B0%E6%8D%AE/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -659,210 +884,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-Unknown-system-variable-query-cache-size/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/MySQL-Unknown-system-variable-query-cache-size/" class="post-title-link" itemprop="url">MySQL-Unknown system variable query_cache_size</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-25 11:30:25 / Modified: 12:05:55" itemprop="dateCreated datePublished" datetime="2021-12-25T11:30:25+08:00">2021-12-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h3><p>前几天进行业务迁移，在没有任何代码修改的基础上竟然出现了异常，切换到本地环境后，异常也复现了出来：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.sql.SQLException: Unknown system variable &#x27;query_cache_size&#x27;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/MySQL-Unknown-system-variable-query-cache-size/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Threadlocal-get-return-null-with-async/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Threadlocal-get-return-null-with-async/" class="post-title-link" itemprop="url">Threadlocal get() return null with async</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-11-27 19:57:37 / Modified: 20:27:51" itemprop="dateCreated datePublished" datetime="2021-11-27T19:57:37+08:00">2021-11-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>前几天的日常巡查时发现生产服务上有空指针的异常，但是业务又没有影响，然后通过查看对应的堆栈异常信息，总算是定位到了问题，但是这个问题又有点奇怪。<br><code>ThreadLocal</code> 的 <code>get()</code> 返回了空指针，但是是在当前的线程的运行中去取值，这个怎么会有问题呢？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Threadlocal-get-return-null-with-async/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Linux-tcpdump%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Linux-tcpdump%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">Linux-tcpdump使用指南</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-10-30 15:40:19 / Modified: 16:37:38" itemprop="dateCreated datePublished" datetime="2021-10-30T15:40:19+08:00">2021-10-30</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><code>tcpdump</code> 是一个运行在命令行下的的数据包分析器，它允许用户拦截和显示发送或接收通过网络连接到该台计算机的 <code>TCP/IP</code> 数据包或者其他协议的数据包。它支持针对网络层、协议、主机、网络或端口的过滤，并提供 <code>and</code> 、 <code>or</code> 、 <code>not</code>等逻辑语句来帮助用户去掉无用的信息。</p>
-<p>还有一些功能相同的工具，类似于 <code>wireshark</code> ，不过它是由图形化界面的，而 <code>tcpdump</code> 只有命令行。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Linux-tcpdump%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -930,14 +955,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

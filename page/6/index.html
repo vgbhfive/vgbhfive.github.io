@@ -165,6 +165,219 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">设计模式-你不知道的单例模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-02 10:44:10" itemprop="dateCreated datePublished" datetime="2021-05-02T10:44:10+08:00">2021-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-21 22:23:28" itemprop="dateModified" datetime="2021-07-21T22:23:28+08:00">2021-07-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天经历了一次面试，原本的打算是检查自己的水平，好家伙，这一次面试直接给我干自闭了。😭😭😭</p>
+<p>内容如题目所述： <code>单例模式</code> ，如果你目前对于自己的 Java 有一点自信的话，那我建议你看看!</p>
+<p><small><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Joshua_Bloch"><code>Joshua Bloch</code></a> 大神说过的一句话： <code>实现单例模式的最佳方法是使用枚举</code>。</small></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="post-title-link" itemprop="url">Redis-分布式锁</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-24 11:08:40 / Modified: 15:16:45" itemprop="dateCreated datePublished" datetime="2021-04-24T11:08:40+08:00">2021-04-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在系统中修改已有数据时，需要先读取，然后进行修改保存，此时很容易遇到并发问题。<br>由于修改和保存都不是原子操作，在并发场景下，部分对数据的操作可能会丢失。<br>所以在单服务器系统我们常用本地锁来避免并发带来的问题，然而，当服务采用集群方式部署时，本地锁无法在多个服务器之间生效，这时候保证<strong>数据的一致性</strong>就需要分布式锁来实现。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Linux-awk-command/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Linux-awk-command/" class="post-title-link" itemprop="url">Linux-awk command</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-23 23:10:28" itemprop="dateCreated datePublished" datetime="2021-04-23T23:10:28+08:00">2021-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-24 10:51:23" itemprop="dateModified" datetime="2021-04-24T10:51:23+08:00">2021-04-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>AWK 是一种处理文本文件的语言，是一个强大的文本分析工具。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">awk [选项参数] &#x27;script&#x27; var=value file(s)</span><br><span class="line">或</span><br><span class="line">awk [选项参数] -f scriptfile var=value file(s)</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Linux-awk-command/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ActiveMQ-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -670,215 +883,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/" class="post-title-link" itemprop="url">JDK1.6支持TLS1.2</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-02-03 22:47:18 / Modified: 23:31:51" itemprop="dateCreated datePublished" datetime="2021-02-03T22:47:18+08:00">2021-02-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>最近工作的部分是重构一个系统的部分代码，并做一些安全性的升级，其中就牵扯到了 TLS 1.2 。但是在我查到 JDK 1.6 不支持 TLS 1.2 之后，就开始漫长的解决方法寻找之旅。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/JDK1-6%E6%94%AF%E6%8C%81TLS1-2/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/kubectl%E6%A6%82%E8%BF%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/kubectl%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">kubectl概述</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-11-29 21:42:25" itemprop="dateCreated datePublished" datetime="2020-11-29T21:42:25+08:00">2020-11-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-01-03 16:19:11" itemprop="dateModified" datetime="2021-01-03T16:19:11+08:00">2021-01-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><code>kubectl</code> 是一个命令行接口，用于对<strong>Kubernetes 集群</strong>进行命令操作管理。<br><code>kubectl</code> 在 <code>$HOME/.kube</code> 目录中寻找一个名为 <strong>config</strong> 的文件。可以通过设置环境变量 <code>KUBECONFIG</code> 或设置 <code>--kubeconfig</code> 参数指定其它 <code>kubeconfig</code> 文件。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/kubectl%E6%A6%82%E8%BF%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Win10%E5%A4%96%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%99%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Win10%E5%A4%96%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%99%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA/" class="post-title-link" itemprop="url">Win10外接显示器Chrome浏览器无法显示</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-10-11 20:49:38 / Modified: 21:00:50" itemprop="dateCreated datePublished" datetime="2020-10-11T20:49:38+08:00">2020-10-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>昨晚刷知乎的时候，看到了几篇关于显示器的推荐，顿时我的热血就起来了，所以当晚就剁手买了一台显示器😭😭😭</p>
-<p><small>心疼我的钱包啊…</small></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Win10%E5%A4%96%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%99%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -946,14 +954,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

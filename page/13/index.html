@@ -165,6 +165,239 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/" class="post-title-link" itemprop="url">No serializer found for class org.hibernate.proxy.pojo.javassist.Javassist?</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-04-19 08:56:14" itemprop="dateCreated datePublished" datetime="2019-04-19T08:56:14+08:00">2019-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:27:05" itemprop="dateModified" datetime="2020-02-05T14:27:05+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p> 话不多说，先看异常：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 HTTP Status 500 - Could not write content: No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: java.util.ArrayList[0]-&gt;com.agen.entity.User[&quot;positionchanges&quot;]-&gt;org.hibernate.collection.internal.PersistentSet[0]-&gt;com.agen.entity.Positionchange[&quot;position&quot;]-&gt;com.agen.entity.Position_$$_jvst714_7[&quot;handler&quot;]); nested exception is com.fasterxml.jackson.databind.JsonMappingException: No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: java.util.ArrayList[0]-&gt;com.agen.entity.User[&quot;positionchanges&quot;]-&gt;org.hibernate.collection.internal.PersistentSet[0]-&gt;com.agen.entity.Positionchange[&quot;position&quot;]-&gt;com.agen.entity.Position_$$_jvst714_7[&quot;handler&quot;])</span><br></pre></td></tr></table></figure>
+<p> 网上找到的解决办法说是因为，hibernate会给每一个被管理的对象加上hibernateLayInitializer属性，同时structs-jsonplugin或者其他的jsonplugin都是。<br>因为jsonplugin用的是java的”内审机制”，hibernate会给被管理的pojo加入一个hibernateLayInitializer属性，jsonplugin通过java的反射机制将pojo解析为json时，<br>同时hibernateLazyInitializer属性也进行反射操作，但是hibernateLazyIniyializer无法由反射得到，所以就抛出了异常。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/APlusB-Solution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/APlusB-Solution/" class="post-title-link" itemprop="url">APlusB Solution</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-03-20 14:59:26" itemprop="dateCreated datePublished" datetime="2019-03-20T14:59:26+08:00">2019-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:27:27" itemprop="dateModified" datetime="2020-02-05T14:27:27+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="A-B问题"><a href="#A-B问题" class="headerlink" title="A + B问题"></a>A + B问题</h3><p>这是我在LintCode上看见的一道题目，我觉得很有意思，就决定写了博客记录一下。</p>
+<p>题目：<br>给出两个整数 a 和 b , 求他们的和。</p>
+<p>要求：</p>
+<ol>
+<li>不允许使用 + 。</li>
+<li>使用运算符。</li>
+<li>a和b都是32位的整数。</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/APlusB-Solution/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hibernate-%E5%BB%BA%E8%A1%A8-Error-executing-DDL-via-JDBC-Statement/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Hibernate-%E5%BB%BA%E8%A1%A8-Error-executing-DDL-via-JDBC-Statement/" class="post-title-link" itemprop="url">Hibernate 建表-Error executing DDL via JDBC Statement</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-03-18 13:11:15" itemprop="dateCreated datePublished" datetime="2019-03-18T13:11:15+08:00">2019-03-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:27:38" itemprop="dateModified" datetime="2020-02-05T14:27:38+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="毕设错误3"><a href="#毕设错误3" class="headerlink" title="毕设错误3"></a>毕设错误3</h3><p>今天在写毕设的时候，偶然出现了这个错误,如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Error executing DDL  via JDBC Statement</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>遇见错误后，我做了这些事：</p>
+<ol>
+<li>检查MySQL版本。</li>
+<li>打开MySQL的Line Command，将出错误的MySQL复制进MySQL Line Command，找到出错原因对应的错误码。</li>
+<li>上网查询对应的出错信息，比对最初的错误信息。</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Hibernate-%E5%BB%BA%E8%A1%A8-Error-executing-DDL-via-JDBC-Statement/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Vue.js-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -680,237 +913,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/" class="post-title-link" itemprop="url">Armstrong Number - 阿姆斯特朗数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-02-17 13:44:58" itemprop="dateCreated datePublished" datetime="2019-02-17T13:44:58+08:00">2019-02-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:27:59" itemprop="dateModified" datetime="2020-02-05T14:27:59+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-第一个版本"><a href="#1-第一个版本" class="headerlink" title="1. 第一个版本"></a>1. 第一个版本</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import java.util.*;</span><br><span class="line">import java.math.*;</span><br><span class="line"></span><br><span class="line">//寻找阿姆斯特朗数</span><br><span class="line">public class LookforNumber</span><br><span class="line">&#123;   </span><br><span class="line"></span><br><span class="line">    public Scanner scanner = new Scanner(System.in);</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args)&#123;</span><br><span class="line">        LookforNumber ln = new LookforNumber();</span><br><span class="line">        ln.number();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void number()&#123;//计算三位，四位，五位的阿姆斯特朗数</span><br><span class="line">        System.out.println(&quot;这是在求阿姆斯特朗数(n=3时，为水仙花数):&quot;);</span><br><span class="line">        System.out.println(&quot;请输入要求数的位数:&quot;);</span><br><span class="line">        int n = scanner.nextInt();</span><br><span class="line">        int a=0,b=0,c=0,d=0,e=0;</span><br><span class="line">        int x = (int)Math.pow(10,n-1);</span><br><span class="line">        int y = (int)Math.pow(10,n);</span><br><span class="line">        for(;x&lt;y;x++)&#123;</span><br><span class="line">            for(int z=1;z&lt;=n;z++)&#123;</span><br><span class="line">                switch(z)&#123;</span><br><span class="line">                    case 1 : a = x/(int)Math.pow(10,n-z);break;</span><br><span class="line">                    case 2 : b = x/(int)Math.pow(10,n-z)%10;break;</span><br><span class="line">                    case 3 : c = x/(int)Math.pow(10,n-z)%10;break;</span><br><span class="line">                    case 4 : d = x/(int)Math.pow(10,n-z)%10;break;</span><br><span class="line">                    case 5 : e = x/(int)Math.pow(10,n-z)%10;break;</span><br><span class="line">                    default : break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if(x == (int)Math.pow(a,n)+(int)Math.pow(b,n)+(int)Math.pow(c,n)</span><br><span class="line">                +(int)Math.pow(d,n)+(int)Math.pow(e,n))&#123;</span><br><span class="line">                System.out.print(x + &quot; &quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(&quot;上述都是阿姆斯特朗数。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Armstrong-Number-%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E6%9C%97%E6%95%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/" class="post-title-link" itemprop="url">SpringBoot相关组件详细配置信息</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-02-16 15:13:08" itemprop="dateCreated datePublished" datetime="2019-02-16T15:13:08+08:00">2019-02-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:26:30" itemprop="dateModified" datetime="2020-02-05T14:26:30+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Hibernate"><a href="#Hibernate" class="headerlink" title="Hibernate"></a>Hibernate</h3><p>使用HibernateORM需要引入以下的包：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring-boot-starter-data-jpa</span><br><span class="line">mysql-connector-java</span><br></pre></td></tr></table></figure>
-<p>下面是Hibernate的详细配置信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#数据库使用的驱动类</span><br><span class="line">hibernate.connection.driver_class=com.mysql.jdbc.Driver</span><br><span class="line">#数据库连接地址</span><br><span class="line">hibernate.connection.url=jdbc:mysql://localhost:3306/db</span><br><span class="line">#数据库连接的用户名</span><br><span class="line">hibernate.connection.username=user</span><br><span class="line">#数据库连接的密码</span><br><span class="line">hibernate.connection.password=password</span><br><span class="line">#使用JNDI数据源连接数据库 -&gt; 请看下一个JNDI配置</span><br><span class="line">hibernate.connection.datasource=java:comp/env/jdbc/TestDb</span><br><span class="line">#数据库使用的方言，将操作转为对应的SQL语句</span><br><span class="line">hibernate.dialect=net.sf.hibernate.dialect.MySQLDialect</span><br><span class="line">#是否打印SQL语句</span><br><span class="line">hibernate.show_sql=true</span><br><span class="line">javax.persistence.validation.mode=none</span><br><span class="line">#在 log 和 console 中打印出更漂亮的 SQL语句</span><br><span class="line">hibernate.format_sql=true</span><br><span class="line">#设置在Hibernate数据库连接池中的连接数量，这里我们一般使用c3p0连接池</span><br><span class="line">hibernate.connection.pool_size=3</span><br></pre></td></tr></table></figure>
-<hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/SpringBoot%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F/" class="post-title-link" itemprop="url">关系模式与范式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-02-11 21:04:31" itemprop="dateCreated datePublished" datetime="2019-02-11T21:04:31+08:00">2019-02-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:28:39" itemprop="dateModified" datetime="2020-02-05T14:28:39+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Relationship pattern and paradigm</p>
-<h2 id="11-关系模式与范式"><a href="#11-关系模式与范式" class="headerlink" title="11 关系模式与范式"></a>11 关系模式与范式</h2><h3 id="11-1-关系模式的设计"><a href="#11-1-关系模式的设计" class="headerlink" title="11.1 关系模式的设计"></a>11.1 关系模式的设计</h3><p>数据库模式（Schema）是数据库中全体数据的逻辑结构和特征的描述，关系型数据库的模式又叫关系模式，我所理解的关系模式就是数据库中表结构的定义以及多张表之间的逻辑联系。</p>
-<p>关系模式的设计就是根据一个具体的应用，把现实世界中的关系用表的形式来表示的逻辑设计过程，不规范的关系模式设计会带来以下的问题：</p>
-<pre><code>    1.数据冗余
-    2.更新异常
-    3.插入异常
-    4.删除异常
-</code></pre>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%8C%83%E5%BC%8F/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -978,14 +984,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

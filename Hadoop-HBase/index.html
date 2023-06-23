@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基础HBase 是一个在 HDFS 上开发的面向列的分布式数据库，如果你需要实时访问超大规模的数据集，那么使用 HBase 就对了。 HBase 自底而上地进行构建，可以简单的通过增加节点来线性扩展。其并不是关系型数据库，并且也不支持 SQL，在特定的空间里，能够做 RDBMS 不能做的事，即在廉价的硬件构成的集群上管理超大规模的稀疏表。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop-HBase">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Hadoop-HBase/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="基础HBase 是一个在 HDFS 上开发的面向列的分布式数据库，如果你需要实时访问超大规模的数据集，那么使用 HBase 就对了。 HBase 自底而上地进行构建，可以简单的通过增加节点来线性扩展。其并不是关系型数据库，并且也不支持 SQL，在特定的空间里，能够做 RDBMS 不能做的事，即在廉价的硬件构成的集群上管理超大规模的稀疏表。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-HBase/hadoop-HBase-2.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-HBase/hadoop-hbase.jpeg">
+<meta property="article:published_time" content="2023-05-28T04:31:42.000Z">
+<meta property="article:modified_time" content="2023-06-21T14:56:16.038Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/Hadoop-HBase/hadoop-HBase-2.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Hadoop-HBase/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Hadoop-HBase | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hadoop-HBase/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hadoop-HBase
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-28 12:31:42" itemprop="dateCreated datePublished" datetime="2023-05-28T12:31:42+08:00">2023-05-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-06-21 22:56:16" itemprop="dateModified" datetime="2023-06-21T22:56:16+08:00">2023-06-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><p><code>HBase</code> 是一个在 <code>HDFS</code> 上开发的<strong>面向列</strong>的<strong>分布式数据库</strong>，如果你需要实时访问超大规模的数据集，那么使用 <code>HBase</code> 就对了。</p>
+<p><code>HBase</code> <strong>自底而上</strong>地进行构建，可以简单的通过<strong>增加节点来线性扩展</strong>。其并不是关系型数据库，并且也不支持 <code>SQL</code>，在特定的空间里，能够做 <code>RDBMS</code> 不能做的事，即在廉价的硬件构成的集群上管理超大规模的稀疏表。</p>
+<span id="more"></span>
+
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>应用将数据放到带有标签的表中。而表有行和列组成，表的 <em>单元格</em> 由行和列的交叉决定，其是有版本的。默认情况下，版本号自动分配，为 <code>HBase</code> 插入单元格时的时间戳，单元格的内容是未解释的字节数组。</p>
+<p>表中的行也是字节数组，因此理论上任何东西都可以通过表示成字节数组或者将二进制形式转换为长整型或直接对数据结构进行序列化来作为键值。表中的行根据行的键值进行排序，排序根据字节序进行，所有对表的访问都需要通过表的主键。</p>
+<img src="/Hadoop-HBase/hadoop-HBase-2.jpg" class="" title="Hadoop-HBase">
+
+<p>行中的列被分为<strong>列族（<code>column family</code>）</strong>，同一个列族的所有成员具有相同的前缀。列族的前缀必须由 <em>可打印的</em> 字符组成，而修饰性的结尾字符，即列族修饰符，可以为任意字节。列族和修饰符之间始终以冒号（<code>:</code>）分隔。<br>一个表的列族必须作为表模式定义的一部分预先给出，但是新的列族成员可以随后按需加入。</p>
+<p>在物理上所有的列族成员都一起存放在文件系统中，因此结合前面的将 <code>HBase</code> 描述为一个面向列的存储器，其本质上更准确的是面向列族的存储器。<br>但由于调优和存储都是在列族这个维度上进行，所以所有的列族成员具有相同的访问模式和大小特征是最优解。对于存储较大字节的数据和较小字节的数据最好分别存储在不同的列族中。</p>
+<p>简而言之，<code>HBase</code> 的表和 <code>RDBMS</code> 的表类似，只不过其单元格有版本；行是排序的；只要列族是预先存在的，客户端随时可以将列添加进去。</p>
+<h5 id="区域"><a href="#区域" class="headerlink" title="区域"></a>区域</h5><p><code>HBase</code> 自动将表水平划分为<strong>区域（<code>region</code>）</strong>，每个区域由表中行的子集构成，每个区域由所属表、所包含的第一行及最后一行来表示。<br>从表建立之初，一个表只有一个区域，但随着数据增多，其区域也会增大，知道区域超过阈值的界限，就会在某行的边界上将表区分为两个大小相同的新分区。</p>
+<p>区域是 <code>HBase</code> 集群上分布数据的最小单位，使用这种方式不会因为数据太大而无法放置在单个机器上的表会被放到集群中，其中集群中的每个机器负责管理表所有区域的一个子集。而表的加载也是使用这种方法将数据分布到各个节点，集群中所有的机器上的节点按次序排列也就构成了表的所有内容。</p>
+<h5 id="加锁"><a href="#加锁" class="headerlink" title="加锁"></a>加锁</h5><p>无论对行进行访问的事务牵涉到多少行，对行的更新都是 <em>原子级别</em>。</p>
+<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
+<li><strong>没有真正的索引</strong><br>  行是顺序存储的，每行中的列也是，所以不存在索引膨胀的问题，而且插入性能和表的大小无关。</li>
+<li><strong>自动分区</strong><br>  在表增长的时候，表会自动分裂成区域，并分布到可用的节点上。</li>
+<li><strong>线性扩展和对于新节点的自动处理</strong><br>  增加一个节点将它指向现有集群并运行 <code>regionserver</code>。区域会自动重新进行平衡，负载均匀分布。</li>
+<li>普通商用硬件支持</li>
+<li><strong>容错</strong><br>  大量节点意味着每个节点的重要性并不突出，不用担心单个节点失效。</li>
+<li><strong>批处理</strong><br>  <code>MapReduce</code> 集成功能使用全并行的分布式作业根据数据位置来处理它们。</li>
+</ul>
+<h4 id="与传统-RDBMS-比较"><a href="#与传统-RDBMS-比较" class="headerlink" title="与传统 RDBMS 比较"></a>与传统 <code>RDBMS</code> 比较</h4><p><code>HBase</code> 是一个分布式的、面向列的数据存储系统，通过在 <code>HDFS</code> 上提供随机读&#x2F;写来解决 <code>Hadoop</code> 不能处理的问题。<code>HBase</code> 自底层设计开始即聚集于各种可伸缩性问题：表可以很<em>高</em>（数十亿个数据行）；表可以很<em>宽</em>（数百万个列）；水平分区并在上千个普通机器上自动复制。表的模式是物理存储的直接反映，使系统有可能提供高效的数据结构的序列化、存储和检索，因此程序的开发者就必须选择以正确的方式使用这种存储和检索方式。</p>
+<p>严格来说 <code>RDBMS</code> 是一个遵循 <strong><code>Codd</code> 的 <code>12</code> 条准则</strong>的数据库。标准的 <code>RDBMS</code> 是模式固定、面向行的数据库且具有 <code>ACID</code> 性质和复杂的 <code>SQL</code> 查询处理引擎。<code>RDBMS</code> 强调事务的<em>强一致性</em>、参照完整性、数据抽象和物理存储层相对独立，以及基于 <code>SQL</code> 语言的复杂查询支持。在 <code>RDBMS</code> 中，可以非常容易地建立 <em>二级索引</em>，执行复杂的内连接和外连接，执行计数、求和、排序、分组等操作，或对表、行和列中的数据进行分页存放。</p>
+<hr>
+
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>正如 <code>HDFS</code> 和 <code>YARN</code> 是由客户端、<code>slave</code> 和 <code>master</code> 组成，<code>HBase</code> 也采用了相同的架构，使用一个 <code>master</code> 节点协调管理一个或多个 <code>regionserver</code>。<code>HBase</code> 的 <code>master</code> 节点负责启动一个新的集群，将区域分配个注册的 <code>regionserver</code>，恢复 <code>regionserver</code> 的故障。<br><code>regionserver</code> 负责零个或多个区域的管理以及相应客户端的读写请求，还负责区域的划分并通知 <code>master</code> 有了新的子区域，因此 <code>master</code> 就可以将父区域设置为离线，并用子区域替代父区域。</p>
+<img src="/Hadoop-HBase/hadoop-hbase.jpeg" class="" title="Hadoop-HBase">
+
+<p><code>HBase</code> 依赖于 <code>ZooKeeper</code>，默认情况下管理着一个 <code>ZooKeeper</code> 实例，作为集群的 <em>权威机构</em>，其还负责管理 <code>hbase:meta</code> 目录表的位置以及当前集群主控地址等重要信息。<br>如果在区域的分配过程中有服务器崩溃，就可以通过 <code>ZooKeeper</code> 来进行分配的协调。<br>在启动一个客户端到 <code>HBase</code> 集群的连接时，客户端必须至少拿到集群所传递的 <code>ZooKeeper</code> 集合体的位置，这样客户端才能访问 <code>ZooKeeper</code> 的层次结构，从而了解集群的属性。</p>
+<p><code>regionserver</code> 从节点列表可以在 <code>HBase</code> 的 <code>conf/regionservers</code> 文件中看到，与 <code>Hadoop</code> 的一致。<br>集群的站点配置在 <code>HBase</code> 的 <code>conf/hbase-site.xml</code> 和 <code>conf/hbase-env.sh</code> 中，他们的格式和 <code>Hadoop</code> 父项目中对应的格式相同。</p>
+<p>大部分人都是使用 <code>HDFS</code> 来运行 <code>HBase</code>，而 <code>HBase</code> 通过 <code>Hadoop</code> 文件系统 <code>API</code> 来持久化存储数据。但在默认情况下，<code>HBase</code> 会将存储写入本地文件系统。</p>
+<h4 id="使用中的-HBase"><a href="#使用中的-HBase" class="headerlink" title="使用中的 HBase"></a>使用中的 <code>HBase</code></h4><p><code>HBase</code> 内部保留着名为 <strong><code>hbase:meta</code> 的特殊目录表（<code>catalog table</code>）</strong>，他们维护着当前集群上所有区域的列表、状态和位置。<code>hbase:meta</code> 表中的项使用区域名作为键，区域名由 <em>所属的表名</em>、<em>区域的起始行</em>、<em>区域的创建时间</em> 以及对其整体进行的 <em><code>MD5</code> 哈希值（即对表名、起始行、创建的时间戳进行哈希后的结果）</em> 组成。示例如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 表名、起始行、时间戳使用逗号隔开，而 MD5 哈希值则使用两个句号包围</span><br><span class="line">TestTable,xyz,1279753346289.8hjffu7fhsis6f638hf6sjf67jd9sj3g.</span><br></pre></td></tr></table></figure>
+
+<p>如前所属，行的键都是排序的，因此想要查找一个特定行所在的区域只要在目录表中找到第一个键大于或等于给定行键的项即可。而当区域变化时，目录表也会进行对应的更新，集群上所有区域的状态信息都能保持更新。<br>每个行操作可能要访问三次远程节点，而为了节省代价，通常都会缓存 <code>hbase:meta</code> 信息，其中缓存的内容包含位置信息、用户空间区域的开始行和结束行。当使用缓存中的数据发生异常时，即区域被移动了，客户端会去查看 <code>hbase:meta</code> 获取区域的新位置，如果 <code>hbase:meta</code> 也被移动了，那客户端也会重新寻找。<br>当新的客户端连接到 <code>ZooKeeper</code> 时会首先查找 <code>hbase:meta</code> 的位置，然后通过寻找合适的区域来获取用户空间区域所在的节点和位置，接下来就是客户端直接与管理对应区域的 <code>regionserver</code> 进行交互。</p>
+<p>到达 <code>Regionserver</code> 的写操作首先追加到 <em>提交日志（<code>commit log</code>）</em> 中，然后加入内存中的 <code>metastore</code>，若是 <code>metastore</code> 已满，则会将内容 <em>刷入（<code>flash</code>）</em> 文件系统。<br>提交日志存放在 <code>HDFS</code> 中，当发现某个 <code>Regionserver</code> 崩溃时，<code>master</code> 节点会根据区域对崩溃的 <code>Regionserver</code> 的提交日志进行分割，找到还没有被持久化存储的更新，然后这部分被 <em>重做（<code>replay</code>）</em> 以使区域恢复到崩溃之前的状态。<br>而在读的时候会检查区域的 <code>metastore</code>，如果在其中找到了需要的版本则查询至此结束。否则就需要按照次序从新道旧检查 <em>刷新文件（<code>flash</code>）</em>，直到找到们组查询的版本，或者所有刷新文件都处理完为止。</p>
+<p>之前说到的 <em>刷新文件（<code>flash</code>）</em> 会有一个后台进程在其个数达到阈值时压缩他们，将多个文件重新写入一个文件，在执行压缩操作时，进程会清理掉超出模式所设最大值的版本以及删除单元格或标识单元格为过期。<br>而在 <code>Regionserver</code> 上会有另外一个进程监控着刷新文件的大小，一旦大小超过预先设定的最大值，便会对区域进行分割。</p>
+<hr>
+
+<h3 id="日常问题"><a href="#日常问题" class="headerlink" title="日常问题"></a>日常问题</h3><h4 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a><code>HDFS</code></h4><p><code>HBase</code> 使用 <code>HDFS</code> 的方式与 <code>MapReduce</code> 的使用方式截然不同。在 <code>HBase</code> 中数据文件在启动时就被打卡，并在处理过程中始终保持打开状态，这是为了节省每次访问操作打开文件所需的代价。</p>
+<ol>
+<li><p>文件描述符用完<br>由于在连接的集群上始终保持文件的打开状态，因此可能会达到系统和 <code>HDFS</code> 设定的限制。<br>其中一个进程默认的文件描述符限制是 <code>1024</code>，当使用的描述符个数超过文件系统的 <code>ulimit</code> 值，就会在日志中看到异常信息 <code>Too many open files</code>，不过在出现异常信息之前，往往 <code>HBase</code> 就已经出现问题了。</p>
+</li>
+<li><p><code>datanode</code> 中的线程用完<br>与上述的情况类似，<code>datanode</code> 上限制运行的线程数不能超过 <code>256</code>，可以通过在 <code>hdfs-site.xml</code> 中配置 <code>dfs.datanode.max.transfer.threads</code> 来更改设置。</p>
+</li>
+</ol>
+<h4 id="用户界面"><a href="#用户界面" class="headerlink" title="用户界面"></a>用户界面</h4><p><code>HBase</code> 在 <code>master</code> 节点机器上运行了 <code>Web</code> 服务，提供了运行中集群的状态视图。默认情况下，其监听 <code>60010</code> 端口，主界面显示基本的属性（包含软件版本、集群负载、请求频率、集群表的列表）和加入的 <code>Regionserver</code> 等。<br>在主界面上点击选中的 <code>Regionserver</code> 就会展示对应的 <code>Web</code> 服务器，展示该服务器上所有区域的列表及其他基本的属性值。</p>
+<h4 id="度量-Metric"><a href="#度量-Metric" class="headerlink" title="度量 Metric"></a>度量 <code>Metric</code></h4><p><code>Hadoop</code> 有一个<strong>度量 <code>Metric</code></strong> 系统，会在每隔一段时间获取系统重要组件的信息，并将其输出到上下文中。启用该系统可以将信息导出到 <code>JMX</code>，从而展示集群上正在和过去的请求视图。</p>
+<h4 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h4><p><code>Htable</code> 提供的 <strong><code>incrementColumnValue()</code></strong> 方法可以实现计数器每秒数千次的更新，解决之前计数器存储在 <code>MySQL</code> 中的更新频繁问题。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/to-2023-05-15/" rel="prev" title="to_2023-05-15">
+      <i class="fa fa-chevron-left"></i> to_2023-05-15
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%8C%97%E4%BA%AC%E5%90%8C%E4%BB%81%E5%8C%BB%E9%99%A2%E9%AA%8C%E5%85%89%E6%94%BB%E7%95%A5/" rel="next" title="北京同仁医院验光攻略">
+      北京同仁医院验光攻略 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">区域</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8A%A0%E9%94%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">加锁</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8E%E4%BC%A0%E7%BB%9F-RDBMS-%E6%AF%94%E8%BE%83"><span class="nav-number">1.3.</span> <span class="nav-text">与传统 RDBMS 比较</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%AD%E7%9A%84-HBase"><span class="nav-number">2.1.</span> <span class="nav-text">使用中的 HBase</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">日常问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HDFS"><span class="nav-number">3.1.</span> <span class="nav-text">HDFS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2"><span class="nav-number">3.2.</span> <span class="nav-text">用户界面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%A6%E9%87%8F-Metric"><span class="nav-number">3.3.</span> <span class="nav-text">度量 Metric</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-number">3.4.</span> <span class="nav-text">计数器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '9810c1f00b8124f5f4399ed19e955876',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

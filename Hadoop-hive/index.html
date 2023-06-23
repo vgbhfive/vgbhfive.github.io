@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/mmexport1684155646915.jpg">
 <meta property="og:image" content="https://blog.vgbhfive.cn/Hadoop-Hive/hadoop_hive_driver.jpg">
 <meta property="article:published_time" content="2023-04-12T14:31:45.000Z">
-<meta property="article:modified_time" content="2023-05-21T16:18:49.654Z">
+<meta property="article:modified_time" content="2023-05-22T14:07:24.718Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="Hadoop">
 <meta name="twitter:card" content="summary">
@@ -206,7 +206,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-22 00:18:49" itemprop="dateModified" datetime="2023-05-22T00:18:49+08:00">2023-05-22</time>
+                <time title="Modified: 2023-05-22 22:07:24" itemprop="dateModified" datetime="2023-05-22T22:07:24+08:00">2023-05-22</time>
               </span>
 
           
@@ -624,7 +624,16 @@
 <p><code>Hive</code> 创建视图时并不把视图物化存储在磁盘上，相反视图的 <code>SELECT</code> 语句只是在执行引用视图的语句时才执行。<code>SHOW TABLES</code> 命令的输出结果里包含视图。还可以使用 <code>DESCRIBE EXTENDED view_name</code> 命令来查看某个视图的详细信息，包括用于定义它的那个查询。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> valid_table</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> col1, col3 <span class="keyword">FROM</span> target <span class="keyword">WHERE</span> <span class="keyword">year</span> <span class="operator">!=</span> <span class="string">&#x27;2022&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<h5 id="EXPLAIN"><a href="#EXPLAIN" class="headerlink" title="EXPLAIN"></a><code>EXPLAIN</code></h5><hr>
+<h5 id="EXPLAIN"><a href="#EXPLAIN" class="headerlink" title="EXPLAIN"></a><code>EXPLAIN</code></h5><p>在查询语句之前加上 <code>EXPLAIN</code> 关键字，就可以了解到查询计划和其他的信息来更加直观的展示 <code>Hive</code> 是如何将查询任务转化为 <code>MapReduce</code> 任务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">hive&gt; </span><span class="language-bash">EXPLAIN SELECT <span class="built_in">sum</span>(col1) FROM target;</span></span><br></pre></td></tr></table></figure>
+
+<p>首先会输出抽象语法树。其表明 <code>Hive</code> 是如何将查询解析为 <code>token</code>（符号）和 <code>literal</code>（字面值）的，是将查询转化到最终结果的一部分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ABSTRACT SYNTAX TREE:</span><br><span class="line">(TOK_QUERY</span><br><span class="line">    (TOK_FROM (TOK_TABREF (TOK_TABNAME target)))</span><br><span class="line">    (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE))</span><br><span class="line">    (TOK_SELECT (TOK_SELEXPR (TOK_FUNCTION sum (TOK_TABLE_OR_COL number))))))</span><br></pre></td></tr></table></figure>
+<p>接下来可以看到列明 <code>col1</code>、 表明 <code>target</code> 还有 <code>sum</code> 函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">STAGE DEPENDENCIES:</span><br><span class="line">    Stage-1 is a root stage</span><br><span class="line">    Stage-0 is a root stage</span><br></pre></td></tr></table></figure>
+<p><small>一个 <code>Hive</code> 任务会包含一个或多个 <code>stage</code> 阶段，不同的 <code>stage</code> 阶段间会存在着依赖关系。一个 <code>stage</code> 可以是一个 <code>MapReduce</code> 任务，也可以是一个抽样阶段，或者一个合并阶段，还可以是一个 <code>limit</code> 阶段，以及 <code>Hive</code> 需要的其他任务的一个阶段。</small><br><small>默认情况下，<code>Hive</code> 一次只执行一个 <code>stage</code>（阶段）。</small></p>
+<p>除此之外还可以使用 <code>EXPLAIN EXTENDED</code> 语句产生更多的输出信息。</p>
+<hr>
 
 <h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
 
@@ -651,8 +660,8 @@
       <i class="fa fa-chevron-left"></i> MySQL-Could not find first log file name in binary log index file
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/" rel="next" title="2023 低生产 PC 装机报告">
-      2023 低生产 PC 装机报告 <i class="fa fa-chevron-right"></i>
+    <a href="/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7%E5%8A%9B-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/" rel="next" title="2023 低生产力 PC 装机报告">
+      2023 低生产力 PC 装机报告 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -729,14 +738,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

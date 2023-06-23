@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介Jupyter Notebook 是一个开源的 Web 应用程序，允许用户创建和共享包含代码、方程式、可视化和文本的文档。主要用于 数据清理和转换、数值模拟、统计建模、数据可视化、机器学习 等等。具有以下优势：  可选择语言：支持超过 40 种编程语言，包括 Python、R、Julia、Scala 等。 分享笔记本：可以使用电子邮件、Dropbox、GitHub 和 Jupyter Note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker install jupyter-notebook">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Docker-install-jupyter-notebook/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介Jupyter Notebook 是一个开源的 Web 应用程序，允许用户创建和共享包含代码、方程式、可视化和文本的文档。主要用于 数据清理和转换、数值模拟、统计建模、数据可视化、机器学习 等等。具有以下优势：  可选择语言：支持超过 40 种编程语言，包括 Python、R、Julia、Scala 等。 分享笔记本：可以使用电子邮件、Dropbox、GitHub 和 Jupyter Note">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Docker-install-jupyter-notebook/docker-1111.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Docker-install-jupyter-notebook/docker-2222.png">
+<meta property="article:published_time" content="2023-06-23T03:31:59.000Z">
+<meta property="article:modified_time" content="2023-06-23T04:13:23.268Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Day">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/Docker-install-jupyter-notebook/docker-1111.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Docker-install-jupyter-notebook/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Docker install jupyter-notebook | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Docker-install-jupyter-notebook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker install jupyter-notebook
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-06-23 11:31:59 / Modified: 12:13:23" itemprop="dateCreated datePublished" datetime="2023-06-23T11:31:59+08:00">2023-06-23</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><code>Jupyter Notebook</code> 是一个开源的 <code>Web</code> 应用程序，允许用户创建和共享包含代码、方程式、可视化和文本的文档。主要用于 <strong>数据清理和转换</strong>、<strong>数值模拟</strong>、<strong>统计建模</strong>、<strong>数据可视化</strong>、<strong>机器学习</strong> 等等。<br>具有以下优势：</p>
+<ul>
+<li>可选择语言：支持超过 <code>40</code> 种编程语言，包括 <code>Python</code>、<code>R</code>、<code>Julia</code>、<code>Scala</code> 等。</li>
+<li>分享笔记本：可以使用电子邮件、<code>Dropbox</code>、<code>GitHub</code> 和 <code>Jupyter Notebook Viewer</code> 与他人共享。</li>
+<li>交互式输出：代码可以生成丰富的交互式输出，包括 <code>HTML</code>、图像、视频、<code>LaTeX</code> 等等。</li>
+<li>大数据整合：通过 <code>Python</code>、<code>R</code>、<code>Scala</code> 编程语言使用 <code>Apache Spark</code> 等大数据框架工具。支持使用 <code>pandas</code>、<code>scikit-learn</code>、<code>ggplot2</code>、<code>TensorFlow</code> 来探索同一份数据。</li>
+</ul>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="查找镜像"><a href="#查找镜像" class="headerlink" title="查找镜像"></a>查找镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker search jupyter</span></span><br><span class="line">NAME                                 DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED</span><br><span class="line">jupyter/scipy-notebook               Scientific Jupyter Notebook Python Stack fro…   404</span><br><span class="line">jupyter/tensorflow-notebook          Scientific Jupyter Notebook Python Stack w/ …   344</span><br><span class="line">jupyter/all-spark-notebook           Python, Scala, R and Spark Jupyter Notebook …   417</span><br><span class="line">jupyter/pyspark-notebook             Python and Spark Jupyter Notebook Stack from…   277</span><br><span class="line">jupyter/datascience-notebook         Data Science Jupyter Notebook Python Stack f…   1027</span><br><span class="line">jupyterhub/singleuser                single-user docker images for use with Jupyt…   45                   [OK]</span><br><span class="line">jupyterhub/jupyterhub                JupyterHub: multi-user Jupyter notebook serv…   326                  [OK]</span><br><span class="line">jupyter/minimal-notebook             Minimal Jupyter Notebook Python Stack from h…   183</span><br><span class="line">jupyter/base-notebook                Base image for Jupyter Notebook stacks from …   203</span><br><span class="line">jupyterhub/k8s-hub                                                                   22</span><br><span class="line">jupyterhub/k8s-network-tools                                                         2</span><br><span class="line">jupyterhub/configurable-http-proxy   node-http-proxy + REST API                      6                    [OK]</span><br><span class="line">jupyter/nbviewer                     Jupyter Notebook Viewer                         32                   [OK]</span><br><span class="line">jupyterhub/k8s-singleuser-sample                                                     10</span><br><span class="line">jupyter/r-notebook                   R Jupyter Notebook Stack from https://github…   54</span><br><span class="line">jupyterhub/k8s-image-awaiter                                                         2</span><br><span class="line">jupyter/repo2docker                  Turn git repositories into Jupyter enabled D…   21</span><br><span class="line">jupyterhub/k8s-secret-sync                                                           1</span><br><span class="line">jupyterhub/jupyterhub-onbuild        onbuild version of JupyterHub images            6</span><br><span class="line">jupyter/demo                         (DEPRECATED) Demo of the IPython/Jupyter Not…   16</span><br><span class="line">bitnami/jupyter-base-notebook                                                        39</span><br><span class="line">jupyterhub/k8s-image-cleaner                                                         1</span><br><span class="line">jupyterhub/k8s-binderhub                                                             3</span><br><span class="line">jupyterhub/k8s-pre-puller                                                            1</span><br><span class="line">bitnami/jupyterhub                                                                   18</span><br></pre></td></tr></table></figure>
+
+<h4 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">dockcer pull jupyter/datascience-notebook</span></span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from jupyter/datascience-notebook</span><br><span class="line">d5fd17ec1767: Pull complete </span><br><span class="line">9288915018bc: Pull complete </span><br><span class="line">ad895732ee5c: Pull complete </span><br><span class="line">4f4fb700ef54: Pull complete </span><br><span class="line">7b053b0d567d: Pull complete </span><br><span class="line">577d6f3bb6f4: Pull complete </span><br><span class="line">1d18b5a5f242: Pull complete </span><br><span class="line">ffc9ad0a0b36: Pull complete </span><br><span class="line">75f3e04b1547: Pull complete </span><br><span class="line">e9036ae1aec3: Pull complete </span><br><span class="line">8016e50184c6: Pull complete </span><br><span class="line">55f4c93ee7b8: Pull complete </span><br><span class="line">17c3e54db24b: Pull complete </span><br><span class="line">e8c81a9b6c9a: Pull complete</span><br><span class="line">530f1db1e9d7: Pull complete </span><br><span class="line">44fa9360bdc5: Pull complete </span><br><span class="line">6f59df66069f: Pull complete </span><br><span class="line">a8c1c1bcf1d4: Pull complete </span><br><span class="line">5784e3ca1d66: Pull complete </span><br><span class="line">60e2c9b0e0a4: Pull complete </span><br><span class="line">4866b0f6598a: Pull complete </span><br><span class="line">613fc67c0714: Pull complete </span><br><span class="line">2a41639ceb55: Pull complete </span><br><span class="line">fa391f2a4b79: Pull complete </span><br><span class="line">Digest: sha256:acd52864dd364e2e5c494ccefa661e6f58f551c9006ec7263d7b5afd5d1852e9</span><br><span class="line">Status: Downloaded newer image for jupyter/datascience-notebook:latest</span><br><span class="line">docker.io/jupyter/datascience-notebook:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run -d -p 8000:8888 –name jupyter-notebook jupyter/datascience-notebook</span></span><br><span class="line">xxxxxxxxx</span><br></pre></td></tr></table></figure>
+
+<h4 id="部署代理"><a href="#部署代理" class="headerlink" title="部署代理"></a>部署代理</h4><p>服务部署完毕后，通过 <code>Nginx</code> 反向代理到公网访问，下面是示例配置。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen          80;</span><br><span class="line">    server_name     jupyter.vgbhfive.com;</span><br><span class="line">    index           index.html;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass      http://127.0.0.1:8000;</span><br><span class="line">        proxy_set_header Host http://127.0.0.1:8000;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ /api/kernels/ &#123;</span><br><span class="line">        proxy_pass            http://127.0.0.1:8000;</span><br><span class="line">        proxy_set_header      Host $host;</span><br><span class="line"></span><br><span class="line">        proxy_http_version    1.1;  # websocket support</span><br><span class="line">        proxy_set_header      Upgrade &quot;websocket&quot;;</span><br><span class="line">        proxy_set_header      Connection &quot;Upgrade&quot;;</span><br><span class="line">        proxy_read_timeout    86400;</span><br><span class="line">    &#125;</span><br><span class="line">    location ~ /terminals/ &#123;</span><br><span class="line">        proxy_pass            http://127.0.0.1:8000;</span><br><span class="line">        proxy_set_header      Host $host;</span><br><span class="line"></span><br><span class="line">        proxy_http_version    1.1;  # websocket support</span><br><span class="line">        proxy_set_header      Upgrade &quot;websocket&quot;;</span><br><span class="line">        proxy_set_header      Connection &quot;Upgrade&quot;;</span><br><span class="line">        proxy_read_timeout    86400;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="页面访问"><a href="#页面访问" class="headerlink" title="页面访问"></a>页面访问</h4><img src="/Docker-install-jupyter-notebook/docker-1111.png" class="" title="docker-1111">
+
+<p>第一次访问建议通过 <code>Token</code> 访问并设置，之后就只需要密码即可进入。</p>
+<hr>
+
+<h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><h4 id="403-GET-api-kernels"><a href="#403-GET-api-kernels" class="headerlink" title="403 GET /api/kernels"></a><code>403 GET /api/kernels</code></h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[W 2023-06-21 08:28:50.567 ServerApp] 403 GET /api/contents/demo.ipynb/checkpoints?1687335545679 (@172.17.0.1) 1.28ms referer=http://jupyter.vgbhfive.com/lab/tree/demo.ipynb</span><br><span class="line">[I 2023-06-21 08:32:19.956 ServerApp] Connecting to kernel 66e74bf7-4e19-40cc-8437-1eb43b35e208.</span><br><span class="line">[I 2023-06-21 08:32:19.956 ServerApp] Restoring connection for 66e74bf7-4e19-40cc-8437-1eb43b35e208:35bb8ace-627e-4574-b476-08fae23ccaa5</span><br><span class="line">[W 2023-06-21 08:33:49.957 ServerApp] WebSocket ping timeout after 90000 ms.</span><br><span class="line">[I 2023-06-21 08:33:54.961 ServerApp] Starting buffering for 66e74bf7-4e19-40cc-8437-1eb43b35e208:35bb8ace-627e-4574-b476-08fae23ccaa5</span><br><span class="line">[W 2023-06-21 08:34:04.639 ServerApp] wrote error: &#x27;Forbidden&#x27;</span><br><span class="line">    Traceback (most recent call last):</span><br><span class="line">      File &quot;/opt/conda/lib/python3.11/site-packages/tornado/web.py&quot;, line 1784, in _execute</span><br><span class="line">        result = method(*self.path_args, **self.path_kwargs)</span><br><span class="line">                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span><br><span class="line">      File &quot;/opt/conda/lib/python3.11/site-packages/tornado/web.py&quot;, line 3278, in wrapper</span><br><span class="line">        url = self.get_login_url()</span><br><span class="line">              ^^^^^^^^^^^^^^^^^^^^</span><br><span class="line">      File &quot;/opt/conda/lib/python3.11/site-packages/jupyter_server/base/handlers.py&quot;, line 753, in get_login_url</span><br><span class="line">        raise web.HTTPError(403)</span><br><span class="line">    tornado.web.HTTPError: HTTP 403: Forbidden</span><br></pre></td></tr></table></figure>
+<p>根据 <code>403</code> 状态码的解释，服务器已经解析请求但没有权限访问资源，那么问题就来了，在查了无数资料之后，看到了这个东西：</p>
+<img src="/Docker-install-jupyter-notebook/docker-2222.png" class="" title="docker-2222">
+
+<p>该问题是由于在 <code>Nginx</code> 代理请求时，将所有的请求代理为 <code>HTTP</code> 请求，而 <code>Jupyter Notebook</code> 的部分请求为 <code>WebSocket</code>，从而导致请求异常，修改 <code>Nginx</code> 代理之后问题就迎刃而解。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">location ~ /api/kernels/ &#123;</span><br><span class="line">    proxy_pass            http://127.0.0.1:8000;</span><br><span class="line">    proxy_set_header      Host $host;</span><br><span class="line"></span><br><span class="line">    proxy_http_version    1.1;  # websocket support</span><br><span class="line">    proxy_set_header      Upgrade &quot;websocket&quot;;</span><br><span class="line">    proxy_set_header      Connection &quot;Upgrade&quot;;</span><br><span class="line">    proxy_read_timeout    86400;</span><br><span class="line">&#125;</span><br><span class="line">location ~ /terminals/ &#123;</span><br><span class="line">    proxy_pass            http://127.0.0.1:8000;</span><br><span class="line">    proxy_set_header      Host $host;</span><br><span class="line"></span><br><span class="line">    proxy_http_version    1.1;  # websocket support</span><br><span class="line">    proxy_set_header      Upgrade &quot;websocket&quot;;</span><br><span class="line">    proxy_set_header      Connection &quot;Upgrade&quot;;</span><br><span class="line">    proxy_read_timeout    86400;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/76094881/jupyter-docker-image-kernel-disconnected-400-apache-proxy">Jupyter Docker Image Kernel Disconnected 400 Apache Proxy</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Day/" rel="tag"># Day</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%8C%97%E4%BA%AC%E5%90%8C%E4%BB%81%E5%8C%BB%E9%99%A2%E9%AA%8C%E5%85%89%E6%94%BB%E7%95%A5/" rel="prev" title="北京同仁医院验光攻略">
+      <i class="fa fa-chevron-left"></i> 北京同仁医院验光攻略
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E9%95%9C%E5%83%8F"><span class="nav-number">2.1.</span> <span class="nav-text">查找镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">2.2.</span> <span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%95%9C%E5%83%8F"><span class="nav-number">2.3.</span> <span class="nav-text">启动镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">部署代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E8%AE%BF%E9%97%AE"><span class="nav-number">2.5.</span> <span class="nav-text">页面访问</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E9%97%AE"><span class="nav-number">3.</span> <span class="nav-text">疑问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#403-GET-api-kernels"><span class="nav-number">3.1.</span> <span class="nav-text">403 GET &#x2F;api&#x2F;kernels</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : 'a258a35c04c862652edbd20b7277f232',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
