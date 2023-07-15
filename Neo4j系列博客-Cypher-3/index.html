@@ -21,19 +21,20 @@
     var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="查询调优">
+  <meta name="description" content="查询调优Neo4j 会尽可能地执行查询，然而利用行业的专业知识重新组织语句以获取更好的性能是很有用处的。然而手动优化的总目标是只从图中检索必要的数据，不必要的数据尽可能早地被过滤掉，以减少查询后期需要处理的数据量。同时也要避免返回整个节点和关系，尽量返回节点和关系中需要的数据。 Cypher 执行引擎会将每一个 Cypher 查询都转为一个执行计划。为了减少使用的资源，应尽可能地使用参数代替字面值">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Neo4j系列博客-Cypher-3">
 <meta property="og:url" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/index.html">
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
-<meta property="og:description" content="查询调优">
+<meta property="og:description" content="查询调优Neo4j 会尽可能地执行查询，然而利用行业的专业知识重新组织语句以获取更好的性能是很有用处的。然而手动优化的总目标是只从图中检索必要的数据，不必要的数据尽可能早地被过滤掉，以减少查询后期需要处理的数据量。同时也要避免返回整个节点和关系，尽量返回节点和关系中需要的数据。 Cypher 执行引擎会将每一个 Cypher 查询都转为一个执行计划。为了减少使用的资源，应尽可能地使用参数代替字面值">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/cypher-3-1.jpg">
 <meta property="article:published_time" content="2022-02-20T08:18:37.000Z">
-<meta property="article:modified_time" content="2023-06-22T08:00:28.948Z">
+<meta property="article:modified_time" content="2023-07-15T17:14:58.043Z">
 <meta property="article:author" content="vgbhfive">
-<meta property="article:tag" content="TODO">
 <meta property="article:tag" content="Neo4j">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/cypher-3-1.jpg">
 
 <link rel="canonical" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/">
 
@@ -201,7 +202,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-22 16:00:28" itemprop="dateModified" datetime="2023-06-22T16:00:28+08:00">2023-06-22</time>
+                <time title="Modified: 2023-07-16 01:14:58" itemprop="dateModified" datetime="2023-07-16T01:14:58+08:00">2023-07-16</time>
               </span>
 
           
@@ -222,11 +223,193 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="查询调优"><a href="#查询调优" class="headerlink" title="查询调优"></a>查询调优</h3><span id="more"></span>
+        <h3 id="查询调优"><a href="#查询调优" class="headerlink" title="查询调优"></a>查询调优</h3><p><code>Neo4j</code> 会尽可能地执行查询，然而利用行业的专业知识重新组织语句以获取更好的性能是很有用处的。然而手动优化的总目标是只从图中检索必要的数据，不必要的数据尽可能早地被过滤掉，以减少查询后期需要处理的数据量。同时也要避免返回整个节点和关系，尽量返回节点和关系中需要的数据。</p>
+<p><code>Cypher</code> 执行引擎会将每一个 <code>Cypher</code> 查询都转为一个执行计划。为了减少使用的资源，应尽可能地使用参数代替字面值，这会使得 <code>Cypher</code> 重用查询，而不必解析并构造新的执行计划。</p>
+<span id="more"></span>
 
+<h4 id="查询如何执行"><a href="#查询如何执行" class="headerlink" title="查询如何执行"></a>查询如何执行</h4><p>每个查询都被查询计划器转为一个执行计划，在执行查询时，执行计划将告知 <code>Neo4j</code> 执行什么操作。<code>Neo4j</code> 包含有两种不同的执行计划策略：</p>
+<ul>
+<li><strong>规则</strong><br>  查询计划器有用于产生查询计划的规则。他会考虑所有可用的索引，但不使用统计信息去指导查询编译。</li>
+<li><strong>成本</strong><br>  计划器使用统计服务为所有可选的查询赋予一个成本，然后选择耗费最少的那个。<br>  默认情况下，<code>Neo4j</code> 会对所有的查询使用成本计划器，可以通过使用 <code>cypher.planner</code> 配置来使用指定的计划器，当然也可以通过查看执行计划来查看使用的是哪个计划器。</li>
+</ul>
+<h4 id="查询性能分析"><a href="#查询性能分析" class="headerlink" title="查询性能分析"></a>查询性能分析</h4><p>查看执行计划对查询进行分析时有两个选项：</p>
+<ul>
+<li><strong><code>EXPLAIN</code></strong><br>  如果仅查看执行计划而不运行该语句，则可以在查询语句中加入 <code>EXPLAIN</code>，执行该语句后会返回空结果，对数据库不会做任何操作。</li>
+<li><strong><code>PROFILE</code></strong><br>  如果想运行查询语句并查看哪个运算符占据了大部分的工作，则可以使用 <code>PROFILE</code>。该语句执行时会跟踪传递了多少行数据给每个运算符，以及每个运算符与存储层交互以获取必要的数据。<br>  <small>使用 <code>PROFILE</code> 的语句会使用更多的资源，因此除非在做性能分析，尽量不要使用 <code>PROFILE</code>。</small></li>
+</ul>
+<p><small>在查询中尽可能地指出返回的关系类型和节点标签，这有助于 <code>Neo4j</code> 使用最合适的统计信息，进而产生更好的执行计划。</small></p>
+<h4 id="USING"><a href="#USING" class="headerlink" title="USING"></a><code>USING</code></h4><p><code>USING</code> 语句用于为一个查询构建执行计划时影响计划器的决定。<br><small>强制影响计划器的决定可能会导致查询性能的降低，因此谨慎使用。</small></p>
+<p>当执行一个查询时，<code>Neo4j</code> 需要决定从查询图中的哪里开始匹配，取决于 <code>MATCH</code> 语句和 <code>WHERE</code> 中的条件这些信息来寻找有用的索引或者其他开始节点。那么可以使用 <code>USING</code> 来强制 <code>Neo4j</code> 使用一个特定的开始点，这个被称为<strong>计划器提示</strong>。<br>计划器提示可以分为三种：</p>
+<ul>
+<li><strong>索引提示</strong></li>
+<li><strong>扫描提示</strong></li>
+<li><strong>连接（<code>join</code>）提示</strong></li>
+</ul>
+<p><small>含有 <code>START</code> 的语句不能使用查询器提示。</small></p>
+<p>后续的示例将使用一下图：<br><img src="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/cypher-3-1.jpg" alt="cypher-3-1"></p>
+<h5 id="索引提示"><a href="#索引提示" class="headerlink" title="索引提示"></a>索引提示</h5><p><strong>索引提示</strong>用于告知计划器无论在什么情况下都应使用指定的索引作为开始点。在遇到特定值的查询时，索引统计信息不够准确导致计划器使用非最佳的索引，而这种情况下索引提示就非常有用。其使用在 <code>MATCH</code> 语句之后添加 <strong><code>USING INDEX variable:Label(property)</code></strong> 来补充索引提示。<br>当然也支持多个补充索引提示，但是多个开始点会在后面的查询计划中潜在地需要额外的连接。</p>
+<h5 id="扫描提示"><a href="#扫描提示" class="headerlink" title="扫描提示"></a>扫描提示</h5><p>如果查询匹配到一个索引的大部分，那么<strong>扫描索引</strong>可以快速的扫描标签并过滤掉不匹配的节点。通过在 <code>MATCH</code> 语句后面使用 <code>USING SCAN variable:Lable</code> 实现。其会强制 <code>Cypher</code> 不使用本应使用的索引，而采用标签扫描。</p>
+<h5 id="连接提示"><a href="#连接提示" class="headerlink" title="连接提示"></a>连接提示</h5><p><strong>连接提示</strong>是计划器提示中的高级选项。其不是用于找到查询计划的开始点，而是强制在特定的点进行连接。为了查询能够连接来自这些叶子节点的两个分支，这意味着在计划中会出现多个开始点，基于这一点 <em>连接提示器</em> 将强制计划器查看额外的开始点。<br><small>再查看额外的开始点时，如果没有更多好的开始点，则会使用较差的开始点，这将对查询性能产生负面的效果。但在部分情况下，强制提示器选取一些不好的开始点，但结果是好的。</small></p>
 <hr>
 
-<h3 id="执行计划"><a href="#执行计划" class="headerlink" title="执行计划"></a>执行计划</h3><hr>
+<h3 id="执行计划"><a href="#执行计划" class="headerlink" title="执行计划"></a>执行计划</h3><p><code>Neo4j</code> 将执行一个查询的任务分解为一些被称为<strong>运算符</strong>，每个运算符负责整个查询中的一小部分。这些以模式（<code>Pattern</code>）形式连接在一起的运算符则被称为一个<strong>执行计划</strong>。<br>每个运算符使用如下统计信息来注解：</p>
+<ul>
+<li><strong><code>Rows</code></strong></li>
+<li><strong><code>EstimatedRows</code></strong></li>
+<li><strong><code>DbHits</code></strong></li>
+</ul>
+<h4 id="开始点运算符"><a href="#开始点运算符" class="headerlink" title="开始点运算符"></a>开始点运算符</h4><p>开始点运算符用于找到图的开始点。</p>
+<ol>
+<li><p>全节点扫描<br>从节点库中读取所有的节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n) RETURN n</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过 <code>id</code> 搜索有向关系<br>从关系库中通过 <code>id</code> 来读取一个或多个关系，结果将返回关系和两端的节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n1)-[r]-&gt;() WHERE id(r) = 0 RETURN r, n1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过 <code>id</code> 寻找节点<br>从节点库中通过 <code>id</code> 读取一个或多个节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n) WHERE id(n) = 0 RETURN n</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过标签扫描检索节点<br>使用标签索引，从节点的标签索引中获取拥有指定标签的所有节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (person:Person) RETURN person</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过索引检索节点<br>使用索引搜索节点，节点变量和使用的索引在运算符的实参中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (localtion:Location &#123;name: &quot;Vgbh&quot;&#125;) RETURN localtion</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过索引范围（<code>Range</code>）搜索节点<br>通过使用检索节点，节点的属性值满足给定的字符串前缀。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (l:Location) WHERE l.name STARTS WITH &#x27;V&#x27; RETURN l</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过索引包含（<code>Contains</code>）检索节点<br>一个节点的包含扫描将遍历存储在索引中的所有值，搜索实体中是否包含指定的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (l:Location) WHERE l.name CONTAINS &#x27;V&#x27; RETURN l</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过索引扫描检索节点<br>索引扫描将遍历存储在索引中的所有值，其可以找到拥有特定标签和特定属性的所有节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (l:Location) WHERE exists(l.name) RETURN l</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过 <code>id</code> 检索无方向关系<br>从关系库中通过 <code>id</code> 读取一个或多个关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n1)-[r]-() WHERE id(r) = 1 RETURN n1, r</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="Expand-运算符"><a href="#Expand-运算符" class="headerlink" title="Expand 运算符"></a><code>Expand</code> 运算符</h4><p><code>Expand</code> 运算符用于展开图模式来搜索图。</p>
+<ol>
+<li><p><code>Expand All</code><br>给定一个关系节点 	<code>expand-all</code> 将根据关系中的模式沿开始节点或结束节点展开。也可以处理变长模式的关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person &#123;name: &quot;Vgbh&quot;&#125;)-[:FRIENDS_WITH]-&gt;(fof) RETURN fof</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Expand into</code><br>当开始和结束节点都已经找到时 <code>expand-into</code> 用于找到两个节点之间连接的所有关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person &#123;name: &quot;Vgbh&quot;&#125;)-[:FRIENDS_WITH]-&gt;(fof)--&gt;(p) RETURN fof</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可选 <code>Expand All</code><br>可选 <code>expand</code> 从一个开始节点开始遍历关系，确保在返回结果之前断言会被处理。如果没找到匹配的关系，则返回 <code>null</code> 并产生一个结束节点变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) OPTIONAL MATCH (p)-[works_in:WORKS_IN]-&gt;(l) WHERE works_in.duration &gt; 180 RETURN p, l</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="组合运算符"><a href="#组合运算符" class="headerlink" title="组合运算符"></a>组合运算符</h4><p>组合运算符用于将其他运算符拼接在一起。</p>
+<ol>
+<li><p><code>Apply</code><br><code>Apply</code> 以循环嵌套的方式工作。<code>Apply</code> 运算符左端返回的每一行作为右端运算符的输入，然后 <code>Apply</code> 将产生组合的结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person)-[:FRIENDS_WITH]-&gt;(f) WITH p, count(f) AS fs WHERE fs &gt; 2 OPTIONAL MATCH (p)-[:WORKDS_IN]-&gt;(city) RETURN city.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>SemiApply</code><br>测试一个模式断言的存在性。<code>SemiApply</code> 从它的子运算符中获取一行，并将其作为右端的叶节点运算符的输入。如果右端运算符至少产生一行结果，左端的这一行由 <code>SemoApply</code> 运算符产生。这使得 <code>SemiApply</code> 成为一个过滤运算符，可大量运用在查询的模式断言中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) WHERE (p)-[:FRIENDS_WITH]-&gt;() RETURN p.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AntiSemiApply</code><br>测试一个模式断言的存在性。其功能与 <code>SemiApply</code> 相反，进行反向过滤。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (me:Person &#123;name: &quot;Vgbh&quot;&#125;), (other:Person) WHERE NOT (me)-[:FRIENDS_WITH]-&gt;(other) RETURN other.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>LetSemiApply</code><br>测试模式断言的存在性。当一个查询包含多个模式断言时，其将用于处理其中的第一个，记录断言的评估结果，但会留下过滤器到另外一个运算符。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (other:Person) WHERE (other)-[:FRIENDS_WITH]-&gt;() OR (other)-[:WORKS_IN]-&gt;() RETURN other.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>LetAntiSemiApply</code><br>测试模式断言的存在性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (other:Person) WHERE NOT (other)-[:FRIENDS_WITH]-&gt;() OR (other)-[:WORKS_IN]-&gt;() RETURN other.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>SelectOrSemiApply</code><br>测试一个模式断言的存在性并评估一个断言。这个运算符允许将一般的断言与检查存在性的断言放在一起，首先评估普通表达式，仅当返回 <code>false</code> 时模式断言才会执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (other:Person) WHERE other.age &gt; 25 OR (other)-[:FRIENDS_WITH]-&gt;() RETURN other.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>SelectOrAntiSemiApply</code><br>测试一个模式断言的存在性并评估一个断言。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCh (other:Person) WHERE other.age &gt; 25 OR NOT (other)-[:FRIENDS_WITH]-&gt;() RETURN other.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>ConditionalApply</code><br>检查一个变量是否不为 <code>null</code>，如果是则执行右边的部分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MERGE (p:Person &#123;name: &quot;Vgbh&quot;&#125;) ON MATCH SET p.exists = TRUE</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AntiConditionalApply</code><br>检查一个变量是否为 <code>null</code>，如果是则执行右边的部分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MERGE (p:Person &#123;name: &quot;Vgbh&quot;&#125;) ON CREATE SET p.exists = TRUE</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AssertSameNode</code><br>该运算符用于确保没有违背唯一性约束。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MERGE (t:Term &#123;name: &quot;Vgbh&quot;, age: 37&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>NodeHashJoin</code><br>使用哈希表 <code>NodeHashJoin</code> 将来自左端和右端的输入连接起来。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (andy:Person &#123;name: &quot;Vgbh&quot;&#125;)-[:WORKS_IN]-&gt;(loc)&lt;-[:WORKS_IN]-(other:Person &#123;name: &quot;five&quot;&#125;) RETURN loc.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>三元（<code>Triadic</code>）<br>三元用于解决三元查询，例如常见的查询中查找我朋友的朋友还不是我朋友的人，首先将所有的朋友放入一个集合，然后检查是否与我相连。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other) WHERE NOT (me)-[:FRIENDS_WITH]-(other) RETURN other.name</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="行运算符"><a href="#行运算符" class="headerlink" title="行运算符"></a>行运算符</h4><p>行运算符将其他运算符产生的行转换为一个新的行集合（<code>Set</code>）。</p>
+<ol>
+<li><p><code>Eager</code><br>为了隔离的目的，该运算符确保在继续之前将那些影响后续操作的运算在整个数据集上被完全执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (a)-[r]-(b) DELETE r, a, b MERGE ()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Distinct</code><br>移除输入行流中重复的行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (l:Location)&lt;-[:WORKS_IN]-(p:Person) RETURN DISTINCT l</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Eager</code> 聚合<br>即时加载潜在的结果并存入哈希 <code>map</code> 中，使用分组键作为 <code>map</code> 的键。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (l:Location)&lt;-[:WORKS_IN]-(p:Person) RETURN l.name AS location, collect(p.name) AS people</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从计数库获取节点数量<br>从计数库中获取节点数量会比 <code>Eager</code> 聚合的计数方式要快很多。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) RETURN count(p) AS people</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从计数库获取关系数量<br>从关系库中获取节点数量会比 <code>Eager</code> 聚合的计数方式要快很多。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person)-[r:WORKS_IN]-&gt;() RETURN count(r) AS jobs</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>过滤<br>过滤来自子运算符的每一行，仅仅让断言为 <code>true</code> 的结果通过。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) WHERE p.name =~ &#x27;^a.*&#x27; RETURN p</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Limit</code><br>返回输入的前 <code>n</code> 行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) RETURN p LIMIT 5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Projection</code><br>对于输入的每一行 <code>projection</code> 将评估表达式并产生一行表达式的结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RETURN &#x27;hello&#x27; AS greeting</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Skip</code><br>跳过输入行的前 <code>n</code> 行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) RETURN p ORDER BY p.id SKIP 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Sort</code><br>根据给定的键进行排序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) RETURN p ORDER BY p.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Top</code><br>返回根据给定键排序后的前 <code>n</code> 行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) RETURN p ORDER BY p.name TOP 2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Union</code><br>将左右两个计划的结果连接在一起。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Location) RETURN p.name UNION ALL MATCH (p:Country) RETURN p.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Unwind</code><br>将列表中的值以每行一个元素的形式返回。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNWIND range(1, 5) AS value RETURN value</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>调用过程<br>返回以 <code>name</code> 为序的所有标签。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CALL db.labels() YIELD label RETURN * ORDER BY label</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="更新运算符"><a href="#更新运算符" class="headerlink" title="更新运算符"></a>更新运算符</h4><p>更新运算符用于在查询中更新图。</p>
+<ol>
+<li><p>约束操作<br>在一对标签和属性上创建一个约束。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE CONSTRAINT ON (c:Country) ASSERT c.name IS UNIQUE</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>EmptyResult</code><br>即时加载产生的所有结果到 <code>EmptyResult</code> 运算符并丢弃掉。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE (:Person)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更新图<br>对图进行更新操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CYPHER planner=rule CREATE (:Person &#123;name: &quot;vgbhfive&quot;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Merge Into</code><br>当开始节点和结束节点已经找到时，<code>Merge Into</code> 用于找到这两个节点之间的所有关系或者创建一个新的关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CYPHER planner=rule MATCH (p:Person &#123;name: &#x27;Vgbh&#x27;&#125;), (other:Person &#123;name: &quot;five&quot;&#125;) MERGE (p)-[:FRIENDS_WITH]-(other)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+
+<h3 id="Cypher-最短路径优化"><a href="#Cypher-最短路径优化" class="headerlink" title="Cypher 最短路径优化"></a><code>Cypher</code> 最短路径优化</h3><p>不同的断言在规划最短路径时可能导致 <code>Cypher</code> 中产生不同的查询计划。如果断言可以在搜索路径时处理，<code>Neo4j</code> 将使用快速的 <strong>双向广度优先搜索算法</strong>，因此当路径上时普通断言时该算法可以一直正确地返回正确的结果。<br>若在决定哪条路径有效或无效之前，断言需要检查所有路径，那么就要使用 <strong>穷举深度优先算法</strong> 来寻找路径。</p>
+<h4 id="快速算法检索最短路径"><a href="#快速算法检索最短路径" class="headerlink" title="快速算法检索最短路径"></a>快速算法检索最短路径</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MATCH (v1:Person &#123;name: &#x27;Vgbh&#x27;&#125;), (v2:Person &#123;name: &#x27;Five&#x27;&#125;), p = shortestPath((v1)-[rels:ACTED_IN*]-(v2))</span><br><span class="line">WHERE ALL (r IN rels WHERE exists(r.role))</span><br><span class="line">RETURN p</span><br></pre></td></tr></table></figure>
+<p>该查询没有查看所有路径，因此可以使用快速算法。</p>
+<h4 id="检查路径上额外断言的最短路径规划"><a href="#检查路径上额外断言的最短路径规划" class="headerlink" title="检查路径上额外断言的最短路径规划"></a>检查路径上额外断言的最短路径规划</h4><ol>
+<li><p>使用穷举搜索算法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MATCH (v1:Person &#123;name: &#x27;Vgbh&#x27;&#125;), (v2:Person &#123;name: &#x27;Five&#x27;&#125;), p = shortestPath((v1)-[*]-(v2))</span><br><span class="line">WHERE length(p) &gt; 1</span><br><span class="line">RETURN p</span><br></pre></td></tr></table></figure>
+<p>该查询与之前的查询不同，该查询需要知道所有路径的前提下才能找到最短路径，因此适合使用穷举搜索算法。</p>
+</li>
+<li><p>禁止穷举搜索算法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MATCH (v1:Person &#123;name: &#x27;Vgbh&#x27;&#125;), (v2:Person &#123;name: &#x27;Five&#x27;&#125;), p = shortestPath((v1)-[*]-(v2))</span><br><span class="line">WITH p</span><br><span class="line">WHERE length(p) &gt; 1</span><br><span class="line">RETURN p</span><br></pre></td></tr></table></figure>
+<p>该查询语句与上述的语句查询意图一致，但是使用 <code>WITH</code> 语句将使得查询计划不会使用穷举搜索算法，而使用快速搜索算法找的路径可能会导致没有结果返回。</p>
+</li>
+</ol>
+<hr>
 
 <h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
 
@@ -240,7 +423,6 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/TODO/" rel="tag"># TODO</a>
               <a href="/tags/Neo4j/" rel="tag"># Neo4j</a>
           </div>
 
@@ -316,7 +498,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%B0%83%E4%BC%98"><span class="nav-number">1.</span> <span class="nav-text">查询调优</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">执行计划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">4.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%B0%83%E4%BC%98"><span class="nav-number">1.</span> <span class="nav-text">查询调优</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C"><span class="nav-number">1.1.</span> <span class="nav-text">查询如何执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">查询性能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#USING"><span class="nav-number">1.3.</span> <span class="nav-text">USING</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%8F%90%E7%A4%BA"><span class="nav-number">1.3.1.</span> <span class="nav-text">索引提示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%AB%E6%8F%8F%E6%8F%90%E7%A4%BA"><span class="nav-number">1.3.2.</span> <span class="nav-text">扫描提示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%8F%90%E7%A4%BA"><span class="nav-number">1.3.3.</span> <span class="nav-text">连接提示</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">执行计划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E7%82%B9%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.1.</span> <span class="nav-text">开始点运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Expand-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.2.</span> <span class="nav-text">Expand 运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.3.</span> <span class="nav-text">组合运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.4.</span> <span class="nav-text">行运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.5.</span> <span class="nav-text">更新运算符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cypher-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">Cypher 最短路径优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E7%AE%97%E6%B3%95%E6%A3%80%E7%B4%A2%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84"><span class="nav-number">3.1.</span> <span class="nav-text">快速算法检索最短路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E8%B7%AF%E5%BE%84%E4%B8%8A%E9%A2%9D%E5%A4%96%E6%96%AD%E8%A8%80%E7%9A%84%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92"><span class="nav-number">3.2.</span> <span class="nav-text">检查路径上额外断言的最短路径规划</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">5.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -332,14 +514,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">132</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

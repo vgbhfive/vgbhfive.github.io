@@ -276,7 +276,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-22 16:00:28" itemprop="dateModified" datetime="2023-06-22T16:00:28+08:00">2023-06-22</time>
+                <time title="Modified: 2023-07-16 01:14:58" itemprop="dateModified" datetime="2023-07-16T01:14:58+08:00">2023-07-16</time>
               </span>
 
           
@@ -290,7 +290,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="查询调优"><a href="#查询调优" class="headerlink" title="查询调优"></a>查询调优</h3>
+          <h3 id="查询调优"><a href="#查询调优" class="headerlink" title="查询调优"></a>查询调优</h3><p><code>Neo4j</code> 会尽可能地执行查询，然而利用行业的专业知识重新组织语句以获取更好的性能是很有用处的。然而手动优化的总目标是只从图中检索必要的数据，不必要的数据尽可能早地被过滤掉，以减少查询后期需要处理的数据量。同时也要避免返回整个节点和关系，尽量返回节点和关系中需要的数据。</p>
+<p><code>Cypher</code> 执行引擎会将每一个 <code>Cypher</code> 查询都转为一个执行计划。为了减少使用的资源，应尽可能地使用参数代替字面值，这会使得 <code>Cypher</code> 重用查询，而不必解析并构造新的执行计划。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-3/#more" rel="contents">
@@ -955,14 +956,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">132</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
