@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/</loc>
+    
+    <lastmod>2023-07-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.vgbhfive.cn/about/index.html</loc>
     
     <lastmod>2023-07-15</lastmod>
@@ -1255,7 +1264,7 @@
 
   <url>
     <loc>https://blog.vgbhfive.cn/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -1263,315 +1272,322 @@
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Java/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/TODO/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Algorithm/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/MySQL/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/ClickHouse/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Kubernetes/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/ServiceMesh/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Envoy/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Translate/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Day/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Git/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Utils/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Go/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Hadoop/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/JavaScript/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Spring-Boot/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Linux/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/MyBatis/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Neo4j/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Python/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/RPC/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Redis/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Prometheus/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Windows/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Zookeeper/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/WeChat/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Vue-js/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/DataStruct/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Spring/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Raspberry/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Myx-Lyl/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Design-Partten/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/MQ/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/ActiveMQ/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/ECharts/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Mongo/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Nginx/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/RabbitMQ/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/kafka/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Risk-Control/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Feature/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Dubbo/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/GraphQL/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Electron/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.vgbhfive.cn/tags/Docker/</loc>
-    <lastmod>2023-07-15</lastmod>
+    <lastmod>2023-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.vgbhfive.cn/tags/ML/</loc>
+    <lastmod>2023-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

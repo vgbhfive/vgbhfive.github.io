@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="数据简介该数据集最初来自糖尿病&#x2F;消化&#x2F;肾脏疾病研究所，此数据集的目标是基于数据集中包含的某些身体指标来诊断性的预测患者是否患有糖尿病。数据集由多个医学指标和一个目标变量 Outcome 组成，医学指标包含患者的怀孕次数、BMI 指数、胰岛素水平、年龄、血压等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习实践-Pima 数据集">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="数据简介该数据集最初来自糖尿病&#x2F;消化&#x2F;肾脏疾病研究所，此数据集的目标是基于数据集中包含的某些身体指标来诊断性的预测患者是否患有糖尿病。数据集由多个医学指标和一个目标变量 Outcome 组成，医学指标包含患者的怀孕次数、BMI 指数、胰岛素水平、年龄、血压等。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/1.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/2.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/3.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/4.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/5.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/6.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/7.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/8.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/9.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/7.png">
+<meta property="article:published_time" content="2023-07-17T15:30:07.000Z">
+<meta property="article:modified_time" content="2023-07-19T14:20:40.521Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/1.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>机器学习实践-Pima 数据集 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习实践-Pima 数据集
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-07-17 23:30:07" itemprop="dateCreated datePublished" datetime="2023-07-17T23:30:07+08:00">2023-07-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-19 22:20:40" itemprop="dateModified" datetime="2023-07-19T22:20:40+08:00">2023-07-19</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="数据简介"><a href="#数据简介" class="headerlink" title="数据简介"></a>数据简介</h3><p>该数据集最初来自糖尿病&#x2F;消化&#x2F;肾脏疾病研究所，此<a target="_blank" rel="noopener" href="https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database">数据集</a>的目标是基于数据集中包含的某些身体指标来诊断性的预测患者是否患有糖尿病。<br>数据集由多个医学指标和一个目标变量 <code>Outcome</code> 组成，医学指标包含患者的怀孕次数、<code>BMI</code> 指数、胰岛素水平、年龄、血压等。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><h4 id="导入基础依赖"><a href="#导入基础依赖" class="headerlink" title="导入基础依赖"></a>导入基础依赖</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br></pre></td></tr></table></figure>
+
+<h4 id="导入数据查看基础信息"><a href="#导入数据查看基础信息" class="headerlink" title="导入数据查看基础信息"></a>导入数据查看基础信息</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pima = pd.read_csv(<span class="string">&quot;diabetes.csv&quot;</span>)</span><br><span class="line"><span class="comment"># pima.head()</span></span><br><span class="line"><span class="comment"># pima.info()</span></span><br><span class="line"><span class="comment"># pima.shape</span></span><br><span class="line">pima.describe()</span><br></pre></td></tr></table></figure>
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/1.png" alt="1"></p>
+<h4 id="数据可视化"><a href="#数据可视化" class="headerlink" title="数据可视化"></a>数据可视化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 柱状图</span></span><br><span class="line">pima.hist(figsize=(<span class="number">16</span>, <span class="number">14</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 散点图</span></span><br><span class="line">sns.pairplot(pima, hue=<span class="string">&quot;Outcome&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 箱图</span></span><br><span class="line">pima.plot(kind=<span class="string">&quot;box&quot;</span>, subplots=<span class="literal">True</span>, layout=(<span class="number">3</span>,<span class="number">3</span>), sharex=<span class="literal">False</span>, sharey=<span class="literal">False</span>, figsize=(<span class="number">16</span>,<span class="number">14</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 热点图</span></span><br><span class="line">column_x = pima.columns[<span class="number">0</span>: <span class="built_in">len</span>(pima.columns)-<span class="number">1</span>]</span><br><span class="line">column_x</span><br><span class="line">corr = pima[pima.columns].corr()</span><br><span class="line">plt.subplots(figsize=(<span class="number">16</span>,<span class="number">14</span>))</span><br><span class="line">sns.heatmap(corr, annot=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="特征预处理"><a href="#特征预处理" class="headerlink" title="特征预处理"></a>特征预处理</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest </span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"> </span><br><span class="line">X = pima.iloc[:, <span class="number">0</span>:<span class="number">8</span>] <span class="comment"># 特征列 0-7列，不含第8列。</span></span><br><span class="line">Y = pima.iloc[:, <span class="number">8</span>] <span class="comment"># 目标列为第8列</span></span><br><span class="line"><span class="comment"># iloc([rows], [cols]) 第一个参数为要截取的行，第二个参数为要截取的列。loc([rows], [cols_name]) 第一个参数为要截取的行，第二个参数为要截取的列名称</span></span><br><span class="line"></span><br><span class="line">select_top_4 = SelectKBest(score_func=chi2, k =<span class="number">4</span>) <span class="comment"># 通过卡方检验选择4个得分最高的特征</span></span><br><span class="line">fits = select_top_4.fit(X, Y) <span class="comment">#将特征输入到评分函数，获取特征信息和目标值信息</span></span><br><span class="line">features = fits.transform(X) <span class="comment">#展现特征转换后的结果</span></span><br><span class="line">features[<span class="number">0</span>:<span class="number">5</span>] <span class="comment">#新特征列</span></span><br><span class="line"></span><br><span class="line">pima.head() <span class="comment"># 表现最佳的特征为 Glucose， Insulin， BMI， Age</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造新的 DataFrame</span></span><br><span class="line">x_features = pd.DataFrame(data=features, columns=[<span class="string">&#x27;Glucose&#x27;</span>, <span class="string">&#x27;Insulin&#x27;</span>, <span class="string">&#x27;BMI&#x27;</span>, <span class="string">&#x27;Age&#x27;</span>])</span><br><span class="line">x_features</span><br><span class="line">y_features = pd.DataFrame(data=Y, columns=[<span class="string">&#x27;Outcome&#x27;</span>])</span><br><span class="line">y_features</span><br></pre></td></tr></table></figure>
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/2.png" alt="2"><br><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/3.png" alt="3"></p>
+<h4 id="特征标准化"><a href="#特征标准化" class="headerlink" title="特征标准化"></a>特征标准化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将属性值更改为 均值为0，标准差为1 的 高斯分布. 当算法期望输入特征处于高斯分布时，它非常有用</span></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line">rescaled_x = StandardScaler().fit_transform(x_features)</span><br><span class="line">x = pd.DataFrame(data=rescaled_x, columns=x_features.columns)</span><br><span class="line">x.head()</span><br></pre></td></tr></table></figure>
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/4.png" alt="4"></p>
+<h4 id="数据切分"><a href="#数据切分" class="headerlink" title="数据切分"></a>数据切分</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">seed = <span class="number">7</span></span><br><span class="line">test_size = <span class="number">0.33</span></span><br><span class="line">x_train, x_test, y_train, y_test = train_test_split(x, y_features, test_size=test_size, random_state=seed)</span><br><span class="line">x_train.head()</span><br><span class="line">y_train.head()</span><br></pre></td></tr></table></figure>
+
+<h4 id="构建二分类算法模型"><a href="#构建二分类算法模型" class="headerlink" title="构建二分类算法模型"></a>构建二分类算法模型</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> KFold</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB</span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"></span><br><span class="line">models = []</span><br><span class="line">models.append((<span class="string">&quot;LB&quot;</span>, LogisticRegression()))</span><br><span class="line">models.append((<span class="string">&quot;NB&quot;</span>, GaussianNB()))</span><br><span class="line">models.append((<span class="string">&quot;KNN&quot;</span>, KNeighborsClassifier()))</span><br><span class="line">models.append((<span class="string">&quot;DT&quot;</span>, DecisionTreeClassifier()))</span><br><span class="line">models.append((<span class="string">&quot;SVM&quot;</span>, SVC()))</span><br><span class="line"></span><br><span class="line">results = []</span><br><span class="line">names = []</span><br><span class="line"><span class="keyword">for</span> name, model <span class="keyword">in</span> models:</span><br><span class="line">    kfold = KFold(n_splits=<span class="number">10</span>, shuffle=<span class="literal">True</span>, random_state=<span class="number">22</span>)</span><br><span class="line">    cv_result = cross_val_score(model, x_train, y_train, cv=kfold, scoring=<span class="string">&quot;accuracy&quot;</span>)</span><br><span class="line">    names.append(name)</span><br><span class="line">    results.append(cv_result)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(names)):</span><br><span class="line">    <span class="built_in">print</span>(names[i], results[i].mean())</span><br></pre></td></tr></table></figure>
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/5.png" alt="5"></p>
+<h4 id="模型评估"><a href="#模型评估" class="headerlink" title="模型评估"></a>模型评估</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, confusion_matrix</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"></span><br><span class="line">classifier = SVC(kernel=<span class="string">&quot;rbf&quot;</span>)</span><br><span class="line">classifier.fit(x_train, y_train)</span><br><span class="line">y_pred = classifier.predict(x_test)</span><br><span class="line"></span><br><span class="line">cm = confusion_matrix(y_test, y_pred) <span class="comment"># 混淆矩阵</span></span><br><span class="line">cm</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(classification_report(y_test, y_pred)) <span class="comment"># 显示准确率</span></span><br><span class="line"></span><br><span class="line">accuracy = accuracy_score(y_test, y_pred)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Accuracy: %.2f%%&quot;</span> % (accuracy * <span class="number">100.0</span>))</span><br></pre></td></tr></table></figure>
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/6.png" alt="6"><br><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/7.png" alt="7"><br><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/8.png" alt="8"></p>
+<h4 id="模型优化"><a href="#模型优化" class="headerlink" title="模型优化"></a>模型优化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用”网格搜索“来提高模型 - 模型优化</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV</span><br><span class="line"></span><br><span class="line">param_grid = &#123;<span class="string">&#x27;C&#x27;</span>: [<span class="number">0.1</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">100</span>], <span class="string">&#x27;gamma&#x27;</span>: [<span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.01</span>, <span class="number">0.001</span>]&#125;</span><br><span class="line">grid = GridSearchCV(SVC(), param_grid, refit=<span class="literal">True</span>, verbose=<span class="number">2</span>)</span><br><span class="line">grid.fit(x_train, y_train)</span><br><span class="line"></span><br><span class="line">grid_prediction = grid.predict(x_test)</span><br><span class="line"><span class="built_in">print</span>(classification_report(y_test, grid_prediction))</span><br></pre></td></tr></table></figure>
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/9.png" alt="9"></p>
+<hr>
+
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><h4 id="评分函数"><a href="#评分函数" class="headerlink" title="评分函数"></a>评分函数</h4><ol>
+<li><p><code>SelectKBest()</code><br>只保留 <code>K</code> 个最高分的特征，能够返回特征评价的得分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectKBest(score_func=&lt;function f_classif&gt;, k=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>SelectPercentile()</code><br>只保留用户指定百分比的最高得分的特征，能够返回特征评价的得分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectPercentile(score_func=&lt;function f_classif&gt;, percentile=<span class="number">10</span>) </span><br></pre></td></tr></table></figure>
+<p>使用常见的单变量统计检验：假正率 <code>SelectFpr</code>，错误发现率 <code>SelectFdr</code>，或者总体错误率 <code>SelectFwe</code>。</p>
+</li>
+<li><p><code>GenericUnivariateSelect()</code><br>通过结构化策略进行特征选择，通过超参数搜索估计器进行特征选择。</p>
+</li>
+</ol>
+<h4 id="cross-val-score-函数"><a href="#cross-val-score-函数" class="headerlink" title="cross_val_score() 函数"></a><code>cross_val_score()</code> 函数</h4><p><code>cross_val_score()</code> 函数，交叉验证评分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.cross_validation.cross_val_score(estimator, X, y=<span class="literal">None</span>, scoring=<span class="literal">None</span>, cv=<span class="literal">None</span>, n_jobs=<span class="number">1</span>, verbose=<span class="number">0</span>, fit_params=<span class="literal">None</span>, pre_dispatch=<span class="string">&#x27;2*n_jobs&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><code>estimator</code>：数据对象 </li>
+<li><code>X</code>：数据 </li>
+<li><code>y</code>：预测数据 </li>
+<li><code>soring</code>：调用的方法</li>
+<li><code>cv</code>：交叉验证生成器或可迭代的次数 </li>
+<li><code>n_jobs</code>：同时工作的 <code>cpu</code> 个数（<code>-1</code> 代表全部）</li>
+<li><code>verbose</code>：详细程度</li>
+<li><code>fit_params</code>：传递给估计器的拟合方法的参数</li>
+<li><code>pre_dispatch</code>：控制并行执行期间调度的作业数量</li>
+</ul>
+<h4 id="KFold-交叉验证"><a href="#KFold-交叉验证" class="headerlink" title="KFold 交叉验证"></a><code>KFold</code> 交叉验证</h4><p><code>K</code> 折交叉验证，将数据集分成 <code>K</code> 份的官方给定方案，所谓 <code>K</code> 折就是将数据集通过 <code>K</code> 次分割，使得所有数据既在训练集出现过，又在测试集出现过，当然每次分割中不会有重叠，相当于无放回抽样。<br><code>StratifiedKFold</code> 用法类似 <code>Kfold</code>，但是他是分层采样，确保训练集，测试集中各类别样本的比例与原始数据集中相同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.model_selection.KFold(n_splits=<span class="number">3</span>, shuffle=<span class="literal">False</span>, random_state=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p>将训练&#x2F;测试数据集划分 <code>n_splits</code> 个互斥子集，每次用其中一个子集当作验证集，剩下的 <code>n_splits-1</code> 个作为训练集，进行 <code>n_splits</code> 次训练和测试，得到 <code>n_splits</code> 个结果。</p>
+<p>参数说明：</p>
+<ul>
+<li><code>n_splits</code>：表示划分几等份</li>
+<li><code>shuffle</code>：在每次划分时，是否进行洗牌<ul>
+<li>若为 <code>False</code> 时，其效果等同于 <code>random_state</code> 等于整数，每次划分的结果相同。</li>
+<li>若为 <code>True</code> 时，每次划分的结果都不一样，表示经过洗牌，随机取样的。</li>
+</ul>
+</li>
+<li><code>random_state</code>：随机种子数</li>
+</ul>
+<p><small>注意点：对于不能均等份的数据集，其前 <code>n_samples % n_splits</code> 子集拥有 <code>n_samples // n_splits + 1</code> 个样本，其余子集都只有 <code>n_samples // n_splits</code> 样本。</small></p>
+<h4 id="LeaveOneOut-留一法"><a href="#LeaveOneOut-留一法" class="headerlink" title="LeaveOneOut 留一法"></a><code>LeaveOneOut</code> 留一法</h4><p><code>LeaveOneOut</code> 留一法，每一回合中，几乎所有的样本都用于训练模型，因此最接近原始样本的分布，这样的评估所得的结果比较可靠。实验过程中，没有随机因素会影响实验数据，确保实验过程是可以被复制的。<br>但是 <code>LeaveOneOut</code> 也有明显的缺点，就是计算成本高，当原始样本数很多时，需要花费大量的时间去完成算法的运算与评估。</p>
+<h4 id="SVC-函数"><a href="#SVC-函数" class="headerlink" title="SVC() 函数"></a><code>SVC()</code> 函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.svm.SVC(C=<span class="number">1.0</span>, kernel=<span class="string">&#x27;rbf&#x27;</span>, degree=<span class="number">3</span>, gamma=<span class="string">&#x27;auto&#x27;</span>, coef0=<span class="number">0.0</span>, shrinking=<span class="literal">True</span>, probability=<span class="literal">False</span>,tol=<span class="number">0.001</span>, cache_size=<span class="number">200</span>, class_weight=<span class="literal">None</span>, verbose=<span class="literal">False</span>, max_iter=-<span class="number">1</span>, decision_function_shape=<span class="literal">None</span>,random_state=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><code>C</code>：<code>C-SVC</code> 的惩罚参数 <code>C</code>，默认值是 <code>1.0</code>。<br>  <code>C</code> 越大，相当于惩罚松弛变量，希望松弛变量接近 <code>0</code>，即对误分类的惩罚增大，趋向于对训练集全分对的情况，这样对训练集测试时准确率很高，但泛化能力弱。<br>  <code>C</code> 值小，对误分类的惩罚减小，允许容错，将他们当成噪声点，泛化能力较强。</li>
+<li><code>kernel</code>：核函数，默认是 <code>rbf</code>，可以是 <code>linear</code>、 <code>poly</code>、 <code>rbf</code>、 <code>sigmoid</code>、 <code>precomputed</code><ul>
+<li>线性：<code>u&#39;v</code></li>
+<li>多项式：<code>(gamma*u&#39;*v + coef0)^degree</code></li>
+<li><code>RBF</code> 函数：<code>exp(-gamma|u-v|^2)</code></li>
+<li><code>sigmoid</code>：<code>tanh(gamma*u&#39;*v + coef0)</code></li>
+</ul>
+</li>
+<li><code>degree</code>：多项式 <code>poly</code> 函数的维度，默认是 <code>3</code>，选择其他核函数时会被忽略</li>
+<li><code>gamma</code>： <code>rbf</code>、 <code>poly</code> 和 <code>sigmoid</code> 的核函数参数，默认是 <code>auto</code>，则会选择 <code>1/n_features</code></li>
+<li><code>coef0</code>：核函数的常数项，对于 <code>poly </code>和 <code>sigmoid</code> 有用</li>
+<li><code>probability</code>：是否采用概率估计，默认为 <code>False</code></li>
+<li><code>shrinking</code>：是否采用 <code>shrinking heuristic</code> 方法，默认为 <code>True</code></li>
+<li><code>tol</code>：停止训练的误差值大小，默认为 <code>1e-3</code></li>
+<li><code>cache_size</code>：核函数 <code>cache</code> 缓存大小，默认为 <code>200</code></li>
+<li><code>class_weight</code>：类别的权重，字典形式传递。设置第几类的参数 <code>C</code> 为 <code>weight*C</code></li>
+<li><code>verbose</code>：是否允许冗余输出</li>
+<li><code>max_iter</code>：最大迭代次数，<code>-1</code> 为无限制</li>
+<li><code>decision_function_shape</code>：<code>ovo</code>、 <code>ovr</code> 或者 <code>None</code>，默认值为 <code>None</code></li>
+<li><code>random_state</code>：数据洗牌时的种子值</li>
+</ul>
+<p>主要调节的参数有：<code>C</code>、 <code>kernel</code>、 <code>degree</code>、 <code>gamma</code>、 <code>coef0</code>。</p>
+<h4 id="confusion-matrix-函数"><a href="#confusion-matrix-函数" class="headerlink" title="confusion_matrix() 函数"></a><code>confusion_matrix()</code> 函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.metrics.confusion_matrix(y_true, y_pred, labels=<span class="literal">None</span>, sample_weight=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><code>y_true</code>：是样本真实分类结果</li>
+<li><code>y_pred</code>：是样本预测分类结果</li>
+<li><code>labels</code>：是所给出的类别，通过这个可对类别进行选择 </li>
+<li><code>sample_weight</code> : 样本权重</li>
+</ul>
+<h4 id="classification-report-预测准确率"><a href="#classification-report-预测准确率" class="headerlink" title="classification_report() 预测准确率"></a><code>classification_report()</code> 预测准确率</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.metrics.classification_report(y_true, y_pred, *, labels=<span class="literal">None</span>, target_names=<span class="literal">None</span>, sample_weight=<span class="literal">None</span>, digits=<span class="number">2</span>, output_dict=<span class="literal">False</span>, zero_division=<span class="string">&#x27;warn&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/7.png" alt="7"><br>输出说明：</p>
+<ul>
+<li><code>precision</code>: 准确率，<code>TP/ (TP+FP) </code></li>
+<li><code>recall</code>: 召回率，<code>TP(TP + FN)</code></li>
+<li><code>f1-score</code>: 是准确率与召回率的综合，可以认为是平均结果，<code>2*TP/(2*TP + FP + FN)</code><ul>
+<li><code>TP</code>: 预测为正，实现为正</li>
+<li><code>FP</code>: 预测为正，实现为负</li>
+<li><code>FN</code>: 预测为负，实现为正</li>
+<li><code>TN</code>: 预测为负，实现为负</li>
+</ul>
+</li>
+</ul>
+<h4 id="GridSearchCV"><a href="#GridSearchCV" class="headerlink" title="GridSearchCV()"></a><code>GridSearchCV()</code></h4><p><code>GridSearchCV()</code> 可以拆分为两部分 <code>GridSearch</code> 和 <code>CV</code>，即网格搜索和交叉验证。网格搜索，指的是参数，即在指定的参数范围内，按步长依次调整参数，利用调整的参数训练学习器，从所有的参数中找到在验证集上精度最高的参数，这其实是一个训练和比较的过程。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.model_selection.GridSearchCV(estimator, param_grid, *, scoring=<span class="literal">None</span>, n_jobs=<span class="literal">None</span>, refit=<span class="literal">True</span>, cv=<span class="literal">None</span>, verbose=<span class="number">0</span>, pre_dispatch=<span class="string">&#x27;2*n_jobs&#x27;</span>, error_score=nan, return_train_score=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><code>estimator</code>：选择使用的分类器，并且传入除需要确定最佳的参数之外的其他参数。并且每一个分类器都需要一个 <code>scoring</code> 参数或者 <code>score</code> 方法。</li>
+<li><code>param_grid</code>：需要最优化的参数的取值，值为字典或者列表。</li>
+<li><code>scoring=None</code>：模型评价标准，默认 <code>None</code>。这时需要使用 <code>score</code> 函数，根据所选模型不同，评价准则不同。</li>
+<li><code>n_jobs</code>：并行数，<code>-1</code> 跟 <code>CPU</code> 核数一致。</li>
+</ul>
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>机器学习总体来说不像编程需要很强的计算机基础知识，但额外需要了解业务方面的知识以及对所使用包的熟悉程度，因此还是那句老话“<strong>实践出真知</strong>”。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Docker-install-jupyter-notebook/" rel="prev" title="Docker install jupyter-notebook">
+      <i class="fa fa-chevron-left"></i> Docker install jupyter-notebook
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">数据简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%9F%BA%E7%A1%80%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">导入基础依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E6%9F%A5%E7%9C%8B%E5%9F%BA%E7%A1%80%E4%BF%A1%E6%81%AF"><span class="nav-number">2.2.</span> <span class="nav-text">导入数据查看基础信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text">数据可视化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">特征预处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%A0%87%E5%87%86%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">特征标准化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%87%E5%88%86"><span class="nav-number">2.6.</span> <span class="nav-text">数据切分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E4%BA%8C%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.7.</span> <span class="nav-text">构建二分类算法模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0"><span class="nav-number">2.8.</span> <span class="nav-text">模型评估</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96"><span class="nav-number">2.9.</span> <span class="nav-text">模型优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%81%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">要点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E5%88%86%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">评分函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cross-val-score-%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">cross_val_score() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KFold-%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="nav-number">3.3.</span> <span class="nav-text">KFold 交叉验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LeaveOneOut-%E7%95%99%E4%B8%80%E6%B3%95"><span class="nav-number">3.4.</span> <span class="nav-text">LeaveOneOut 留一法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SVC-%E5%87%BD%E6%95%B0"><span class="nav-number">3.5.</span> <span class="nav-text">SVC() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#confusion-matrix-%E5%87%BD%E6%95%B0"><span class="nav-number">3.6.</span> <span class="nav-text">confusion_matrix() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#classification-report-%E9%A2%84%E6%B5%8B%E5%87%86%E7%A1%AE%E7%8E%87"><span class="nav-number">3.7.</span> <span class="nav-text">classification_report() 预测准确率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GridSearchCV"><span class="nav-number">3.8.</span> <span class="nav-text">GridSearchCV()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">6.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '22df86d93d2320fe091d826d6df86089',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
