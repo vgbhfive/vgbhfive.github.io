@@ -165,6 +165,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-mysqldump-warning-GTID/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/MySQL-mysqldump-warning-GTID/" class="post-title-link" itemprop="url">MySQL-mysqldump warning GTID</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-02-23 23:44:40" itemprop="dateCreated datePublished" datetime="2023-02-23T23:44:40+08:00">2023-02-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-02-24 00:09:54" itemprop="dateModified" datetime="2023-02-24T00:09:54+08:00">2023-02-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h3><p>工作时需要拉一下测试环境的数据到开发环境，所以就是 <code>mysqldump</code> 老哥出场了…</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mysqldump -h localhost -u root -p --tables test_table --where=&quot;str=&#x27;str1&#x27;&quot; &gt; test_table_data.sql</span><br><span class="line">Enter password:</span><br><span class="line">Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don&#x27;t want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events.</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/MySQL-mysqldump-warning-GTID/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Hadoop-MapReduce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -196,7 +269,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-11 23:10:43" itemprop="dateModified" datetime="2023-03-11T23:10:43+08:00">2023-03-11</time>
+                <time title="Modified: 2023-03-11 23:10:44" itemprop="dateModified" datetime="2023-03-11T23:10:44+08:00">2023-03-11</time>
               </span>
 
           
@@ -263,7 +336,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-02-14 21:42:33 / Modified: 21:53:34" itemprop="dateCreated datePublished" datetime="2023-02-14T21:42:33+08:00">2023-02-14</time>
+              <time title="Created: 2023-02-14 21:42:33 / Modified: 21:53:36" itemprop="dateCreated datePublished" datetime="2023-02-14T21:42:33+08:00">2023-02-14</time>
             </span>
 
           
@@ -336,7 +409,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-11 23:16:51" itemprop="dateModified" datetime="2023-03-11T23:16:51+08:00">2023-03-11</time>
+                <time title="Modified: 2023-03-11 23:16:52" itemprop="dateModified" datetime="2023-03-11T23:16:52+08:00">2023-03-11</time>
               </span>
 
           
@@ -408,7 +481,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-04 15:42:33" itemprop="dateModified" datetime="2023-02-04T15:42:33+08:00">2023-02-04</time>
+                <time title="Modified: 2023-02-04 15:42:34" itemprop="dateModified" datetime="2023-02-04T15:42:34+08:00">2023-02-04</time>
               </span>
 
           
@@ -485,7 +558,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-02 19:26:20" itemprop="dateModified" datetime="2023-01-02T19:26:20+08:00">2023-01-02</time>
+                <time title="Modified: 2023-01-02 19:26:22" itemprop="dateModified" datetime="2023-01-02T19:26:22+08:00">2023-01-02</time>
               </span>
 
           
@@ -557,7 +630,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-06 20:37:57" itemprop="dateModified" datetime="2023-02-06T20:37:57+08:00">2023-02-06</time>
+                <time title="Modified: 2023-02-06 20:37:58" itemprop="dateModified" datetime="2023-02-06T20:37:58+08:00">2023-02-06</time>
               </span>
 
           
@@ -629,7 +702,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-02 19:26:04" itemprop="dateModified" datetime="2023-01-02T19:26:04+08:00">2023-01-02</time>
+                <time title="Modified: 2023-01-02 19:26:06" itemprop="dateModified" datetime="2023-01-02T19:26:06+08:00">2023-01-02</time>
               </span>
 
           
@@ -701,7 +774,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-01 23:44:15" itemprop="dateModified" datetime="2023-01-01T23:44:15+08:00">2023-01-01</time>
+                <time title="Modified: 2023-01-01 23:44:16" itemprop="dateModified" datetime="2023-01-01T23:44:16+08:00">2023-01-01</time>
               </span>
 
           
@@ -773,7 +846,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-01 23:46:35" itemprop="dateModified" datetime="2023-01-01T23:46:35+08:00">2023-01-01</time>
+                <time title="Modified: 2023-01-01 23:46:36" itemprop="dateModified" datetime="2023-01-01T23:46:36+08:00">2023-01-01</time>
               </span>
 
           
@@ -791,78 +864,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/ClickHouse-%E5%88%86%E5%B8%83%E5%BC%8F/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ClickHouse-MergeTree%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/ClickHouse-MergeTree%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">ClickHouse-MergeTree原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-07-31 13:57:06" itemprop="dateCreated datePublished" datetime="2022-07-31T13:57:06+08:00">2022-07-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-01 23:47:47" itemprop="dateModified" datetime="2023-01-01T23:47:47+08:00">2023-01-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>表引擎是 <code>ClickHouse</code> 设计实现的一大特色，也可以说是表引擎成就了一张表的最终<em>面貌</em>。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/ClickHouse-MergeTree%E5%8E%9F%E7%90%86/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -953,7 +954,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">134</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1076,6 +1077,8 @@
 
 
 
+
+  
 
   
 

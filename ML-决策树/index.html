@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概要决策树（decision tree）是一种基本的分类和回归方法。其主要呈现为树状结构，在分类问题中，表示基于特征对实例进行分类的过程，可以被认为是 if-then 的规则集合，也可以被认为是定义在特征空间与类空间上的条件概率分布。 其优点主要有分类速度快、模型具有可读性，在学习时利用训练数据根据损失函数最小化的原则建立决策树模型；而在预测时对新的数据利用决策树模型进行分类。 决策树模型主要包含">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ML-决策树">
+<meta property="og:url" content="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="概要决策树（decision tree）是一种基本的分类和回归方法。其主要呈现为树状结构，在分类问题中，表示基于特征对实例进行分类的过程，可以被认为是 if-then 的规则集合，也可以被认为是定义在特征空间与类空间上的条件概率分布。 其优点主要有分类速度快、模型具有可读性，在学习时利用训练数据根据损失函数最小化的原则建立决策树模型；而在预测时对新的数据利用决策树模型进行分类。 决策树模型主要包含">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree-1.jpeg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree_3.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree_2.jpg">
+<meta property="article:published_time" content="2023-08-02T13:48:52.000Z">
+<meta property="article:modified_time" content="2023-08-13T03:52:25.474Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree-1.jpeg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>ML-决策树 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ML-%E5%86%B3%E7%AD%96%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ML-决策树
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-02 21:48:52" itemprop="dateCreated datePublished" datetime="2023-08-02T21:48:52+08:00">2023-08-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-13 11:52:25" itemprop="dateModified" datetime="2023-08-13T11:52:25+08:00">2023-08-13</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>决策树（<code>decision tree</code>）是一种基本的<strong>分类和回归方法</strong>。其主要呈现为<strong>树状结构</strong>，在分类问题中，表示基于特征对实例进行分类的过程，可以被认为是 <strong><code>if-then</code> 的规则集合</strong>，也可以被认为是定义在<strong>特征空间与类空间上的条件概率分布</strong>。</p>
+<p>其优点主要有分类速度快、模型具有可读性，在学习时利用训练数据根据<strong>损失函数最小化</strong>的原则建立决策树模型；而在预测时对新的数据利用<strong>决策树模型</strong>进行分类。</p>
+<p>决策树模型主要包含以下步骤：</p>
+<ul>
+<li><strong>特征选择</strong></li>
+<li><strong>决策树的生成</strong></li>
+<li><strong>决策树的修剪</strong></li>
+</ul>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h3><h4 id="决策树模型"><a href="#决策树模型" class="headerlink" title="决策树模型"></a>决策树模型</h4><p>分类决策树模型是一种描述对实例进行分类的树状结构。决策树有<strong>结点（<code>node</code>）</strong>和<strong>有向边（<code>directed edge</code>）</strong>组成，结点有两种类型：<strong>内部结点（<code>internal node</code>）</strong>和<strong>叶结点（<code>leaf node</code>）</strong>，其中内部结点表示一个特征或属性，叶结点表示一个类。</p>
+<p>用决策树分类，首先从根结点开始对实例的某一个特征进行测试，根据测试结果将实例分配到其子结点上，每个子结点对应着一个特征的取值。如此递归地对实例进行测试和分配，直至到达叶结点，最后将实例分配到叶结点的分类中。</p>
+<p><img src="/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree-1.jpeg" alt="decision_tree-1"></p>
+<h4 id="分类过程"><a href="#分类过程" class="headerlink" title="分类过程"></a>分类过程</h4><ol>
+<li><p><strong><code>if-then</code> 规则集合</strong><br>决策树可以看成是 <code>if-then</code> 规则的集合。将决策树转换为 <code>if-then</code> 规则的流程如下：由决策树的根结点到叶结点的每一条路径构建一个规则；路径上的内部结点的特征表示规则的条件，而叶结点的分类则对应的规则的结论。<br>决策树上的路径或其对应的 <code>if-then</code> 规则集合具有一个重要的性质：<strong>互斥且完备</strong>。也就是说每一个实例都被一条路径或对应的一条规则覆盖，而且仅被一条路径或一条规则所覆盖。<br><small>覆盖是指实例的特征与路径上的特征一致或实例满足规则的条件。</small></p>
+</li>
+<li><p><strong>条件概率分布</strong><br>决策树还可以表示为给定特征条件下类的<strong>条件概率分布</strong>，该条件概率分布定义在特征空间的划分（<code>partition</code>）上。将特征空间划分为互不相交的单元或区域，并在每个单元或区域定义一个类的概率分布就可以构成一个条件概率分布。<br>决策树中的每一条路径对应花粉中的某个单元，决策树所表示的条件概率分布就是由各个单元在给定特征条件下类的条件概率分布组成。<br><img src="/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree_3.jpg" alt="decision_tree-3"></p>
+</li>
+</ol>
+<h4 id="决策树学习"><a href="#决策树学习" class="headerlink" title="决策树学习"></a>决策树学习</h4><p>决策树学习根据给定的训练数据集构建一个决策树模型，使之可以正确地进行分类，但其本质就是从训练数据集中归纳总结出一组分类规则，而最终所需要的是具有很好的泛化能力，既可以对训练数据有很好的拟合，也可以对未知数据有很好的预测。<br>那么如何对这一要求如何体现呢？决策树模型使用损失函数来表示这一目标，其通常是<strong>正则化的极大似然函数，策略是以损失函数为目标函数的最小化</strong>。</p>
+<p>决策树学习的算法通常就是一个递归地选择特征，并根据该特征对训练数据进行分割，使得对各个子数据集有一个最好的分类，这一过程对应特征空间的划分，也是决策树的构建。<br>在开始时构建根结点，将所有的训练数据都放在根结点，此时选择一个最优特征，根据这一特征将训练数据集划分为子集，使得各个子集在当前分类情况下是最好的分类；如果这些子集可以被基本正确分类，那就构建叶结点，并将子集分配到对应的叶结点中；如果这些子集不能被正确分类，则为这些子集重新选择新的最优特征，继续对其划分并构建相应的结点；如此递归下去直至训练数据子集都能被正确分类，或者没有合适的特征为止，至此每个子集都会被分配到对应的叶结点上，这就生成了一颗决策树。</p>
+<p>以上方法生成的决策树可以很好的对训练数据集进行分类，但对于未知的数据集却未必有很好的分类能力，即可能发生<strong>过拟合现象</strong>。因此需要对生成的决策树进行<strong>剪枝</strong>，将决策树变得简单化，使其具有更好的<strong>泛化能力</strong>。</p>
+<hr>
+
+<h3 id="生成算法"><a href="#生成算法" class="headerlink" title="生成算法"></a>生成算法</h3><h4 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a><code>ID3</code></h4><p><code>ID3</code> 算法的核心在于对决策树上的各个结点应用<strong>信息增益准则</strong>选择特征，递归地构建决策树。<br>具体方法是：</p>
+<ul>
+<li>从根结点（<code>root node</code>）开始，对结点计算所有可能的特征的信息增益，选择信息增益最大的特征作为结点的特征，由该特征的不同取值建立子结点。</li>
+<li>再对子结点递归地调用以上方法，构建决策树。</li>
+<li>直到所有特征的信息增益都很小或没有特征可以选择为止。</li>
+<li>最终就会得到一个决策树，其本质是使用 <em>极大似然法</em> 进行概率模型的选择。</li>
+</ul>
+<p>示例：</p>
+<blockquote>
+<p>输入：训练数据集 <code>D</code>，特征集 <code>A</code>，阈值 $\omega$ <br><br>输出：决策树<br>过程：</p>
+<ol>
+<li>若 <code>D</code> 中所有实例属于同一类 $C_k$，则 <code>T</code> 为单结点树，并将类 $C_k$ 作为该结点的类标记，返回 <code>T</code>。</li>
+<li>若 <code>A =</code> $\phi$，则 <code>T</code> 为单结点树，并将 <code>D</code> 中实例数最大的类 $C_k$ 作为该结点的类标记，返回 <code>T</code>。</li>
+<li>否则计算 <code>A</code> 中各个特征对 <code>D</code> 的信息增益，选择信息增益最大的特征 $A_g$。</li>
+<li>如果 $A_g$ 小于阈值 $\omega$，则置 <code>T</code> 为单结点树，并将 <code>D</code> 中实例数最大的类 $C_k$ 作为该类的标记，返回 <code>T</code>。</li>
+<li>否则对 $A_g$ 的每一个可能值 $a_i$，依据 $A_g$ &#x3D; $a_i$ 将 <code>D</code> 划分为若干个非空子集 $D_i$，将 $D_i$ 中实例数最大的类作为标记，构建子结点，由结点及其子结点构成树 <code>T</code>，返回 <code>T</code>。</li>
+<li>对第 <code>i</code> 个子结点，以 $D_i$ 为训练集，以 <code>A - </code>$A_g$ 为特征集，递归地调用 <code>1, 2, 3, 4, 5</code> 得到子树 $T_i$，返回 $T_i$。</li>
+</ol>
+</blockquote>
+<h4 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5"></a><code>C4.5</code></h4><p><code>C4.5</code> 算法与 <code>ID3</code> 算法类似，<code>C4.5</code> 在生成过程中使用了<strong>信息增益比</strong>来选择特征。</p>
+<h4 id="CART"><a href="#CART" class="headerlink" title="CART"></a><code>CART</code></h4><p><strong>分类与回归树（<code>classification and regression tree, CART</code>）模型</strong>是应用非常广泛的决策树学习方法，既可以用于分类，也可以用于回归，将用于分类和回归的树统称为决策树。</p>
+<p><code>CART</code> 是在给定输入随机变量 <code>X</code> 条件下输出随机变量 <code>Y</code> 的条件概率分布的学习方法。解释其含义就是，<code>CART</code> 假设决策树是二叉树，内部结点特征取值为<strong>“是”</strong>或 <strong>“否”</strong>，即左分支是取值为“是”的分支，右分支是取值为“否”的分支，这样决策树就等价于递归地对每个特征进行二分，即将输入空间即特征空间划分为有限个单元，并在这些单元上确定预测的概率分布，也就是在输入给定的条件下输出的条件概率分布。</p>
+<p><code>CART</code> 算法由以下两步组成：</p>
+<ul>
+<li>决策树生成：基于训练数据集生成决策树，生成的决策树要尽可能的大。</li>
+<li>决策树剪枝：用验证数据集对已生成的树进行剪枝并选择最优子树，此时<strong>使用损失函数最小化作为剪枝的标准</strong>。</li>
+</ul>
+<hr>
+
+<h3 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h3><p>特征选择在于选取对训练数据具有分类能力的特征，这样可以大大提高决策树学习的效率。如果一个特征进行分类的结果和随机分类的结果没有太大的差别，则这个特征没有分类能力，实际中这样的特征对决策树学习的准确度影响不大。<br>特征选择的准则是：</p>
+<ul>
+<li><strong>信息增益</strong></li>
+<li><strong>信息增益比</strong></li>
+<li><strong>基尼系数</strong></li>
+</ul>
+<h4 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h4><p>在信息论与概率统计中，<strong>熵（<code>entropy</code>）</strong>用来度量随机变量的不确定性。</p>
+<p><strong>条件熵 <code>H(Y|X)</code></strong> 表示在已知随机变量 <code>X</code> 的条件下随机变量 <code>Y</code> 的不确定性，即定义为 <code>X</code> 给定条件下 <code>Y</code> 的条件概率分布的熵对 <code>X</code> 的数学期望。</p>
+<p>$$ H(Y|X) &#x3D; \sum_{i&#x3D;1}^n p_i H (Y | X &#x3D; x_i) $$</p>
+<p><small>其中 $p_i$ <code>= P(X = </code> $x_i$ <code>), i = 1, 2, ..., n</code></small></p>
+<p>当熵和条件熵中的概率由数据估计（特别是极大似然估计）得到时，所对应的熵和条件熵分别被称为<strong>经验熵（<code>empirical entropy</code>）</strong>和<strong>经验条件熵（<code>empirical conditional entropy</code>）</strong>。</p>
+<p><strong>信息增益（<code>information gain</code>）</strong>表示得知特征 <code>X</code> 的信息而使得类 <code>Y</code> 的信息的不确定性减少的程度。<br>特征 <code>A</code> 对训练数据集 <code>D</code> 的信息增益 $g(D, A)$，定义为集合 <code>D</code> 的经验熵 $H(D)$ 与特征 <code>A</code> 给定条件下 <code>D</code> 的经验条件熵 $H(D|A)$ 之差，即</p>
+<p>$$ g(D, A) &#x3D; H(D) - H(D|A) $$</p>
+<p>给定训练数据集 <code>D</code> 与特征 <code>A</code>，<strong>经验熵 $H(D)$</strong> 表示数据集 <code>D</code> 进行分类的不确定性；而<strong>经验条件熵 $H(D|A)$</strong> 表示在特征 <code>A</code> 给定条件下对数据集 <code>D</code> 进行分类的不确定性，那么他们的差即信息增益，表示由于特征 <code>A</code> 而使得对数据集 <code>D</code> 的分类的不确定性减少的程度。由此可以得到信息增益依赖于特征，不同的特征具有不同的信息增益，而信息增益大的特征具有更强的分类能力。</p>
+<p><small>一般地，熵 <code>H(Y)</code> 与条件熵 <code>H(Y|X)</code> 之差称为互信息（<code>mutual information</code>），决策树学习中的信息增益等价于训练数据集中类与特征的互信息，因此决策树学习应用信息增益准则选择特征。</small></p>
+<p>在实际中根据信息增益准则选择特征的方式是：对训练数据集 <code>D</code>，计算其每个特征的信息增益，并比较其大小，择优选择信息增量最大的特征。</p>
+<p>信息增益算法示例： </p>
+<blockquote>
+<p>输入：训练数据集 <code>D</code> 和特征 <code>A</code><br>输出：特征 <code>A</code> 对训练数据集 <code>D</code> 的信息增益 <code>g(D, A)</code><br>过程：</p>
+<ol>
+<li>计算数据集 <code>D</code> 的信息增益<br>$$ H(D) &#x3D; - \sum_{k&#x3D;1}^K {\frac {\vert {C_k}\vert} {\vert {D} \vert} } log_2 {\frac {\vert {C_k}\vert} {\vert {D} \vert} } $$</li>
+<li>计算特征 <code>A</code> 对数据集 <code>D</code> 的经验条件熵<br>$$ H(D|A) &#x3D; \sum_{i&#x3D;1}^n {\frac {\vert {D_i} \vert} {\vert {D} \vert} H(D_i) } $$</li>
+<li>计算信息增益<br>$$ g(D, A) &#x3D; H(D) - H(D|A) $$</li>
+</ol>
+</blockquote>
+<h4 id="信息增益比"><a href="#信息增益比" class="headerlink" title="信息增益比"></a>信息增益比</h4><p>信息增益的大小是相对于训练数据而言的，并没有绝对意义，而在训练数据集的经验熵大的时候，信息增益也会偏大。反之信息增益值会偏小。因此使用信息增益比可以解决这一问题，也是特征选择的另一个准则。<br>特征 <code>A</code> 对训练数据集 <code>D</code> 的信息增益比 $g_r(D, A)$，定义为其信息增益 $g(D, A)$ 与训练数据集 <code>D</code> 的经验熵 $H(D)$ 之比：</p>
+<p>$$ g_r(D, A) &#x3D; {\frac {g(D, A)} {H(D)} } $$</p>
+<h4 id="基尼系数"><a href="#基尼系数" class="headerlink" title="基尼系数"></a>基尼系数</h4><p>决策树的生成是递归地构建二叉决策树的过程，对<strong>回归树使用平方误差最小化准则</strong>，对<strong>分类树使用基尼系数（<code>Gini index</code>）最小化准则</strong>，进行特征选择生成二叉树。</p>
+<h5 id="生成回归树"><a href="#生成回归树" class="headerlink" title="生成回归树"></a>生成回归树</h5><p>假设 <code>X, Y</code> 分别表示输入和输出变量，且 <code>Y</code> 是连续变量，给定的数据集表示为：$D &#x3D; { (x_1, y_1), (x_2, y_2), …, (x_N, y_N)}$，那么回归树如何生成？</p>
+<p>一个回归树对应着输入空间（特征空间）的一个划分以及在划分单元上的输出值。假设已将输入空间划分为 <code>M</code> 个单元 $R_1, R_2, …, R_M$ 并且在每个单元 $R_m$ 上有一个固定的输出值 $C_m$，于是回归树的模型可以表示为</p>
+<p>$$ f(x) &#x3D; \sum_{m&#x3D;1}^M C_m I(x \in R_m) $$</p>
+<p>当输入空间的划分确定时就可以使用平方误差 $\sum_{x_i \in R_m} (y_i - f(x_i))^2$ 表示回归树对训练数据集的预测误差，即平方误差最小时表示该单元上的最优输出值。</p>
+<p>那输入空间（特征空间）的切分点如何划分呢？这里采用启发式的方法，选择第 <code>j</code> 个变量 $X_j$ 和对应的取值 $C_j$ 作为<strong>切分变量（<code>splitting variable</code>）</strong>和<strong>切分点（<code>splitting point</code>）</strong> ，定义两个区域<br>$$R_1(j, C_j) &#x3D; {X | X_j &lt;&#x3D; C_m}, R_2(j, C_j) &#x3D; {x | X_j &gt; C_m}$$<br>然后寻找<strong>最优变量 <code>j</code></strong> 和<strong>最优切分点 $C_m$</strong> 。即求解</p>
+<p>$$ \min_{j,C_m}[\min_{C_1}\sum_{x_i \in R_1(j, C_m)}(y_i - C_1)^2 + \min_{C_2}\sum_{x_i \in R_1(j, C_m)}(y_i - C_2)^2] $$</p>
+<p>而对于固定输入变量 <code>j</code> 就可以找到最优切分点 $C_m$</p>
+<p>$$ \bar{c_1} &#x3D; ave(y_i | x_i \in R_1(j, C_m)) , \bar{c_2} &#x3D; ave(y_i | x_i \in R_2(j, C_m)) $$</p>
+<p>接着遍历输入所有变量，找到最优的切分变量 <code>j</code>，构成一个 $(j, C_m)$。依次将输入空间划分为两个区域，接着对上述区域进行重复划分，直至满足条件为止。即可以生成被称为<strong>最小二乘回归树（<code>least squares regression tree</code>）</strong>。</p>
+<p>最小二乘回归树生成算法示例：</p>
+<blockquote>
+<p>输入：训练数据集 <code>D</code><br>输出：回归树 $f(x)$ <br><br>过程：</p>
+<ol>
+<li>在训练数据集所在的输入空间中，递归地将每个区域划分为两个子区域并决定每个子区域的输出值。</li>
+<li>计算划分数据集的最优切分变量 <code>j</code> 和最优切分点 $C_m$，求解<br> $$ \min_{j,C_m}[\min_{C_1}\sum_{x_i \in R_1(j, C_m)}(y_i - C_1)^2 + \min_{C_2}\sum_{x_i \in R_1(j, C_m)}(y_i - C_2)^2] $$<br>遍历变量 <code>j</code>，对固定的切分变量 <code>j</code> 和切分点 $C_m$ 能得到最小值的对 $(j, C_m)$。</li>
+<li>用选定的最小值的对 $(j, C_m)$ 划分区域并计算对应的输出值<br> $$ R_1(j, C_m) &#x3D; {x|x_j &lt;&#x3D; C_m}, R_2(j, C_m) &#x3D; {x|x_j &gt; C_m} $$<br> $$ \bar{C_m} &#x3D; {\frac {1} {N_m}} \sum_{x_i \in R_m(j, C_m)} y_i, x \in R_m, m &#x3D; 1, 2 $$</li>
+<li>继续对两个子区域调用步骤 <code>2, 3</code>，直至满足条件。</li>
+<li>至此就可以得到将输入空间划分为 <code>M</code> 个区域 $R_1, R_2, …, R_M$ 即可生成回归决策树。<br> $$ f(x) &#x3D; \sum_{m&#x3D;1}^M \bar{C_m} I(x \in R_m) $$</li>
+</ol>
+</blockquote>
+<h5 id="生成分类树"><a href="#生成分类树" class="headerlink" title="生成分类树"></a>生成分类树</h5><p>分类树用<strong>基尼指数</strong>选择最优特征，同时决定该特征的最优二值切分点。<br>在分类问题中，假设有 <code>K</code> 个类，样本点属于第 <code>k</code> 类的概率为 <code>Pk</code>，则概率分布的基尼指数定义为：</p>
+<p>$$ Gini(p) &#x3D; \sum_{k&#x3D;1}^K P_k (1-P_k) &#x3D; 1-\sum_{k&#x3D;1}^K p_k^2 $$</p>
+<p>对于二分类问题，若样本点属于第一个类的概率为 <code>p</code>，则概率分布的基尼指数为：</p>
+<p>$$ Gini(p) &#x3D; 2p(1-p) $$</p>
+<p>对于给定的样本集合 <code>D</code>，其基尼指数为：</p>
+<p>$$ Gini(D) &#x3D; 1 - (\sum_{k&#x3D;1}^K)({\frac {\vert{C_k}\vert} {\vert{D}\vert} })^2 $$</p>
+<p><small>其中 $C_k$ 是 <code>D</code> 中属于第 <code>k</code> 类的样本子集，<code>K</code> 是类的个数。</small> </p>
+<p>如果样本集合 <code>D</code> 根据特征 <code>A</code> 是否取某一个可能值 <code>a</code> 被分割为 <code>D1</code> 和 <code>D2</code>，即 $D1 &#x3D; {(x, y) \in D | A(x) \in a}, D2 &#x3D; D - D1$<br>则在特征 <code>A</code> 的条件下，集合 <code>D</code> 的基尼指数定义为：</p>
+<p>$$ Gini(D, A) &#x3D; {\frac {\vert {D1} \vert} {\vert {D} \vert} } Gini(D1) + {\frac {\vert {D2} \vert} {\vert {D} \vert} } Gini(D2) $$</p>
+<p><small>基尼指数 <code>Gini(D, A)</code> 表示 <code>A = a</code> 分割后集合 <code>D</code> 的不确定性。</small></p>
+<p><small>基尼指数越大，样本集合的不稳定性则越大。</small></p>
+<p><code>CART</code> 决策树基尼系数生成算法示例：</p>
+<blockquote>
+<p>输入：训练数据集 <code>D</code>，停止计算的条件<br>输出：<code>CART</code> 决策树<br>过程：</p>
+<ol>
+<li>根据训练数据集，根结点的数据集为 <code>D</code>，计算现有特征对该数据集的基尼指数，对于特征 <code>A</code> 有一个可能的取值 <code>a</code>，根据样本对 <code>A = a</code> 的测试为“是”或“否”，从而将数据集 <code>D</code> 拆分为 $D_1$ 和 $D_2$ 两部分，计算对应的基尼指数，</li>
+<li>在计算特征 <code>A</code> 所有取值 <code>a</code> 对应的基尼指数后，选择其中基尼指数最小的特征作为对应的最优特征和最优切分点，至此就可以将数据集切分为两部分，生成两个子结点，将数据集分配到对应的子结点中。</li>
+<li>对两个子结点递归地调用 <code>1, 2</code>，直至结点中的数据集个数小于预定阈值，或者基尼指数低于预定阈值，又或者没有足够的特征。</li>
+<li>至此在满足所有条件后即可生成 <code>CART</code> 决策树。</li>
+</ol>
+</blockquote>
+<hr>
+
+<h3 id="决策树修剪"><a href="#决策树修剪" class="headerlink" title="决策树修剪"></a>决策树修剪</h3><p>决策树通过生成算法递归地产生决策树，直到不能继续下去为止，这样产生的树往往对训练数据的分类很准确，但是却对未知的数据分类没有那么准确，即出现过拟合现象。过拟合的原因在于学习时过多的考虑如何提高针对训练数据的正确分类，从而构建出复杂的决策树，那么解决这个问题就是将复杂的决策树进行简单化。<br>在决策树的学习中将已生成的树进行简化的过程称为<strong>剪枝（<code>pruning</code>）</strong>，具体就是剪枝从已生成的树上裁掉一些子树或叶结点，并将其根结点或父结点作为新的叶结点，从而简化树模型。</p>
+<p>决策树的剪枝往往通过极小化决策树整体的 <em>损失函数（<code>lose function</code>）</em> 或 <em>代价函数（<code>cost function</code>）</em> 来实现。<br>设树 <code>T</code> 的叶结点个树为 ${\vert {T} \vert}$，<code>t</code> 是树 <code>T</code> 的叶结点，该叶结点有 $N_t$ 个样本点，其中 <code>k</code> 类的样本点有 $N_{tk}$ 个 <code>k = 1, 2, ..., K</code>，$H_t(T)$ 为叶结点 <code>t</code> 上的经验熵，<code>a &gt;= 0</code> 为参数，则决策树学习的损失函数可以定义为：</p>
+<p>$$ C_a(T) &#x3D; \sum_{t&#x3D;1}^{\vert {T} \vert} N_t H_t (T) + a {\vert {T} \vert} $$</p>
+<p>其中经验熵为：</p>
+<p>$$ H_t(T) &#x3D; -\sum_k {\frac {N_{tk} } {N_t} } log {\frac {N_{tk} } {N_t} } $$</p>
+<p>那么：</p>
+<p>$$ C(T) &#x3D;  \sum_{t&#x3D;1}^{\vert {T} \vert} N_t H_t (T) &#x3D; -\sum_{t&#x3D;1}^{\vert {T} \vert} N_t \sum_{k&#x3D;1}^K  {\frac {N_{tk} } {N_t} } log {\frac {N_{tk} } {N_t} } &#x3D;  -\sum_{t&#x3D;1}^{\vert {T} \vert} \sum_{k&#x3D;1}^K {N_{tk} } log {\frac {N_{tk} } {N_t} } $$</p>
+<p>即可得到：</p>
+<p>$$ C_a(T) &#x3D; C(T) + a(T) $$</p>
+<p>上述中 $C(T)$ 表示模型对训练数据的预测误差，即模型和训练数据的拟合程度，${\vert {T} \vert}$ 表示模型复杂度，参数 <code>a &gt;= 0</code> 控制两者之间的影响。那么较大的 <code>a</code> 就意味着选择较简单的决策树，较小的 <code>a</code> 选择较简单的决策树，<code>a = 0</code> 也就意味着只考虑决策树与训练数据的拟合程度，不考虑决策树的复杂度。<br>决策树剪枝也就是当 <code>a</code> 确定时，选择损失函数最小的决策树，即损失函数最小的子树，刚好通过使得损失函数最小化来平衡复杂的模型和训练数据的拟合程度。</p>
+<p>下面就是具体的剪枝算法示例：</p>
+<blockquote>
+<p>输入；算法生成的决策树 <code>T</code>，参数 <code>a</code><br>输出：修剪后的子树 $T_a$ <br><br>过程：</p>
+<ol>
+<li>计算每个结点的经验熵。</li>
+<li>递归地从树的叶结点向上回缩。<br> <img src="/ML-%E5%86%B3%E7%AD%96%E6%A0%91/decision_tree_2.jpg" alt="decision_tree-2"><br> 假设一组叶结点回缩到其父结点之前与之后的整体树分别为 $T_B$ 与 $T_A$，其对应的损失函数为 $C_a(T_B)$ 与 $C_a(T_A)$，如果 $ C_a(T_B) &lt;&#x3D; C_a(T_A) $ 则进行剪枝，即将父结点变为新的叶结点。</li>
+<li>返回 <code>2</code>，直至不能继续为止，即可得到损失函数最小的子树 $T_a$。</li>
+</ol>
+</blockquote>
+<h4 id="CART-剪枝"><a href="#CART-剪枝" class="headerlink" title="CART 剪枝"></a><code>CART</code> 剪枝</h4><p><code>CART</code> 剪枝算法从决策树底端剪去一些子树，使决策树变小，模型变简单，从而能够对未知数据更准确的预测。<br><code>CART</code> 剪枝算法由两步组成：</p>
+<ul>
+<li><p>首先从算法生成的决策树 $T_0$ 底端开始不断剪枝，直到 $T_0$ 的根结点，形成一个子树序列（$T_0$, $T_1$, …, $T_n$）。<br>  剪枝过程中，计算子树的损失函数：<br>  $$ C_a(T) &#x3D; C(T) + a{\vert {T} \vert} $$<br>  <small><code>T</code> 为任意子树，$C(T)$ 为对训练数据的预测误差，${\vert {T} \vert}$ 为子树的叶结点个树，<code>a &gt;= 0</code> 为参数，$C_a(T)$ 为参数是 <code>a</code> 时的子树 <code>T</code> 的整体损失。</small><br>  对于某个的 <code>a</code>，一定存在使损失函数 $C_a(T)$ 最小的子树 $T_a$，即 $T_a$ 在损失函数 $C_a(T)$ 最小时最优。当 <code>a</code> 大的时候，最优子树 $T_a$ 偏小；当 <code>a</code> 小的时候，最优子树 $T_a$ 偏大；而极端情况下 <code>a = 0</code>，整体树最优；当 <code>a -&gt; </code> $\infty$ 时，根结点组成的单结点树是最优的。</p>
+<p>  具体从整树 $T_0$ 开始剪枝，对 $T_0$ 的任意内部结点 <code>t</code>，以 <code>t</code> 为单结点树的损失函数为：<br>  $$ C_a(T) &#x3D; C(t) + a $$</p>
+<p>  以 <code>t</code> 为根结点的子树 $T_t$ 的损失函数为：<br>  $$ C_a(T_t) &#x3D; C(T_t) + a {\vert {T_t} \vert} $$ </p>
+<ul>
+<li>当 <code>a = 0</code> 及 <code>a</code> 充分小的时候，有不等式：$ C_a(T_t) &lt; C_a(t) $</li>
+<li>当 <code>a</code> 增大时，在某一个 <code>a</code> 有：$ C_a(T_t) &#x3D; C_a(t) $</li>
+<li>当 <code>a</code> 继续增大时，只要 $a &#x3D; {\frac {C(t) - C(T_t)} { {\vert {T_t}\vert} } - 1}$ 即 $T_t$ 与 <code>t</code> 具有相同的损失函数，而 <code>t</code> 的结点较少，因此 <code>t</code> 比 $T_t$ 更可取，对 $T_t$ 进行剪枝。</li>
+</ul>
+<p> 为此计算 $T_0$ 中每个内部结点 <code>t</code><br> $$ g(t) &#x3D; {\frac {C(t) - C(T_t)} { {\vert {T_t}\vert} - 1} }$$<br> 表示剪枝后整体损失函数减小的程度。</p>
+<p> 在 $T_0$ 中剪去 <code>g(t)</code> 最小的子树 $T_t$，将得到子树作为 $T_1$，同时将最小的 <code>g(t)</code> 设为 $a_1$，$T_1$ 为区间 $[a_1, a_2)$ 的最优子树。如此剪枝下去直至根结点，而在这一过程中，不断递增 <code>a</code>，不断产生新的区间。</p>
+</li>
+<li><p>接着通过交叉验证法在独立的验证数据集上对子树序列进行测试，从而选出最优子树。<br>  利用验证数据集测试子树序列 $T_0, T_1, …, T_n$ 中各个子树的平均方差或基尼系数，平方误差或基尼系数最小的子树也就是最优的决策树，而当最优子树被确定时，子树对应的 <code>a</code> 也会被确定，即可得到最优子树 $T_a$。</p>
+</li>
+</ul>
+<p>下面就是具体的 <code>CART</code> 剪枝算法示例：</p>
+<blockquote>
+<p>输入：<code>CART</code> 算法生成的决策树 $T_0$<br><br>输出：最优决策树 $T_a$<br><br>过程：</p>
+<ol>
+<li>设 $k &#x3D; 0, T &#x3D; T_0$。</li>
+<li>设 <code>a </code> $ &#x3D; + \infty$。</li>
+<li>自上而下地对各内部结点 <code>t</code> 计算 $C(T_t)$，${\vert {T_t} \vert}$ 以及<br>  $$ g(t) &#x3D; {\frac {C(t) - C(T_t)} { {\vert {T_t} \vert} - 1} } $$<br>  $$ a &#x3D; min(a, g(t)) $$<br> <small> $T_t$ 表示以 <code>t</code> 为根结点的子树，$C(T_t)$ 是对训练数据的预测误差，${\vert {T_t} \vert}$ 是 $T_t$ 的叶结点个树。</small></li>
+<li>自上而下地访问内部结点 <code>t</code>，如果有 <code>g(t) = a</code>，则进行剪枝并对叶结点 <code>t</code> 以多数表决法决定其类，得到树 <code>T</code>。</li>
+<li>设 $k &#x3D; k + 1, a_k &#x3D;$ <code> a</code> $, T_k &#x3D; T$。</li>
+<li>如果 <code>T</code> 不是由根结点单独组成的树，则返回 <code>4</code>。</li>
+<li>采用交叉验证法在子树序列 $T_0, T_1, …, T_n$ 中选取最优子树 $T_a$。</li>
+</ol>
+</blockquote>
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>分类决策树模型是用于表示基于特征对实例进行分类的树形结构体，决策树可以转换为 <code>if-then</code> 规则集合，也可以看作是定义在特征空间上划分的条件概率分布。</li>
+<li>决策树学习宗旨是构建一个可以对训练数据很好的分类，但同时复杂度较小的决策树。<br> 决策树学习算法包含三部分：特征选择、树的生成、树的剪枝。<br> 常用的算法：<code>ID3</code>、 <code>C4.5</code>、 <code>CART</code>。</li>
+<li>特征选择的目的在于能够选取对实例分类有用的特征，常用的准则如下：<ul>
+<li>样本集合 <code>D</code> 对特征 <code>A</code> 的信息增益：<br> $$ g(D, A) &#x3D; H(D) - H(D|A) $$<br> $$ H(D) &#x3D; - \sum_{k&#x3D;1}^K {\frac {\vert {C_k}\vert} {\vert {D} \vert} } log_2 {\frac {\vert {C_k}\vert} {\vert {D} \vert} } $$<br> $$ H(D|A) &#x3D; \sum_{i&#x3D;1}^n {\frac {\vert {D_i} \vert} {\vert {D} \vert} H(D_i) } $$</li>
+<li>样本集合 <code>D</code> 对特征 <code>A</code> 的信息增益比：<br> $$ g_r(D, A) &#x3D; {\frac {g(D, A)} {H(D)} } $$</li>
+<li>样本集合 <code>D</code> 的基尼指数：<br> $$ Gini(D) &#x3D; 1 - \sum_{k&#x3D;1}^K ({\frac {\vert {C_k} \vert} {\vert {D} \vert} })^2 $$<br> 特征 <code>A</code> 条件下集合 <code>D</code> 的基尼指数：<br> $$  Gini(D, A) &#x3D; {\frac {\vert {D1} \vert} {\vert {D} \vert} } Gini(D1) + {\frac {\vert {D2} \vert} {\vert {D} \vert} } Gini(D2) $$</li>
+</ul>
+</li>
+<li>决策树的生成同时是采用信息增益最大、信息增益比最大或基尼指数最小作为特征选择的准则，然后从根结点开始，通过特征选择准则划分正确的子集，递归地生成决策树。</li>
+<li>生成决策树的过程中会产生过拟合问题，因此需要剪枝，从已生成的决策树上剪掉一些叶结点或者子结点，并将其父结点作为新的叶结点，从而简化决策树。</li>
+</ol>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习《统计学习方法》所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/" rel="prev" title="机器学习实践-Pima 数据集">
+      <i class="fa fa-chevron-left"></i> 机器学习实践-Pima 数据集
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">决策树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">决策树模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E8%BF%87%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">分类过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.3.</span> <span class="nav-text">决策树学习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">生成算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ID3"><span class="nav-number">3.1.</span> <span class="nav-text">ID3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C4-5"><span class="nav-number">3.2.</span> <span class="nav-text">C4.5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CART"><span class="nav-number">3.3.</span> <span class="nav-text">CART</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">4.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A"><span class="nav-number">4.1.</span> <span class="nav-text">信息增益</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A%E6%AF%94"><span class="nav-number">4.2.</span> <span class="nav-text">信息增益比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E5%B0%BC%E7%B3%BB%E6%95%B0"><span class="nav-number">4.3.</span> <span class="nav-text">基尼系数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%9B%9E%E5%BD%92%E6%A0%91"><span class="nav-number">4.3.1.</span> <span class="nav-text">生成回归树</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%88%86%E7%B1%BB%E6%A0%91"><span class="nav-number">4.3.2.</span> <span class="nav-text">生成分类树</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91%E4%BF%AE%E5%89%AA"><span class="nav-number">5.</span> <span class="nav-text">决策树修剪</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CART-%E5%89%AA%E6%9E%9D"><span class="nav-number">5.1.</span> <span class="nav-text">CART 剪枝</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : 'ab554a9450a459fd083c15d6c445ab56',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -29,7 +29,7 @@
 <meta property="og:description" content="引入前几天的日常巡查时发现生产服务上有空指针的异常，但是业务又没有影响，然后通过查看对应的堆栈异常信息，总算是定位到了问题，但是这个问题又有点奇怪。ThreadLocal 的 get() 返回了空指针，但是是在当前的线程的运行中去取值，这个怎么会有问题呢？">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-11-27T11:57:37.000Z">
-<meta property="article:modified_time" content="2021-11-27T12:27:51.495Z">
+<meta property="article:modified_time" content="2021-11-27T12:27:52.000Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Day">
@@ -195,7 +195,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-11-27 19:57:37 / Modified: 20:27:51" itemprop="dateCreated datePublished" datetime="2021-11-27T19:57:37+08:00">2021-11-27</time>
+              <time title="Created: 2021-11-27 19:57:37 / Modified: 20:27:52" itemprop="dateCreated datePublished" datetime="2021-11-27T19:57:37+08:00">2021-11-27</time>
             </span>
 
           
@@ -342,7 +342,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">134</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -465,6 +465,8 @@
 
 
 
+
+  
 
   
 
