@@ -165,6 +165,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" class="post-title-link" itemprop="url">ML-逻辑回归</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-21 21:59:51" itemprop="dateCreated datePublished" datetime="2023-09-21T21:59:51+08:00">2023-09-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-29 00:49:11" itemprop="dateModified" datetime="2023-09-29T00:49:11+08:00">2023-09-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><p><strong>逻辑回归（<code>logistic regression</code>）</strong>是统计学习中的经典分类方法，虽然被称为回归，但其实是个分类模型。其本质是假设某个数据服从逻辑分布，就可以使用极大似然法估计出其线性回归的参数，之后再使用 <code>Sigmoid</code> 逻辑函数对其分类。<br><small>面试的时候千万不要说你很了解 <code>LR</code>，因为细节真的太多了😂</small></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -823,74 +895,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MySQL-Could-not-find-first-log-file-name-in-binary-log-index-file/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/MySQL-Could-not-find-first-log-file-name-in-binary-log-index-file/" class="post-title-link" itemprop="url">MySQL-Could not find first log file name in binary log index file</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-04-02 20:32:07 / Modified: 20:41:26" itemprop="dateCreated datePublished" datetime="2023-04-02T20:32:07+08:00">2023-04-02</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h3><p>在之前的博客中说明过，我负责的业务有数据同步的需求，是从 <code>MySQL</code> 实时同步数据到 <code>ClickHouse</code>，为此我们使用了一个工具 <code>clickhouse-mysql-data-reader</code>，该工具的底层是通过监听 <code>MySQL</code> 的 <code>bin log</code> 来实现实时同步数据。</p>
-<p>就在今早，数据同步不知为何停止了，当发现问题重新拉起同步任务时，就发现同步脚本出现了异常：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could not find first log file name in binary log index file</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/MySQL-Could-not-find-first-log-file-name-in-binary-log-index-file/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -962,7 +966,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基础逻辑回归（logistic regression）是统计学习中的经典分类方法，虽然被称为回归，但其实是个分类模型。其本质是假设某个数据服从逻辑分布，就可以使用极大似然法估计出其线性回归的参数，之后再使用 Sigmoid 逻辑函数对其分类。面试的时候千万不要说你很了解 LR，因为细节真的太多了😂">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ML-逻辑回归">
+<meta property="og:url" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="基础逻辑回归（logistic regression）是统计学习中的经典分类方法，虽然被称为回归，但其实是个分类模型。其本质是假设某个数据服从逻辑分布，就可以使用极大似然法估计出其线性回归的参数，之后再使用 Sigmoid 逻辑函数对其分类。面试的时候千万不要说你很了解 LR，因为细节真的太多了😂">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_3.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_2.png">
+<meta property="article:published_time" content="2023-09-21T13:59:51.511Z">
+<meta property="article:modified_time" content="2023-09-28T16:49:11.524Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_1.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>ML-逻辑回归 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ML-逻辑回归
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-21 21:59:51" itemprop="dateCreated datePublished" datetime="2023-09-21T21:59:51+08:00">2023-09-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-29 00:49:11" itemprop="dateModified" datetime="2023-09-29T00:49:11+08:00">2023-09-29</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><p><strong>逻辑回归（<code>logistic regression</code>）</strong>是统计学习中的经典分类方法，虽然被称为回归，但其实是个分类模型。其本质是假设某个数据服从逻辑分布，就可以使用极大似然法估计出其线性回归的参数，之后再使用 <code>Sigmoid</code> 逻辑函数对其分类。<br><small>面试的时候千万不要说你很了解 <code>LR</code>，因为细节真的太多了😂</small></p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="逻辑回归模型"><a href="#逻辑回归模型" class="headerlink" title="逻辑回归模型"></a>逻辑回归模型</h3><h4 id="逻辑回归分布"><a href="#逻辑回归分布" class="headerlink" title="逻辑回归分布"></a>逻辑回归分布</h4><p>设 <code>X</code> 是连续随机变量，<code>X</code> 服从逻辑分布是指具有下列<strong>分布函数</strong>和<strong>密度函数</strong>：<br>$$ F(x) &#x3D; P(X&lt;&#x3D;x) &#x3D; {\frac {1} {1 + e^{-(x-\mu)&#x2F;\gamma}}} $$<br>$$ f(x) &#x3D; F^‘(x) &#x3D; {\frac {e^{-(x-\mu)&#x2F;\gamma}} {\gamma(1+e^{-(x-\mu)&#x2F;\gamma})^2}} $$<br><small>$\mu$ 为位置参数，$\gamma&gt;0$ 为形状参数。</small></p>
+<p><img src="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_1.jpg" alt="logistic_1.png"><br>分布函数属于逻辑函数，其分布是一条 <strong><code>S</code> 型曲线（<code>sigmoid curve</code>）</strong>，该曲线以点 $(\mu, {\frac {1} {2}})$ 为中心对成，即满足<br>$$ F(-x + \mu) - {\frac {1} {2}} &#x3D; -F(x-\mu) + {\frac {1} {2}} $$<br>该曲线在中心附近增长速度较快，在两端增长速度较慢。同时逻辑回归的分布函数在 $\mu&#x3D;0,\gamma&#x3D;1$ 的特殊参数下就是 <strong><code>Sigmoid</code> 逻辑函数</strong>。<br><small>形状参数 $\gamma$ 越小，曲线在中心位置的增长越快。</small></p>
+<h4 id="二项逻辑回归模型"><a href="#二项逻辑回归模型" class="headerlink" title="二项逻辑回归模型"></a>二项逻辑回归模型</h4><p><strong>二项逻辑回归模型（<code>binomial logistic regression model</code>）</strong>是一种分类模型，由条件概率分布 <code>P(Y|X)</code> 表示，形式为参数化的逻辑分布。<br>$$ P(Y&#x3D;1|x) &#x3D; {\frac {\exp{(w·x+b)}} {1+\exp{(w·x+b)}}} $$<br>$$ P(Y&#x3D;0|x) &#x3D; {\frac {1} {1+\exp{(w·x+b)}}} $$<br><small>随机变量 <code>X</code> 取值为实数，随机变量 <code>Y</code> 取值为 <code>1</code> 或 <code>0</code>。</small><br><small>$x\in R^n$ 是输入，$Y\in{0,1}$ 是输出，$w\in R^n$ 和 $b\in R$ 是参数，$w$ 称为权值向量，$b$ 称为偏置，$w·x$ 是 $w$ 和 $x$ 的内积。</small></p>
+<p>至此，对于给定的输入实例，可以根据上述公式求得 $P(Y&#x3D;1|x)$ 和 $P(Y&#x3D;0|x)$ 的概率，逻辑回归比较两个值的大小，然后将实例分到概率较大的一类中。</p>
+<p>某个事件的<strong>几率（<code>odds</code>）</strong>是指该事件发生的概率与不发生概率的比值。如果事件发生的概率为 $p$，那么该事件的几率就是 ${\frac {p} {1-p}}$，该事件的<strong>对数几率（<code>log odds</code>）</strong>或 <strong><code>logit</code> 函数</strong>是：<br>$$ logit(p) &#x3D; log {\frac {p} {1-p}} $$</p>
+<p>而对于逻辑回归而言，即可得：<br>$$ log {\frac {P(Y&#x3D;1|x)} {1-P(Y&#x3D;1|x)}} &#x3D; w·x $$</p>
+<p>也就是说在逻辑回归模型中，输出 $Y&#x3D;1$ 的对数几率是输入 $x$ 的线性函数，即可将线性函数 $w·x$ 转换为概率：<br>$$ P(Y&#x3D;1|x) &#x3D; {\frac {exp(w·x)} {1+exp(w·x)}} $$</p>
+<p>此时线性函数的值越接近正无穷，概率值就越接近 <code>1</code>，线性函数的值越接近负无穷，概率值就越接近 <code>0</code>，即此模型就是概率回归模型。</p>
+<h4 id="多项逻辑回归模型"><a href="#多项逻辑回归模型" class="headerlink" title="多项逻辑回归模型"></a>多项逻辑回归模型</h4><p>前面说的二项逻辑回归模型可以通过扩展随机变量 <code>Y</code> 的取值集合 $Y\in{1,2,3,…,K}$，那么<strong>多项逻辑回归</strong>的模型是：<br>$$ P(Y&#x3D;k|x) &#x3D; {\frac {exp(w_k·x)} {1+sum_{k&#x3D;1}^{K-1} exp(w_k·x)}} , \quad k &#x3D; {1, 2, 3, …, K}$$<br><small>其中 $x\in R^{n+1}, w_k\in R^{n+1}$</small></p>
+<hr>
+
+<h3 id="模型参数估计"><a href="#模型参数估计" class="headerlink" title="模型参数估计"></a>模型参数估计</h3><p>在逻辑回归的学习中，对于给定的数据集，可以使用极大似然估计法估计模型参数，从而得到逻辑回归模型<br>假设：<br>$$ P(Y&#x3D;1|X) &#x3D; \pi(x), \quad P(Y&#x3D;0|X) &#x3D; 1 - \pi(x) $$<br>似然函数：<br>$$ \Pi_{i&#x3D;1}^N [\pi(x_i)]^{y_i} [1-\pi(x_i)]^{1-y_i} $$<br>对数似然函数：<br>$$\begin{equation}\begin{split}<br>L(w) &amp;&#x3D; sum_{i&#x3D;1}^N [y_i log \pi(x_i) + (1-y_i) log(1-\pi(x_i))] \\<br>&amp;&#x3D; sum_{i&#x3D;1}^N [y_i log {\frac {\pi(x_i)} {1-\pi(x_i)} + log(1-\pi(x_i))}] \\<br>&amp;&#x3D; sum_{i&#x3D;1}^N [y_i(w·x_i) - log(1+exp(w·x_i))]<br>\end{split}\nonumber\end{equation}$$<br>对 $L(w)$ 求极大值，从而得到 $w$ 的估计值。</p>
+<p>至此问题就变成了以对数似然函数为目标的最优化问题。逻辑斯谛回归中通常采用的方法是：</p>
+<ul>
+<li><strong>改进的迭代尺度法</strong></li>
+<li><strong>梯度下降法</strong></li>
+<li>牛顿法</li>
+<li><strong>拟牛顿法</strong></li>
+</ul>
+<h4 id="改进的迭代尺度法"><a href="#改进的迭代尺度法" class="headerlink" title="改进的迭代尺度法"></a>改进的迭代尺度法</h4><p><strong>改进的迭代尺度法（<code>improved iterative scaling, IIS</code>）</strong>是一种最大熵模型学习的最优化算法。<br><code>IIS</code> 的想法是：假设最大熵模型当前的参数向量是 $w&#x3D;(w_1,w_2,…,w_n)^T$，那希望找到新的参数向量 $w+\delta &#x3D; (w_1+\delta_1,w_2+\delta_2,…,w_n+\delta_n)^T$，以此使得模型的对数似然函数值增大。即找到一种参数向量的更新方法：$\tau:w \rightarrow w+\delta$，那么就可以使用这一方法，直至找到对数似然函数的最大值。</p>
+<p><strong>改进的迭代尺度算法 <code>IIS</code></strong> ：</p>
+<blockquote>
+<p>输入：特征函数 $f_1,f_2,…,f_n$；经验分布 $\widetilde{P}(X,Y)$，模型 $P_w(y|x)$ <br><br>输出：最优参数值 $w_i^*$；最优模型 $P_{w^*}$ <br><br>过程：</p>
+<ol>
+<li>对所有的 $i \in {1,2,…,n}$，取初始值 $w_i&#x3D;0$。</li>
+<li>对每一个 $i \in {1,2,…,n}$：<br><br> a. 令 $\delta_i$ 是方程 $sum_{x,y} \widetilde{P}(x) P(y|x) f_i(x,y) \exp{(\delta_i sum_{i&#x3D;1}^nf_i(x,y))} &#x3D; E_{\widetilde{P}}(f_i)$ 的解。<br><br>  b. 更新 $w_i$ 值：$w_i \leftarrow w_i + \delta_i$。</li>
+<li>如果所有的 $w_i$ 都收敛，则继续重复步骤 <code>2</code>。<br> 这一步骤的关键是求解 $\delta_i$。如果 $sum_{i&#x3D;1}^nf_i(x,y)$ 是常数，即对所有的 <code>x,y</code> 都有 $sum_{i&#x3D;1}^nf_i(x,y) &#x3D; M$，那么 $\delta_i$ 就可以显示地表示为<br> $$ \delta_i &#x3D; {\frac {1} {M}} \log{\frac {E_{\widetilde{P}} (f_i)} {E_P (f_i)}} $$<br> 如果 $sum_{i&#x3D;1}^nf_i(x,y)$ 不是常数，则必须通过数值计算求 $\delta_i$。</li>
+</ol>
+</blockquote>
+<h4 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h4><p><strong>梯度下降法（gradient descent）</strong>的计算过程就是沿着梯度下降的方向求解极小值（也可以沿着梯度上升的方向求最大值）。<br>$$ \theta_1 &#x3D; \theta_0 - \alpha {\frac {\delta} {\delta \theta_j}} J(\theta) $$<br><small>$\alpha$ 被称为学习率或步长，用来控制每一步行走的距离。其不能太大，也不能太小。</small></p>
+<p><strong>梯度下降法</strong>：</p>
+<blockquote>
+<p>输入：特征函数 $f_1,f_2,…,f_n$；经验分布 $\widetilde{P}(X,Y)$，模型 $P_w(y|x)$ <br><br>输出：最优参数值 $w_i^*$；最优模型 $P_{w^*}$ <br><br>过程：</p>
+<ol>
+<li>初始化终止距离 $\epsilon$ 以及步长 $\alpha$。</li>
+<li>确定当前位置的损失函数梯度，对于 $\theta_i$，其梯度表达式如下：<br> $$ {\frac {\delta} {\delta \theta_j}} J(\theta) $$</li>
+<li>使用步长乘以损失函数的梯度得到当前的下降距离，即 $\alpha {\frac {\delta} {\delta \theta_j}} J(\theta)$。</li>
+<li>确定是否所有的 $\theta_i$ 都小于终止距离 $\epsilon$，如果都小于则确定当前的 $\theta_i$ 为本次计算结果。</li>
+<li>更新表达式 $\theta_i &#x3D; \theta_i - \alpha {\frac {\delta} {\delta \theta_i}} J(\theta)$ 然后转入步骤 <code>2</code>。</li>
+</ol>
+</blockquote>
+<h4 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h4><p>最大熵模型还可以应用<strong>牛顿法</strong>或<strong>拟牛顿法</strong>。</p>
+<p><strong>最大熵模型学习的 <code>BFGS</code> 算法</strong>：</p>
+<blockquote>
+<p>输入：特征函数 $f_1,f_2,…,f_n$；经验分布 $\widetilde{P}(X,Y)$，目标函数 $f(w)$，梯度 $g(w)&#x3D; \nabla{f(w)}$，精度要求 $\epsilon$ <br><br>输出：最优参数值 $w_i^*$；最优模型 $P_{w^*}$ <br><br>过程：</p>
+<ol>
+<li>选定初识点 $w^{(0)}$，取 $B_0$ 为正定对称矩阵，置 $k&#x3D;0$</li>
+<li>计算 $g_k&#x3D;g(w^{(k)})$ 。若 $||g_k||&lt;\epsilon$ 则停止计算，得 $w^*&#x3D;w^{(k)}$；否则转步骤 <code>3</code></li>
+<li>由 $B_k p_k &#x3D; -g_k$ 求出 $p_k$</li>
+<li>一维搜索：求 $\lambda_k$ 使得<br> $$ f(w^{(k)} + \lambda_k p_k) &#x3D; min_{\lambda&gt;&#x3D;0} f(w^{(k)} + \lambda p_k) $$</li>
+<li>置 $w^{(k+1)} &#x3D; w^{(k)} + \lambda_k p_k$</li>
+<li>计算 $g_{k+1} &#x3D; g()w^{(k+1)}$，若 $||g_{k+1}|| &lt; \epsilon$ 则停止计算，得 $w^*&#x3D;w^{(k+1)}$；否则求出 $B_{k+1}$：<br> $$ B_{k+1} &#x3D; B_k + {\frac {y_k y_k^T} {y_k^T \delta_k}} - {\frac {B_k \delta_k \delta_k^T B_k} {\delta_k^T B_k \delta_k}} $$<br> <small>其中 $y_k &#x3D; g_{k+1}-g_k, \delta_k &#x3D; w^{(k+1)}-w^{(k)}$</small></li>
+<li>置 $k&#x3D;k+1$，转步骤 <code>3</code>。</li>
+</ol>
+</blockquote>
+<hr>
+
+<h3 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h3><h4 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h4><p>正则化是一个通用的算法和思想，任何会产生过拟合现象的算法都可以使用正则化来避免过拟合。在经验风险最小化的基础上（训练误差最小化），尽可能地采用简单模型，可以有效提高泛化预测精度。而正则化之所以有效是因为其降低了特征的权重，使得模型更加简单。</p>
+<p>正则化一般采用 <code>L1</code> 范式或 <code>L2</code> 范式，其形式分别为 $\Phi(w) &#x3D; ||x||_1$ 和 $\Phi(w) &#x3D; ||x||_2$。</p>
+<h5 id="L1-正则化"><a href="#L1-正则化" class="headerlink" title="L1 正则化"></a><code>L1</code> 正则化</h5><p><strong><code>L1</code> 正则化</strong>也称为 <strong><code>LASSO</code> 回归</strong>，其为模型增加了一个参数 <code>w</code>，而此参数 <code>w</code> 服从<strong>零均值拉普拉斯分布</strong>：<br>$$ f(w|\mu,b) &#x3D; {\frac {1} {2b}} \exp{-{\frac {|w-\mu|} {b}}} $$</p>
+<p>那么之后的似然函数如下：<br>$$\begin{equation}\begin{split}<br>L(w) &amp;&#x3D; P(y|w,x) P(w) \\<br>&amp;&#x3D; \Pi_{i&#x3D;1}^N p(x_i)^{y_i} (1-p(x_i))^{1-y_i} \Pi_{j&#x3D;1}^d {\frac {1} {2b}} \exp({-{\frac {|w_j|} {b}}})<br>\end{split}\nonumber\end{equation}$$</p>
+<p>对该式子取 <code>log</code> 再取负可得目标函数：<br>$$ -\ln{L(w)} &#x3D; - sum_i[y_i \ln{p(x_i)} + (1-y_i) \ln{(1-p(x_i))}] + {\frac {1} {2b^2}} sum_j |w_j| $$</p>
+<p>等价于原始损失函数的后面再加上了 <code>L1</code> 正则项，因此 <code>L1</code> 的本质就是为模型增加<strong>模型参数服从零均值拉普拉斯分布</strong>的这一特点。</p>
+<h5 id="L2-正则化"><a href="#L2-正则化" class="headerlink" title="L2 正则化"></a><code>L2</code> 正则化</h5><p><strong><code>L2</code> 正则化</strong>也称 <strong><code>Ridge</code> 回归</strong>，其本质是为模型增加了一个参数 <code>w</code>，而此参数服从<strong>零均值正态分布</strong>。<br>$$ f(w|\mu,)\sigma &#x3D; {\frac {1} {\sqrt{2\pi} \sigma}} \exp{(- {\frac {(w-\mu)^2} {2 \sigma^2}})} $$</p>
+<p>那么之后的似然函数如下：<br>$$\begin{equation}\begin{split}<br>L(w) &amp;&#x3D; P(y|w,x)P(w) \\<br>&amp;&#x3D; \Pi_{i&#x3D;1}^N p(x_i)^{y_i} (1-p(x_i))^{1-y_i} \Pi_{j&#x3D;1}^d {\frac {1} {\sqrt{2\pi}\sigma}} \exp{(- {\frac {w_j^2} {2\sigma^2}})} \\<br>&amp;&#x3D; \Pi_{i&#x3D;1}^N p(x_i)^{y_i} (1-p(x_i))^{1-y_i} {\frac {1} {\sqrt{2\pi}\sigma}} \exp{(- {\frac {w^T w} {2\sigma^2}})}<br>\end{split}\nonumber\end{equation}$$</p>
+<p>对上式子取 <code>log</code> 再取负可得到目标函数：<br>$$ - \log{L(w)} &#x3D; - sum_i [y_i \log{p(x_i)} + (1 - y_i) \log{(1-p(x_i))}] + {\frac {1} {2 \sigma^2}} w^T w + const $$</p>
+<p>上述公式等价于原始的 <code>cross - entropy</code> 之后再加上 <code>L2</code> 正则项，至此 <code>L2</code> 正则的本质也就是为模型增加<strong>模型参数服从零均值正态分布</strong>这一特点。 </p>
+<h5 id="L1-正则与-L2-正则的区别"><a href="#L1-正则与-L2-正则的区别" class="headerlink" title="L1 正则与 L2 正则的区别"></a><code>L1</code> 正则与 <code>L2</code> 正则的区别</h5><p><code>L1</code> 正则化增加了所有权重 <code>w</code> 参数的绝对值之和，使得更多的 <code>w</code> 趋向于零，从而导致模型参数变得稀疏。而 <code>L2</code> 正则化则是增加了所有权重 <code>w</code> 参数的平方之和，使得参数 <code>w</code> 仅可能趋向于零但不为零，以此导致模型参数更加稠密，从而防止过拟合。</p>
+<p><img src="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_3.png" alt="logistic_3"></p>
+<h4 id="并行化"><a href="#并行化" class="headerlink" title="并行化"></a>并行化</h4><p>在逻辑回归的求解过程中，无论是改进的迭代尺度法还是牛顿法，其本质都是需要计算梯度的，因此逻辑回归的并行化主要是对<strong>目标函数梯度计算的并行化</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://ssjcoding.github.io/2018/11/20/gradient-descent/">梯度下降法详解</a></p>
+<h4 id="在线学习"><a href="#在线学习" class="headerlink" title="在线学习"></a>在线学习</h4><p>😭<code>TODO</code></p>
+<hr>
+
+<h3 id="最大熵模型"><a href="#最大熵模型" class="headerlink" title="最大熵模型"></a>最大熵模型</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p><strong>最大熵模型（<code>maximum entropy model</code>）</strong>是由最大熵原理推导而成。最大熵原理认为：学习概率模型时，在所有可能的概率分布中，熵最大的模型也就是最好的模型。通常使用约束条件来确定概率模型的集合，而最大熵原理也可以表示为在满足约束条件的模型集合中选取熵最大的模型。<br>假设离散随机变量 $X$ 的概率分布是 $P(X)$，则其熵为：<br>$$ H(P) &#x3D; - sum_x P(x) logP(x) $$<br><small>熵需要满足 $0&lt;&#x3D;H(P)&lt;&#x3D;log|X|$，其中 $|X|$ 是 <code>X</code> 的取值个数，当且仅当 <code>X</code> 的分布是均匀分布是右边的等号才会成立。（<code>X</code> 服从均匀分布时，其熵最大）</small></p>
+<p>概率模型集合可使用由欧氏空间中的<strong>单纯形</strong>表示，其中一个点表示一个模型，整个单纯形代表模型集合。单纯形中的直线表示约束条件，直线的交集对应于满足所有约束条件的模型集合。然而这样的模型会存在多个，最大熵原理则是在众多的模型中选择最优的模型。<br><small>单纯形是指在 <code>n</code> 维欧氏空间中的 <code>n+1</code> 个仿射无关的点的集合的凸包。</small><br><img src="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_2.png" alt="logistic_2.png"></p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>最大熵原理是统计学习中的一般原理，将它应用到分类得到最大熵模型。假设分类模型是一个条件概率分布 $P(Y|X)$，其表示对于给定的输入 <code>X</code>，会以条件概率 $P(Y|X)$ 输出 <code>Y</code>，其中 $X,Y$ 分别表示输入和输出。</p>
+<p>给定一个训练数据集 $T&#x3D;{(x_1, y_1), …, (x_N, y_N)}$，学习的目标是使用最大熵原理选择最好的分类模型。对于给定的训练数据集，可以确定联合分布 $P(X, Y)$ 的经验分布和边缘分布 $P(X)$ 的经验分布，分别以 $\widetilde{P}(X, Y)$ 和 $\widetilde{P}(X)$ 表示：<br>$$ \widetilde{P}(X&#x3D;x, Y&#x3D;y) &#x3D; {\frac {v(X&#x3D;x, Y&#x3D;y)} {N}} $$<br>$$ \widetilde{P}(X&#x3D;x) &#x3D; {\frac {v(X&#x3D;x)} {N}} $$<br><small>$v(X&#x3D;x, Y&#x3D;y)$ 表示训练数据中样本 $(x, y)$ 出现的频数，$v(X&#x3D;x)$ 表示训练数据中输出 <code>x</code> 出现的频数，<code>N</code> 表示训练样本容量。</small><br><br><br>首要模型需要考虑满足条件，可以使用<strong>特征函数（<code>feature function</code>）</strong> $f(x, y)$ 描述输入 $x$ 和输出 $y$ 之间的某一个事实，其定义为：<br>$$<br>f(x, y) &#x3D;<br>\begin{cases}<br>1,  &amp; \text{x 与 y 满足某一条件} \\<br>0, &amp; \text{否则}<br>\end{cases}<br>$$<br><small>上述定义为一个<strong>二值函数</strong>，当 <code>x</code> 和 <code>y</code> 满足某个事实时取值为 <code>1</code>，否则为 <code>0</code>。</small><br>特征函数 $f(x, y)$ 关于经验分布 $\widetilde{P}(X, Y)$ 的期望值用 $E_\widetilde{p} (f)$ 来表示：<br>$$ E_\widetilde{p} (f) &#x3D; sum_{x,y} \widetilde{P}(x,y) f(x,y) $$<br>特征函数 $f(x, y)$ 关于模型 $P(Y|X)$ 与经验分布 $\widetilde{P}(X)$ 的期望值用 $E_\widetilde{p}(f)$ 来表示：<br>$$ E_p (f) &#x3D; sum_{x,y} E_\widetilde{p}(x) P(y|x) f(x,y) $$<br>那么在训练数据集中获得足够多的条件，就可以假设两个期望值相等，即：<br>$$ E_p (f) &#x3D; E_\widetilde{p}(f) $$<br>$$ sum_{x,y} \widetilde{P}(x) P(y|x) f(x,y) &#x3D; sum_{x,y} \widetilde{P}(x,y) f(x,y) $$<br><br><br>假设满足所有约束条件的模型集合为 $\varsigma &#x3D; {p \in P|E_p(f_i) &#x3D; E_\widetilde{p}(f_i), i&#x3D;1,2, …, n}$，定义在条件概率分布 $P(Y|X)$ 上的条件熵为：<br>$$ H(P) &#x3D; - sum_{x,y} \widetilde{P}(x) P(y|x) logP(y|x) $$<br>则模型集合 $\varsigma$ 中条件熵 $H(P)$ 最大的模型称为最大熵模型，而公式中的对数为<strong>自然对数</strong>。</p>
+<h4 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h4><p>最大熵模型的学习过程就是求解最大熵模型的过程，最大熵模型的学习可以形式化为最优化问题。</p>
+<p>对于给定的训练数据集 $T &#x3D; {(x_1, y_1), …, (x_N, y_N)}$ 以及特征函数 $f_i(x,y), i&#x3D;1,2,…,N$，最大熵模型的学习等价于约束最优化问题：<br>$$ max_{P \in \varsigma} H(P) &#x3D; - sum_{x,y} \widetilde{P}(x) P(y|x) logP(y|x) $$<br>$$ E_p(f_i) &#x3D; E_\widetilde{p}(f_i), \quad i&#x3D;1,2,…,n $$<br>$$ sum_y P(y|x) &#x3D; 1 $$<br>按照求解最优化问题的习惯，将求<strong>最大值问题改写为等价的求最小值问题</strong>：<br>$$ min_{P \in \varsigma} -H(P) &#x3D; sum_{x,y} \widetilde{P}(x) P(y|x) logP(y|x) $$<br>$$ s.t. \quad E_p(f_i) - E_\widetilde{p}(f_i) &#x3D; 0, \quad i&#x3D;1,2,…,n $$<br>$$ sum_y P(y|x) &#x3D; 1 $$</p>
+<p>至此可以将约束最优化的原始问题转换为无约束最优化的对偶问题，通过求解对偶问题来求解原始问题。</p>
+<ol>
+<li><p>引入拉格朗日乘子 $w_0, w_1, …, w_n$。<br>定义拉格朗日函数 $L(P, w)$。<br>$$\begin{equation}\begin{split}<br>L(P, w) &amp;&#x3D; -H(P) + w_0(1-sum_yP(y|x)) + sum_{i&#x3D;1}^n w_i (E_\widetilde{p}(f_i) - E_p(f_i)) \\<br>&amp;&#x3D; sum_{x,y} \widetilde{P}(x) P(y|x) logP(y|x) + w_0(1-sum_yP(y|x)) \\<br>&amp;+ sum_{i&#x3D;1}^n w_i (sum_{x,y} \widetilde{P}(x,y) f_i(x,y) - sum_{x,y} \widetilde{P}(x) P(y|x) f_i(x,y)) \\<br>\end{split}\nonumber\end{equation}$$</p>
+<p> 上述可得需要优化的原始问题是:<br> $$ min_{P \in \varsigma} max_w L(P, w) $$<br> 那么对偶问题是：<br> $$ max_w min_{P \in \varsigma} L(P, w) $$</p>
+<p> 由于拉格朗日函数 $L(P, w)$ 是 <code>P</code> 的凸函数，因此原始问题的解等价于对偶问题的解。</p>
+</li>
+<li><p>求解对偶问题内部的极小化。<br>$min_{P \in \varsigma} L(P, w)$ 是 <code>w</code> 的函数，将其记作：<br>$$ \Psi(w) &#x3D; min_{P \in \varsigma} L(P, w) &#x3D; L(P_w, w) $$</p>
+<p> $\Psi(w)$ 是对偶函数，同时将其记作：<br> $$ P_w &#x3D; arg min_{P \in \varsigma} L(P, w) &#x3D; P_w(y|x) $$</p>
+<p> 之后求 $L(P, w)$ 对 $P(y|x)$ 的偏导数。<br> $$\begin{equation}\begin{split}<br> {\frac {\partial{L(P, w)}} {\partial{P(y|x)}}} &amp;&#x3D; sum_{x,y} \widetilde{P}(x)(logP(y|x)+1) - sum_y w_0 - sum_{x,y}(\widetilde{P}(x) sum_{i&#x3D;1}^n w_i f_i(x,y)) \\<br> &amp;&#x3D; sum_{x,y} \widetilde{P}(x)(logP(y|x)+1-w_0-sum_{i&#x3D;1}^n w_i f_i(x,y))<br> \end{split}\nonumber\end{equation}$$</p>
+<p> 在令偏导数等于 <code>0</code>，$\widetilde{P}(x)&gt;0$ 的情况下，解得：<br> $$\begin{equation}\begin{split}<br> P(y|x) &amp;&#x3D; exp(sum_{i&#x3D;1}^n w_i f_i(x,y) + w_0 - 1) \\<br> &amp;&#x3D; {\frac {exp(sum_{i&#x3D;1}^n w_i f_i(x,y))} {exp(1-w_0)}}<br> \end{split}\nonumber\end{equation}$$</p>
+<p> 由于 $sum_yP(y|x)&#x3D;1$，可得：<br> $$ P_w(y|x) &#x3D; {\frac {1} {Z_w(x)}} exp(sum_{i&#x3D;1}^n w_i f_i(x,y)) $$<br> 而这其中 $Z_w(x) &#x3D; sum_y exp(sum_{i&#x3D;1}^n w_i f_i(x,y))$</p>
+<p> <small>$Z_w(x)$ 被称为规范化因子，$f_i(x,y)$ 是特征函数，$w_i$ 是特征的权值，模型 $P_w&#x3D;P_w(y|x)$ 就是最大熵模型，而 <code>w</code> 是最大熵模型的参数向量。</small></p>
+</li>
+<li><p>求解对偶问题外部的极大化。<br>$max_w \Psi(w)$ 将其解记作 $w^*$，即：<br>$$ w^* &#x3D; arg max_w \Psi(w) $$</p>
+<p> 应用最优化算法求对偶问题 $\Psi(w)$ 的极大化得到 $w^*$，表示 $P^* \in \varsigma$。此时这里的 $p^*&#x3D;P_{w^*}&#x3D;P_{w^*}(y|x)$ 也就是学习到的最优模型（最大熵模型）。即可得到最大熵模型的学习就是对偶函数 $\Psi(w)$ 的极大化。</p>
+</li>
+</ol>
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>对于文章中不理解的特有名词，还是需要自己去了解查询。<br>如果你在阅读途中遇到了看不懂、不了解等因素，可以先放一放，阅读完毕后你就会明白之前是什么含义。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://ssjcoding.github.io/2018/11/20/gradient-descent/">梯度下降法详解</a><br><a target="_blank" rel="noopener" href="https://www.jasper.wang/logistic_r">Logistic回归</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习《统计学习方法》所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="prev" title="ML-支持向量机">
+      <i class="fa fa-chevron-left"></i> ML-支持向量机
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">逻辑回归模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E5%88%86%E5%B8%83"><span class="nav-number">2.1.</span> <span class="nav-text">逻辑回归分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">二项逻辑回归模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E9%A1%B9%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.3.</span> <span class="nav-text">多项逻辑回归模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">模型参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E7%9A%84%E8%BF%AD%E4%BB%A3%E5%B0%BA%E5%BA%A6%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">改进的迭代尺度法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">梯度下降法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%9F%E7%89%9B%E9%A1%BF%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">拟牛顿法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="nav-number">4.</span> <span class="nav-text">逻辑回归</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">4.1.</span> <span class="nav-text">正则化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#L1-%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">4.1.1.</span> <span class="nav-text">L1 正则化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#L2-%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">4.1.2.</span> <span class="nav-text">L2 正则化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#L1-%E6%AD%A3%E5%88%99%E4%B8%8E-L2-%E6%AD%A3%E5%88%99%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.1.3.</span> <span class="nav-text">L1 正则与 L2 正则的区别</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E5%8C%96"><span class="nav-number">4.2.</span> <span class="nav-text">并行化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.3.</span> <span class="nav-text">在线学习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">最大熵模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">5.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">5.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0"><span class="nav-number">5.3.</span> <span class="nav-text">学习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '69aad8a87e597ceb84760fa2785dba8f',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

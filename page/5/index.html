@@ -165,6 +165,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/" class="post-title-link" itemprop="url">Neo4j系列博客-Cypher-1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-11 22:48:28" itemprop="dateCreated datePublished" datetime="2022-01-11T22:48:28+08:00">2022-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-03 11:06:46" itemprop="dateModified" datetime="2022-02-03T11:06:46+08:00">2022-02-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Cypher-概述"><a href="#Cypher-概述" class="headerlink" title="Cypher 概述"></a>Cypher 概述</h3><p><code>Cypher</code> 是一种声明式图数据库查询语言，它具有丰富的表现力，能高效地查询和更新图数据。 <code>Cypher</code> 查询语言设计很人性化，既适合开发人员，也很适合专业的运营人员。</p>
+<p><code>Cypher</code> 借鉴了 <code>SQL</code> 语言的结构，查询可由各种各样的语句组合。语句被链接在一起，相互之间传递中间结果集。</p>
+<h4 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h4><p><code>Neo4j</code> 图由节点和关系构成。节点可能还有标签和属性，关系可能还有类型和属性。节点表达的是实体，关系连接一对节点。节点可以按照类似关系数据库中的表，但又不完全一样。节点的标签可以理解为不同的表名，属性类似关系数据库中表的列。一个节点的数据类似关系数据库中表的一行数据。拥有相同标签的节点通常具有类似的属性，但不完全一样，这点与关系数据库中一张表中的行数据拥有相同的列是不一样的。<br>单个节点或者关系只能编码很少的信息，但<strong>模式可以将很多节点和关系编码为任意复杂的想法</strong>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-Cypher-1/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Neo4j%E7%B3%BB%E5%88%97%E5%8D%9A%E5%AE%A2-%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -787,80 +861,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/" class="post-title-link" itemprop="url">算法-链表中都有哪些套路</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-05-25 20:53:41 / Modified: 22:10:56" itemprop="dateCreated datePublished" datetime="2021-05-25T20:53:41+08:00">2021-05-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近这两天在看牛客网上链表这块的算法题，一番苦战总结下来就是那些个套路，只要熟知一些常见的套路，碰见链表一类的算法题都会有个大概的思路。<br>全文包含的套路如下：</p>
-<ul>
-<li><a href="#1">快慢指针</a></li>
-<li><a href="#2">链表删除节点</a></li>
-<li><a href="#3">链表反转</a></li>
-<li><a href="#4">临时头节点</a></li>
-<li><a href="#5">破坏当前节点</a></li>
-</ul>
-<p><small>不过还有一些小细节就需要你自己在做题的过程中发现了，这里只是一些比较常见的套路，希望对你有所帮助。</small></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%97%E8%B7%AF/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -932,7 +932,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
