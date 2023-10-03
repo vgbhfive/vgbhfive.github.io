@@ -165,6 +165,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/" class="post-title-link" itemprop="url">SpringBoot结合Dobbo出现Error</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-02-17 14:18:34" itemprop="dateCreated datePublished" datetime="2019-02-17T14:18:34+08:00">2019-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:28:24" itemprop="dateModified" datetime="2020-02-05T14:28:24+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>如题目所属，这是我遇到的问题，以此记录一下，不说上异常：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.beans.factory.BeanCreationException: </span><br><span class="line">Error creating bean with name &#x27;persistenceExceptionTranslationPostProcessor&#x27; defined in class path resource [org/springframework/boot/autoconfigure/dao/PersistenceExceptionTranslationAutoConfiguration.class]: Initialization of bean failed; </span><br><span class="line">nested exception is java.lang.IllegalStateException: </span><br><span class="line">No persistence exception translators found in bean factory. </span><br><span class="line">Cannot perform exception translation.</span><br></pre></td></tr></table></figure>
+<p>这个是在我写练习Demo时遇到的错误，经过反复的琢磨之后，才发现，是在引入Dubbo时，由Dubbo引入的Spring包与SpringBoot引入的Spring包发生了冲突，所以修改pom.xml文件，</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/SpringBoot%E7%BB%93%E5%90%88Dobbo%E5%87%BA%E7%8E%B0Error/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -674,14 +748,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-count">137</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

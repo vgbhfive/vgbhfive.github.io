@@ -29,10 +29,10 @@
 <meta property="og:description" content="基础逻辑回归（logistic regression）是统计学习中的经典分类方法，虽然被称为回归，但其实是个分类模型。其本质是假设某个数据服从逻辑分布，就可以使用极大似然法估计出其线性回归的参数，之后再使用 Sigmoid 逻辑函数对其分类。面试的时候千万不要说你很了解 LR，因为细节真的太多了😂">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_1.jpg">
-<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_3.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_3.jpg">
 <meta property="og:image" content="https://blog.vgbhfive.cn/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_2.png">
 <meta property="article:published_time" content="2023-09-21T13:59:51.511Z">
-<meta property="article:modified_time" content="2023-09-28T16:49:11.524Z">
+<meta property="article:modified_time" content="2023-09-28T17:02:56.860Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="ML">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-29 00:49:11" itemprop="dateModified" datetime="2023-09-29T00:49:11+08:00">2023-09-29</time>
+                <time title="Modified: 2023-09-29 01:02:56" itemprop="dateModified" datetime="2023-09-29T01:02:56+08:00">2023-09-29</time>
               </span>
 
           
@@ -298,7 +298,7 @@
 <p>对上式子取 <code>log</code> 再取负可得到目标函数：<br>$$ - \log{L(w)} &#x3D; - sum_i [y_i \log{p(x_i)} + (1 - y_i) \log{(1-p(x_i))}] + {\frac {1} {2 \sigma^2}} w^T w + const $$</p>
 <p>上述公式等价于原始的 <code>cross - entropy</code> 之后再加上 <code>L2</code> 正则项，至此 <code>L2</code> 正则的本质也就是为模型增加<strong>模型参数服从零均值正态分布</strong>这一特点。 </p>
 <h5 id="L1-正则与-L2-正则的区别"><a href="#L1-正则与-L2-正则的区别" class="headerlink" title="L1 正则与 L2 正则的区别"></a><code>L1</code> 正则与 <code>L2</code> 正则的区别</h5><p><code>L1</code> 正则化增加了所有权重 <code>w</code> 参数的绝对值之和，使得更多的 <code>w</code> 趋向于零，从而导致模型参数变得稀疏。而 <code>L2</code> 正则化则是增加了所有权重 <code>w</code> 参数的平方之和，使得参数 <code>w</code> 仅可能趋向于零但不为零，以此导致模型参数更加稠密，从而防止过拟合。</p>
-<p><img src="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_3.png" alt="logistic_3"></p>
+<p><img src="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/logistic_3.jpg" alt="logistic_3"></p>
 <h4 id="并行化"><a href="#并行化" class="headerlink" title="并行化"></a>并行化</h4><p>在逻辑回归的求解过程中，无论是改进的迭代尺度法还是牛顿法，其本质都是需要计算梯度的，因此逻辑回归的并行化主要是对<strong>目标函数梯度计算的并行化</strong>。</p>
 <p><a target="_blank" rel="noopener" href="https://ssjcoding.github.io/2018/11/20/gradient-descent/">梯度下降法详解</a></p>
 <h4 id="在线学习"><a href="#在线学习" class="headerlink" title="在线学习"></a>在线学习</h4><p>😭<code>TODO</code></p>
@@ -357,7 +357,10 @@
     <a href="/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="prev" title="ML-支持向量机">
       <i class="fa fa-chevron-left"></i> ML-支持向量机
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B01/" rel="next" title="Moto-摩旅日记1">
+      Moto-摩旅日记1 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -433,14 +436,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-count">137</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
