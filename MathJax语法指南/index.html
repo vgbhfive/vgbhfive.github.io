@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介MathJax 是一个 JavaScript 库，可以让你直接用 Latex 语法来写复杂数学公式，使用十分方便。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MathJax语法指南">
+<meta property="og:url" content="https://blog.vgbhfive.cn/MathJax%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介MathJax 是一个 JavaScript 库，可以让你直接用 Latex 语法来写复杂数学公式，使用十分方便。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-27T15:43:21.000Z">
+<meta property="article:modified_time" content="2023-10-06T04:57:24.409Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Utils">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/MathJax%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>MathJax语法指南 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/MathJax%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MathJax语法指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-27 23:43:21" itemprop="dateCreated datePublished" datetime="2023-09-27T23:43:21+08:00">2023-09-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-10-06 12:57:24" itemprop="dateModified" datetime="2023-10-06T12:57:24+08:00">2023-10-06</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><strong><code>MathJax</code></strong> 是一个 <code>JavaScript</code> 库，可以让你直接用 <code>Latex</code> 语法来写复杂数学公式，使用十分方便。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h3><h4 id="如何配置"><a href="#如何配置" class="headerlink" title="如何配置"></a>如何配置</h4><p>关于如何在 <code>hexo</code> 中增加 <code>MathJax</code> 的支持，可以看这篇<a target="_blank" rel="noopener" href="https://hexo-next.readthedocs.io/zh_CN/latest/next/advanced/%E9%85%8D%E7%BD%AEMathJax/">官方文档</a>。</p>
+<h4 id="使用位置"><a href="#使用位置" class="headerlink" title="使用位置"></a>使用位置</h4><ol>
+<li>行内 <code>$ x $</code>：$x$</li>
+<li>换行 <code>$$ x $$</code>：$$x$$</li>
+</ol>
+<h4 id="上下标"><a href="#上下标" class="headerlink" title="上下标"></a>上下标</h4><ol>
+<li><p>下标 <code>$x_1$</code>：$x_1$</p>
+</li>
+<li><p>上标 <code>$x^2$</code>：$x^2$</p>
+</li>
+</ol>
+<h4 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h4><p><code>$\quad$</code></p>
+<h4 id="控制括号大小"><a href="#控制括号大小" class="headerlink" title="控制括号大小"></a>控制括号大小</h4><p>使用 <code>\left</code> 和 <code>\right</code> 能自动控制不同层次括号的大小，需要配对使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\left( \frac&#123;3&#125;&#123;5&#125;  \left[ 3 + 2 * \left( a + b \right) \right] \right)</span><br></pre></td></tr></table></figure>
+<p>$$ \left( \frac{3}{5}  \left[ 3 + 2 * \left( a + b \right) \right] \right) $$</p>
+<h4 id="公式手动编号"><a href="#公式手动编号" class="headerlink" title="公式手动编号"></a>公式手动编号</h4><p>在公式书写时使用 <code>\tag&#123;num&#125;</code> 添加手动编号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;equation&#125;</span><br><span class="line">f(x) = w·x + b \tag&#123;1&#125;</span><br><span class="line">\end&#123;equation&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>\begin{equation}<br>f(x) &#x3D; w·x + b \tag{1}<br>\end{equation}<br>$$</p>
+<h4 id="多行公式对齐"><a href="#多行公式对齐" class="headerlink" title="多行公式对齐"></a>多行公式对齐</h4><p><code>begin&#123;split&#125;</code> 表示开始多行公式，<code>end&#123;split&#125;</code> 表示结束，公式中用 <code>\\</code> 表示回车到下一行，<code>&amp;</code> 表示对齐的位置，<code>\nonumber</code> 表示不展示公式编号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;equation&#125;</span><br><span class="line">\begin&#123;split&#125;</span><br><span class="line">f(x) &amp;= x + 2x + 14 \\\\</span><br><span class="line">&amp;= 3x + 14</span><br><span class="line">\end&#123;split&#125;</span><br><span class="line">\nonumber</span><br><span class="line">\end&#123;equation&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>\begin{equation}<br>\begin{split}<br>f(x) &amp;&#x3D; x + 2x + 14 \\<br>&amp;&#x3D; 3x + 14<br>\end{split}<br>\nonumber<br>\end{equation}<br>$$</p>
+<hr>
+
+<h3 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h3><h4 id="希腊字母"><a href="#希腊字母" class="headerlink" title="希腊字母"></a>希腊字母</h4><table>
+<thead>
+<tr>
+<th><code>latex</code></th>
+<th>显示效果</th>
+<th><code>latex</code></th>
+<th>显示效果</th>
+<th><code>latex</code></th>
+<th>显示效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\alpha</code></td>
+<td>$\alpha$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\beta</code></td>
+<td>$\beta$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\gamma</code></td>
+<td>$\gamma$</td>
+<td><code>\Gamma</code></td>
+<td>$\Gamma$</td>
+<td><code>\digamma</code></td>
+<td>$\digamma$</td>
+</tr>
+<tr>
+<td><code>\delta</code></td>
+<td>$\delta$</td>
+<td><code>\Delta</code></td>
+<td>$\Delta$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\epsilon</code></td>
+<td>$\epsilon$</td>
+<td><code>\varepsilon</code></td>
+<td>$\varepsilon$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\zeta</code></td>
+<td>$\zeta$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\eta</code></td>
+<td>$\eta$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\theta</code></td>
+<td>$\theta$</td>
+<td><code>\Theta</code></td>
+<td>$\Theta$</td>
+<td><code>\vartheta</code></td>
+<td>$\vartheta$</td>
+</tr>
+<tr>
+<td><code>\iota</code></td>
+<td>$\iota$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\kappa</code></td>
+<td>$\kappa$</td>
+<td><code>\varkappa</code></td>
+<td>$\varkappa$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\lambda</code></td>
+<td>$\lambda$</td>
+<td><code>\Lambda</code></td>
+<td>$\Lambda$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\mu</code></td>
+<td>$\mu$</td>
+<td><code>\nu</code></td>
+<td>$\nu$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\xi</code></td>
+<td>$\xi$</td>
+<td><code>\Xi</code></td>
+<td>$\Xi$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\pi</code></td>
+<td>$\pi$</td>
+<td><code>\Pi</code></td>
+<td>$\Pi$</td>
+<td><code>\varpi</code></td>
+<td>$\varpi$</td>
+</tr>
+<tr>
+<td><code>\rho</code></td>
+<td>$\rho$</td>
+<td><code>\varrho</code></td>
+<td>$\varrho$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\sigma</code></td>
+<td>$\sigma$</td>
+<td><code>\Sigma</code></td>
+<td>$\Sigma$</td>
+<td><code>\varsigma</code></td>
+<td>$\varsigma$</td>
+</tr>
+<tr>
+<td><code>\tau</code></td>
+<td>$\tau$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\upsilon</code></td>
+<td>$\upsilon$</td>
+<td><code>\Upsilon</code></td>
+<td>$\Upsilon$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\phi</code></td>
+<td>$\phi$</td>
+<td><code>\Phi</code></td>
+<td>$\Phi$</td>
+<td><code>\varphi</code></td>
+<td>$\varphi$</td>
+</tr>
+<tr>
+<td><code>\chi</code></td>
+<td>$\chi$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\psi</code></td>
+<td>$\psi$</td>
+<td><code>\Psi</code></td>
+<td>$\Psi$</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\omega</code></td>
+<td>$\omega$</td>
+<td><code>\Omega</code></td>
+<td>$\Omega$</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="数学符号"><a href="#数学符号" class="headerlink" title="数学符号"></a>数学符号</h4><ol>
+<li><p>求和<br><code>\sum</code>：$\sum$</p>
+</li>
+<li><p>偏导<br><code>\partial</code>：$\partial$</p>
+</li>
+<li><p>梯度<br><code>\nabla</code>：$\nabla$</p>
+</li>
+<li><p>取整<br>向下取整 <code>\lfloor x \rfloor</code>：$\lfloor x \rfloor$ <br><br>向上取整 <code>\lceil x \rceil</code>：$\lceil x \rceil$</p>
+</li>
+</ol>
+<h4 id="箭头符号"><a href="#箭头符号" class="headerlink" title="箭头符号"></a>箭头符号</h4><table>
+<thead>
+<tr>
+<th><code>latex</code></th>
+<th>显示效果</th>
+<th><code>latex</code></th>
+<th>显示效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\uparrow</code></td>
+<td>$\uparrow$</td>
+<td><code>\Uparrow</code></td>
+<td>$\Uparrow$</td>
+</tr>
+<tr>
+<td><code>\downarrow</code></td>
+<td>$\downarrow$</td>
+<td><code>\Downarrow</code></td>
+<td>$\Downarrow$</td>
+</tr>
+<tr>
+<td><code>\updownarrow</code></td>
+<td>$\updownarrow$</td>
+<td><code>\Updownarrow</code></td>
+<td>$\Updownarrow$</td>
+</tr>
+<tr>
+<td><code>\leftarrow</code></td>
+<td>$\leftarrow$</td>
+<td><code>\Leftarrow</code></td>
+<td>$\Leftarrow$</td>
+</tr>
+<tr>
+<td><code>\rightarrow</code></td>
+<td>$\rightarrow$</td>
+<td><code>\Rightarrow</code></td>
+<td>$\Rightarrow$</td>
+</tr>
+<tr>
+<td><code>\leftrightarrow</code></td>
+<td>$\leftrightarrow$</td>
+<td><code>\Leftrightarrow</code></td>
+<td>$\Leftrightarrow$</td>
+</tr>
+<tr>
+<td><code>\leftharpoonup</code></td>
+<td>$\leftharpoonup$</td>
+<td><code>\leftharpoondown</code></td>
+<td>$\leftharpoondown$</td>
+</tr>
+<tr>
+<td><code>\rightharpoonup</code></td>
+<td>$\rightharpoonup$</td>
+<td><code>\rightharpoondown</code></td>
+<td>$\rightharpoondown$</td>
+</tr>
+<tr>
+<td><code>\upharpoonright</code></td>
+<td>$\upharpoonright$</td>
+<td><code>\downharpoonright</code></td>
+<td>$\downharpoonright$</td>
+</tr>
+</tbody></table>
+<h4 id="特殊符号"><a href="#特殊符号" class="headerlink" title="特殊符号"></a>特殊符号</h4><table>
+<thead>
+<tr>
+<th><code>latex</code></th>
+<th>显示效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\aleph</code></td>
+<td>$\aleph$</td>
+</tr>
+<tr>
+<td><code>\beth</code></td>
+<td>$\beth$</td>
+</tr>
+<tr>
+<td><code>\daleth</code></td>
+<td>$\daleth$</td>
+</tr>
+<tr>
+<td><code>\gimel</code></td>
+<td>$\gimel$</td>
+</tr>
+</tbody></table>
+<hr>
+
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><h4 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h4><ol>
+<li><p>方括号矩阵</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">A =</span><br><span class="line">\begin&#123;bmatrix&#125;</span><br><span class="line">1 &amp; 0 &amp; 2 \\\\</span><br><span class="line">-2 &amp; 1 &amp; 3 \\\\</span><br><span class="line">\end&#123;bmatrix&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>A &#x3D;<br>\begin{bmatrix}<br>1 &amp; 0 &amp; 2 \\<br>-2 &amp; 1 &amp; 3 \\<br>\end{bmatrix}<br>$$</p>
+</li>
+<li><p>无括号矩阵</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;matrix&#125;</span><br><span class="line">1 &amp; x &amp; x^2 \\\\</span><br><span class="line">1 &amp; y &amp; y^2 \\\\</span><br><span class="line">1 &amp; z &amp; z^2 \\\\</span><br><span class="line">\end&#123;matrix&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>\begin{matrix}<br>1 &amp; x &amp; x^2 \\<br>1 &amp; y &amp; y^2 \\<br>1 &amp; z &amp; z^2 \\<br>\end{matrix}<br>$$</p>
+</li>
+<li><p>竖线矩阵</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\left[</span><br><span class="line">    \begin&#123;array&#125;&#123;cc|c&#125;</span><br><span class="line">      1&amp;2&amp;3\\\\</span><br><span class="line">      4&amp;5&amp;6</span><br><span class="line">    \end&#123;array&#125;</span><br><span class="line">\right]</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>\left[<br> \begin{array}{cc|c}<br>   1&amp;2&amp;3\\<br>   4&amp;5&amp;6<br> \end{array}<br>\right]<br>$$</p>
+</li>
+</ol>
+<h4 id="方程组"><a href="#方程组" class="headerlink" title="方程组"></a>方程组</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">x = x_1 + t_1(x_2 - x_1) \\\\</span><br><span class="line">y = y_1 + t_1(y_2 - y_1)</span><br><span class="line">\end&#123;cases&#125;</span><br><span class="line">\quad t_1 \in [0,1]</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>\begin{cases}<br>x &#x3D; x_1 + t_1(x_2 - x_1) \\<br>y &#x3D; y_1 + t_1(y_2 - y_1)<br>\end{cases}<br>\quad t_1 \in [0,1]<br>$$</p>
+<h4 id="多行公式"><a href="#多行公式" class="headerlink" title="多行公式"></a>多行公式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;equation&#125;</span><br><span class="line">\begin&#123;split&#125;</span><br><span class="line">\frac&#123;\partial^2 f&#125;&#123;\partial&#123;x^2&#125;&#125; &amp;= \frac&#123;\partial(\Delta_x f(i,j))&#125;&#123;\partial x&#125; = \frac&#123;\partial(f(i+1,j)-f(i,j))&#125;&#123;\partial x&#125; \\\\</span><br><span class="line">&amp;= \frac&#123;\partial f(i+1,j)&#125;&#123;\partial x&#125; - \frac&#123;\partial f(i,j)&#125;&#123;\partial x&#125; \\\\</span><br><span class="line">&amp;= f(i+2,j) -2f(f+1,j) + f(i,j)</span><br><span class="line">\end&#123;split&#125;</span><br><span class="line">\nonumber</span><br><span class="line">\end&#123;equation&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>\begin{equation}<br>\begin{split}<br>\frac{\partial^2 f}{\partial{x^2}} &amp;&#x3D; \frac{\partial(\Delta_x f(i,j))}{\partial x} &#x3D; \frac{\partial(f(i+1,j)-f(i,j))}{\partial x} \\<br>&amp;&#x3D; \frac{\partial f(i+1,j)}{\partial x} - \frac{\partial f(i,j)}{\partial x} \\<br>&amp;&#x3D; f(i+2,j) -2f(f+1,j) + f(i,j)<br>\end{split}<br>\nonumber<br>\end{equation}<br>$$</p>
+<h4 id="多行分支等式"><a href="#多行分支等式" class="headerlink" title="多行分支等式"></a>多行分支等式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">f(n) =</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">n/2,  &amp; \text&#123;if $n$ is even&#125; \\\\</span><br><span class="line">3n+1, &amp; \text&#123;if $n$ is odd&#125;</span><br><span class="line">\end&#123;cases&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>f(n) &#x3D;<br>\begin{cases}<br>n&#x2F;2,  &amp; \text{n &gt;&#x3D; 0} \\<br>3n+1, &amp; \text{n &lt; 0}<br>\end{cases}<br>$$</p>
+<hr>
+
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><p><a target="_blank" rel="noopener" href="https://mhchem.github.io/MathJax-mhchem/">test drive</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Utils/" rel="tag"># Utils</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="prev" title="ML-逻辑回归">
+      <i class="fa fa-chevron-left"></i> ML-逻辑回归
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B01/" rel="next" title="Moto-摩旅日记1">
+      Moto-摩旅日记1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">基础使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">如何配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">使用位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%A0%87"><span class="nav-number">2.3.</span> <span class="nav-text">上下标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BA%E6%A0%BC"><span class="nav-number">2.4.</span> <span class="nav-text">空格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E6%8B%AC%E5%8F%B7%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.5.</span> <span class="nav-text">控制括号大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E6%89%8B%E5%8A%A8%E7%BC%96%E5%8F%B7"><span class="nav-number">2.6.</span> <span class="nav-text">公式手动编号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%A1%8C%E5%85%AC%E5%BC%8F%E5%AF%B9%E9%BD%90"><span class="nav-number">2.7.</span> <span class="nav-text">多行公式对齐</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.</span> <span class="nav-text">符号</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%8C%E8%85%8A%E5%AD%97%E6%AF%8D"><span class="nav-number">3.1.</span> <span class="nav-text">希腊字母</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.2.</span> <span class="nav-text">数学符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.3.</span> <span class="nav-text">箭头符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.4.</span> <span class="nav-text">特殊符号</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">公式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5"><span class="nav-number">4.1.</span> <span class="nav-text">矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="nav-number">4.2.</span> <span class="nav-text">方程组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%A1%8C%E5%85%AC%E5%BC%8F"><span class="nav-number">4.3.</span> <span class="nav-text">多行公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%A1%8C%E5%88%86%E6%94%AF%E7%AD%89%E5%BC%8F"><span class="nav-number">4.4.</span> <span class="nav-text">多行分支等式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7"><span class="nav-number">5.</span> <span class="nav-text">工具</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP20002937号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '98a7d330526e5993ac0a567dc93a8d3d',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
