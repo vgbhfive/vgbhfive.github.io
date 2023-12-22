@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介Selenium 最初是一个用于网站的自动化测试工具，支持各种 Chrome、Firefox、Safari 等主流浏览器，同时也支持 phantomJS 无界面浏览器。不过其更通常的使用在于爬虫中使用，其主要是用于解决 requests 无法直接执行 JavaScript 代码的问题，不过用于解析 Dom 元素更有其妙用之处。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Selenium-使用教程">
+<meta property="og:url" content="https://blog.vgbhfive.cn/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介Selenium 最初是一个用于网站的自动化测试工具，支持各种 Chrome、Firefox、Safari 等主流浏览器，同时也支持 phantomJS 无界面浏览器。不过其更通常的使用在于爬虫中使用，其主要是用于解决 requests 无法直接执行 JavaScript 代码的问题，不过用于解析 Dom 元素更有其妙用之处。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-12-21T15:17:39.000Z">
+<meta property="article:modified_time" content="2023-12-22T15:48:32.079Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Selenium-使用教程 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Selenium-使用教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-12-21 23:17:39" itemprop="dateCreated datePublished" datetime="2023-12-21T23:17:39+08:00">2023-12-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-12-22 23:48:32" itemprop="dateModified" datetime="2023-12-22T23:48:32+08:00">2023-12-22</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><strong><code>Selenium</code></strong> 最初是一个用于网站的自动化测试工具，支持各种 <code>Chrome</code>、<code>Firefox</code>、<code>Safari</code> 等主流浏览器，同时也支持 <code>phantomJS</code> 无界面浏览器。不过其更通常的使用在于爬虫中使用，其主要是用于解决 <code>requests</code> 无法直接执行 <code>JavaScript</code> 代码的问题，不过用于解析 <code>Dom</code> 元素更有其妙用之处。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>在 <code>Python</code> 中使用 <code>Selenium</code> 需要通过 <code>pip</code> 安装即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+
+<h4 id="驱动程序"><a href="#驱动程序" class="headerlink" title="驱动程序"></a>驱动程序</h4><p><code>Selenium</code> 在安装之后还需要一个驱动程序来与浏览器交互，不同的浏览器都有自己的驱动程序。列表如下：</p>
+<table>
+<thead>
+<tr>
+<th>浏览器</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Chrome</code></td>
+<td><code>https://sites.google.com/chromium.org/driver/</code></td>
+</tr>
+<tr>
+<td><code>Edge</code></td>
+<td><code>https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/</code></td>
+</tr>
+<tr>
+<td><code>Firefox</code></td>
+<td><code>https://github.com/mozilla/geckodriver/releases</code></td>
+</tr>
+<tr>
+<td><code>Safari</code></td>
+<td><code>https://webkit.org/blog/6900/webdriver-support-in-safari-10/</code></td>
+</tr>
+</tbody></table>
+<p>不过在新版本 <code>4.6.0</code> 之后，发行包中包含一个 <strong><code>Selenium Manager</code> 新工具</strong>，该工具帮助 <code>Selenium</code> 在发现驱动程序不可用时，会自动发现、下载并缓存驱动程序。</p>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><p>模拟点击<a target="_blank" rel="noopener" href="https://baidu.com/">百度首页</a>输出其标题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;https://baidu.com&#x27;</span></span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line">browser.get(url)</span><br><span class="line"></span><br><span class="line">title = browser.find_element(By.TAG_NAME, <span class="string">&#x27;title&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(title.text)</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h3><h4 id="元素定位"><a href="#元素定位" class="headerlink" title="元素定位"></a>元素定位</h4><p>通过方法查找元素的函数共有两个：</p>
+<ul>
+<li><code>find_element(By.KEY, &#39;KEY_NAME&#39;)</code></li>
+<li><code>find_elements(By.KEY, &#39;KEY_NAME&#39;)</code></li>
+</ul>
+<p><code>By.KEY</code> 用于定位页面上的元素共有以下八种：</p>
+<ul>
+<li><code>ID</code> 通过元素的 <code>ID</code> 属性定位元素。</li>
+<li><code>NAME</code> 通过元素的名称属性定位元素。</li>
+<li><code>XPATH</code> 通过在 <code>XML</code> 文档中的 <code>XPATH</code> 节点定位元素。</li>
+<li><code>LINK_TEXT</code> 通过锚标记中使用的链接文本定位元素。</li>
+<li><code>PARTIAL_LINK_TEXT</code> 通过锚标记中使用的链接文本定位元素。</li>
+<li><code>TAG_NAME</code> 通过标签名称定位元素。</li>
+<li><code>CLASS_NAME</code> 通过类名定位元素。</li>
+<li><code>CSS_SELECTOR</code> 使用 <code>CSS</code> 选择器语法定位元素。</li>
+</ul>
+<h4 id="WebElement-常用方法"><a href="#WebElement-常用方法" class="headerlink" title="WebElement 常用方法"></a><code>WebElement</code> 常用方法</h4><ol>
+<li><code>clear()</code><br>如果元素是输入文本，则清除文本。</li>
+<li><code>click()</code><br>单击该元素。</li>
+<li><code>get_attribute()</code><br>获取元素的给定属性。</li>
+<li><code>get_dom_attribute()</code>、<br>获取元素在 <code>HTML</code> 标记中声明的元素。</li>
+<li><code>get_property()</code><br>获取元素的给定属性。</li>
+<li><code>is_displayed()</code><br>该元素是否对用户可见。</li>
+<li><code>is_enabled()</code><br>该元素使用可用。</li>
+<li><code>is_selected()</code><br>该元素是否被选中。</li>
+<li><code>send_keys()</code><br>模拟在元素中输入内容。</li>
+<li><code>location</code><br>获取元素的坐标。</li>
+<li><code>submit()</code><br>提交表格。</li>
+<li><code>text</code><br>元素的文本。</li>
+<li><code>tag_name</code><br>元素的 <code>tagName</code> 属性。</li>
+</ol>
+<h4 id="鼠标键盘事件"><a href="#鼠标键盘事件" class="headerlink" title="鼠标键盘事件"></a>鼠标键盘事件</h4><ol>
+<li><code>click(on_element=None)</code><br>单击左键。</li>
+<li><code>context_click(on_element=None)</code><br>单击右键。</li>
+<li><code>double_click(on_element=None)</code><br>双击左键。</li>
+<li><code>key_down(value, on_element=None)</code><br>按下键盘上的某个键。</li>
+<li><code>key_up(value, on_element=None)</code><br>松开键盘上的某个键。</li>
+<li><code>move_by_offset(xoffset, yoffset)</code><br>鼠标从当前位置移动到某个坐标。</li>
+<li><code>move_to_element(to_element)</code><br>鼠标移动到某个元素。</li>
+<li><code>move_to_element_with_offset(to_element, xoffset, yoffset)</code><br>移动到距某个元素（左上角坐标）多少距离的位置。</li>
+<li><code>send_keys()</code><br>发送某个键或者输入文本到当前元素。</li>
+</ol>
+<h4 id="浏览器操作"><a href="#浏览器操作" class="headerlink" title="浏览器操作"></a>浏览器操作</h4><ol>
+<li><p>获取页面的 <code>URL</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser.current_url</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取页面日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">browser.maximize_window() # 最大化</span><br><span class="line">browser.fullscreen_window() # 全屏</span><br><span class="line">browser.minimize_window() # 最小化</span><br><span class="line">browser.get_window_position() # 获取窗口的坐标</span><br><span class="line">browser.get_window_rect() # 获取窗口的大小和坐标</span><br><span class="line">browser.set_window_position(100, 200) # 设置窗口的坐标</span><br><span class="line">browser.set_window_rect(100, 200, 32, 50) # 设置窗口的大小和坐标</span><br><span class="line">browser.set_window_size(200, 300) # 设置窗口的大小</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭页面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">browser.close() # 关闭当前标签页</span><br><span class="line">browser.quit() # 关闭浏览器并关闭驱动</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>屏幕操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">browser.save_screenshot(&#x27;save.png&#x27;) # 截图，只支持 PNG 格式</span><br><span class="line">browser.get_screenshot_as_png() # 获取当前窗口的截图作为二进制数据</span><br><span class="line">browser.get_screenshot_as_base64() # 获取当前窗口的截图作为 base64 编码的字符串</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前进后退刷新</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">browser.forward() # 前进</span><br><span class="line">browser.back()  # 后退</span><br><span class="line">browser.refresh() # 刷新</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="cookie-操作"><a href="#cookie-操作" class="headerlink" title="cookie 操作"></a><code>cookie</code> 操作</h4><ol>
+<li><code>get_cookie(NAME)</code><br>获取指定键的 <code>Cookies</code>。</li>
+<li><code>get_cookies()</code><br>获取所有的 <code>Cookies</code>。</li>
+<li><code>delete_cookie(NAME)</code><br>删除指定键的 <code>Cookies</code>。</li>
+<li><code>delete_all_cookies()</code><br>删除所有的 <code>Cookies</code>。</li>
+</ol>
+<h4 id="JavaScript-操作"><a href="#JavaScript-操作" class="headerlink" title="JavaScript 操作"></a><code>JavaScript</code> 操作</h4><p><code>Selenium</code> 可以自定义执行 <code>JavaScript</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser.execute_script(<span class="string">&quot;alter(&#x27;hello selenium!&#x27;)&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="示例-Demo"><a href="#示例-Demo" class="headerlink" title="示例 Demo"></a>示例 <code>Demo</code></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.keys <span class="keyword">import</span> Keys</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取居民消费价格指数 CPI 数据，数据来源于东方财富网。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">to_next_page</span>(<span class="params">browser</span>):</span><br><span class="line">	<span class="comment"># 点击下一页，获取数据</span></span><br><span class="line">	pagerbox = browser.find_elements(By.CLASS_NAME, <span class="string">&#x27;pagerbox&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">	a = pagerbox.find_elements(By.TAG_NAME, <span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">	<span class="keyword">for</span> ai <span class="keyword">in</span> a:</span><br><span class="line">		<span class="keyword">if</span> ai.text == <span class="string">&#x27;下一页&#x27;</span>:</span><br><span class="line">			ai.send_keys(Keys.ENTER)</span><br><span class="line">			<span class="built_in">print</span>(ai.text)</span><br><span class="line">			time.sleep(<span class="number">3</span>)</span><br><span class="line">			get_data()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_data</span>(<span class="params">browser</span>):</span><br><span class="line">	<span class="comment"># 解析数据结构</span></span><br><span class="line">	table = browser.find_element(By.CLASS_NAME, <span class="string">&#x27;table-model&#x27;</span>)</span><br><span class="line">	tbody = table.find_elements(By.TAG_NAME, <span class="string">&#x27;tbody&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">	tr = tbody.find_elements(By.TAG_NAME, <span class="string">&#x27;tr&#x27;</span>)</span><br><span class="line">	<span class="built_in">print</span>(<span class="built_in">len</span>(tr))</span><br><span class="line">	<span class="comment"># 遍历数据结构并输出</span></span><br><span class="line">	<span class="keyword">for</span> tr_e <span class="keyword">in</span> tr:</span><br><span class="line">		td = tr_e.find_elements(By.TAG_NAME, <span class="string">&#x27;td&#x27;</span>)</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span>*<span class="number">50</span>)</span><br><span class="line">		<span class="keyword">for</span> td_e <span class="keyword">in</span> td:</span><br><span class="line">			<span class="built_in">print</span>(td_e.text)</span><br><span class="line">	<span class="comment"># 下一页</span></span><br><span class="line">	to_next_page(browser)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_url</span>(<span class="params">url</span>):</span><br><span class="line">	browser = webdriver.Chrome()</span><br><span class="line">	browser.get(url)</span><br><span class="line">	<span class="comment"># 获取 CPI 数据</span></span><br><span class="line">	get_data(browser)</span><br><span class="line">	browser.quit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	url = <span class="string">&#x27;https://data.eastmoney.com/cjsj/cpi.html&#x27;</span></span><br><span class="line">	<span class="comment"># 解析 URL 并输出数据</span></span><br><span class="line">	parse_url(url)</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="异常信息"><a href="#异常信息" class="headerlink" title="异常信息"></a>异常信息</h3><h4 id="NoSuchElementException"><a href="#NoSuchElementException" class="headerlink" title="NoSuchElementException"></a><code>NoSuchElementException</code></h4><p>在获取页面元素后，如果 <code>Dom</code> 发生变化就会出现该异常。</p>
+<h4 id="stale-element-reference-stale-element-not-found"><a href="#stale-element-reference-stale-element-not-found" class="headerlink" title="stale element reference: stale element not found"></a><code>stale element reference: stale element not found</code></h4><p>分析该问题是因为在 <code>Dom</code> 树中未找到该元素。因此其解决方案就是保证在操作前，该元素存在且是可操作的。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://selenium-python.readthedocs.io/index.html">官方文档</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" rel="prev" title="Linux-nc使用指南">
+      <i class="fa fa-chevron-left"></i> Linux-nc使用指南
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">基础使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.2.</span> <span class="nav-text">驱动程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">基本使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E5%AE%9A%E4%BD%8D"><span class="nav-number">3.1.</span> <span class="nav-text">元素定位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WebElement-%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">WebElement 常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BC%A0%E6%A0%87%E9%94%AE%E7%9B%98%E4%BA%8B%E4%BB%B6"><span class="nav-number">3.3.</span> <span class="nav-text">鼠标键盘事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">3.4.</span> <span class="nav-text">浏览器操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cookie-%E6%93%8D%E4%BD%9C"><span class="nav-number">3.5.</span> <span class="nav-text">cookie 操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaScript-%E6%93%8D%E4%BD%9C"><span class="nav-number">3.6.</span> <span class="nav-text">JavaScript 操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-Demo"><span class="nav-number">4.</span> <span class="nav-text">示例 Demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E4%BF%A1%E6%81%AF"><span class="nav-number">5.</span> <span class="nav-text">异常信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NoSuchElementException"><span class="nav-number">5.1.</span> <span class="nav-text">NoSuchElementException</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stale-element-reference-stale-element-not-found"><span class="nav-number">5.2.</span> <span class="nav-text">stale element reference: stale element not found</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '37a5f6b40d38651dda38fec26a148778',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
