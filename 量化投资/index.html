@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述量化是指一种投资交易策略，利用统计学、数学、计算机、人工智能等方法取代传统人工做出决策，通过模型来实现资产交易进而构建投资组合。即利用计算机技术和数学模型来实现投资策略的过程。 主观投资与量化投资的对比：    主观投资 量化投资    基于基金经理的判断 基于模型运算的客观结果   基金经理对宏观环境、行业、公司的研究，预测未来趋势 核心在于利用计算机技术在海量数据中寻找到投资规律   注重">
+<meta property="og:type" content="article">
+<meta property="og:title" content="量化投资">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="概述量化是指一种投资交易策略，利用统计学、数学、计算机、人工智能等方法取代传统人工做出决策，通过模型来实现资产交易进而构建投资组合。即利用计算机技术和数学模型来实现投资策略的过程。 主观投资与量化投资的对比：    主观投资 量化投资    基于基金经理的判断 基于模型运算的客观结果   基金经理对宏观环境、行业、公司的研究，预测未来趋势 核心在于利用计算机技术在海量数据中寻找到投资规律   注重">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-03_15-37-16.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-26_11-56-51.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-27_17-49-49.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-02_11-31-48.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-02_14-17-18.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-24_23-17-59.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-08.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-21.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-32.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-41.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-53.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-38-06.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-38-16.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-38-25.png">
+<meta property="article:published_time" content="2024-01-31T14:10:10.000Z">
+<meta property="article:modified_time" content="2024-03-03T08:26:40.765Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="ML">
+<meta property="article:tag" content="Quantum">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-03_15-37-16.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>量化投资 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          量化投资
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-01-31 22:10:10" itemprop="dateCreated datePublished" datetime="2024-01-31T22:10:10+08:00">2024-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-03 16:26:40" itemprop="dateModified" datetime="2024-03-03T16:26:40+08:00">2024-03-03</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><strong>量化</strong>是指一种投资交易策略，利用统计学、数学、计算机、人工智能等方法取代传统人工做出决策，通过模型来实现资产交易进而构建投资组合。即利用计算机技术和数学模型来实现投资策略的过程。</p>
+<p>主观投资与量化投资的对比：</p>
+<table>
+<thead>
+<tr>
+<th>主观投资</th>
+<th>量化投资</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基于基金经理的判断</td>
+<td>基于模型运算的客观结果</td>
+</tr>
+<tr>
+<td>基金经理对宏观环境、行业、公司的研究，预测未来趋势</td>
+<td>核心在于利用计算机技术在海量数据中寻找到投资规律</td>
+</tr>
+<tr>
+<td>注重研究深度，对少数资产进行深入研究</td>
+<td>注重广度，全市场筛选标的，多维度分析</td>
+</tr>
+<tr>
+<td>持股集中，稳定性略差</td>
+<td>持股分散，组合投资</td>
+</tr>
+<tr>
+<td>交易依靠主管认知与判断</td>
+<td>模型自主下单</td>
+</tr>
+</tbody></table>
+<span id="more"></span>
+
+<p>优势：</p>
+<ul>
+<li>投资范围广泛。借助计算机技术，可以分析整体市场，促进更多的投资机会。</li>
+<li>程序化交易，避免主观因素干扰。通过回测验证策略的有效性和可行性，自助下单，程序化交易。</li>
+<li>数据处理快速响应，创造交易价值。利用计算机技术，分析海量数据，支持高频交易，可及时验证每个决策后模型的有效性。</li>
+</ul>
+<p>风险：</p>
+<ul>
+<li>策略失效。量化投资最大的风险是策略失效，但更大的风险在于策略在何时失效。</li>
+<li>流通性风险。量化投资由于很多因素很容易导致同质化，带来的问题就是会产生共振，更容易产生系统性的风险。</li>
+<li>模型本身风险。量化投资需要借助模型，而建立模型需要设定各种参数，由于参数的不确定性可能会导致巨大损失。</li>
+</ul>
+<p>一般流程：</p>
+<ul>
+<li>策略设计。基于金融理论、历史数据或其他分析方法，构建量化投资策略。</li>
+<li>回测验证。使用历史数据对策略进行回测，检验策略的有效性和可行性，以及找到优化策略的方法。</li>
+<li>模拟盘验证。使用虚拟账户和资金进行模拟交易，检验策略在实际市场中的表现，根据反馈及时调整和优化策略。</li>
+<li>实盘交易。经过前面的验证和优化后，将策略投入实际交易中执行。</li>
+</ul>
+<p>量化投资的策略设计和实施过程需要严谨、科学、系统化的方法，同时也需要一定的技术和数学功底。成功的量化投资不仅仅依赖于策略的设计，也需要严格的风险控制和资金管理。</p>
+<hr>
+
+<h3 id="数据收集"><a href="#数据收集" class="headerlink" title="数据收集"></a>数据收集</h3><h4 id="资产数据"><a href="#资产数据" class="headerlink" title="资产数据"></a>资产数据</h4><p>资产数据信息根据来源和分析方法的不同，可以分为两类：</p>
+<ul>
+<li>技术面数据。技术面数据主要是根据资产的历史价格和交易量等市场数据进行分析和计算得出的指标信息。</li>
+<li>基本面数据。通过分析公司的财务状况、业绩表现、竞争力等信息得出的评估信息。</li>
+</ul>
+<h4 id="技术面常见指标"><a href="#技术面常见指标" class="headerlink" title="技术面常见指标"></a>技术面常见指标</h4><h5 id="移动平均线-MA"><a href="#移动平均线-MA" class="headerlink" title="移动平均线 MA"></a>移动平均线 <code>MA</code></h5><p><strong>移动平均线</strong>是通过计算一段时间内的资产平均价格来平滑价格波动。</p>
+<p>常见的移动平均线有两种：</p>
+<ul>
+<li><strong>简单移动平均线（<code>SMA</code>）</strong>，最基本的移动平均线类型，通过将一段时间内的资产收盘价相加，然后除以时间段的天数来计算。简单移动平均线可以平滑价格波动，显示出长期趋势。</li>
+<li><strong>指数移动平均线（<code>EMA</code>）</strong>，对近期价格给予更高的权重，可以反映市场更近期的变化。计算指数移动平均线时，当前价格会根据选定的时间段和权重系数，与之前的移动平均线值相结合。</li>
+</ul>
+<p>移动平均线的应用主要有以下几个方面：</p>
+<ul>
+<li><strong>确定趋势</strong>：使用不同期限的移动平均线来确定<strong>趋势的强度和方向</strong>。</li>
+<li><strong>交叉信号</strong>：移动平均线的交叉均可以提供<strong>买入和卖出的信号</strong>。</li>
+<li><strong>支撑与阻力线</strong>：移动平均线经常被称为<strong>支撑线</strong>和<strong>阻力线</strong>的参考。</li>
+</ul>
+<p>均线八大买卖法则：</p>
+<ul>
+<li>买点 <code>1</code>：均线整体上行，价格由下至上上穿均线，此为黄金交叉，形成第一个买点。</li>
+<li>买点 <code>2</code>：价格出现下跌迹象，但尚未跌破均线，此时均线成为支撑线，形成第二个买点。</li>
+<li>买点 <code>3</code>：价格仍处于均线上方，但呈现急剧下跌趋势，当跌破均线时，形成第三个买点。</li>
+<li>买点 <code>4</code>：价格和均线均处于下降通道，且价格处于均线下方，严重远离均线，出现第四个买点。</li>
+<li>卖点 <code>1</code>：均线由上升状态变为缓慢下降状态，价格开始下跌，当价格跌破均线时，此为死亡交叉点，形成第一个卖点。</li>
+<li>卖点 <code>2</code>：价格仍处于均线之下，但价格开始呈现上涨趋势，当价格无限接近均线但尚未突破时，此时均线变为阻力线，形成第二个卖点。</li>
+<li>卖点 <code>3</code>：价格终于突破均线，处于均线上方，但持续时间不长，价格开始下跌，直至再一次跌破均线，形成第三个卖点。</li>
+<li>卖点 <code>4</code>：价格和均线均在上涨，价格上涨速度大于均线上涨速度，当价格严重便宜均线时，出现第四个卖点。</li>
+</ul>
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-03_15-37-16.jpg" alt="Snipaste_2024-02-03_15-37-16.jpg"></p>
+<h5 id="相对强弱指数-RSI"><a href="#相对强弱指数-RSI" class="headerlink" title="相对强弱指数 RSI"></a>相对强弱指数 <code>RSI</code></h5><p><strong><code>RSI</code></strong> 是一种用于衡量资产价格变动强度和速度的技术指标。可以帮助投资者判断资产市场的超买和超卖情况，以及价格的反转和确认信号。<code>RSI</code> 是一种短期的指标，对价格的反应较为敏感。</p>
+<p><code>RSI</code> 的计算基于一定时期内资产价格的平均涨幅和跌幅。通常情况下 <code>RSI</code>的取值范围在 <code>0~100</code> 之间。<br><code>RSI</code> 指标的常用参数为 <code>14</code>，计算步骤如下：</p>
+<ul>
+<li>首先计算 <code>14</code> 个交易周期内涨幅和跌幅的平均值。</li>
+<li>计算涨幅平均值与跌幅平均值的相对强弱比率（<code>Relative Strength, RS</code>）。<br><code>RS</code> &#x3D; 交易周期内涨幅平均值 &#x2F; 交易周期内跌幅平均值</li>
+<li>计算相对强弱指数（<code>RSI</code>）。<br><code>RSI = 100 - (100 / (1 + RS))</code></li>
+</ul>
+<p><code>RSI</code> 的数值解读如下：</p>
+<ul>
+<li><strong>指数在 <code>0~30</code> 之间</strong>：表示资产市场被超卖，可能存在价格反弹的机会。</li>
+<li><strong>指数在 <code>70~100</code> 之间</strong>：表示资产市场被超买，可能存在价格下跌的机会。</li>
+<li><strong>指数在 <code>30~70</code> 之间</strong>：表示资产市场相对平稳，没有明显的超买或超卖信号。</li>
+</ul>
+<h5 id="MACD"><a href="#MACD" class="headerlink" title="MACD"></a><code>MACD</code></h5><p><strong><code>MACD</code></strong> 指标是资产技术分析中常用的趋势追踪和买卖信号指标，其通过比较两条移动平均线的差异，来判断资产价格的趋势以及价格的买卖信号。<code>MACD</code> 指标是一种相对较慢的指标，较长时间的移动平均线会导致滞后性。</p>
+<p><code>MACD</code> 指标由以下几个元素组成：</p>
+<ul>
+<li><strong><code>DIF</code>（<code>Difference Line</code>）</strong>：短期指数移动平均线减去长期指数移动平均线得到的差值线。<code>DIF</code> 线可以较为敏感地反应价格的短期波动。</li>
+<li><strong><code>DEA</code>（<code>Signal Line</code>）</strong>：对 <code>DIF</code> 线进行平滑处理，一般使用 <code>DIF</code> 线的 <code>9</code> 日移动平均线得到。<code>DEA</code> 线可以平滑 <code>DIF</code> 线的波动，更好地体现价格的中期趋势。</li>
+<li><strong><code>MACD</code>（<code>MACD Histogram</code>）</strong>： <code>DIF</code> 线与 <code>DEA</code> 线的差值，可将价格的快速波动变化显示为柱状图。</li>
+</ul>
+<p><code>MACD</code> 指标的应用主要包括以下几个方面：</p>
+<ul>
+<li><strong>趋势判断</strong>：当 <code>DIF</code> 线与 <code>DEA</code> 线发生金叉（<code>DIF</code> 线向上穿过 <code>DEA</code> 线）时，表示价格可能出现上涨趋势；当 <code>DIF</code> 线与 <code>DEA</code> 线发生死叉（<code>DIF</code> 线向下穿过 <code>DEA</code> 线）时，表示价格可能出现下跌趋势。</li>
+<li><strong>买卖信号</strong>：当 <code>MACD</code> 柱由负值转为正值时，被视为买入信号；当 <code>MACD</code> 柱由正值转为负值时，被视为卖出信号。这些转折点可能表示价格快速波动的转变。</li>
+<li><strong>背离信号</strong>：观察价格和 <code>MACD</code> 指标的背离情况。例如，当价格创新高而 <code>MACD</code> 指标未能创新高时，可能表示价格上涨动能下降，可能出现价格回调。</li>
+</ul>
+<h5 id="成交量"><a href="#成交量" class="headerlink" title="成交量"></a>成交量</h5><p><strong>成交量</strong>指标衡量了资产交易的活跃程度。当资产价格上涨时，成交量增加可以视为价格上涨的确认，而当资产价格下跌时，成交量增加可能表示价格下跌的确认。成交量指标相对于价格指标而言，属于非价格类指标。</p>
+<p>成交量指标的计算非常简单，即某一时间周期内的总成交量。</p>
+<p>成交量指标的应用主要包括以下几个方面：</p>
+<ul>
+<li><strong>确认趋势</strong>：成交量指标可以用来确认价格趋势的有效性。在上涨趋势中，成交量增加可能意味着买盘增加，市场看涨情绪强烈。而在下跌趋势中，成交量增加可能意味着卖盘增加，市场看跌情绪强烈。如果价格和成交量出现背离，即价格上涨而成交量下降，或价格下跌而成交量增加，可能意味着趋势反转的可能性。</li>
+<li><strong>确认突破</strong>：成交量指标也可用于确认价格突破的有效性。当价格突破重要的价格水平（如支撑或阻力线）时，如果成交量也大幅增加，可能预示着价格突破的力度和可持续性增加。</li>
+<li><strong>观察分析</strong>：通过观察成交量指标的变化，研究市场情绪和买卖压力。</li>
+<li><strong>交易量模型</strong>：使用成交量指标构建交易量模型，例如量价分析（<code>Volume Price Analysis</code>）或成交量波动指标（<code>Volume Oscillator</code>），这些模型通过比较成交量与价格的关系，以此寻找特定的交易信号。</li>
+</ul>
+<h5 id="随机指标"><a href="#随机指标" class="headerlink" title="随机指标"></a>随机指标</h5><p><strong>随机指标</strong>用于判断资产价格的超买和超卖情况，以及价格反转的可能性。可以帮助确定适合买入或卖出资产的时机。随机指标是一种短期的技术指标，可以辅助投资者判断市场价格走势和买卖时机，但并不是绝对准确的。</p>
+<p>随机指标的计算基于一段时间内的收盘价与最高价和最低价的关系。该指标通常使用 <code>%K</code> 线和 <code>%D</code> 线两条线，并结合超买区和超卖区进行解读。</p>
+<p>随机指标的计算步骤如下：</p>
+<ul>
+<li>首先计算一定时间段（常见为 <code>14</code> 个交易日）内的最高价和最低价。</li>
+<li>计算当前收盘价与该时间段内最低价的差值（收盘价-最低价），并除以最高价和最低价的差值（最高价-最低价）。<br> <code>%K</code> &#x3D; （收盘价 - 最低价）&#x2F; （最高价 - 最低价） * <code>100</code></li>
+<li>计算 <code>%K</code> 的移动平均值作为 <code>%D</code> 线的值，通常使用 <code>3</code> 日平均。<br> <code>%D</code> &#x3D; <code>%K</code> 的 <code>3</code> 日简单移动平均线</li>
+</ul>
+<p>随机指标的数值解读如下：</p>
+<ul>
+<li>当 <code>%K</code> 线从下方穿越 <code>%D</code> 线时，被视为买入信号，可能预示着价格的反转和上涨。</li>
+<li>当 <code>%K</code> 线从上方穿越 <code>%D</code> 线时，被视为卖出信号，可能预示着价格的反转和下跌。</li>
+<li>当 <code>%K</code> 线位于高位（一般超过<code>80</code>）时，表示市场可能超买，价格的下跌风险增加。</li>
+<li>当 <code>%K</code> 线位于低位（一般低于<code>20</code>）时，表示市场可能超卖，价格的上涨机会增加。</li>
+</ul>
+<h4 id="基本面常见指标"><a href="#基本面常见指标" class="headerlink" title="基本面常见指标"></a>基本面常见指标</h4><h5 id="每股收益"><a href="#每股收益" class="headerlink" title="每股收益"></a>每股收益</h5><p><strong>每股收益</strong>用于衡量公司每股可供股东分配的净利润，即每股盈利能力。每股收益是投资者评估公司盈利能力和估值的重要参考指标。</p>
+<p>每股收益的计算公式为：<code>EPS</code> &#x3D; 净利润 &#x2F; 流通股本。<br><small>净利润是指公司在一定会计周期内所创造的净收益，即扣除各项费用和税后利润。流通股本是指公司已经发行并在市场上自由交易的资产数量。</small></p>
+<p>每股收益指标的应用主要包括以下几个方面：</p>
+<ul>
+<li><strong>估值比较</strong>：每股收益可以作为比较不同公司的盈利能力和估值水平的重要依据。通常情况下，具有更高每股收益的公司往往被认为具有更好的盈利能力。</li>
+<li><strong>成长趋势</strong>：观察每股收益的变化趋势可以了解公司盈利能力的增长速度和稳定性。持续增长的每股收益可能意味着公司业绩好于预期，具有良好的成长潜力。</li>
+<li><strong>盈利稳定性</strong>：通过比较每股收益的波动程度，可以判断公司的盈利稳定性。较小的波动通常被认为是公司盈利稳定性较好的表现。</li>
+</ul>
+<h5 id="市净率"><a href="#市净率" class="headerlink" title="市净率"></a>市净率</h5><p><strong>市净率</strong>也称为股价净资产比，是一种用于衡量当前市场价格与每股净资产之间关系的指标，是用来评估公司的市场估值是否低估或高估的重要指标。</p>
+<p>市净率的计算公式为：市净率 &#x3D; 总市值 &#x2F; 净资产。<br><small>总市值是指公司所有已发行资产的市值之和，而净资产是指公司的总资产减去总负债。</small></p>
+<p>市净率是一个相对指标，一般用来比较同行业或同一市场的公司。较低的市净率通常被认为是公司被低估的迹象，而较高的市净率可能意味着公司被高估。<br>根据市净率可以得出以下几个判断：</p>
+<ul>
+<li><strong>市净率低于1</strong>：通常表示公司的市场价值低于其净资产，资产可能被低估。</li>
+<li><strong>市净率约等于1</strong>：表示公司的市场价值大致等于其净资产，资产被市场公平估价。</li>
+<li><strong>市净率高于1</strong>：通常表示公司的市场价值高于其净资产，资产可能被高估。</li>
+</ul>
+<h5 id="股息收益率"><a href="#股息收益率" class="headerlink" title="股息收益率"></a>股息收益率</h5><p><strong>股息收益率</strong>用于衡量资产派发的股息相对于资产的价格的比率。股息是公司利润的一部分，以现金或资产形式派发给股东，股息收益率可以帮助投资者评估持有一只资产所能获得的现金回报。</p>
+<p>股息收益率的计算公式为：股息收益率 &#x3D; 每股股息 &#x2F; 资产价格。<br><small>每股股息是指公司每股派发的股息金额，资产价格是资产在市场上的交易价格。</small></p>
+<p>股息收益率指标的应用主要包括以下几个方面：</p>
+<ul>
+<li><strong>现金回报</strong>：股息收益率可以帮助投资者了解持有资产所能获得的现金回报，尤其对于偏好分红收入的投资者而言，具有重要意义。较高的股息收益率可能表示股东获得较高的分红回报。</li>
+<li><strong>盈利比较</strong>：通过比较不同公司的股息收益率，可以了解公司的盈利能力和分红政策。</li>
+<li><strong>市场情绪</strong>：股息收益率也可以反映市场对公司的情绪和风险偏好。一般而言，较高的股息收益率可能意味着市场对公司前景持谨慎态度，或者公司面临一定的困境。</li>
+</ul>
+<h5 id="净利润"><a href="#净利润" class="headerlink" title="净利润"></a>净利润</h5><p><strong>净利润</strong>用于衡量一家公司在特定会计期间内实际获得的净收益，即扣除各项费用和税后利润。净利润是评估公司盈利能力和基本经营状况的重要指标。</p>
+<p>净利润的计算公式为：净利润 &#x3D; 总收入 - 总成本 - 税收 - 其他费用。<br>其中：</p>
+<ul>
+<li>总收入：是指公司在特定会计期间内所实现的总销售收入或营业收入。</li>
+<li>总成本：包括直接成本和间接成本，指用于生产和销售产品或提供服务的成本。</li>
+<li>税收：是指公司应缴纳的所得税或其他税收费用。</li>
+<li>其他费用：包括财务费用、管理费用、营销费用等。</li>
+</ul>
+<p>净利润是衡量公司盈利能力的重要指标，主要应用包括以下几个方面：</p>
+<ul>
+<li>盈利能力评估：净利润是评估盈利能力的核心指标之一。较高的净利润意味着公司创造了更多的利润，具有较好的盈利能力。</li>
+<li>盈利趋势分析：观察净利润的变化趋势可以了解盈利的增长趋势和稳定性。</li>
+<li>盈利比较：通过比较不同公司的净利润，投资者可以了解公司的盈利水平和和业绩相对强弱。对于同行业的公司，较高的净利润可能意味着公司的竞争力较强。</li>
+</ul>
+<h5 id="负债与资产比率"><a href="#负债与资产比率" class="headerlink" title="负债与资产比率"></a>负债与资产比率</h5><p><strong>负债与资产比率</strong>用于衡量公司的资本结构和债务风险水平。该比率反映了公司负债占总资产的比例（财务杠杆），可以了解公司负债情况以及对负债承受能力的评估。</p>
+<p>负债与资产比率的计算公式为：负债与资产比率 &#x3D; 总负债 &#x2F; 总资产。<br><small>总负债是指公司在特定时点上的所有债务总额，包括长期负债和短期负债。总资产是指公司在特定时点上的全部资产，包括流动资产和固定资产。</small></p>
+<p>负债与资产比率指标的应用主要包括以下几个方面：</p>
+<ul>
+<li>资本结构评估：通过负债与资产比率，投资者可以评估公司的资本结构，了解公司通过负债融资来支持业务运营和发展的程度。</li>
+<li>债务风险评估：负债与资产比率可以帮助投资者评估公司的债务风险水平。</li>
+<li>行业比较：通过比较同行业内不同公司的负债与资产比率，投资者可以了解公司在行业内的相对债务水平。</li>
+</ul>
+<hr>
+
+<h3 id="选股策略"><a href="#选股策略" class="headerlink" title="选股策略"></a>选股策略</h3><h4 id="选股的原因"><a href="#选股的原因" class="headerlink" title="选股的原因"></a>选股的原因</h4><p>在经济学的有效市场理论模型中，根据有效性可以将当前证券市场分为四种类型：</p>
+<ul>
+<li><strong>无效市场</strong>。当前价格未反应历史价格信息，那么未来的价格将进一步对过去的价格做出反应。</li>
+<li><strong>弱有效市场</strong>。通过技术分析的交易已经无法获取利润，而基本面分析还可以获取利润。</li>
+<li><strong>半强有效市场</strong>。基本面全部失效，此时通过内幕消息可以获得利润。</li>
+<li><strong>强有效市场</strong>。价格已经充分反应所有信息，此时只能采取保守策略。</li>
+</ul>
+<p>以上几种类型是为了研究而构建出的理想模型，在现实中未必全部对应，但市场如果可以将<strong>历史价格信息</strong>、<strong>基本面</strong>和<strong>内幕消息</strong>反映到资产价格上，那么该市场就是有效的。</p>
+<h4 id="效用函数"><a href="#效用函数" class="headerlink" title="效用函数"></a>效用函数</h4><p>为了简化问题，假设我们每个人都有自己的<strong>效用函数</strong>，它的输入是预备投入的金额，输出是可以带来多少<strong>效用</strong>。效用简单来说就是产出的金额，其具有两个性质：</p>
+<ul>
+<li>如果 <code>x &lt; y</code>，那么 <code>u(x) &lt;= u(y)</code>，即产出的金额越多越好。</li>
+<li>如果 <code>d &gt;= 0</code>，并且 <code>x &lt; y</code>，那么 <code>u(x+d)−u(x) &gt;= u(y+d)−u(y)</code>。即输入相同的金额，但本金较少的那个人效用最大。</li>
+</ul>
+<p>那也就是说如果某一个人的效用函数为 <code>u</code>，面对 <code>n</code> 中选项，这些选项的结果为 $X_1, X_2 … X_n$，那么这个人会选择的就是 <code>E[u(X)]</code> 最大的那个选项。</p>
+<h4 id="现代资产配置理论模型"><a href="#现代资产配置理论模型" class="headerlink" title="现代资产配置理论模型"></a>现代资产配置理论模型</h4><p><strong>现代资产配置理论模型（<code>Modern Portfolio Theory, MPT</code>）模型</strong>核心思想是以最小化标准差并最大化预期收益为目标进行资产配置，也被称为<strong>均值-方差分析</strong>。</p>
+<h5 id="假设和模型"><a href="#假设和模型" class="headerlink" title="假设和模型"></a>假设和模型</h5><p>假设市场中存在 <code>n</code> 个不同的资产，对于某个资产 <code>i</code>，使用 $r_i$ 表示该资产的收益率的随机变量，$E[r_i]$ 表示预期收益率，$\sigma_i$ 表示 $r_i$ 的标准差。<br><br>市场中所有收益率没有不确定的资产称<strong>无风险资产</strong>，并且所有无风险资产的收益率都是一致的，称为<strong>无风险利率 $r_f$</strong> 。<br><br><strong>风险资产配置（<code>risky portfilio, P</code>）</strong>是由风险资产 <code>i=1,2 ... n</code> 按照权重比例组成，每个资产 <code>i</code> 在 <code>P</code> 中的权重是 $\omega_i$，所有权重满足 $sum_{i-1}^n \omega_i &#x3D; 1$。<br>根据单个资产的收益率，可以计算资产配置的收益变量，资产组合收益率的随机变量 $r_p &#x3D; sum_{i&#x3D;1}^n \omega_i r_i$，其预期收益为：<br>$$E[r_p] &#x3D; E[sum_{i&#x3D;1}^n \omega_i r_i] &#x3D; sum_{i&#x3D;1}^n \omega_i E[r_i]$$<br>方差为：<br>$$Var(r_p) &#x3D; E[r_p - E[r_p]] &#x3D; sum_{i&#x3D;1}^n sum_{j&#x3D;1}^n \omega_i \omega_j Cov(r_i, r_j) $$</p>
+<h5 id="有效前沿"><a href="#有效前沿" class="headerlink" title="有效前沿"></a>有效前沿</h5><p>对于任意一个预期收益值 $\mu$，均可以找到一个由配置权重 $\omega &#x3D; (\omega_1, \omega_2, …, \omega_n)$ 定义的风险资产配置 $P$，其预期收益率为 $\mu$，并且在所有可以配置出预期收益率为 $\mu$ 的资产组合中，$P$ 的方差是最小的。<em>最优化问题的目标函数</em>如下：<br>$$ Min \quad Var(r_p) &#x3D; E[r_p - E[r_p]] &#x3D; sum_{i&#x3D;1}^n sum_{j&#x3D;1}^n \omega_i \omega_j Cov(r_i, r_j) $$<br>$$ 满足 \quad E[r_p] &#x3D; E[sum_{i&#x3D;1}^n \omega_i r_i] &#x3D; sum_{i&#x3D;1}^n \omega_i E[r_i] &#x3D; \mu, sum_{i&#x3D;1}^n \omega_i &#x3D; 1 $$<br><br>上面的问题可以使用 <em><code>Lagrange</code> 乘子</em>的方法解决，对于每一个值 $\mu$，会得到一个风险资产配置 $P$，满足 $E[r_p] &#x3D; \mu$，并且 $\delta_p$ 是最小的。<br>将上述结果输出，则可以在标准差-预期的坐标上可以一条线，该线被称为<strong>有效前沿（<code>efficient frontier</code>）</strong>，由于其形状类似子弹也被称为<em>马科维兹子弹（<code>Markowitz bullet</code>）</em>。<br>有效前沿存在一个波动率最小的位置 <code>A</code>，并且该点以上的位置才是真正<em>有效</em>的，其含义是在固定风险的前期下选择最大的预期收益。</p>
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-26_11-56-51.png" alt="Snipaste_2024-02-26_11-56-51"></p>
+<h5 id="夏普比率"><a href="#夏普比率" class="headerlink" title="夏普比率"></a>夏普比率</h5><p>有效前沿的左侧区域是通过风险资产无法配置的，但如果在资产配置中加入无风险资产则可以获取到左侧的某些位置。<br>选择有效前沿上的某个资产配置 <code>P</code>，并选择比例 $\alpha &gt; 0$，将本金的 $\alpha$ 配置于 <code>P</code>，将 $1-\alpha$ 配置于无风险资产。</p>
+<ul>
+<li>$\alpha &lt;&#x3D; 1$，则 $1-\alpha &gt;&#x3D; 0$，也就是将 $1-\alpha$ 倍的本金购买无风险资产，以此获得无风险利率。</li>
+<li>$\alpha &gt;&#x3D; 1$，则 $1-\alpha &lt;&#x3D; 0$，也就是贷款本金 $\alpha-1$ 倍的资金支付无风险利率，并用贷款和本金一起配置 <code>P</code>。</li>
+</ul>
+<p>以 $\alpha$ 为系数，使用无风险资产和资产组合 <code>P</code>，可以配置出一个投资组合，那么其收益随机变量为 $r_\alpha$，计算可得：<br>$$ E[r_\alpha] &#x3D; E[\alpha r_p + (1-\alpha) r_f] &#x3D; E[\alpha r_p] + (1-\alpha)r_f $$<br>$$ \sigma_\alpha &#x3D; {\sqrt {Var(\alpha r_p + (1-\alpha) r_f)}} &#x3D; \sigma \alpha_p $$</p>
+<p>以上投资组合在期望收益率-标准差曲线上表现为一条经过有效边界上一点的射线，该线被称为<strong>资本配置线（<code>Capital Allocation Line, CAL</code>）</strong>，该线上的每个点都表示一个风险资产和无风险资产的投资组合。</p>
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-27_17-49-49.png" alt="Snipaste_2024-02-27_17-49-49"></p>
+<p><code>CAL</code> 的斜率 $ Sharpe(P) &#x3D; {\frac {E[r_p] - r_f} {\alpha_p}} $，该比率被称为<strong>报酬-波动性比率（<code>reward-to-variability ratio</code>）</strong>，又被称为<strong>夏普比率</strong>。</p>
+<h5 id="资本市场线"><a href="#资本市场线" class="headerlink" title="资本市场线"></a>资本市场线</h5><p>用市场信息计算得来的有效前沿上必定有一个夏普比率最高的点 <code>M</code>，称其为<strong>市场组合</strong>；穿过 <code>M</code> 的资产配置线 <code>CAL(M)</code> 称为<strong>资本市场线（<code>capital market line</code>）</strong>。资本市场线的意义在于固定标准差，那么市场上预期收益最高的投资组合就在该线上；或者固定预期收益，那么标准差最低的投资组合就在该线上。因此资本市场线可以通俗理解为<strong>最佳配置线</strong>。</p>
+<h4 id="资本资产定价模型"><a href="#资本资产定价模型" class="headerlink" title="资本资产定价模型"></a>资本资产定价模型</h4><p><strong>资本资产定价模型（<code>Capital Asset Pricing Model, CAPM</code>）</strong>是建立在 <code>MPT</code> 之上，其用简单的数学公式表达资产的收益率与风险系数 $\beta$ 以及系统性风险之间的关系。</p>
+<h5 id="假设和模型-1"><a href="#假设和模型-1" class="headerlink" title="假设和模型"></a>假设和模型</h5><p><code>CAPM</code> 假设市场上所有的投资者均对于风险和收益的评估仅限于对于收益变量的预期值和标准值的分析。并且市场是完全公开的，对于任何投资者信息和机会完全均等，任何投资者均可以以唯一的无风险利率无限制地贷款或借出。</p>
+<p>为了最大化预期收益并最小化标准差，所有的投资者均选择<em>资本市场线</em>上的某一个点作为资产配置，即所有投资者都按一定比例持有现金和市场组合 <code>M</code>。因此市场组合的波动性和不确定性不单单是组合的风险，而是整个市场的风险，其被称为<strong>系统性风险</strong>。</p>
+<h5 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h5><p><code>CAPM</code> 公式表达的是任意风险资产的收益率与市场组合的收益率之间的关系，在该公式中任何风险资产的收益率都可以被分为两部分：无风险收益和风险收益 $\beta$。</p>
+<p>$$ E[r_S] &#x3D; r_f + \beta_S(E[r_M] - r_f) $$<br><small>$r_S$ 表示 <code>S</code> 的收益变量，$r_M$ 表示市场组合的收益变量，$r_f$ 表示市场的无风险利率，$\beta_S &#x3D; {\frac {Cov(r_S, r_M)} {Var(r_M)}}$ 表示组合 <code>S</code> 对于市场风险的敏感度。</small><br>$E[r_M] - r_f$ 是市场组合的风险收益，$\beta_S(E[r_M] - r_f)$ 是资产组合 <code>S</code> 的风险收益，因此可以理解为资产组合 <code>S</code> 承担 $\sigma_S$ 倍的市场风险，其将会承担相应倍数的风险补偿。</p>
+<p>通过 <code>CAPM</code> 公式可以得到资产组合 <code>S</code> 的夏普比率与市场组合 <code>M</code> 的夏普比率之间的关系：<br>$$ Sharpe(S) &#x3D; Corr(r_S, r_M) Sharpe(M) $$<br>从公式可以得出 <code>S</code> 与 <code>M</code> 的相关性越高，则 <code>S</code> 的夏普比率越高，相应的风险与收益的比值也就越大。</p>
+<p><small>风险组合 <code>S</code> 的预期收益与 $\beta_S$ 有关，而与其自身风险 $\sigma_S$ 无关。</small></p>
+<h5 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h5><p>在现实环境中，可以将一个概括市场整体的组合（比如大盘指数）作为市场组合，并以其为基准计算每个风险资产的系统性风险 $\beta$，这样就可以根据对市场整体趋势的判断以及对需要的风险进行控制，进而选择合适的 $\beta$ 进行资产配置。</p>
+<h4 id="套利定价理论"><a href="#套利定价理论" class="headerlink" title="套利定价理论"></a>套利定价理论</h4><p><strong>套利定价理论 <code>APT</code></strong> 可以理解为 <code>CAPM</code> 的一个推广，由 <code>APT</code> 给出的定价模型是将收益归因到不同的因子之上，而 <code>CAPM</code> 仅把收益归咎于市场变化着一个因子。</p>
+<p><code>APT</code> 模型认为在现有市场中，套利行为是市场价格均衡形成的一个决定因素，如果市场价格未达到均衡状态时，则会存在无风险套利机会，而套利行为会使得市场价格回归均衡状态。<br><code>APT</code> 模型使用多个因素来解释风险资产的收益，并根据无套利原则，得出风险资产的收益与多个因素之间存在近似的线性关系，也就是说资产的预期收益率与一组影响他们的系统性因素的预期收益率是线性相关的，即影响资产收益率的因素从 <code>CAPM</code> 的单一因素拓展到多个因素。<strong>多因子模型（<code>Multiple-Factor Model, MFM</code>）</strong>正是基于 <code>APT</code> 模型的思想发展而来的完整风险模型。<br>多因子模型定量刻画了资产收益率与每个因子之间的线性关系，数学表达式如下：<br>$$ \bar r_j &#x3D; sum_{k&#x3D;1}^K X_{jk} * \bar f_k + \bar u_j $$</p>
+<p><small>$ \bar X_{jk}$ 表示资产 <code>j</code> 在因子 <code>k</code> 上的载荷；$ \bar f_k$ 表示因子 <code>k</code> 的收益；$\bar u_j$ 表示资产 <code>j</code> 的残差收益。</small></p>
+<h4 id="多因子模型"><a href="#多因子模型" class="headerlink" title="多因子模型"></a>多因子模型</h4><p><strong>多因子模型</strong>是一个用于选择投资组合的策略，其通过多个与预期收益相关的因子来选择投资组合，而因子可以通过历史数据计算来预测未来的收益表现，以期望达到全面、稳定的预测。<br>多因子模型常见的三类因子如下：</p>
+<ul>
+<li>基本面因子：包括市盈率 <code>PE</code>、市净率 <code>PB</code>、营业收入增长率、估值、营业收入、净利润、负债等。</li>
+<li>技术分析因子：包括动量 <code>Momentum</code>、波动率 <code>Volatility</code>、换手率、量比等。</li>
+<li>宏观经济因子：包括利率、通货膨胀率、<code>GDP</code> 增长、工业增加值、<code>CPI</code>、利率、<code>M1</code>、<code>M2</code>等。</li>
+</ul>
+<h5 id="多因子选股实践"><a href="#多因子选股实践" class="headerlink" title="多因子选股实践"></a>多因子选股实践</h5><p>在实现多因子选股模型时，需要进行以下步骤：</p>
+<ul>
+<li>确定目标和约束条件。</li>
+<li>选择因子并计算。</li>
+<li>异常值处理。</li>
+<li>因子标准化。</li>
+<li>确定因子权重。</li>
+<li>构建多因子模型。</li>
+<li>资产筛选和组合优化。</li>
+<li>回测和调整。</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取和准备数据</span></span><br><span class="line">df = pd.read_csv(<span class="string">&#x27;stock_data.csv&#x27;</span>)</span><br><span class="line">X = df[[<span class="string">&#x27;PE&#x27;</span>, <span class="string">&#x27;PB&#x27;</span>, <span class="string">&#x27;ROE&#x27;</span>]] <span class="comment"># 特征因子</span></span><br><span class="line">y = df[<span class="string">&#x27;Returns&#x27;</span>] <span class="comment"># 目标变量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拆分训练数据和测试数据</span></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准化处理</span></span><br><span class="line">scaler = StandardScaler()</span><br><span class="line">X_train = scaler.fit_transform(X_train)</span><br><span class="line">X_test = scaler.transform(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建线性回归模型</span></span><br><span class="line">model = LinearRegression()</span><br><span class="line">model.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看模型系数，确定因子权重</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Factor weights:&#x27;</span>, model.coef_)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用模型预测测试数据的收益</span></span><br><span class="line">y_pred = model.predict(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个 DataFrame 来保存资产的预测收益</span></span><br><span class="line">predicted_returns = pd.DataFrame(&#123;<span class="string">&#x27;Stock&#x27;</span>: X_test.index, <span class="string">&#x27;Predicted return&#x27;</span>: y_pred&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据预测收益选择资产</span></span><br><span class="line">selected_stocks = predicted_returns[predicted_returns[<span class="string">&#x27;Predicted return&#x27;</span>] &gt; <span class="number">0.1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Selected stocks:&#x27;</span>, selected_stocks)</span><br></pre></td></tr></table></figure>
+<p>以上示例实现了一个线性回归的多因子模型，通过 <code>PE</code>、<code>PB</code>、<code>ROE</code> 三个因子来预测资产收益，利用模型系数作为因子权重，采用线性回归作为预测模型，但在实际情况下，可以根据需求调整和改进更多因子，同时使用更复杂的模型，例如神经网络、随机森林等，或者使用更复杂的特征工程技术，例如 <code>PCA</code>、特征选择等。另外该模型未进行任何形式的模型验证，例如交叉验证、超参数调优等，可进一步针对优化。</p>
+<hr>
+
+<h3 id="择时策略"><a href="#择时策略" class="headerlink" title="择时策略"></a>择时策略</h3><p>量化择时策略即采用<strong>数量化分析</strong>方法，利用<strong>单个或多个技术指标的组合</strong>，来对交易标的资产或资产指数进行<strong>低买高卖</strong>的操作，期望获得超越简单买入持有策略的收益风险表现。</p>
+<p>量化择时策略的核心是客观型技术分析。客观型技术分析，是指其分析过程中所用到的分析方法，具有 <code>100%</code> 客观的定义标准，不包含任何主观定义的部分。</p>
+<p>常用策略方法：</p>
+<ul>
+<li><strong>趋势择时</strong>。趋势择时的基本思想来自于技术分析，技术分析认为趋势存在延续性，主要指标有 <code>MA</code>、<code>MACD</code>、<code>DMA</code> 等。</li>
+<li><code>Hurst</code> 指数。</li>
+<li><strong><code>SWARCH</code> 模型</strong>。该模型主要刻画了货币供应量 <code>M2</code> 和大盘走势之间的关系，揭示证券市场指数变化与货币供应量之间的相关关系。</li>
+<li>异常指标择时。异常指标择时主要处理一些特殊情况下的择时，主要有：市场噪声、行业集中度和兴登堡凶兆3个策略。</li>
+<li>市场情绪择时。</li>
+<li><code>SVM</code> 分类。<code>SVM</code> 择时是利用 <code>SVM</code> 技术进行大盘趋势的模式识别，将大盘区分为几个明显的模式，从而找出其中的特征，然后利用历史数据学习的模型来预测未来的趋势。</li>
+<li><strong>有效资金模型</strong>。有效资金是指市场上能对趋势产生影响的资金流，同样的资金量，在趋势顶部和底部的时候，对市场的影响是不一样的。</li>
+<li>牛熊线。</li>
+</ul>
+<h4 id="双均线择时策略"><a href="#双均线择时策略" class="headerlink" title="双均线择时策略"></a>双均线择时策略</h4><p>策略原理：使用两根均线，一根长周期均线，一根短周期均线。当短期均线从下往上穿越长周期均线的时候，买入；当短期均线从上往下穿越长周期均线的时候，卖出。均线八大法则也是一种双均线策略，其短周期均线为M1（当日收盘价）。<br>均线根据不同周期有以下分类：</p>
+<ul>
+<li><strong>短期均线</strong>：<code>5、7、10</code> 用于预测短期走势，<code>MA5</code> 和 <code>MA10</code> 又称为短期监测线。</li>
+<li><strong>中期均线</strong>：<code>20、30、60</code> 用于预测中期走势，<code>MA20</code> 和 <code>MA30</code> 又称为警戒线，<code>MA60</code> 则称之为生死线。</li>
+<li><strong>长期均线</strong>：<code>120、250</code> 用于长期走势，<code>MA120</code> 又称为确认线，<code>MA250</code> 则通常被看做反转线，也称为牛熊分界线。</li>
+</ul>
+<p>策略缺陷：</p>
+<ul>
+<li><strong>滞后性</strong>：均线归根到底是一种平均值，在应用中存在的最大问题就是滞后性。当出现买入卖出信号时，最佳时机早已过去。</li>
+<li><strong>长短周期难以选择</strong>：如果两根均线的周期接近可能会造成很大的亏损，因此两个参数选择的很重要，趋势性越强的品种，均线策略越有效。</li>
+</ul>
+<p>策略优化尝试方向：</p>
+<ul>
+<li><strong>使用加权移动平均值</strong>：均线策略的一大缺陷是指标具有滞后性，因此可以使用加权移动平均值代替移动平均值。计算时将短期（如昨天）的权重增大，以加强指标的敏感性。</li>
+<li><strong>不局限于收盘价</strong>：可以尝试将最高价、最低价等加入到加权移动平均值的计算中。</li>
+<li><strong>自适应调整均线周期</strong>：价格走势进入单边上涨趋势，自适应均线自动缩短周期，采用短期均线，转为向上移动；市场走势进入横盘震荡，自适应均线自动延长周期，采用长期均线，转为横向移动。</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取资产数据，选取最近日期的 500 条数据</span></span><br><span class="line">df = pd.read_csv(<span class="string">&#x27;000001.csv&#x27;</span>, header=<span class="literal">None</span>)</span><br><span class="line">df = df[-<span class="number">500</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算短期均线和长期均线</span></span><br><span class="line">df[<span class="string">&#x27;MA5&#x27;</span>] = df[<span class="string">&#x27;close&#x27;</span>].rolling(window=<span class="number">5</span>).mean()</span><br><span class="line">df[<span class="string">&#x27;MA20&#x27;</span>] = df[<span class="string">&#x27;close&#x27;</span>].rolling(window=<span class="number">20</span>).mean()</span><br><span class="line">df[<span class="string">&#x27;MA60&#x27;</span>] = df[<span class="string">&#x27;close&#x27;</span>].rolling(window=<span class="number">60</span>).mean()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图表展示</span></span><br><span class="line">plt.figure(figsize=(<span class="number">18</span>,<span class="number">8</span>))</span><br><span class="line">plt.plot(df[<span class="string">&#x27;MA5&#x27;</span>], label=<span class="string">&#x27;MA5&#x27;</span>)</span><br><span class="line">plt.plot(df[<span class="string">&#x27;MA20&#x27;</span>], label=<span class="string">&#x27;MA20&#x27;</span>)</span><br><span class="line">plt.plot(df[<span class="string">&#x27;MA60&#x27;</span>], label=<span class="string">&#x27;MA60&#x27;</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-02_11-31-48.png" alt="Snipaste_2024-02-02_11-31-48.png"></p>
+<h4 id="MACD-均线择时策略"><a href="#MACD-均线择时策略" class="headerlink" title="MACD 均线择时策略"></a><code>MACD</code> 均线择时策略</h4><p><strong>异同移动平均线（<code>Moving Average Convergence and Divergence, MACD</code>）</strong>是由指数均线演变而来，通过对资产的收盘价进行平滑处理，生成两线一柱，其中两线为快速线(<code>Difference Line, DIF</code>)和慢速线(<code>Signal Line, DEA</code>)，一柱是 <code>MACD</code>。</p>
+<p><code>MACD</code> 指标是 <code>DIF</code> 与 <code>DEA</code> 之间的差，其可以反映出最近价格走势的强弱变化和能量，把握准确的买卖点。</p>
+<p>指标计算公式：</p>
+<ul>
+<li><strong>短期 <code>EMA</code></strong> ：短期（如 <code>12</code> 天）的收盘价指数移动平均值，一般采用 <code>EMA(price, 12)</code>。</li>
+<li><strong>长期 <code>EMA</code></strong> ：长期（如 <code>26</code> 天）的收盘价指数移动平均值，一般采用 <code>EMA(price, 26)</code>。</li>
+<li><strong><code>DIF</code></strong> ：短期 <code>EMA</code> 与长期 <code>EMA</code> 的差值，即 <code>DIF = EMA(price, 12) - EMA(price, 26)</code>。</li>
+<li><strong><code>DEA</code></strong> ：<code>DIF</code> 的多日指数移动平均值，即 <code>DEA=EMA(DIF, 9)</code>。</li>
+<li><strong><code>MACD</code></strong> ：<code>DIF</code> 与 <code>DEA</code> 线的差值，即 <code>MACD = DIF - DEA</code>。</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> talib <span class="keyword">as</span> ta </span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用最近 500 天的收盘价数据</span></span><br><span class="line">data = pd.read_csv(<span class="string">&#x27;000001.csv&#x27;</span>, header=<span class="literal">None</span>)</span><br><span class="line">data = data[-<span class="number">500</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用 talib 库中的相应函数计算 MACD 指标</span></span><br><span class="line">dif, dea, macd = ta.MACD(data[<span class="string">&#x27;close&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图表展示</span></span><br><span class="line">plt.figure(figsize=(<span class="number">18</span>,<span class="number">8</span>))</span><br><span class="line">plt.plot(dif)</span><br><span class="line">plt.plot(dea)</span><br><span class="line">plt.bar(macd.index, macd.values)</span><br><span class="line">plt.legend([<span class="string">&quot;dif&quot;</span>, <span class="string">&quot;bea&quot;</span>, <span class="string">&quot;macd&quot;</span>], loc=<span class="string">&quot;upper left&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-02_14-17-18.png" alt="Snipaste_2024-02-02_14-17-18.png"></p>
+<hr>
+
+<h3 id="调仓策略"><a href="#调仓策略" class="headerlink" title="调仓策略"></a>调仓策略</h3><h4 id="最优化计算仓位"><a href="#最优化计算仓位" class="headerlink" title="最优化计算仓位"></a>最优化计算仓位</h4><p>之前根据<strong>多因子模型</strong>和<strong>择时策略</strong>对资产进行未来收益的预测；在多因子模型中根据同一个时间截面上不同因子的指标，通过线性、非线性的方法将多个因子综合成多因子作为资产未来收益率高低的预测值；在择时策略中，通过计算资产的离散时序信号连续化，连续信号的差异化使得各个资产的择时信号能够进行比较。至此可能就会发现上述预测并没有说明购买风险资产的数量，即<strong>如何分配资金</strong>。</p>
+<p>常用符号约定如下：</p>
+<ul>
+<li><code>N</code>：资产数量</li>
+<li>$\omega$：权重向量</li>
+<li>$\omega_i$：资产 <code>i</code> 的权重</li>
+<li>$\mu$：预期收益率</li>
+<li>$\sigma$：波动率</li>
+<li>$\sigma_i$：资产 <code>i</code> 的波动率</li>
+<li>$\sigma_{ij}$：资产 <code>i</code> 与资产 <code>j</code> 之间的协方差</li>
+<li>$\Sigma$：方差协方差矩阵</li>
+<li>$\sigma_p$：组合波动率</li>
+<li>$\mu_p$：组合收益率</li>
+<li>$\lambda$：风险厌恶系数</li>
+<li>$r_f$：无风险收益率</li>
+</ul>
+<h5 id="等权重"><a href="#等权重" class="headerlink" title="等权重"></a>等权重</h5><p>顾名思义即在没有任何信息的情况下，等权重是最简单的方法，即每个资产都赋予相同的价值。$$ \omega_i &#x3D; {\frac {1} {N}} $$</p>
+<h5 id="市值加权"><a href="#市值加权" class="headerlink" title="市值加权"></a>市值加权</h5><p>在没有任何信息的情况下，另外的一种方法就是根据市值进行加权。<br>$$ \omega_i &#x3D; Cap_i &#x2F; sum_i{Cap_i}$$<br><small>$ Cap_i $ 为资产 <code>i</code> 的市值。</small><br><small>市值加权会给与过高估值的资产更多权重，因此在某些情况下并不占优。</small></p>
+<h5 id="最小方差组合"><a href="#最小方差组合" class="headerlink" title="最小方差组合"></a>最小方差组合</h5><p>前两种方法都是没有任何信息时才使用，而在实际中可以通过历史收益率的方差来作为代理变量，追求组合整体的方差最小，其数学表达式为：<br>$$ Min \quad \sigma_p &#x3D; \omega^&#96; \Sigma_w $$</p>
+<h5 id="最大分散度"><a href="#最大分散度" class="headerlink" title="最大分散度"></a>最大分散度</h5><p>从组合的方差-协方差矩阵中可知，组合中的一部分风险来源于各个资产的方差，而另外一部分风险来源于资产之间的协方差，因此想要降低风险就要分散投资，其数学表达式为：<br>$$ Max \quad D(\omega) &#x3D; {\frac {\omega^` \sigma} {\sqrt {\omega^` \Sigma_w} }} $$</p>
+<p>目标函数被称为分散比率，其分母为组合波动率，分子为成分波动率加权平均。即可以最大化资产线性加权波动率与投资组合波动率的比值，因此称为最大分散化资产配置组合。</p>
+<h5 id="风险平价"><a href="#风险平价" class="headerlink" title="风险平价"></a>风险平价</h5><p>风险平价是从风险的角度出发，追求所有对组合的风险贡献一致。首先定义边界风险，即每增加 <code>1</code> 单位资产的权重 $\omega_i$ 所引起的组合整体风险变化：<br>$$<br>\begin{equation}<br>\begin{split}<br>MRC_i &amp;&#x3D; {\frac {\delta \sigma_p} {\delta \omega_i}} &#x3D; {\frac {\omega_i \sigma_i^2 + sum_{j!&#x3D;i} \omega_j \rho_{ij} \sigma_i \sigma_j} {\sigma_p}} \\<br>&amp;&#x3D; \frac {sum_{j-1}^N \omega_j \rho_{ij} \sigma_i \sigma_j} {\sigma_p} \\<br>&amp;&#x3D; \frac {\rho_{ip} \sigma_i \sigma_p} {\sigma_p} \\<br>&amp;&#x3D; (\frac {\rho_{ip} \sigma_i} {\sigma_p}) * \sigma_p \\<br>&amp;&#x3D; \beta_i \sigma_p<br>\end{split}<br>\nonumber<br>\end{equation}<br>$$</p>
+<p><small>其中 $\beta_i$ 表示资产 <code>i</code> 收益率对于投资组合收益率的 $\beta$ 系数，在定义过边界风险后，根据其权重就可以得到风险贡献：</small><br>$$ RC_i &#x3D; \omega_i * MRC_i &#x3D; \omega_i {\frac {\delta \sigma_p} {\delta \omega_i}} $$</p>
+<p>因此风险平价组合的目标函数为：<br>$$ Min \quad sum_{i-1}^N sum_{j-1}^N \quad (RC_i - RC_j)^2 $$</p>
+<p>资产的权重与其相对于组合的 $\beta$ 成反比，即 $\beta$ 越高，其权重越低，由此有效地降低风险，每个资产对组合的边界风险贡献相同。</p>
+<h5 id="均值方差优化"><a href="#均值方差优化" class="headerlink" title="均值方差优化"></a>均值方差优化</h5><p>上面说的最小方差、最大分散度、风险平价都是从风险的角度出发的优化方法，而均值方差优化则是在从收益最大化方面出发，实现收益最大化或特定收益风险最小化。即<strong>均值方差优化</strong>，其目标函数如下：<br>$$ Max \quad \omega^T \mu - {\frac {\lambda} {2}} \omega^` \Sigma_\omega $$</p>
+<p>从理论上讲，组合成分间存在无数种可能性，而每种可能性都会有风险收益对，而将多有的结果集合在一起就会形成一个可行域。可行域中的每个结果并非都是<em>好结果</em>，只有在侧边缘的值才是最优解，即 <code>MOV</code> 的解。<br>其中 <code>A ~ D</code> 之间连线，这条线被称为<strong>有效前沿</strong>，任何异于有效前沿上的点，均能找到相同风险下收益率更高的组合。</p>
+<img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-24_23-17-59.jpg" class="" title="Snipaste_2024-02-24_23-17-59"> 
+
+<p>自无风险收益率起做一条切线，其与有效前沿相切于 <code>B</code> 点，该点即所有可行域中夏普比率最大的点，也被称为最大夏普组合，即<strong>最大化组合夏普比率</strong>目标函数如下：<br>$$ Max \quad {\frac {\omega^` \mu} {\sqrt{\omega^` \Sigma_\omega}}} $$</p>
+<p><small>相比之前的各种优化方法，均值方差优化引入了较多的参数，尤其是预期收益率的估计，因此优化结果对于参数会非常敏感，体现就是权重在时序上波动较大，容易出现极端值。其后续优化可以参考 <code>Black-Litterman</code> 模型。</small></p>
+<h5 id="常见约束"><a href="#常见约束" class="headerlink" title="常见约束"></a>常见约束</h5><ul>
+<li>单资产权重的范围限制</li>
+<li>做空限制</li>
+<li>行业中性化</li>
+<li>风险敞口限制</li>
+</ul>
+<h4 id="资本资产定价模型-1"><a href="#资本资产定价模型-1" class="headerlink" title="资本资产定价模型"></a>资本资产定价模型</h4><p><strong>资本资产定价模型（<code>Capital Asset Pricing Model, CAPM</code>）</strong>是在 <code>MPT</code> 基础上发展而来，其表述的是任何一种风险资产的收益率相对于市场组合收益率之间的关系：<br>$$ E(r_s) &#x3D; r_f + \beta_s(E(r_M) - r_f) $$<br><small>$r_s$ 表示的是某种风险资产的收益；$r_f$ 表示为无风险资产收益；$r_M$ 表示市场组合收益率；$\beta_s$ 表示该风险资产相对于市场的敏感度，其反映该风险资产随着市场组合收益变动的关联性大小。</small><br>$$ \beta_s &#x3D; {\frac {cov(r_s, r_M)} {var(r_M)}} &#x3D; {\frac {sum_{i-1}^N w_i cov(r_s, r_i)} {sum_{i-1}^N sum_{j-1}^N w_i w_j cov(r_i, r_j)}} $$<br><small>在牛市期间，如果买入 $\beta_s &gt; 1$ 的资产，可以获得比市场平均收益更多；在熊市期间，如果持有 $\beta_s &lt; 1$ 的资产则可以避免损失，甚至可以获取收益。</small><br>综上所述资本资产定价模型的本质就是如果想获得更多的收益，那就必须承担更多的风险。风险与机遇并存。</p>
+<hr>
+
+<h3 id="量化回测"><a href="#量化回测" class="headerlink" title="量化回测"></a>量化回测</h3><p>量化回测主要用于评估策略在真实市场环境下的好坏，需要从<strong>收益</strong>、<strong>稳定性</strong>、<strong>胜率</strong>、<strong>风险</strong>等方面来综合评估策略，常见的指标可以看净值变化、波动率、最大回撤、夏普比率等。</p>
+<h4 id="回测评估指标"><a href="#回测评估指标" class="headerlink" title="回测评估指标"></a>回测评估指标</h4><p>数据准备</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取中国平安000001、贵州茅台600519、沪深300 000300 数据</span></span><br><span class="line">data1 = pd.read_csv(<span class="string">&#x27;./000001.csv&#x27;</span>, index_col=<span class="number">0</span>, header=<span class="literal">None</span>)</span><br><span class="line">data2 = pd.read_csv(<span class="string">&#x27;./600519.csv&#x27;</span>, index_col=<span class="number">0</span>, header=<span class="literal">None</span>)</span><br><span class="line">data3 = pd.read_csv(<span class="string">&#x27;./000300.csv&#x27;</span>, index_col=<span class="number">0</span>, header=<span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取最近 500 天的日交易数据</span></span><br><span class="line">data1_close = data1[<span class="number">2</span>][-<span class="number">500</span>:]</span><br><span class="line">data2_close = data2[<span class="number">2</span>][-<span class="number">500</span>:]</span><br><span class="line">data3_close = data3[<span class="number">2</span>][-<span class="number">500</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取当日的收盘价整合为待处理数据</span></span><br><span class="line">df = pd.DataFrame()</span><br><span class="line">df[<span class="string">&#x27;000001&#x27;</span>] = data1_close</span><br><span class="line">df[<span class="string">&#x27;600519&#x27;</span>] = data2_close</span><br><span class="line">df[<span class="string">&#x27;000300&#x27;</span>] = data3_close</span><br></pre></td></tr></table></figure>
+
+<h5 id="净值曲线"><a href="#净值曲线" class="headerlink" title="净值曲线"></a>净值曲线</h5><p>净值曲线是一组时间序列曲线，其含义表示为资产或基金在不同时间的价值对比最初价值的<strong>倍数</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以 500 天的收盘价作为基准，计算净值并绘制曲线</span></span><br><span class="line">df_worth = df / df.iloc[<span class="number">0</span>]</span><br><span class="line">df_worth.plot(figsize=(<span class="number">15</span>,<span class="number">6</span>))</span><br><span class="line">plt.title(<span class="string">&#x27;Trend of stock value&#x27;</span>, fontsize=<span class="number">10</span>)</span><br><span class="line">plt.xticks(df.index, fontsize=<span class="number">10</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-08.png" alt="Snipaste_2024-02-22_20-37-08"></p>
+<h5 id="年化收益率"><a href="#年化收益率" class="headerlink" title="年化收益率"></a>年化收益率</h5><p>累计收益率计算公式如下：<br>$$ R_t &#x3D; {\frac {P_T - P_t} {P_t}} $$<br><small>$P_T$ 表示期末的价格，$P_t$ 表示期初的价格。</small><br>年化收益率其最直观的理解就是每年的收益是多少。年化收益率计算公式如下：<br>$$ R_p &#x3D; (1 + R)^{\frac {m} {n}} - 1$$<br><small>$R$ 表示期间总收益率，<code>m, n</code> 表示相对应的计算周期，<code>m</code> 使用 <code>252, 52, 12</code> 分别表示日、周、年的转换，<code>n</code> 表示期间自然日天数。</small></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 区间累积收益率</span></span><br><span class="line">total_return = df_worth.iloc[-<span class="number">1</span>]-<span class="number">1</span></span><br><span class="line">total_return = pd.DataFrame(total_return.values, columns=[<span class="string">&#x27;累计收益率&#x27;</span>], index=total_return.index)</span><br><span class="line">total_return</span><br><span class="line"><span class="comment"># 年化收益率</span></span><br><span class="line">annual_return = pd.DataFrame((<span class="number">1</span> + total_return.values) ** (<span class="number">252</span> / <span class="number">1826</span>) - <span class="number">1</span>, columns=[<span class="string">&#x27;年化收益率&#x27;</span>], index=total_return.index)</span><br><span class="line">annual_return</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-21.png" alt="Snipaste_2024-02-22_20-37-21"><br><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-32.png" alt="Snipaste_2024-02-22_20-37-32"></p>
+<h5 id="波动率"><a href="#波动率" class="headerlink" title="波动率"></a>波动率</h5><p>波动率是对收益变动的衡量，其本质是风险，用于衡量收益率的不确定性。<br>年波动率计算公式如下：<br>$$ V &#x3D; {\sqrt{ {\frac {252} {n-1}} sum_{i&#x3D;1}^n (r_p - {\bar {r_p} })^2 }} $$<br><small>$r_p$ 表示每日收益率，${\bar {r_p} }$ 表示每日收益率的平均值，$n$ 表示策略执行的天数。</small></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 波动率</span></span><br><span class="line">df_return = df / df.shift(<span class="number">1</span>) - <span class="number">1</span></span><br><span class="line">df_return = ((df_return.iloc[<span class="number">1</span>:] - df_return.mean()) ** <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">volatility = pd.DataFrame(np.sqrt(df_return.<span class="built_in">sum</span>() * <span class="number">252</span> / (<span class="number">1826</span>-<span class="number">1</span>)), columns=[<span class="string">&#x27;波动率&#x27;</span>], index=total_return.index)</span><br><span class="line">volatility</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-41.png" alt="Snipaste_2024-02-22_20-37-41"></p>
+<h5 id="最大回撤"><a href="#最大回撤" class="headerlink" title="最大回撤"></a>最大回撤</h5><p>表示在选定的某一周期往后推，在最低点时的收益率回撤的最大幅度。其主要用于<strong>描述最坏的情况</strong>，是量化中最重要的指标。<br>最大回撤计算公式如下：<br>$$ MaxDD &#x3D; {\frac {max(P_i, P_j)} {P_i}} $$<br><small>$P$ 为某一天资产的净值，$P_i, P_j$ 分别表示当天和明天的净值。</small></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最大回撤</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">max_drawdown_cal</span>(<span class="params">df</span>):</span><br><span class="line">    md = ((df.cummax() - df) / df.cummax()).<span class="built_in">max</span>()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">round</span>(md, <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">max_drawdown = &#123;&#125;</span><br><span class="line">max_drawdown[<span class="string">&#x27;000001&#x27;</span>] = max_drawdown_cal(df[<span class="string">&#x27;000001&#x27;</span>])</span><br><span class="line">max_drawdown[<span class="string">&#x27;600519&#x27;</span>] = max_drawdown_cal(df[<span class="string">&#x27;600519&#x27;</span>])</span><br><span class="line">max_drawdown[<span class="string">&#x27;000300&#x27;</span>] = max_drawdown_cal(df[<span class="string">&#x27;000300&#x27;</span>])</span><br><span class="line"></span><br><span class="line">max_drawdown = pd.DataFrame(max_drawdown, index=[<span class="string">&#x27;最大回撤&#x27;</span>]).T</span><br><span class="line">max_drawdown</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-37-53.png" alt="Snipaste_2024-02-22_20-37-53"></p>
+<h5 id="Alpha-系数和-Beta-系数"><a href="#Alpha-系数和-Beta-系数" class="headerlink" title="Alpha 系数和 Beta 系数"></a><code>Alpha</code> 系数和 <code>Beta</code> 系数</h5><p><code>Alpha</code> 系数是指投资中的非系统性风险，可获得与市场无关的回报，而 <code>Beta</code> 系数则是指投资中的系统性风险。<br>使用资本资产定价模型来评估策略的 <code>Alpha</code> 和 <code>Beta</code> 系数：<br>$$ E(r_i) &#x3D; r_f + \beta(E(r_m) - r_f) $$<br><small>$E(r_i)$ 表示投资组合的预期收益；$r_f$ 表示无风险利率；$r_m$ 表示市场指数利率；$\beta$ 表示波动风险与投资中的系统性风险；</small></p>
+<p>因此 <code>CAPM</code> 的计量模型可以表示为：<br>$$ r_i &#x3D; \alpha + \beta r_m + \epsilon_\alpha $$<br><small>$\epsilon_\alpha$ 表示随机扰动，可以理解其为个体风险。</small></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># alpha 和 beta 系数</span></span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算每日收益率 收盘价缺失值（停牌），使用前值代替</span></span><br><span class="line">rets=(df.iloc[:, :<span class="number">3</span>].fillna(method=<span class="string">&#x27;pad&#x27;</span>)).apply(<span class="keyword">lambda</span> x:x/x.shift(<span class="number">1</span>)-<span class="number">1</span>)[<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment"># # 市场指数为x，个股收益率为y</span></span><br><span class="line">x = rets.iloc[:,<span class="number">1</span>].values</span><br><span class="line">y = rets.iloc[:,:<span class="number">3</span>].values</span><br><span class="line">capm = pd.DataFrame()</span><br><span class="line">alpha = []</span><br><span class="line">beta = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">    b, a, r_value, p_value, std_err = stats.linregress(x, y[:,i])</span><br><span class="line">    <span class="comment"># alpha 转化为年化</span></span><br><span class="line">    alpha.append(<span class="built_in">round</span>(a*<span class="number">250</span>, <span class="number">3</span>))</span><br><span class="line">    beta.append(<span class="built_in">round</span>(b, <span class="number">3</span>))</span><br><span class="line">    </span><br><span class="line">capm[<span class="string">&#x27;alpha&#x27;</span>] = alpha</span><br><span class="line">capm[<span class="string">&#x27;beta&#x27;</span>] = beta</span><br><span class="line">capm.index = rets.columns[:<span class="number">3</span>]</span><br><span class="line">capm</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-38-06.png" alt="Snipaste_2024-02-22_20-38-06"></p>
+<h5 id="夏普比率-1"><a href="#夏普比率-1" class="headerlink" title="夏普比率"></a>夏普比率</h5><p>夏普比率是指在承担多一重风险时，可获得的超额回报。该比率是在资本资产定价模型中通过转换而得来。<br>夏普比率计算公式如下：<br>$$ SharpRatio &#x3D; {\frac {R_p - R_f} {\delta_p}} $$<br><small>$R_p$ 表示策略的年化收益率，$R_f$ 表示无风险收益率，$\delta_p$ 表示年化标准差。</small></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 夏普比率</span></span><br><span class="line"><span class="comment"># 超额收益率以无风险收益率为基准，假设无风险收益率为年化 3%</span></span><br><span class="line">ex_return=rets - <span class="number">0.03</span>/<span class="number">250</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算夏普比率</span></span><br><span class="line">sharpe_ratio = np.sqrt(<span class="built_in">len</span>(ex_return)) * ex_return.mean() / ex_return.std()</span><br><span class="line">sharpe_ratio = pd.DataFrame(sharpe_ratio, columns=[<span class="string">&#x27;夏普比率&#x27;</span>])</span><br><span class="line">sharpe_ratio</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-38-16.png" alt="Snipaste_2024-02-22_20-38-16"></p>
+<h5 id="信息比率"><a href="#信息比率" class="headerlink" title="信息比率"></a>信息比率</h5><p>信息比率与夏普比率类似，不过其参照的是策略的<strong>市场基准收益率</strong>。<br>$$ SharpRatio &#x3D; {\frac {R_p - R_f} {\delta_t}} $$<br><small>$R_p$ 表示策略的年化收益率，$R_f$ 表示无风险收益率，$\delta_t$ 表示策略与每日基准收益率差值的年化标准差。</small></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 信息比率（参考的是市场基准收益率）</span></span><br><span class="line">ex_return = pd.DataFrame() </span><br><span class="line">ex_return[<span class="string">&#x27;000001&#x27;</span>] = rets.iloc[:,<span class="number">0</span>] - rets.iloc[:,<span class="number">2</span>]</span><br><span class="line">ex_return[<span class="string">&#x27;600519&#x27;</span>] = rets.iloc[:,<span class="number">1</span>] - rets.iloc[:,<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算信息比率</span></span><br><span class="line">information_ratio = np.sqrt(<span class="built_in">len</span>(ex_return)) * ex_return.mean() / ex_return.std()</span><br><span class="line"><span class="comment"># 信息比率的输出结果</span></span><br><span class="line">information_ratio = pd.DataFrame(information_ratio, columns=[<span class="string">&#x27;信息比率&#x27;</span>])</span><br><span class="line">information_ratio</span><br></pre></td></tr></table></figure>
+
+<p><img src="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/Snipaste_2024-02-22_20-38-25.png" alt="Snipaste_2024-02-22_20-38-25"></p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a target="_blank" rel="noopener" href="https://datawhalechina.github.io/whale-quant/#/">WhaleQuant</a><br><a target="_blank" rel="noopener" href="https://ta-lib.github.io/ta-lib-python/">ta-lib</a></p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+              <a href="/tags/Quantum/" rel="tag"># Quantum</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" rel="prev" title="Selenium-使用教程">
+      <i class="fa fa-chevron-left"></i> Selenium-使用教程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86"><span class="nav-number">2.</span> <span class="nav-text">数据收集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E4%BA%A7%E6%95%B0%E6%8D%AE"><span class="nav-number">2.1.</span> <span class="nav-text">资产数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E9%9D%A2%E5%B8%B8%E8%A7%81%E6%8C%87%E6%A0%87"><span class="nav-number">2.2.</span> <span class="nav-text">技术面常见指标</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E5%B9%B3%E5%9D%87%E7%BA%BF-MA"><span class="nav-number">2.2.1.</span> <span class="nav-text">移动平均线 MA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9%E5%BC%BA%E5%BC%B1%E6%8C%87%E6%95%B0-RSI"><span class="nav-number">2.2.2.</span> <span class="nav-text">相对强弱指数 RSI</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MACD"><span class="nav-number">2.2.3.</span> <span class="nav-text">MACD</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%88%90%E4%BA%A4%E9%87%8F"><span class="nav-number">2.2.4.</span> <span class="nav-text">成交量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%8C%87%E6%A0%87"><span class="nav-number">2.2.5.</span> <span class="nav-text">随机指标</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%9D%A2%E5%B8%B8%E8%A7%81%E6%8C%87%E6%A0%87"><span class="nav-number">2.3.</span> <span class="nav-text">基本面常见指标</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AF%8F%E8%82%A1%E6%94%B6%E7%9B%8A"><span class="nav-number">2.3.1.</span> <span class="nav-text">每股收益</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%82%E5%87%80%E7%8E%87"><span class="nav-number">2.3.2.</span> <span class="nav-text">市净率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%82%A1%E6%81%AF%E6%94%B6%E7%9B%8A%E7%8E%87"><span class="nav-number">2.3.3.</span> <span class="nav-text">股息收益率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%87%80%E5%88%A9%E6%B6%A6"><span class="nav-number">2.3.4.</span> <span class="nav-text">净利润</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B4%9F%E5%80%BA%E4%B8%8E%E8%B5%84%E4%BA%A7%E6%AF%94%E7%8E%87"><span class="nav-number">2.3.5.</span> <span class="nav-text">负债与资产比率</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E8%82%A1%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text">选股策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E8%82%A1%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.1.</span> <span class="nav-text">选股的原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%88%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">效用函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E8%B5%84%E4%BA%A7%E9%85%8D%E7%BD%AE%E7%90%86%E8%AE%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.3.</span> <span class="nav-text">现代资产配置理论模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%81%87%E8%AE%BE%E5%92%8C%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.3.1.</span> <span class="nav-text">假设和模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%89%E6%95%88%E5%89%8D%E6%B2%BF"><span class="nav-number">3.3.2.</span> <span class="nav-text">有效前沿</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8F%E6%99%AE%E6%AF%94%E7%8E%87"><span class="nav-number">3.3.3.</span> <span class="nav-text">夏普比率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B5%84%E6%9C%AC%E5%B8%82%E5%9C%BA%E7%BA%BF"><span class="nav-number">3.3.4.</span> <span class="nav-text">资本市场线</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%9C%AC%E8%B5%84%E4%BA%A7%E5%AE%9A%E4%BB%B7%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.4.</span> <span class="nav-text">资本资产定价模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%81%87%E8%AE%BE%E5%92%8C%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">3.4.1.</span> <span class="nav-text">假设和模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F"><span class="nav-number">3.4.2.</span> <span class="nav-text">公式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">3.4.3.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A5%97%E5%88%A9%E5%AE%9A%E4%BB%B7%E7%90%86%E8%AE%BA"><span class="nav-number">3.5.</span> <span class="nav-text">套利定价理论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%9B%A0%E5%AD%90%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.6.</span> <span class="nav-text">多因子模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E5%9B%A0%E5%AD%90%E9%80%89%E8%82%A1%E5%AE%9E%E8%B7%B5"><span class="nav-number">3.6.1.</span> <span class="nav-text">多因子选股实践</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%A9%E6%97%B6%E7%AD%96%E7%95%A5"><span class="nav-number">4.</span> <span class="nav-text">择时策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8C%E5%9D%87%E7%BA%BF%E6%8B%A9%E6%97%B6%E7%AD%96%E7%95%A5"><span class="nav-number">4.1.</span> <span class="nav-text">双均线择时策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MACD-%E5%9D%87%E7%BA%BF%E6%8B%A9%E6%97%B6%E7%AD%96%E7%95%A5"><span class="nav-number">4.2.</span> <span class="nav-text">MACD 均线择时策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E4%BB%93%E7%AD%96%E7%95%A5"><span class="nav-number">5.</span> <span class="nav-text">调仓策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E4%BB%93%E4%BD%8D"><span class="nav-number">5.1.</span> <span class="nav-text">最优化计算仓位</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AD%89%E6%9D%83%E9%87%8D"><span class="nav-number">5.1.1.</span> <span class="nav-text">等权重</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%82%E5%80%BC%E5%8A%A0%E6%9D%83"><span class="nav-number">5.1.2.</span> <span class="nav-text">市值加权</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E6%96%B9%E5%B7%AE%E7%BB%84%E5%90%88"><span class="nav-number">5.1.3.</span> <span class="nav-text">最小方差组合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E5%88%86%E6%95%A3%E5%BA%A6"><span class="nav-number">5.1.4.</span> <span class="nav-text">最大分散度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A3%8E%E9%99%A9%E5%B9%B3%E4%BB%B7"><span class="nav-number">5.1.5.</span> <span class="nav-text">风险平价</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9D%87%E5%80%BC%E6%96%B9%E5%B7%AE%E4%BC%98%E5%8C%96"><span class="nav-number">5.1.6.</span> <span class="nav-text">均值方差优化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%BA%A6%E6%9D%9F"><span class="nav-number">5.1.7.</span> <span class="nav-text">常见约束</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%9C%AC%E8%B5%84%E4%BA%A7%E5%AE%9A%E4%BB%B7%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">5.2.</span> <span class="nav-text">资本资产定价模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8F%E5%8C%96%E5%9B%9E%E6%B5%8B"><span class="nav-number">6.</span> <span class="nav-text">量化回测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E6%B5%8B%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="nav-number">6.1.</span> <span class="nav-text">回测评估指标</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%87%80%E5%80%BC%E6%9B%B2%E7%BA%BF"><span class="nav-number">6.1.1.</span> <span class="nav-text">净值曲线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B4%E5%8C%96%E6%94%B6%E7%9B%8A%E7%8E%87"><span class="nav-number">6.1.2.</span> <span class="nav-text">年化收益率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A2%E5%8A%A8%E7%8E%87"><span class="nav-number">6.1.3.</span> <span class="nav-text">波动率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E5%9B%9E%E6%92%A4"><span class="nav-number">6.1.4.</span> <span class="nav-text">最大回撤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Alpha-%E7%B3%BB%E6%95%B0%E5%92%8C-Beta-%E7%B3%BB%E6%95%B0"><span class="nav-number">6.1.5.</span> <span class="nav-text">Alpha 系数和 Beta 系数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8F%E6%99%AE%E6%AF%94%E7%8E%87-1"><span class="nav-number">6.1.6.</span> <span class="nav-text">夏普比率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%AF%94%E7%8E%87"><span class="nav-number">6.1.7.</span> <span class="nav-text">信息比率</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">8.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">141</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : 'bf8dc3c967c06f124b1a600824454870',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
