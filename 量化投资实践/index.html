@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前序本篇文章其目的在于实践《量化投资》而特意编写，内容主要包含收集数据、整理和分析数据、因子指标计算、策略制定、量化回测。 阅读本篇需要一定的 Python 基础、金融基础知识和计算机编程经验，各位予取予求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="量化投资实践">
+<meta property="og:url" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="前序本篇文章其目的在于实践《量化投资》而特意编写，内容主要包含收集数据、整理和分析数据、因子指标计算、策略制定、量化回测。 阅读本篇需要一定的 Python 基础、金融基础知识和计算机编程经验，各位予取予求。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240326-202930.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/Snipaste_2024-04-14_23-51-28.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240328-171714.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-113918.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-142801.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-142818.png">
+<meta property="og:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-142826.png">
+<meta property="article:published_time" content="2024-03-24T05:43:41.000Z">
+<meta property="article:modified_time" content="2024-04-14T15:52:48.289Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="ML">
+<meta property="article:tag" content="Quantum">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240326-202930.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>量化投资实践 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          量化投资实践
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-03-24 13:43:41" itemprop="dateCreated datePublished" datetime="2024-03-24T13:43:41+08:00">2024-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-04-14 23:52:48" itemprop="dateModified" datetime="2024-04-14T23:52:48+08:00">2024-04-14</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="前序"><a href="#前序" class="headerlink" title="前序"></a>前序</h3><p>本篇文章其目的在于实践<a target="_blank" rel="noopener" href="https://blog.vgbhfive.com/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/">《量化投资》</a>而特意编写，内容主要包含<strong>收集数据</strong>、<strong>整理和分析数据</strong>、<strong>因子指标计算</strong>、<strong>策略制定</strong>、<strong>量化回测</strong>。</p>
+<p>阅读本篇需要一定的 <code>Python</code> 基础、金融基础知识和计算机编程经验，各位予取予求。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="数据收集及整理"><a href="#数据收集及整理" class="headerlink" title="数据收集及整理"></a>数据收集及整理</h3><p>本次数据采用的是中国平安近一年的历史股票数据，其数据指标包含<strong>开盘价</strong>、<strong>最高价</strong>、<strong>最低价</strong>、<strong>收盘价</strong>、<strong>成交量</strong>、<strong>成交额</strong>、<strong>换手率</strong>。</p>
+<h4 id="获取历史数据"><a href="#获取历史数据" class="headerlink" title="获取历史数据"></a>获取历史数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.options <span class="keyword">import</span> Options</span><br><span class="line"><span class="keyword">from</span> browsermobproxy <span class="keyword">import</span> Server</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 股票每日价格</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 股票数据保存 csv 文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">save_basic_data_to_csv</span>(<span class="params">code, daliy_data</span>):</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(daliy_data) &lt;= <span class="number">0</span>:</span><br><span class="line">		<span class="built_in">print</span>(code + <span class="string">&#x27; certificate data length is &#x27;</span> + <span class="built_in">str</span>(<span class="built_in">len</span>(daliy_data)))</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	col_data = &#123;&#125;</span><br><span class="line">	<span class="comment"># 确定数据结构</span></span><br><span class="line">	col_num = <span class="built_in">len</span>(daliy_data[<span class="number">0</span>].split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(col_num):</span><br><span class="line">		col_data[i] = []</span><br><span class="line">	<span class="comment"># 改造数据结构</span></span><br><span class="line">	<span class="keyword">for</span> data <span class="keyword">in</span> daliy_data:</span><br><span class="line">		rows = data.split(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(rows)):</span><br><span class="line">			col_data[i].append(rows[i])</span><br><span class="line">	<span class="comment"># save csv</span></span><br><span class="line">	data = pd.DataFrame(col_data)</span><br><span class="line">	data.to_csv(<span class="built_in">str</span>(code)+<span class="string">&#x27;.csv&#x27;</span>, index=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">data</span>(<span class="params">code</span>):</span><br><span class="line">	url = url_where(code)</span><br><span class="line">	<span class="comment"># 启动代理</span></span><br><span class="line">	server = Server(<span class="string">&#x27;selenium_install_path/browsermob-proxy-2.1.4/bin/browsermob-proxy&#x27;</span>) <span class="comment"># 此处配置安装的 selenium 路径</span></span><br><span class="line">	server.start()</span><br><span class="line">	proxy = server.create_proxy()</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 启动浏览器</span></span><br><span class="line">	chrome_options = Options()</span><br><span class="line">	chrome_options.add_argument(<span class="string">&#x27;--ignore-certificate-errors&#x27;</span>)</span><br><span class="line">	chrome_options.add_argument(<span class="string">&#x27;--proxy-server=&#123;0&#125;&#x27;</span>.<span class="built_in">format</span>(proxy.proxy))</span><br><span class="line">	<span class="comment"># chrome_options.add_argument(&#x27;--headless&#x27;)  # 无头模式</span></span><br><span class="line">	browser = webdriver.Chrome(options=chrome_options)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 监听结果</span></span><br><span class="line">	proxy.new_har(options=&#123;<span class="string">&#x27;captureContent&#x27;</span>: <span class="literal">True</span>, <span class="string">&#x27;captureHeaders&#x27;</span>: <span class="literal">True</span>&#125;)</span><br><span class="line">	browser.get(url)</span><br><span class="line">	time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">	new_har = proxy.har</span><br><span class="line">	<span class="keyword">for</span> entry <span class="keyword">in</span> new_har[<span class="string">&#x27;log&#x27;</span>][<span class="string">&#x27;entries&#x27;</span>]:</span><br><span class="line">		url = entry[<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;url&#x27;</span>]</span><br><span class="line">		<span class="keyword">if</span> <span class="string">&#x27;qt/stock/kline/get&#x27;</span> <span class="keyword">in</span> url:</span><br><span class="line">			header_data = entry[<span class="string">&quot;request&quot;</span>][<span class="string">&quot;headers&quot;</span>]</span><br><span class="line">			<span class="comment"># 格式化headers</span></span><br><span class="line">			headers = &#123;item[<span class="string">&#x27;name&#x27;</span>]: item[<span class="string">&#x27;value&#x27;</span>] <span class="keyword">for</span> item <span class="keyword">in</span> header_data&#125;</span><br><span class="line">			headers.pop(<span class="string">&#x27;Accept-Encoding&#x27;</span>)</span><br><span class="line">			<span class="built_in">print</span>(headers)</span><br><span class="line">			<span class="comment"># 使用headers 发送请求</span></span><br><span class="line">			response = requests.get(url, headers=headers)</span><br><span class="line">			<span class="comment"># 格式化处理返回体</span></span><br><span class="line">			content = <span class="built_in">str</span>(response.content)</span><br><span class="line">			content = content[content.index(<span class="string">&#x27;&#123;&#x27;</span>): content.index(<span class="string">&#x27;&#125;&#x27;</span>)+<span class="number">2</span>]</span><br><span class="line">			content = content.replace(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;\\\\&#x27;</span>)</span><br><span class="line">			<span class="comment"># print(content)</span></span><br><span class="line">			data = json.loads(content)</span><br><span class="line">			<span class="built_in">print</span>(data[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;code&#x27;</span>])</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">len</span>(data[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;klines&#x27;</span>]))</span><br><span class="line">			<span class="comment"># save data</span></span><br><span class="line">			save_basic_data_to_csv(data[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;code&#x27;</span>], data[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;klines&#x27;</span>])</span><br><span class="line">	<span class="comment"># 关闭代理和浏览器</span></span><br><span class="line">	proxy.close()</span><br><span class="line">	browser.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">url_where</span>(<span class="params">code</span>):</span><br><span class="line">	url = <span class="string">&#x27;&#x27;</span></span><br><span class="line">	prefix = code[<span class="number">0</span>:<span class="number">1</span>]</span><br><span class="line">	nowTime = <span class="built_in">int</span>(time.time() * <span class="number">1000</span>)</span><br><span class="line">	preTime = nowTime - random.randint(<span class="number">3</span>, <span class="number">10</span>) * <span class="number">1000</span></span><br><span class="line">	<span class="keyword">if</span> prefix == <span class="string">&#x27;6&#x27;</span>: <span class="comment"># sh</span></span><br><span class="line">		url = <span class="string">&#x27;https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery35109638153987050799_&#x27;</span> + <span class="built_in">str</span>(nowTime) + <span class="string">&#x27;&amp;secid=1.&#x27;</span> + code + <span class="string">&#x27;&amp;ut=fa5fd1943c7b386f172d6893dbfba10b&amp;fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&amp;fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&amp;klt=101&amp;fqt=1&amp;end=20500101&amp;lmt=1000000&amp;_=&#x27;</span> + <span class="built_in">str</span>(preTime)</span><br><span class="line">	<span class="keyword">elif</span> prefix == <span class="string">&#x27;0&#x27;</span> <span class="keyword">or</span> prefix == <span class="string">&#x27;3&#x27;</span> <span class="keyword">or</span> prefix == <span class="string">&#x27;4&#x27;</span> <span class="keyword">or</span> prefix == <span class="string">&#x27;8&#x27;</span>: <span class="comment"># sz bj</span></span><br><span class="line">		url = <span class="string">&#x27;https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery35109638153987050799_&#x27;</span> + <span class="built_in">str</span>(nowTime) + <span class="string">&#x27;&amp;secid=0.&#x27;</span> + code + <span class="string">&#x27;&amp;ut=fa5fd1943c7b386f172d6893dbfba10b&amp;fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&amp;fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&amp;klt=101&amp;fqt=1&amp;end=20500101&amp;lmt=1000000&amp;_=&#x27;</span> + <span class="built_in">str</span>(preTime)</span><br><span class="line">	<span class="keyword">return</span> url</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	data(<span class="string">&#x27;000001&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>原始数据格式如下：<br><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240326-202930.png" alt="screenshot-20240326-202930"></p>
+<h4 id="整理数据"><a href="#整理数据" class="headerlink" title="整理数据"></a>整理数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">df = pd.read_csv(<span class="string">&#x27;./000001.csv&#x27;</span>)</span><br><span class="line">df = df.loc[:, [<span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;10&#x27;</span>]]</span><br><span class="line">df.columns = [<span class="string">&#x27;date&#x27;</span>, <span class="string">&#x27;open&#x27;</span>, <span class="string">&#x27;close&#x27;</span>, <span class="string">&#x27;high&#x27;</span>, <span class="string">&#x27;low&#x27;</span>, <span class="string">&#x27;volume&#x27;</span>, <span class="string">&#x27;volume_amount&#x27;</span>, <span class="string">&#x27;turnover_rate&#x27;</span>]</span><br><span class="line"></span><br><span class="line">df.set_index(pd.to_datetime(df.date), inplace=<span class="literal">True</span>)</span><br><span class="line">df.drop(<span class="string">&#x27;date&#x27;</span>, axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">df = df[datetime.datetime(<span class="number">2023</span>, <span class="number">3</span>, <span class="number">27</span>):]</span><br><span class="line">df</span><br></pre></td></tr></table></figure>
+
+<p>数据经过预处理之后的格式如下：<br><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/Snipaste_2024-04-14_23-51-28.jpg" alt="Snipaste_2024-04-14_23-51-28"></p>
+<hr>
+
+<h3 id="因子计算"><a href="#因子计算" class="headerlink" title="因子计算"></a>因子计算</h3><p>本次使用 <strong>简单移动平均线 <code>SMA</code></strong> 因子来构建量化策略。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;ma5&#x27;</span>] = df[<span class="string">&#x27;close&#x27;</span>].rolling(<span class="number">5</span>).mean()</span><br><span class="line">df[<span class="string">&#x27;ma20&#x27;</span>] = df[<span class="string">&#x27;close&#x27;</span>].rolling(<span class="number">20</span>).mean()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"></span><br><span class="line">sns.lineplot(data=df.loc[:, [<span class="string">&#x27;ma5&#x27;</span>, <span class="string">&#x27;ma20&#x27;</span>]])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240328-171714.png" alt="screenshot-20240328-171714"></p>
+<h4 id="标记行动节点"><a href="#标记行动节点" class="headerlink" title="标记行动节点"></a>标记行动节点</h4><p>有了前面计算的 <strong>简单移动平均线 <code>SMA</code></strong> 因子数据，之后根据上一篇文章中介绍的均线八大买卖法则来标记买入和卖出的节点。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">df.loc[(df[<span class="string">&#x27;ma5&#x27;</span>] &gt; df[<span class="string">&#x27;ma20&#x27;</span>]), <span class="string">&#x27;signal&#x27;</span>] = <span class="number">1</span></span><br><span class="line">df.loc[(df[<span class="string">&#x27;ma5&#x27;</span>] &lt; df[<span class="string">&#x27;ma20&#x27;</span>]), <span class="string">&#x27;signal&#x27;</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">df[<span class="string">&#x27;order&#x27;</span>] = df[<span class="string">&#x27;signal&#x27;</span>].diff()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可视化交易节点</span></span><br><span class="line">plt.figure(figsize=(<span class="number">20</span>,<span class="number">12</span>))</span><br><span class="line">plt.plot(df[<span class="string">&#x27;close&#x27;</span>], color=<span class="string">&#x27;b&#x27;</span>, label=<span class="string">&#x27;close&#x27;</span>)</span><br><span class="line">plt.plot(df[<span class="string">&#x27;ma5&#x27;</span>], ls=<span class="string">&#x27;--&#x27;</span>, color=<span class="string">&#x27;gray&#x27;</span>, label=<span class="string">&#x27;ma5&#x27;</span>)</span><br><span class="line">plt.plot(df[<span class="string">&#x27;ma20&#x27;</span>], ls=<span class="string">&#x27;--&#x27;</span>, color=<span class="string">&#x27;k&#x27;</span>, label=<span class="string">&#x27;ma20&#x27;</span>)</span><br><span class="line">plt.scatter(df.loc[df[<span class="string">&#x27;order&#x27;</span>]==<span class="number">1</span>].index, df[<span class="string">&#x27;close&#x27;</span>][df.order==<span class="number">1</span>], marker=<span class="string">&#x27;^&#x27;</span>, s=<span class="number">100</span>, color=<span class="string">&#x27;m&#x27;</span>, label=<span class="string">&#x27;in&#x27;</span>)</span><br><span class="line">plt.scatter(df.loc[df[<span class="string">&#x27;order&#x27;</span>]==-<span class="number">1</span>].index, df[<span class="string">&#x27;close&#x27;</span>][df.order==-<span class="number">1</span>], marker=<span class="string">&#x27;v&#x27;</span>, s=<span class="number">100</span>, color=<span class="string">&#x27;g&#x27;</span>, label=<span class="string">&#x27;out&#x27;</span>)</span><br><span class="line">plt.yticks(fontsize=<span class="number">20</span>)</span><br><span class="line">plt.xticks(fontsize=<span class="number">20</span>)</span><br><span class="line">plt.legend(fontsize=<span class="number">20</span>)</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-113918.png" alt="screenshot-20240409-113918"></p>
+<hr>
+
+<h3 id="量化回测"><a href="#量化回测" class="headerlink" title="量化回测"></a>量化回测</h3><p>在得知了有效的量化策略以后，那我们就该在模拟盘中进行回测。</p>
+<h4 id="策略模型"><a href="#策略模型" class="headerlink" title="策略模型"></a>策略模型</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> backtrader <span class="keyword">as</span> bt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 引入大脑，并实例化</span></span><br><span class="line">cerebro = bt.Cerebro()</span><br><span class="line"><span class="comment"># 数据样本</span></span><br><span class="line">datafeed = bt.feeds.PandasData(dataname=df, fromdate=datetime.datetime(<span class="number">2023</span>,<span class="number">3</span>,<span class="number">27</span>), todate=datetime.datetime(<span class="number">2024</span>,<span class="number">3</span>,<span class="number">27</span>))</span><br><span class="line"><span class="comment"># 通过cerebro.adddata添加给大脑，并通过 name 赋值 实现数据集与股票的一一对应</span></span><br><span class="line">cerebro.adddata(datafeed, name=<span class="string">&#x27;000001.SH&#x27;</span>) </span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;读取成功&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置起始资金</span></span><br><span class="line">cerebro.broker.setcash(<span class="number">1000000.0</span>)</span><br><span class="line"><span class="comment"># ma_qt 为此量化策略的名称</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ma_qt</span>(bt.Strategy):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 全局只调用一次，一般在此函数中计算指标数据。</span></span><br><span class="line">        self.ma_5 = bt.ind.SMA(self.data0.close, period=<span class="number">5</span>)</span><br><span class="line">        self.ma_20 = bt.ind.SMA(self.data0.close, period=<span class="number">20</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment">#计算买卖条件</span></span><br><span class="line">        <span class="keyword">if</span> self.getposition(self.data).size == <span class="number">0</span>:</span><br><span class="line">        	<span class="comment"># 通过此函数查询持仓，若持仓等于0</span></span><br><span class="line">            <span class="keyword">if</span> self.ma_5[<span class="number">0</span>] &gt; self.ma_20[<span class="number">0</span>] <span class="keyword">and</span> self.ma_5[-<span class="number">1</span>] &lt; self.ma_20[-<span class="number">1</span>]:</span><br><span class="line">            	<span class="comment"># 当前一日接近下轨，当日跌破下轨时买入</span></span><br><span class="line">                self.order = self.buy(self.data, <span class="number">100</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;买入 100 股成功&#x27;</span>)</span><br><span class="line">        <span class="keyword">elif</span> self.getposition(self.data).size &gt; <span class="number">0</span>:</span><br><span class="line">        	<span class="comment"># 持仓大于0时</span></span><br><span class="line">            <span class="keyword">if</span> self.ma_20[<span class="number">0</span>] &gt; self.ma_5[<span class="number">0</span>] <span class="keyword">and</span> self.ma_20[-<span class="number">1</span>] &lt; self.ma_5[-<span class="number">1</span>]:</span><br><span class="line">            	<span class="comment"># 前一期小于上轨，当日突破上轨卖出</span></span><br><span class="line">                self.order = self.close(self.data, <span class="number">100</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;卖出 100 股成功&#x27;</span>)</span><br><span class="line">            </span><br><span class="line">cerebro.broker.set_slippage_perc(perc=<span class="number">0.002</span>)       </span><br><span class="line">cerebro.broker.setcommission(commission=<span class="number">0.001</span>)</span><br><span class="line"><span class="comment"># 将策略添加给大脑    </span></span><br><span class="line">cerebro.addstrategy(ma_qt)</span><br><span class="line"><span class="comment"># 添加分析指标</span></span><br><span class="line"><span class="comment"># 返回年初至年末的年度收益率</span></span><br><span class="line">cerebro.addanalyzer(bt.analyzers.AnnualReturn, _name=<span class="string">&#x27;_AnnualReturn&#x27;</span>)</span><br><span class="line"><span class="comment"># 计算最大回撤相关指标</span></span><br><span class="line">cerebro.addanalyzer(bt.analyzers.DrawDown, _name=<span class="string">&#x27;_DrawDown&#x27;</span>)</span><br><span class="line"><span class="comment"># 计算年化夏普比率：</span></span><br><span class="line">cerebro.addanalyzer(bt.analyzers.SharpeRatio_A, _name=<span class="string">&#x27;_SharpeRatio_A&#x27;</span>)</span><br><span class="line"><span class="comment"># 返回收益率时</span></span><br><span class="line">cerebro.addanalyzer(bt.analyzers.TimeReturn,_name=<span class="string">&#x27;_TimeReturn&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">result=cerebro.run()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-142801.png" alt="screenshot-20240409-142801"></p>
+<h4 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h4><ol>
+<li>最终收益率<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最终收益率</span></span><br><span class="line">ret = pd.Series(result[<span class="number">0</span>].analyzers._TimeReturn.get_analysis()) <span class="comment"># 获得收益时序图</span></span><br><span class="line">(ret+<span class="number">1</span>).cumprod()</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-142818.png" alt="screenshot-20240409-142818"></p>
+<ol start="2">
+<li>最大回撤<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看最大回撤</span></span><br><span class="line">result[<span class="number">0</span>].analyzers._DrawDown.get_analysis()[<span class="string">&#x27;max&#x27;</span>][<span class="string">&#x27;drawdown&#x27;</span>] * (-<span class="number">1</span>)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><img src="/./%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/screenshot-20240409-142826.png" alt="screenshot-20240409-142826"></p>
+<hr>
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>股市有风险，入市需谨慎！</li>
+<li>股市有风险，入市需谨慎！</li>
+<li>股市有风险，入市需谨慎！</li>
+</ol>
+<hr>
+
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+              <a href="/tags/Quantum/" rel="tag"># Quantum</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/" rel="prev" title="量化投资">
+      <i class="fa fa-chevron-left"></i> 量化投资
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">前序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86%E5%8F%8A%E6%95%B4%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据收集及整理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8E%86%E5%8F%B2%E6%95%B0%E6%8D%AE"><span class="nav-number">2.1.</span> <span class="nav-text">获取历史数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B4%E7%90%86%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.</span> <span class="nav-text">整理数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E5%AD%90%E8%AE%A1%E7%AE%97"><span class="nav-number">3.</span> <span class="nav-text">因子计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0%E8%A1%8C%E5%8A%A8%E8%8A%82%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">标记行动节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8F%E5%8C%96%E5%9B%9E%E6%B5%8B"><span class="nav-number">4.</span> <span class="nav-text">量化回测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">策略模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%99%A8"><span class="nav-number">4.2.</span> <span class="nav-text">分析器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">142</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '0f24c08436a792a842e7c17e6b08b447',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
