@@ -1,8 +1,10 @@
-https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/
+https://blog.vgbhfive.cn/DL-TensorFlow%E5%85%A5%E9%97%A8/
+https://blog.vgbhfive.cn/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B0/
+https://blog.vgbhfive.cn/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/
 https://blog.vgbhfive.cn/about/index.html
+https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E5%AE%9E%E8%B7%B5/
 https://blog.vgbhfive.cn/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84/
 https://blog.vgbhfive.cn/MathJax%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/
-https://blog.vgbhfive.cn/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B0/
 https://blog.vgbhfive.cn/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/
 https://blog.vgbhfive.cn/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/
 https://blog.vgbhfive.cn/Linux-curl%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/
@@ -196,3 +198,4 @@ https://blog.vgbhfive.cn/tags/Feature/
 https://blog.vgbhfive.cn/tags/Raspberry/
 https://blog.vgbhfive.cn/tags/Design-Partten/
 https://blog.vgbhfive.cn/tags/Quantum/
+https://blog.vgbhfive.cn/tags/DL/
