@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介本文内容主要来源于在学习 TensorFlow 入门过程中的实践总结项目，内容主要包含以下实战项目：  线性模型实战 前向传播算法实践 AUTO-MPG 汽车油耗预测 线性分类实战 MNIST 手写数字数据集分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DL-TensorFlow基础实践">
+<meta property="og:url" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介本文内容主要来源于在学习 TensorFlow 入门过程中的实践总结项目，内容主要包含以下实战项目：  线性模型实战 前向传播算法实践 AUTO-MPG 汽车油耗预测 线性分类实战 MNIST 手写数字数据集分类">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/2.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/3.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/4.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/5.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/6.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/7.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/8.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/9.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/11.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/10.jpg">
+<meta property="article:published_time" content="2024-05-22T14:27:06.000Z">
+<meta property="article:modified_time" content="2024-06-06T14:11:02.477Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="DL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/1.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DL-TensorFlow基础实践 | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.cn/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DL-TensorFlow基础实践
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-05-22 22:27:06" itemprop="dateCreated datePublished" datetime="2024-05-22T22:27:06+08:00">2024-05-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-06-06 22:11:02" itemprop="dateModified" datetime="2024-06-06T22:11:02+08:00">2024-06-06</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>本文内容主要来源于在学习 <strong><code>TensorFlow</code></strong> 入门过程中的实践总结项目，内容主要包含以下实战项目：</p>
+<ul>
+<li><strong>线性模型实战</strong></li>
+<li><strong>前向传播算法实践</strong></li>
+<li><strong><code>AUTO-MPG</code> 汽车油耗预测</strong></li>
+<li><strong>线性分类实战</strong></li>
+<li><strong><code>MNIST</code> 手写数字数据集分类</strong></li>
+</ul>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="线性模型实战"><a href="#线性模型实战" class="headerlink" title="线性模型实战"></a>线性模型实战</h3><p>本实战项目目的在于了解优化 <code>w</code> 和 <code>b</code> 的梯度下降算法，数据采样自来自真实模型的多组数据，从指定的 <code>w=1.477</code> 和 <code>b=0.089</code> 的模型中直接采样：<code>y = 1.477 * x + 0.089</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 采样自均值为0，标准值为0.01 的高斯分布：y = 1.477 * x + 0.089 + e</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_data</span>():</span><br><span class="line">    data = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>): <span class="comment"># 采样 100 个点</span></span><br><span class="line">        x = np.random.uniform(-<span class="number">10.</span>, <span class="number">10.</span>)</span><br><span class="line">        eps = np.random.normal(<span class="number">0.</span>, <span class="number">0.01</span>) <span class="comment"># 采用高斯噪声</span></span><br><span class="line">        y = <span class="number">1.477</span> * x + <span class="number">0.089</span> + eps</span><br><span class="line">        data.append([x, y])</span><br><span class="line">    data = np.array(data)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 循环计算在每个点[x, y] 处的预测值与真实值之间差的平方并累加，从而获得训练集上的均方误差损失值</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mse</span>(<span class="params">w, b, points</span>):</span><br><span class="line">    totalError = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(points)):</span><br><span class="line">        x = points[i, <span class="number">0</span>]</span><br><span class="line">        y = points[i, <span class="number">1</span>]</span><br><span class="line">        totalError += (y - (w * x + b)) ** <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> totalError / <span class="built_in">float</span>(<span class="built_in">len</span>(points))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算梯度</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">step_gradient</span>(<span class="params">w_curr, b_curr, points, lr</span>):</span><br><span class="line">    b_gradient = <span class="number">0</span></span><br><span class="line">    w_gradient = <span class="number">0</span></span><br><span class="line">    M = <span class="built_in">float</span>(<span class="built_in">len</span>(points))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(points)):</span><br><span class="line">        x = points[i, <span class="number">0</span>]</span><br><span class="line">        y = points[i, <span class="number">1</span>]</span><br><span class="line">        b_gradient += (<span class="number">2</span>/M) * ((w_curr * x + b_curr) - y)</span><br><span class="line">        w_gradient += (<span class="number">2</span>/M) * x * ((w_curr * x + b_curr) - y)</span><br><span class="line">    new_w = w_curr - (lr * w_gradient)</span><br><span class="line">    new_b = b_curr - (lr * b_gradient)</span><br><span class="line">    <span class="keyword">return</span> [new_w, new_b]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在计算出误差函数在 w 和 b 的梯度之后，根据对所有训练样本再训练来更新 w 和 b</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gradient_descent</span>(<span class="params">points, starting_w, starting_b, lr, num_iter</span>):</span><br><span class="line">    w = starting_w</span><br><span class="line">    b = starting_b</span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> <span class="built_in">range</span>(num_iter):</span><br><span class="line">        w, b = step_gradient(w, b, np.array(points), lr)</span><br><span class="line">        loss = mse(b, w, points)</span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:  </span><br><span class="line">            <span class="built_in">print</span>(step, loss, w, b)</span><br><span class="line">    <span class="keyword">return</span> [b, w]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    lr = <span class="number">0.01</span> <span class="comment"># 学习率</span></span><br><span class="line">    init_b = <span class="number">0</span></span><br><span class="line">    init_w = <span class="number">0</span></span><br><span class="line">    num_iterations = <span class="number">1000</span></span><br><span class="line">    <span class="comment"># 1. 采集数据</span></span><br><span class="line">    data = load_data()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 训练1000 次，返回最优 w 和 b 和训练下降 loss 的过程</span></span><br><span class="line">    [w, b] = gradient_descent(data, init_b, init_w, lr, num_iterations)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 计算最优解 w 和 b 的均方差 mse</span></span><br><span class="line">    loss = mse(w, b, data)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;final&#x27;</span>, loss, w, b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/1.jpg" alt="1"><br>根据输出可以看到最终的 <code>w</code> 和 <code>b</code> 已经无限逼近采样数据模型。</p>
+<hr>
+
+<h3 id="前向传播算法实战"><a href="#前向传播算法实战" class="headerlink" title="前向传播算法实战"></a>前向传播算法实战</h3><p>本章节的目标是利用 <code>TensorFlow</code> 的基础数据结构实现解析 <code>MNIST</code> 手写数字数据集问题，与神经网络的计算步骤一致，实现思路如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 采用的数据集是 MNIST 手写图片集，输入点数为 784，第一层的输入节点为256，第二层的输入节点为128，第三层的输入节点为10，即样本的属于10类别的概率。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一层的参数</span></span><br><span class="line">w1 = tf.Variable(tf.random.truncated_normal([<span class="number">784</span>, <span class="number">256</span>]), stddev=<span class="number">0.1</span>)</span><br><span class="line">b1 = tf.Variable(tf.zeros([<span class="number">256</span>]))</span><br><span class="line"><span class="comment"># 第二层的参数</span></span><br><span class="line">w2 = tf.Variable(tf.random.truncated_normal([<span class="number">256</span>, <span class="number">128</span>]), stddev=<span class="number">0.1</span>)</span><br><span class="line">b2 = tf.Variable(tf.zeros([<span class="number">128</span>]))</span><br><span class="line"><span class="comment"># 第三层的参数</span></span><br><span class="line">w3 = tf.Variable(tf.random.truncated_normal([<span class="number">128</span>, <span class="number">10</span>]), stddev=<span class="number">0.1</span>)</span><br><span class="line">b3 = tf.Variable(tf.zeros([<span class="number">10</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在前向计算前，将 shape 为 [b,28,28] 的输入张量调整为 [b,784] </span></span><br><span class="line">x = tf.reshape(x, [-<span class="number">1</span>, <span class="number">28</span>*<span class="number">28</span>])</span><br><span class="line">y_onehot = tf.one_hot(y, depth=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.gradientTape() <span class="keyword">as</span> tape：</span><br><span class="line">    <span class="comment"># 完成第一层的计算</span></span><br><span class="line">    h1 = x@w1 + tf.boradcast_to(b1, [x.shape[<span class="number">0</span>], <span class="number">256</span>])</span><br><span class="line">    <span class="comment"># 通过激活函数</span></span><br><span class="line">    h1 = tf.nn.relu(h1)</span><br><span class="line">    <span class="comment"># 第二层计算</span></span><br><span class="line">    h2 = h1@w2 + b2</span><br><span class="line">    h2 = tf.nn.relu(h2)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 输出层计算</span></span><br><span class="line">    out = h2@w3 + b3</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将真实的标量 y 转换为 one-hot 编码，并计算与 out 的均方差</span></span><br><span class="line">    loss = tf.square(y_onehot - out)</span><br><span class="line">    <span class="comment"># 误差标量</span></span><br><span class="line">    loss = tf.reduce_mean(loss)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 通过 tape.gradient() 函数可以获得网络参数到梯度信息，结果保存到 grads 列表中</span></span><br><span class="line">    grads = tape.gradient(loss, [w1, b1, w2, b2, w3, b3])</span><br><span class="line">    w1.assign_sub(lr * grads[<span class="number">0</span>])</span><br><span class="line">    b1.assign_sub(lr * grads[<span class="number">1</span>])</span><br><span class="line">    w2.assign_sub(lr * grads[<span class="number">2</span>])</span><br><span class="line">    b2.assign_sub(lr * grads[<span class="number">3</span>])</span><br><span class="line">    w3.assign_sub(lr * grads[<span class="number">4</span>])</span><br><span class="line">    b3.assign_sub(lr * grads[<span class="number">5</span>]) <span class="comment"># 其中的 assign_sub() 将自身减去给定的参数值，实现参数的原地更新</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="AUTO-MPG-汽车油耗"><a href="#AUTO-MPG-汽车油耗" class="headerlink" title="AUTO-MPG 汽车油耗"></a><code>AUTO-MPG</code> 汽车油耗</h3><p>本节将利用全连接网络来训练模型完成预测汽车的效能指标 <code>MPG</code>（<code>Mile Per Gallon</code>，每加仑燃油英里数）。</p>
+<h4 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> optimizers, losses</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br></pre></td></tr></table></figure>
+
+<h4 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 读取数据 http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data</span></span><br><span class="line">column_names = [<span class="string">&#x27;MPG&#x27;</span>, <span class="string">&#x27;Cylinders&#x27;</span>, <span class="string">&#x27;Displacement&#x27;</span>, <span class="string">&#x27;horsepower&#x27;</span>, <span class="string">&#x27;Weight&#x27;</span>, <span class="string">&#x27;Acceleration&#x27;</span>, <span class="string">&#x27;Model Year&#x27;</span>, <span class="string">&#x27;Origin&#x27;</span>]</span><br><span class="line">raw_dataset = pd.read_csv(<span class="string">&#x27;auto-mpg.data&#x27;</span>, names=column_names, na_values=<span class="string">&#x27;?&#x27;</span>, comment=<span class="string">&#x27;\t&#x27;</span>, sep=<span class="string">&#x27; &#x27;</span>, skipinitialspace=<span class="literal">True</span>)</span><br><span class="line">dataset = raw_dataset.copy()</span><br><span class="line">dataset.head()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/2.jpg" alt="2"></p>
+<h4 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2. 删除空白数据</span></span><br><span class="line">dataset = dataset.dropna()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 预处理数据</span></span><br><span class="line">origin = dataset.pop(<span class="string">&#x27;Origin&#x27;</span>)</span><br><span class="line">dataset[<span class="string">&#x27;USA&#x27;</span>] = (origin == <span class="number">1</span>) * <span class="number">1.0</span></span><br><span class="line">dataset[<span class="string">&#x27;Europe&#x27;</span>] = (origin == <span class="number">2</span>) * <span class="number">1.0</span></span><br><span class="line">dataset[<span class="string">&#x27;Japan&#x27;</span>] = (origin == <span class="number">3</span>) * <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="处理模型数据"><a href="#处理模型数据" class="headerlink" title="处理模型数据"></a>处理模型数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 4. 切分训练集和测试集</span></span><br><span class="line">train_data = dataset.sample(frac=<span class="number">0.8</span>, random_state=<span class="number">0</span>)</span><br><span class="line">test_data = dataset.drop(train_data.index)</span><br><span class="line">train_label = train_data.pop(<span class="string">&#x27;MPG&#x27;</span>)</span><br><span class="line">test_label = test_data.pop(<span class="string">&#x27;MPG&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 标准化数据</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">norm</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> (x - train_stats[<span class="string">&#x27;mean&#x27;</span>]) / train_stats[<span class="string">&#x27;std&#x27;</span>]</span><br><span class="line">norm_train_data = norm(train_data)</span><br><span class="line">norm_test_data = norm(test_data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 构建训练数据集和测试数据集对象</span></span><br><span class="line">train_db = tf.data.Dataset.from_tensor_slices((norm_train_data.values, train_label.values))</span><br><span class="line">train_db = train_db.shuffle(<span class="number">100</span>).batch(<span class="number">32</span>)</span><br><span class="line">test_db = tf.data.Dataset.from_tensor_slices((norm_test_data.values, test_label.values))</span><br><span class="line">test_db = test_db.shuffle(<span class="number">100</span>).batch(<span class="number">32</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 7. 创建网络</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Network</span>(keras.Model):</span><br><span class="line">    <span class="comment"># 回归网络模型</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(Network, self).__init__()</span><br><span class="line">        self.fc1 = layers.Dense(<span class="number">64</span>, activation=tf.nn.relu)</span><br><span class="line">        self.fc2 = layers.Dense(<span class="number">64</span>, activation=tf.nn.relu)</span><br><span class="line">        self.fc3 = layers.Dense(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call</span>(<span class="params">self, inputs, training=<span class="literal">None</span>, mask=<span class="literal">None</span></span>):</span><br><span class="line">        x = self.fc1(inputs)</span><br><span class="line">        x = self.fc2(x)</span><br><span class="line">        x = self.fc3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="comment"># 8. 训练模型</span></span><br><span class="line">model = Network()</span><br><span class="line">model.build(input_shape=(<span class="number">32</span>, <span class="number">9</span>))</span><br><span class="line">model.summary() <span class="comment"># 打印网络信息</span></span><br><span class="line">optimizer = optimizers.RMSprop(<span class="number">0.001</span>) <span class="comment"># 创建优化器并指定学习率</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 9. 数据训练</span></span><br><span class="line">mse_loss_list = []</span><br><span class="line">mae_loss_list = []</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">200</span>):</span><br><span class="line">    <span class="keyword">for</span> step, (x, y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_db):</span><br><span class="line">        <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> tape:</span><br><span class="line">            out = model(x)</span><br><span class="line">            loss = tf.reduce_mean(losses.MSE(y, out))</span><br><span class="line">            mae_loss = tf.reduce_mean(losses.MAE(y, out))</span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">            mse_loss_list.append(loss.numpy())</span><br><span class="line">            mae_loss_list.append(mae_loss.numpy())</span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(epoch, step, <span class="built_in">float</span>(loss), <span class="built_in">float</span>(mae_loss))</span><br><span class="line">        grads = tape.gradient(loss, model.trainable_variables)</span><br><span class="line">        optimizer.apply_gradients(<span class="built_in">zip</span>(grads, model.trainable_variables))</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/3.jpg" alt="3"></p>
+<h4 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 10. 展示 loss 训练的结果</span><br><span class="line">data = pd.DataFrame()</span><br><span class="line">data[&#x27;mse_loss&#x27;] = mse_loss_list</span><br><span class="line">data[&#x27;mae_loss&#x27;] = mae_loss_list</span><br><span class="line">plt.ylim([0, 100]) # 设置 y 轴范围</span><br><span class="line">sns.lineplot(data=data)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/4.jpg" alt="4"></p>
+<hr>
+
+<h3 id="反向传播算法实战"><a href="#反向传播算法实战" class="headerlink" title="反向传播算法实战"></a>反向传播算法实战</h3><p><strong>误差反向传播算法（<code>Backpropagation, BP</code>）</strong>是神经网络中的核心算法之一。</p>
+<p>利用多层全连接网络的梯度推导结果，直接利用循环计算每一层的梯度，并按照梯度下降算法手动更新。<br><small>本次推导使用的梯度传播公式是基于多层全连接网络，只有 <code>Sigmoid</code> 一种激活函数，并且损失函数为均方误差函数的网络类型。</small></p>
+<p>本次将实现一个四层的全连接层网络来完成二分类任务。网络输入节点数为 <code>2</code>，隐藏层的节点数设计为 <code>25, 50, 25</code>，输出层两个节点，分别表示属于类别 <code>1</code> 的概率和类别 <code>2</code> 的概率。</p>
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/5.jpg" alt="5"></p>
+<h4 id="引入依赖-1"><a href="#引入依赖-1" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_moons</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h4><p>此处使用 <code>sklearn</code> 库提供的工具生成 <code>2000</code> 个线性不可分的二分类数据集，数据的特征长度为 <code>2</code>，采样数据分布如下所示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">N_SAMPLES = <span class="number">3000</span> <span class="comment"># 采样点数</span></span><br><span class="line">x, y = make_moons(n_samples=N_SAMPLES, noise=<span class="number">0.2</span>, random_state=<span class="number">200</span>)</span><br><span class="line">x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=<span class="number">0.3</span>, random_state=<span class="number">42</span>) <span class="comment"># 按照 7:3 比例划分训练集和测试集</span></span><br><span class="line"><span class="built_in">print</span>(x.shape, y.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制数据集的分布</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_plot</span>(<span class="params">x, y, plot_name</span>):</span><br><span class="line">    plt.figure(figsize=(<span class="number">16</span>, <span class="number">12</span>))</span><br><span class="line">    axes = plt.gca()</span><br><span class="line">    plt.title(plot_name, fontsize=<span class="number">20</span>)</span><br><span class="line">    axes.<span class="built_in">set</span>(xlabel=<span class="string">&#x27;x&#x27;</span>, ylabel=<span class="string">&#x27;y&#x27;</span>)</span><br><span class="line">    plt.scatter(x[:, <span class="number">0</span>], x[:, <span class="number">1</span>], c=y.ravel(), s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line">make_plot(x, y, <span class="string">&#x27;data-set&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/6.jpg" alt="6"></p>
+<h4 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络层</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Layer</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n_input, n_neurons, activation=<span class="literal">None</span>, weights=<span class="literal">None</span>, bias=<span class="literal">None</span></span>):</span><br><span class="line">        self.weights = weights <span class="keyword">if</span> weights <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> np.random.randn(n_input, n_neurons) * np.sqrt(<span class="number">1</span> / n_neurons)</span><br><span class="line">        self.bias = bias <span class="keyword">if</span> bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> np.random.rand(n_neurons) * <span class="number">0.1</span></span><br><span class="line">        self.activation = activation</span><br><span class="line">        self.last_activation = <span class="literal">None</span></span><br><span class="line">        self.error = <span class="literal">None</span></span><br><span class="line">        self.delta = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">activate</span>(<span class="params">self, x</span>):</span><br><span class="line">        r = np.dot(x, self.weights) + self.bias</span><br><span class="line">        self.last_activation = self._apply_activation(r)</span><br><span class="line">        <span class="keyword">return</span> self.last_activation</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_apply_activation</span>(<span class="params">self, r</span>):</span><br><span class="line">        <span class="keyword">if</span> self.activation <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> r</span><br><span class="line">        <span class="keyword">elif</span> self.activation == <span class="string">&#x27;relu&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> np.maximun(r, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">elif</span> self.activation == <span class="string">&#x27;tanh&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> np.tanh(r)</span><br><span class="line">        <span class="keyword">elif</span> self.activation == <span class="string">&#x27;sigmoid&#x27;</span>:</span><br><span class="line">             <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-r))</span><br><span class="line">        <span class="keyword">return</span> r</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">apply_activation_derivative</span>(<span class="params">self, r</span>):</span><br><span class="line">        <span class="keyword">if</span> self.activation <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> np.ones_like(r)</span><br><span class="line">        <span class="comment"># ReLU 函数的导数实现</span></span><br><span class="line">        <span class="keyword">elif</span> self.activation == <span class="string">&#x27;relu&#x27;</span>:</span><br><span class="line">            grad = np.array(r, copy=<span class="literal">True</span>)</span><br><span class="line">            grad[r &gt; <span class="number">0</span>] = <span class="number">1.</span></span><br><span class="line">            grad[r &lt;= <span class="number">0</span>] = <span class="number">0.</span></span><br><span class="line">            <span class="keyword">return</span> grad</span><br><span class="line">        <span class="comment"># tanh 函数的导数实现</span></span><br><span class="line">        <span class="keyword">elif</span> self.activation == <span class="string">&#x27;tanh&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span> - r ** <span class="number">2</span></span><br><span class="line">        <span class="comment"># Sigmoid 函数的导数实现</span></span><br><span class="line">        <span class="keyword">elif</span> self.activation == <span class="string">&#x27;sigmoid&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> r - <span class="built_in">pow</span>(r, <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> r</span><br></pre></td></tr></table></figure>
+
+<h4 id="网络模型-1"><a href="#网络模型-1" class="headerlink" title="网络模型"></a>网络模型</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络模型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NeuralNetwork</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self._layers = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_layer</span>(<span class="params">self, layer</span>):</span><br><span class="line">        self._layers.append(layer)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">feed_forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self._layers:</span><br><span class="line">            x = layer.activate(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 反向传播</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backpropagation</span>(<span class="params">self, x, y, learning_rate</span>):</span><br><span class="line">        output = self.feed_forward(x)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(<span class="built_in">len</span>(self._layers))):</span><br><span class="line">            layer = self._layers[i]</span><br><span class="line">            <span class="keyword">if</span> layer == self._layers[-<span class="number">1</span>]:</span><br><span class="line">                layer.error = y - output</span><br><span class="line">                layer.delta = layer.error * layer.apply_activation_derivative(output)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                next_layer = self._layers[i+<span class="number">1</span>]</span><br><span class="line">                layer.error = np.dot(next_layer.weights, next_layer.delta)</span><br><span class="line">                layer.delta = layer.error * layer.apply_activation_derivative(layer.last_activation)</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(self._layers)):</span><br><span class="line">            layer = self._layers[i]</span><br><span class="line">            o_i = np.atleast_2d(x <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> self._layers[i-<span class="number">1</span>].last_activation)</span><br><span class="line">            layer.weights += layer.delta * o_i.T * learning_rate</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 网络训练</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, x_train, y_train, x_test, y_test, learning_rate, max_epochs</span>):</span><br><span class="line">        y_onehot = np.zeros((y_train.shape[<span class="number">0</span>], <span class="number">2</span>))</span><br><span class="line">        y_onehot[np.arange(y_train.shape[<span class="number">0</span>]), y_train] = <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">        mses = []</span><br><span class="line">        accs = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(max_epochs):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(x_train)):</span><br><span class="line">                self.backpropagation(x_train[j], y_onehot[j], learning_rate)</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">                mse = np.mean(np.square(y_onehot - self.feed_forward(x_train)))</span><br><span class="line">                mses.append(mse)</span><br><span class="line">                <span class="built_in">print</span>(i, <span class="built_in">float</span>(mse))</span><br><span class="line">                acc = self.accuracy(self.predict(x_test), y_test.flatten()) * <span class="number">100</span></span><br><span class="line">                accs.append(acc)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;acc&#x27;</span>, acc) </span><br><span class="line">        <span class="keyword">return</span> mses, accs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">accuracy</span>(<span class="params">self, y_output, y_test</span>):</span><br><span class="line">        <span class="keyword">return</span> np.mean(np.argmax(y_output, axis=<span class="number">1</span>) == y_test)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, x_test</span>):</span><br><span class="line">        <span class="keyword">return</span> self.feed_forward(x_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型全连接层</span></span><br><span class="line">nn = NeuralNetwork()</span><br><span class="line">nn.add_layer(Layer(<span class="number">2</span>, <span class="number">25</span>, <span class="string">&#x27;sigmoid&#x27;</span>))</span><br><span class="line">nn.add_layer(Layer(<span class="number">25</span>, <span class="number">50</span>, <span class="string">&#x27;sigmoid&#x27;</span>))</span><br><span class="line">nn.add_layer(Layer(<span class="number">50</span>, <span class="number">25</span>, <span class="string">&#x27;sigmoid&#x27;</span>))</span><br><span class="line">nn.add_layer(Layer(<span class="number">25</span>, <span class="number">2</span>, <span class="string">&#x27;sigmoid&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<h4 id="网络训练"><a href="#网络训练" class="headerlink" title="网络训练"></a>网络训练</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模型训练</span></span><br><span class="line">mses, accs = nn.train(x_train, y_train, x_test, y_test, <span class="number">0.001</span>, <span class="number">300</span>) <span class="comment"># learning_rate 学习率为 0.001</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="网络性能"><a href="#网络性能" class="headerlink" title="网络性能"></a>网络性能</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mse 数据图标展示</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(mses)</span><br><span class="line">plt.title(<span class="string">&#x27;mse&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># acc 数据图表展示</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(accs)</span><br><span class="line">plt.ylim(<span class="number">0</span>, <span class="number">100</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;acc&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/7.jpg" alt="7"><br><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/8.jpg" alt="8"></p>
+<hr>
+
+<h3 id="MNIST-数据集"><a href="#MNIST-数据集" class="headerlink" title="MNIST 数据集"></a><code>MNIST</code> 数据集</h3><p>经典机器学习入门实践。</p>
+<h4 id="加载数据并预处理"><a href="#加载数据并预处理" class="headerlink" title="加载数据并预处理"></a>加载数据并预处理</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入所需的库</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.datasets <span class="keyword">import</span> mnist</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Conv2D, Flatten, MaxPooling2D, Dropout</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.utils <span class="keyword">import</span> to_categorical</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载MNIST数据集</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据预处理</span></span><br><span class="line"><span class="comment"># 归一化像素值到0-1</span></span><br><span class="line">x_train, x_test = x_train / <span class="number">255.0</span>, x_test / <span class="number">255.0</span></span><br><span class="line"><span class="comment"># 将标签转换为one-hot编码</span></span><br><span class="line">y_train = to_categorical(y_train, <span class="number">10</span>)</span><br><span class="line">y_test = to_categorical(y_test, <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="构建并编译模型"><a href="#构建并编译模型" class="headerlink" title="构建并编译模型"></a>构建并编译模型</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建CNN模型</span></span><br><span class="line">model = Sequential([</span><br><span class="line">    <span class="comment"># 第一个卷积层，使用32个3x3的卷积核，激活函数为ReLU</span></span><br><span class="line">    Conv2D(<span class="number">32</span>, (<span class="number">3</span>, <span class="number">3</span>), activation=<span class="string">&#x27;relu&#x27;</span>, input_shape=(<span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>)),</span><br><span class="line">    <span class="comment"># 池化层，使用2x2的池化窗口</span></span><br><span class="line">    MaxPooling2D((<span class="number">2</span>, <span class="number">2</span>)),</span><br><span class="line">    <span class="comment"># 第二个卷积层，使用64个3x3的卷积核</span></span><br><span class="line">    Conv2D(<span class="number">32</span>, (<span class="number">3</span>, <span class="number">3</span>), activation=<span class="string">&#x27;relu&#x27;</span>),</span><br><span class="line">    <span class="comment"># 再次使用池化层</span></span><br><span class="line">    MaxPooling2D((<span class="number">2</span>, <span class="number">2</span>)),</span><br><span class="line">    <span class="comment"># 展平层，将多维的输出展平为一维</span></span><br><span class="line">    Flatten(),</span><br><span class="line">    <span class="comment"># 全连接层，使用128个神经元和ReLU激活函数</span></span><br><span class="line">    Dense(<span class="number">128</span>, activation=<span class="string">&#x27;relu&#x27;</span>),</span><br><span class="line">    <span class="comment"># Dropout层，丢弃一部分神经元，防止过拟合</span></span><br><span class="line">    Dropout(<span class="number">0.3</span>),</span><br><span class="line">    <span class="comment"># 输出层，使用Softmax激活函数，输出10个类别的概率</span></span><br><span class="line">    Dense(<span class="number">10</span>, activation=<span class="string">&#x27;softmax&#x27;</span>)</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译模型</span></span><br><span class="line">model.<span class="built_in">compile</span>(optimizer=<span class="string">&#x27;adam&#x27;</span>, loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练模型</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>, batch_size=<span class="number">64</span>, validation_split=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/9.jpg" alt="9"></p>
+<h4 id="模型评估"><a href="#模型评估" class="headerlink" title="模型评估"></a>模型评估</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 评估模型准确率</span></span><br><span class="line">test_loss, test_acc = model.evaluate(x_test, y_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Test accuracy: <span class="subst">&#123;test_acc:<span class="number">.4</span>f&#125;</span>, Test loss: <span class="subst">&#123;test_loss:<span class="number">.4</span>f&#125;</span>&quot;</span>) <span class="comment"># 评估预测结果</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试实际效果</span></span><br><span class="line">start, stop = <span class="number">10</span>, <span class="number">11</span></span><br><span class="line">y_pred = model.predict(x_test[start:stop])</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(start, stop):</span><br><span class="line">    <span class="built_in">print</span>(i, np.argwhere(y_test[i] == <span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>], np.argmax(y_pred[i-start]))</span><br><span class="line">    plt.title(np.argmax(y_pred[i]))</span><br><span class="line">    plt.imshow(x_test[i], cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span>*<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/11.jpg" alt="11"><br><img src="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/10.jpg" alt="10"></p>
+<p>在上述的实例中出现很多第一次出现的内容，这些内容都是卷积神经网络 <code>CNN</code> 中的网络层，不过不用担心，后续会出一篇新的文章去讲卷积神经网络，敬请期待！</p>
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>俗话说：“<strong>实践是检验真理的唯一标准</strong>”，而对于机器学习则更加要多多实践！</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习《TensorFlow深度学习》所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DL/" rel="tag"># DL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/" rel="prev" title="Moto-摩旅日记2">
+      <i class="fa fa-chevron-left"></i> Moto-摩旅日记2
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">线性模型实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">前向传播算法实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AUTO-MPG-%E6%B1%BD%E8%BD%A6%E6%B2%B9%E8%80%97"><span class="nav-number">4.</span> <span class="nav-text">AUTO-MPG 汽车油耗</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">4.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="nav-number">4.2.</span> <span class="nav-text">加载数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">4.3.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E6%A8%A1%E5%9E%8B%E6%95%B0%E6%8D%AE"><span class="nav-number">4.4.</span> <span class="nav-text">处理模型数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.5.</span> <span class="nav-text">网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">4.6.</span> <span class="nav-text">性能指标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98"><span class="nav-number">5.</span> <span class="nav-text">反向传播算法实战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96-1"><span class="nav-number">5.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">5.2.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="nav-number">5.3.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">5.4.</span> <span class="nav-text">网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83"><span class="nav-number">5.5.</span> <span class="nav-text">网络训练</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD"><span class="nav-number">5.6.</span> <span class="nav-text">网络性能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MNIST-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">6.</span> <span class="nav-text">MNIST 数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E5%B9%B6%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">6.1.</span> <span class="nav-text">加载数据并预处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%B9%B6%E7%BC%96%E8%AF%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.2.</span> <span class="nav-text">构建并编译模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0"><span class="nav-number">6.3.</span> <span class="nav-text">模型评估</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">145</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '1407cf3b317f6761203c64c92fd2c96e',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -29,7 +29,7 @@
 <meta property="og:description" content="引入本次将数据从 MySQL 备份到 ClickHouse 采用的是 MinervaDB ClickHouse MySQL Data Reader ，该项目基础版本来自于 Alitinity&#x2F;clickhouse-mysql-data-reader。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-06-12T04:22:05.000Z">
-<meta property="article:modified_time" content="2023-01-05T13:58:48.000Z">
+<meta property="article:modified_time" content="2024-06-05T14:39:54.315Z">
 <meta property="article:author" content="vgbhfive">
 <meta property="article:tag" content="MySQL">
 <meta property="article:tag" content="ClickHouse">
@@ -202,7 +202,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-05 21:58:48" itemprop="dateModified" datetime="2023-01-05T21:58:48+08:00">2023-01-05</time>
+                <time title="Modified: 2024-06-05 22:39:54" itemprop="dateModified" datetime="2024-06-05T22:39:54+08:00">2024-06-05</time>
               </span>
 
           
@@ -263,6 +263,13 @@
 <h3 id="监听-bin-log-同步实时数据"><a href="#监听-bin-log-同步实时数据" class="headerlink" title="监听 bin log 同步实时数据"></a>监听 <code>bin log</code> 同步实时数据</h3><p>另外还可以在 <code>bin log</code> 日志文件中指定<code>clickhouse-mysql</code> 工具开始同步的位置同步数据。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clickhouse-mysql --src-host=127.0.0.1 --src-user=mysql_user --src-password=password --src-tables=db.table1,db.table2 --dst-host=127.0.0.1 --dst-port=9000 --dst-user=ck_user --dst-password=password --dst-schema=db --dst-create-table --src-resume --src-wait --nice-pause=1 --log-level=info --csvpool --mempool-max-flush-interval=60 --mempool-max-events-num=1 --pump-data --src-server-id=222 --log-file=clickhouse-mysql.log --binlog-position-file=/tmp/ck</span><br></pre></td></tr></table></figure>
 
+<h4 id="获取-bin-log-信息"><a href="#获取-bin-log-信息" class="headerlink" title="获取 bin log 信息"></a>获取 <code>bin log</code> 信息</h4><ol>
+<li><p>查看是否开启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &#x27;log_%&#x27;; # log_bin 为 ON 时打开</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看 <code>bin log</code> 信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show binary logs; # 查看 bin log 文件列表</span><br></pre></td></tr></table></figure></li>
+</ol>
 <hr>
 
 <h3 id="常见异常"><a href="#常见异常" class="headerlink" title="常见异常"></a>常见异常</h3><ol>
@@ -385,7 +392,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">优点和限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%90%8C%E6%AD%A5%E5%8E%86%E5%8F%B2%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">运行同步历史数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC-bin-log-%E5%90%8C%E6%AD%A5%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">监听 bin log 同步实时数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8"><span class="nav-number">7.</span> <span class="nav-text">常见异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">8.</span> <span class="nav-text">参数解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">10.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">优点和限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%90%8C%E6%AD%A5%E5%8E%86%E5%8F%B2%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">运行同步历史数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC-bin-log-%E5%90%8C%E6%AD%A5%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">监听 bin log 同步实时数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-bin-log-%E4%BF%A1%E6%81%AF"><span class="nav-number">6.1.</span> <span class="nav-text">获取 bin log 信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8"><span class="nav-number">7.</span> <span class="nav-text">常见异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">8.</span> <span class="nav-text">参数解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">10.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -401,7 +408,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">144</span>
+          <span class="site-state-item-count">145</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
