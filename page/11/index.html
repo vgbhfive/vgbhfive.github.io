@@ -168,6 +168,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/" class="post-title-link" itemprop="url">Jib构建Java镜像</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-20 10:39:21 / Modified: 18:11:56" itemprop="dateCreated datePublished" datetime="2019-12-20T10:39:21+08:00">2019-12-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Jib-简介"><a href="#Jib-简介" class="headerlink" title="Jib 简介"></a>Jib 简介</h2><p>官方Github 库：<a target="_blank" rel="noopener" href="https://github.com/GoogleContainerTools/jib">https://github.com/GoogleContainerTools/jib</a></p>
+<p>示例Demo: <a target="_blank" rel="noopener" href="https://github.com/vgbhfive/SpringBootDemo/tree/master/jibtest">https://github.com/vgbhfive/SpringBootDemo/tree/master/jibtest</a></p>
+<p>如果你之前使用过Docker 来构建镜像，那么Jib 将极大的解放你的劳动，并且有极大的可使用性。</p>
+<h2 id="构建Jib-镜像"><a href="#构建Jib-镜像" class="headerlink" title="构建Jib 镜像"></a>构建Jib 镜像</h2><h3 id="引入Jib"><a href="#引入Jib" class="headerlink" title="引入Jib"></a>引入Jib</h3><p>jib的引入非常简单，已maven plugin的方式集成到项目中，只需要在你的项目中引入下面代码即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.cloud.tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jib-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">from</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--base image--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>openjdk:alpine<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">to</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--目标镜像registry地址，为了方便测试，你需要换成自己的地址，如果你的网络不好，可以选用国内加速器，比如阿里云的--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>registry.hub.docker.com/vgbhfive/jibtest<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 这只是一个最简单的配置，详细的说明可以去看github jib<a target="_blank" rel="noopener" href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#from-object">详细说明</a></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Jib%E6%9E%84%E5%BB%BAJava%E9%95%9C%E5%83%8F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/ES6%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -874,85 +946,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/" class="post-title-link" itemprop="url">SpringBoot-自定义Starter</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-08-13 16:11:39" itemprop="dateCreated datePublished" datetime="2019-08-13T16:11:39+08:00">2019-08-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:24:18" itemprop="dateModified" datetime="2020-02-05T14:24:18+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
-<li>创建Stater 项目</li>
-<li>定义Starter 需要的配置类</li>
-<li>编写自动配置类</li>
-<li>编写spring.factories 文件加载自动配置类</li>
-<li>编写配置提示文件spring-configuration-metadata.json (非必需)</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/SpringBoot-%E8%87%AA%E5%AE%9A%E4%B9%89Starter/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1024,7 +1017,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2024-06-24T14:33:52.564Z</updated>
+  <updated>2024-07-20T01:57:27.514Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DL-循环神经网络RNN</title>
+    <link href="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/"/>
+    <id>https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/</id>
+    <published>2024-07-07T03:42:58.000Z</published>
+    <updated>2024-07-20T01:57:27.514Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;前面学习了&lt;strong&gt;卷积神经网络（&lt;code&gt;CNN&lt;/code&gt;）&lt;/strong&gt;，卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习&lt;strong&gt;循环神经网络（&lt;code&gt;RNN&lt;/code&gt;）&lt;/strong&gt;，循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="DL" scheme="https://blog.vgbhfive.com/tags/DL/"/>
+    
+    <category term="TensorFlow" scheme="https://blog.vgbhfive.com/tags/TensorFlow/"/>
+    
+  </entry>
   
   <entry>
     <title>DL-卷积神经网络CNN实践</title>
@@ -102,7 +121,7 @@
     <link href="https://blog.vgbhfive.com/DL-TensorFlow%E5%85%A5%E9%97%A8/"/>
     <id>https://blog.vgbhfive.com/DL-TensorFlow%E5%85%A5%E9%97%A8/</id>
     <published>2024-04-27T03:23:12.000Z</published>
-    <updated>2024-06-06T14:17:07.609Z</updated>
+    <updated>2024-06-27T14:54:56.806Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;TensorFlow&lt;/code&gt;&lt;/strong&gt; 是由 &lt;code&gt;Google&lt;/code&gt; 团队开发的深度学习框架，其初衷是以最简单的方式实现机器学习和深度学习的概念。该框架融合了计算代数的优化技术，极大地方便了复杂数学表达式的计算。&lt;/p&gt;
@@ -418,23 +437,6 @@
     
     
     <category term="Myx&amp;Lyl" scheme="https://blog.vgbhfive.com/tags/Myx-Lyl/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2023 低生产力 PC 装机报告</title>
-    <link href="https://blog.vgbhfive.com/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7%E5%8A%9B-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/"/>
-    <id>https://blog.vgbhfive.com/2023-%E4%BD%8E%E7%94%9F%E4%BA%A7%E5%8A%9B-PC-%E8%A3%85%E6%9C%BA%E6%8A%A5%E5%91%8A/</id>
-    <published>2023-05-11T13:17:18.000Z</published>
-    <updated>2023-06-14T14:03:40.400Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;配置列表&quot;&gt;&lt;a href=&quot;#配置列表&quot; class=&quot;headerlink&quot; title=&quot;配置列表&quot;&gt;&lt;/a&gt;配置列表&lt;/h3&gt;&lt;p&gt;&lt;code&gt;CPU&lt;/code&gt;：&lt;code&gt;Intel i5-12400&lt;/code&gt; 散片&lt;br&gt;主板：微星 &lt;code&gt;MAG B660 MORTAR WIFI DDR4&lt;/code&gt;&lt;br&gt;内存：光威 天策系列 &lt;code&gt;16G * 2&lt;/code&gt; 套条&lt;br&gt;固态：宏基掠夺者 &lt;code&gt;GM7000 PCIe4.0 NVMe&lt;/code&gt;&lt;br&gt;电源：长城 &lt;code&gt;650w&lt;/code&gt; 金牌全模&lt;br&gt;散热：九州风神 玄冰 &lt;code&gt;400V5&lt;/code&gt;（四热管）&lt;br&gt;机箱：先马 平头哥 &lt;code&gt;M2&lt;/code&gt;（五风扇位，侧头玻璃）&lt;br&gt;系统：&lt;code&gt;Windows 10&lt;/code&gt; 专业版&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Electron" scheme="https://blog.vgbhfive.com/tags/Electron/"/>
     
   </entry>
   

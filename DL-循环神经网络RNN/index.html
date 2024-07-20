@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+  <meta name="baidu-site-verification" content="codeva-K7aZhBcBPm">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介前面学习了卷积神经网络（CNN），卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习循环神经网络（RNN），循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DL-循环神经网络RNN">
+<meta property="og:url" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介前面学习了卷积神经网络（CNN），卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习循环神经网络（RNN），循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/s_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn_2.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn_3.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_2.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_3.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_4.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstmcell_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/gru_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/gru_2.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_1.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_2.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_3.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_4.jpg">
+<meta property="og:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_5.jpg">
+<meta property="article:published_time" content="2024-07-07T03:42:58.000Z">
+<meta property="article:modified_time" content="2024-07-20T01:57:27.514Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="DL">
+<meta property="article:tag" content="TensorFlow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/s_1.jpg">
+
+<link rel="canonical" href="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DL-循环神经网络RNN | Vgbhfive's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DL-循环神经网络RNN
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-07-07 11:42:58" itemprop="dateCreated datePublished" datetime="2024-07-07T11:42:58+08:00">2024-07-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-07-20 09:57:27" itemprop="dateModified" datetime="2024-07-20T09:57:27+08:00">2024-07-20</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>前面学习了<strong>卷积神经网络（<code>CNN</code>）</strong>，卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习<strong>循环神经网络（<code>RNN</code>）</strong>，循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="序列表示"><a href="#序列表示" class="headerlink" title="序列表示"></a>序列表示</h3><p><strong>序列</strong>是指具有先后顺序的一组数据。<br>序列信号使用一个 <code>shape</code> 为 <code>[b,s]</code> 的张量即可表示，其中 <code>b</code> 表示序列数量，<code>s</code> 表示序列长度。</p>
+<p>对于一句含有 <code>n</code> 个单词的句子，单词的表示方法就是之前说过的 <code>one-hot</code> 编码，这种将文字编码为数值的过程叫做 <strong><code>Word Embedding</code></strong> 。<br>但在此过程中会破坏文字之间的相关性，因此可以通过<strong>余弦相关度</strong>衡量词向量之间的相关度。<br>$$ similarity(a, b) &#x3D; cos(\theta) &#x3D; {\frac {a * b} {|a| * |b|}} $$</p>
+<h4 id="Embedding-层"><a href="#Embedding-层" class="headerlink" title="Embedding 层"></a><code>Embedding</code> 层</h4><p>在神经网络总，单词的表示向量可以直接通过训练的方式得到，将单词的表示层称为 <strong><code>Embedding</code> 层</strong>。<br><code>Embedding</code> 层负责将单词编码为某个词向量 <code>v</code>，其接受的是采用数字编码的单词编号 <code>i</code>，系统总单词量记为 <code>N</code>，输出长度为 <code>n</code> 的向量 <code>v</code>。<br><code>Embedding</code> 层实现非常简单，构建一个 <code>shape</code> 为 <code>[N,n]</code> 的查询表对象 <code>table</code>，对于任意的单词编号 <code>i</code>，只需要查询到对应位置上的向量并返回即可。</p>
+<p><code>Embedding</code> 层是可训练的，其放置在神经网络之前，完成单词到向量的转换，得到的表示向量继续通过神经网络完成后续任务，并计算误差 <code>L</code>，采用梯度下降算法来实现端到端（<code>end-to-end</code>）的训练。<br>通过 <code>layers.Embedding(N, n)</code> 来定义一个 <code>Word Embedding</code> 层，其中 <code>N</code> 表示制定词汇数量，<code>n</code> 指定单词向量长度。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x = tf.<span class="built_in">range</span>(<span class="number">10</span>) <span class="comment"># 生成10个单词的数字编码</span></span><br><span class="line">x = tf.random.shuffle(x) <span class="comment"># 打散</span></span><br><span class="line">net = layers.Embedding(<span class="number">10</span>, <span class="number">4</span>) <span class="comment"># # 创建共 10 个单词，每个单词用长度为 4 的向量表示的层</span></span><br><span class="line">out = net(x) </span><br><span class="line"><span class="built_in">print</span>(out) <span class="comment"># 获取词向量</span></span><br><span class="line"><span class="built_in">print</span>(net.embeddings) <span class="comment"># 查看 Embedding 层内部的查询表 table</span></span><br><span class="line"><span class="built_in">print</span>(net.embeddings.trainable) <span class="comment"># 查询表的可优化属性为 True，即可通过梯度下降算法优化</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/s_1.jpg" alt="s_1"></p>
+<h4 id="预训练词向量"><a href="#预训练词向量" class="headerlink" title="预训练词向量"></a>预训练词向量</h4><p><code>Embedding</code> 层的查询表是随机初始化的，需要从零开始训练，但实际上可以使用预训练的 <code>Word Embedding</code> 模型得到更好的单词表示方法。<br>目前较为广泛的预训练模型为 <strong><code>Word2Vec</code></strong> 和 <strong><code>GloVe</code></strong> 等。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># load embedding as a dict</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_embedding</span>(<span class="params">filename</span>):</span><br><span class="line">    <span class="comment"># load embedding into memory, skip first line</span></span><br><span class="line">    file = <span class="built_in">open</span>(filename,<span class="string">&#x27;r&#x27;</span>,encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    lines = file.readlines()</span><br><span class="line">    file.close()</span><br><span class="line">    <span class="comment"># create a map of words to vectors</span></span><br><span class="line">    embedding = <span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        parts = line.split()</span><br><span class="line">        <span class="comment"># key is string word, value is numpy array for vector</span></span><br><span class="line">        embedding[parts[<span class="number">0</span>]] = asarray(parts[<span class="number">1</span>:], dtype=<span class="string">&#x27;float32&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> embedding</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用已经训练好的模型参数去初始化 Embedding 层的查询表</span></span><br><span class="line">embed_glove = load_embedding(<span class="string">&#x27;glove.6B.50d.txt&#x27;</span>)</span><br><span class="line">net.set_weights([embed_glove])</span><br></pre></td></tr></table></figure>
+<p>经过预训练的词向量模型初始化的 <code>Embedding</code> 层可以设置为不参与训练：<code>net.trainable = False</code>，其预训练的词向量就可以直接应用到此特定任务上。</p>
+<hr>
+
+<h3 id="循环神经网络"><a href="#循环神经网络" class="headerlink" title="循环神经网络"></a>循环神经网络</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>如何让网络具有整体理解序列信号的能力？<br>此时想到了<strong>内存（<code>Memory</code>）机制</strong>，网络提供一个单独的内存变量，每次提取词向量的特征并刷新内存变量，直至最后一个输入完成，此时的内存变量即存储了所有序列的语义特征，并且由于输入序列之间的先后顺序，使得内存变量内容与序列顺序具有关联。</p>
+<p>定义状态向量 $h_0$ 为初始的内存状态，经过 <code>s</code> 个词向量的输入后得到网络最终的状态张量 $h_s$，其很好地代表了句子的全局语义信息，基于 $h_s$ 通过某个全连接层分类器即可完成任务。</p>
+<h4 id="循环神经网络-1"><a href="#循环神经网络-1" class="headerlink" title="循环神经网络"></a>循环神经网络</h4><p>为了解决上述问题，提出了一种新的网络结构。在每个时间戳 $t$，网络层接受当前时间戳的输入 $x$ 和上一个时间戳的网络状态向量 $h$，经过 $h_t &#x3D; f_{\theta}(h_{t-1}, x_t)$ 变换后得到当前时间戳的新状态向量 $h_t$，并写入内存状态中。<br/><br>其中 $f_{\theta}$ 表示网络的运算逻辑，在每个时间戳伤网络层均有输出产生 $o &#x3D; g(h)$，即将网络的状态向量变换后输出。</p>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn_1.jpg" alt="rnn_1"></p>
+<p>将上述网络结构进行折叠，便可得到网络循环接受序列的每个特征向量 $x_t$，并刷新内部状态向量 $h_t$，同时得到输出 $o_t$，对于这种网络结构将其称为<strong>循环网络结构（<code>Recurrent Neural Network, RNN</code>）</strong>。</p>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn_2.jpg" alt="rnn_2"></p>
+<p>使用 $W_{xh}, W_{hh}, b$ 来参数化 $f$ 网络，并按照<br>$$ f_{\theta} &#x3D; \sigma (W_{xh} x_t + W_{hh} h_{t-1} + b) $$<br>方式更新内存，将这种网络称为基本的循环神经网络。<br>在循环神经网络中，激活函数一般更多地采用 <code>tanh</code> 函数，并且可以选择不使用偏置 $b$ 来进一步减少参数量。状态向量 $h_t$ 可以直接用作输出，即 $o_t&#x3D;h_t$，也可以对 $h_t$ 做简单线性变换 $o_t &#x3D; W_{ho} h_t$ 后得到每个时间戳上的网络输出 $o_t$。</p>
+<h4 id="梯度传播"><a href="#梯度传播" class="headerlink" title="梯度传播"></a>梯度传播</h4><p>通过循环神经网络的更新表达式可以看出输出对张量 $W_{xh}$、$W_{hh}$ 和偏置 $b$ 均是可导的，其均可以利用自动梯度求导算法计算。</p>
+<p>考虑梯度 ${\frac {\delta L} {\delta W_{hh}}}$，由于 $W_{hh}$ 被每个时间戳 <code>i</code> 上权值共享，因此在计算 ${\frac {\delta L} {\delta W_{hh}}}$ 时需要讲每个中间时间戳 <code>i</code> 上的梯度求和，利用链式法则展开为：<br>$$ {\frac {\delta L} {\delta W_{hh}}} &#x3D; sum_{i&#x3D;1}^t {\frac {\delta L} {\delta o_t}} {\frac {\delta o_t} {\delta h_t}} {\frac {\delta h_t} {\delta h_i}} {\frac {\delta^+ h_i} {\delta W_{hh}}} $$</p>
+<p>其中 ${\frac {\delta L} {\delta o_t}}$ 可以基于损失函数求得，${\frac {\delta o_t} {\delta h_t}}$ 在 $o_t &#x3D; h_t$ 时<br>$${\frac {\delta o_t} {\delta h_t}} &#x3D; I$$</p>
+<p>${\frac {\delta^+ h_i} {\delta W_{hh}}}$ 的梯度将 $h_i$ 展开后也可以求得：<br>$$ {\frac {\delta^+ h_i} {\delta W_{hh}}} &#x3D; {\frac {\delta \sigma (W_{xh} x_t + W_{hh} h_{t-1} + b)} {\delta W_{hh}}} $$</p>
+<p>其中 ${\frac {\delta^+ h_i} {\delta W_{hh}}}$ 只考虑到<em>一个时间戳</em>的梯度传播，与 ${\frac {\delta L} {\delta W_{hh}}}$ 考虑<em>所有时间戳</em>的偏导数不同，因此只需要推导出 ${\frac {\delta h_t} {\delta h_i}}$ 的表达式即可完成循环神经网络的梯度推导。</p>
+<p>利用链式法则将 ${\frac {\delta h_t} {\delta h_i}}$ 拆分为连续时间戳的梯度表达式：<br>$$ {\frac {\delta h_t} {\delta h_i}} &#x3D; {\frac {\delta h_t} {\delta h_{t-1}}} {\frac {\delta h_{t-1}} {\delta h_{t-2}}} … {\frac {\delta h_{i+1}} {\delta h_i}} &#x3D; sum_{k&#x3D;i}^{t-1} {\frac {\delta h_{k+1}} {\delta h_k}}$$</p>
+<p>由于<br>$$ h_{k+1} &#x3D; \sigma (W_{xh} x_{k+1} + W_{hh} h_k + b) $$</p>
+<p>因此<br>$$ {\frac {\delta h_{k+1}} {\delta h_k}} &#x3D; W_{hh}^T diag(\sigma^‘ (W_{xh} x_{k+1} + W_{hh} h_k + b)) &#x3D; W_{hh}^T diag(\sigma^‘(h_{k+1})) $$</p>
+<p><small>其中 $diag(x)$ 把向量 $x$ 的每个元素作为矩阵的对角元素，得到其他元素全为 <code>0</code> 的对角矩阵。</small></p>
+<p>最终<br>$$ {\frac {\delta h_t} {\delta h_i}} &#x3D; sum_{j&#x3D;i}^{t-1} diag(\sigma^‘(W_{xh} x_{j+1} + W_{hh} h_j + b)) W_{hh} $$</p>
+<p>至此 ${\frac {\delta L} {\delta W_{hh}}}$ 梯度推导完成。</p>
+<h4 id="梯度爆炸和梯度弥散"><a href="#梯度爆炸和梯度弥散" class="headerlink" title="梯度爆炸和梯度弥散"></a>梯度爆炸和梯度弥散</h4><p>循环神经网络的训练并不稳定，其深度并不能随意加深，通过回顾 ${\frac {\delta h_t} {\delta h_i}} &#x3D; sum_{j&#x3D;i}^{t-1} diag(\sigma^‘(W_{xh} x_{j+1} + W_{hh} h_j + b)) W_{hh}$ 可以发现其内部包含 $W_{hh}$ 的连乘运算。</p>
+<ul>
+<li>当 $W_{hh}$ 的最大值连续大于 <code>1</code> 时，多次相乘会使得 ${\frac {\delta h_t} {\delta h_i}}$ 结果爆炸式增大。</li>
+<li>当 $W_{hh}$ 的最大值连续小于 <code>1</code> 时，多次相乘会使得 ${\frac {\delta h_t} {\delta h_i}}$ 结果趋近于零。</li>
+</ul>
+<p>这种梯度值接近于 <code>0</code> 的现象叫做<strong>梯度弥散（<code>Gradient Vanishing</code>）</strong>，而把梯度值远大于 <code>1</code> 的现象叫做<strong>梯度爆炸（<code>Gradient Exploding</code>）</strong>。梯度爆炸和梯度弥散都是神经网络优化过程中很容易出现的情况。</p>
+<h5 id="梯度爆炸"><a href="#梯度爆炸" class="headerlink" title="梯度爆炸"></a>梯度爆炸</h5><p>梯度爆炸可以通过<strong>梯度剪裁（<code>Gradient Clipping</code>）</strong>的方式在一定程度上解决。梯度剪裁通过将梯度张量的数值或范数限制在某个较小的区间内，从而将远大于 <code>1</code> 的梯度值减少，避免出现梯度爆炸。</p>
+<p>在深度学习中，梯度剪裁常用以下三种方式：</p>
+<ul>
+<li><strong>张量的数值限幅</strong></li>
+<li><strong>限制梯度张量的范数</strong></li>
+<li><strong>全局范数剪裁</strong></li>
+</ul>
+<h5 id="梯度弥散"><a href="#梯度弥散" class="headerlink" title="梯度弥散"></a>梯度弥散</h5><p>对于梯度弥散现象，可以通过以下措施进行抑制：</p>
+<ul>
+<li><strong>增大学习率</strong></li>
+<li><strong>减少网络深度</strong></li>
+<li><strong>添加 <code>Skip Connection</code></strong></li>
+</ul>
+<h4 id="RNN-层"><a href="#RNN-层" class="headerlink" title="RNN 层"></a><code>RNN</code> 层</h4><p><code>layers.SimpleRNNCell()</code> 和 <code>layers.SimpleRNN()</code>，其中带 <code>Cell</code> 的层仅完成一个时间戳的前向计算，不带 <code>Cell</code> 的层是基于 <code>Cell</code> 层实现，内部完成多个时间戳的循环计算。</p>
+<h5 id="SimpleRNNCell"><a href="#SimpleRNNCell" class="headerlink" title="SimpleRNNCell"></a><code>SimpleRNNCell</code></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 特征长度为4，Cell 状态向量特征长度 h=3</span></span><br><span class="line">cell = layers.SimpleRNNCell(<span class="number">3</span>) <span class="comment"># 创建 RNN Cell，内部向量长度为 3</span></span><br><span class="line">cell.build(input_shape=(<span class="literal">None</span>, <span class="number">4</span>)) <span class="comment"># 输出特征长度为 4</span></span><br><span class="line">cell.trainable_variables <span class="comment"># 输出 Wxh, Whh, b 张量</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn_3.jpg" alt="rnn_3"></p>
+<p><small><code>RNN</code> 内部维护 <code>3</code> 个变量，<code>kernel</code> 变量即 $W_{xh}$，<code>recurrent_kernel</code> 变量即 $W_{hh}$，<code>bias</code> 即偏置变量 $b$。</small></p>
+<h5 id="多层-SimpleRNNCell"><a href="#多层-SimpleRNNCell" class="headerlink" title="多层 SimpleRNNCell"></a>多层 <code>SimpleRNNCell</code></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">x = tf.random.normal([<span class="number">4</span>,<span class="number">80</span>,<span class="number">100</span>])</span><br><span class="line">xt = x[:, <span class="number">0</span>, :] <span class="comment"># 取第一个时间戳的输入 x0</span></span><br><span class="line"><span class="comment"># 构建两个cell，先cell0，再cell1，内存状态向量的长度都是64</span></span><br><span class="line">cell0 = layers.SimpleRNNCell(<span class="number">64</span>)</span><br><span class="line">cell1 = layers.SimpleRNNCell(<span class="number">64</span>)</span><br><span class="line">h0 = [tf.zeros([<span class="number">4</span>,<span class="number">64</span>])] <span class="comment"># cell0 的初始状态向量</span></span><br><span class="line">h1 = [tf.zeros([<span class="number">4</span>,<span class="number">64</span>])] <span class="comment"># cell1 的初始状态向量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在时间轴上循环计算多次来实现整个网络的前向计算，每个时间戳上的输入 xt 首先通过第一层， 得到输出o1，然后通过第二层，得到输出o2。</span></span><br><span class="line"><span class="keyword">for</span> xt <span class="keyword">in</span> tf.unstack(x, axis=<span class="number">1</span>):</span><br><span class="line">    o0, h0 = cell0(xt, h0)</span><br><span class="line">    o1, h1 = cell1(o0, h1)</span><br><span class="line"><span class="comment"># 上述方式先完成一个时间戳上的输入在所有层上的传播，再循环计算所有时间戳上的输入。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要注意的是，循环神经网络的每一层、每一个时间戳上面均有状态输出，一般取最末层 Cell 的状态作为后续任务网络的输入，因为其最有可能保存高层的全局语义特征。</span></span><br></pre></td></tr></table></figure>
+
+<p><small>目前常见的循环神经网络的深度都在10 层以内，因为其很容易出现梯度弥散和梯度爆炸现象。</small></p>
+<h5 id="SimpleRNN"><a href="#SimpleRNN" class="headerlink" title="SimpleRNN"></a><code>SimpleRNN</code></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">layer = layers.SimpleRNN(<span class="number">64</span>) <span class="comment"># 创建状态向量长度为64 的SimpleRNN 层</span></span><br><span class="line">x = tf.random.normal([<span class="number">4</span>,<span class="number">80</span>,<span class="number">100</span>])</span><br><span class="line">out = layer(x) <span class="comment"># 一行代码即可获得输出，默认返回最后一个时间戳上的输出</span></span><br><span class="line">out.shape <span class="comment"># [4, 64]</span></span><br></pre></td></tr></table></figure>
+
+<p><small>如果希望获得所有时间戳上的输出列表，设置 <code>return_sequences=True</code> 参数</small></p>
+<p>对于多层循环神经网络，可以通过堆叠多个 <code>SimpleRNN</code> 来实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建两层RNN。出最外层外，均需要返回所有时间戳的输出，用于下一层的输入</span></span><br><span class="line">net = keras.Sequential([</span><br><span class="line">    layers.SimpleRNN(<span class="number">64</span>, return_sequences=<span class="literal">True</span>),</span><br><span class="line">    layers.SimpleRNN(<span class="number">64</span>)</span><br><span class="line">])</span><br><span class="line">out = net(x) <span class="comment"># 前向计算</span></span><br><span class="line">out.shape <span class="comment"># [4, 64]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="RNN-短时记忆"><a href="#RNN-短时记忆" class="headerlink" title="RNN 短时记忆"></a><code>RNN</code> 短时记忆</h4><p>循环神经网络在处理较长的句子时，<em>仅能够理解有限长度内的信息</em>，而对于较长范围内的信息往往不能很好利用，这种现象被叫做<strong>短时记忆</strong>。<br>那该如何延长短时记忆？就提出了<strong>长短时记忆网络（<code>Long Short-Term Memory, LSTM</code>)</strong> ，相比 <code>RNN</code> 其记忆能力更强，更擅长处理较长的序列信号数据。</p>
+<hr>
+
+<h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a><code>LSTM</code></h3><p>相比 <code>RNN</code> 网络只有一个状态向量 $h_t$，<code>LSTM</code> 新增了一个状态向量 $C_t$，同时引入<strong>门控（<code>Gate</code>）机制</strong>，可通过门控单元来控制信息的<strong>遗忘</strong>和<strong>刷新</strong>。<br>在 <code>LSTM</code> 中有两个状态向量 <code>c</code> 和 <code>h</code>，其中 <code>c</code> 作为 <code>LSTM</code> 的内部状态向量，可以理解为 <code>LSTM</code> 的内存状态向量 <code>Memory</code>；而 <code>h</code> 表示 <code>LSTM</code> 的输出向量。同时 <code>LSTM</code> 将内部 <code>Memory</code> 和输出分开为两个变量，利用以下三个门控来控制内部信息的流动：</p>
+<ul>
+<li><strong>输入门（<code>Input Gate</code>）</strong></li>
+<li><strong>遗忘门（<code>Forget Gate</code>）</strong></li>
+<li><strong>输出门（<code>Output Gate</code>）</strong></li>
+</ul>
+<h4 id="门控机制"><a href="#门控机制" class="headerlink" title="门控机制"></a>门控机制</h4><p><strong>门控机制</strong>可以简单理解为控制数据流通量的一种手段。<br>在 <code>LSTM</code> 中阀门的开合程度通过门控值向量 <code>g</code> 表示，通过 $\sigma_g$ 激活函数将门控制压缩到 <code>[0,1]</code> 之间区间。</p>
+<ul>
+<li>当 $\sigma_g&#x3D;0$ 时，门控值全部关闭，输出 <code>o=0</code>。</li>
+<li>当 $\sigma_g&#x3D;1$ 时，门控全部打开，输出 <code>o=x</code>。</li>
+</ul>
+<p>通过门控机制可以较好地控制数据的流量程度。</p>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_1.jpg" alt="lstm_1"></p>
+<h5 id="输入门"><a href="#输入门" class="headerlink" title="输入门"></a>输入门</h5><p>输入门用于控制 <code>LSTM</code> 对输入的接收程度。<br>首先通过对当前时间戳的输入 $x_t$ 和上一个时间戳的输出 $h_{t-1}$ 做非线性变换得到新的输入变量 $\hat{c_t}$<br>$$\hat{c_t} &#x3D; tanh(W_c[h_{t-1}, x_t] + b_c)$$</p>
+<p><small>其中 $W_c$ 和 $b_c$ 为输入门的参数，需要通过反向传播算法自动优化，<code>tanh</code> 为激活函数，用于将输入标准化到 <code>[-1,1]</code> 区间。</small><br>$\hat{c_t}$ 并不会全部刷新进入 <code>LSTM</code> 的 <code>Memory</code>，而是通过输入门控制接受输入的量。</p>
+<p>输入门的控制变量同样来自于输入 $x_t$ 和输出 $h_{t-1}$：<br>$$g_i &#x3D; \sigma(W_i[h_{t-1},x_t] + b_i)$$</p>
+<p><small>其中 $W_i$ 和 $b_i$ 为输入门的参数，需要通过反向传播算法自动优化，$\sigma$ 为激活函数，一般使用 <code>Sigmoid</code> 函数。</small><br>输入门控制变量 $g_i$ 决定了 <code>LSTM</code> 对当前时间戳的新输入 $\hat{c_t}$ 的接受程度：</p>
+<ul>
+<li>当 $g_i&#x3D;0$ 时，<code>LSTM</code> 不接受任何的新输入 $\hat{c_t}$。</li>
+<li>当 $g_i&#x3D;1$ 时，<code>LSTM</code> 全部接受新输入 $\hat{c_t}$。</li>
+</ul>
+<p>经过输入门后，待写入 <code>Memory</code> 的向量为 $g_i * \hat{c_t}$。</p>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_2.jpg" alt="lstm_2"></p>
+<h5 id="遗忘门"><a href="#遗忘门" class="headerlink" title="遗忘门"></a>遗忘门</h5><p>遗忘门作用于 <code>LSTM</code> 状态向量 <code>c</code> 上，用于控制上一个时间戳的记忆 $c_{t-1}$ 对当前时间戳的影响。<br>遗忘门的控制变量 $g_f$<br>$$g_f &#x3D; \sigma(W_f[h_{t-1}, x_t] + b_f)$$</p>
+<p><small>其中 $W_f$ 和 $b_f$ 为遗忘门的参数张量，可由反向传播算法自动优化，$\sigma$ 为激活函数，一般使用 <code>Sigmoid</code> 函数。</small></p>
+<ul>
+<li>当门控 $g_f&#x3D;1$ 时，遗忘门全部打开，<code>LSTM</code> 接受上一个状态 $c_{t-1}$ 的所有信息；</li>
+<li>当门控 $g_f&#x3D;0$ 时，遗忘门关闭，<code>LSTM</code> 直接忽略 $c_{t-1}$，输出为 <code>0</code> 的向量。</li>
+</ul>
+<p>经过遗忘门后，<code>LSTM</code> 的状态向量变为 $g_f * c_{t-1}$。</p>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_3.jpg" alt="lstm_3"></p>
+<h5 id="输出门"><a href="#输出门" class="headerlink" title="输出门"></a>输出门</h5><p><code>LSTM</code> 的内部状态向量 $c_t$ 并不会直接用于输出，这一点与 <code>RNN</code> 不一样。<code>RNN</code> 网络的状态向量 <code>h</code> 即用于记忆，也用于输出，因此 <code>RNN</code> 可以理解为状态向量 <code>c</code> 和输出向量 <code>h</code> 是同一个对象。</p>
+<p><code>LSTM</code> 中状态向量并不会全部输出，而是在输出门作用下选择性地输出。输出门的门控变量 $g_o$ 为<br>$$g_o &#x3D; \sigma(W_o[h_{t-1},x_t] + b_o)$$</p>
+<p><small>其中 $W_o$ 和 $b_o$ 为输出门的参数，通过需要通过反向传播算法自动优化，$\sigma$ 为激活函数，一般使用 <code>Sigmoid</code> 函数。</small></p>
+<ul>
+<li>当输出门 $g_o&#x3D;0$ 时，输出关闭，<code>LSTM</code> 的内部记忆完全被隔断，无法用作输出，此时输出向量为 <code>0</code>。</li>
+<li>当输出门 $g_o&#x3D;1$ 时，输出完全打开，<code>LSTM</code> 的状态向量 $c_t$ 全部用于输出。</li>
+</ul>
+<p><code>LSTM</code> 的输出<br>$$h_t &#x3D; g_o*tanh(c_t)$$</p>
+<p>即内存向量 $c_t$ 经过 <code>tanh</code> 激活函数后与输入门作用得到 <code>LSTM</code> 的输出。$g_o \in [0,1]$ 同时 $tanh \in [-1,1]$，因此 <code>LSTM</code> 的输出 $h_t \in [-1,1]$。</p>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstm_4.jpg" alt="lstm_4"></p>
+<h5 id="刷新-Memory"><a href="#刷新-Memory" class="headerlink" title="刷新 Memory"></a>刷新 <code>Memory</code></h5><p>在遗忘门和输入门的控制下，<code>LSTM</code> 有选择地读取上一个时间戳的记忆 $c_{t-1}$ 和当前时间戳的新输入 $\hat{c_t}$，状态向量 $c_t$ 的刷新方式为：<br>$$c_t &#x3D; g_i * \hat{c_t} + g_f * c_{t-1}$$ </p>
+<p>得到新的状态向量 $c_t$ 即为当前时间戳的状态向量。</p>
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><p><code>LSTM</code> 虽然状态向量和门控数量较多，计算流程复杂，但将典型的门控列表列举出来，即可解释 <code>LSTM</code> 的行为。</p>
+<table>
+<thead>
+<tr>
+<th>输入门控</th>
+<th>遗忘门控</th>
+<th><code>LSTM</code> 行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td>只使用记忆</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td>综合输入和记忆</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td>清零记忆</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td>输入覆盖记忆</td>
+</tr>
+</tbody></table>
+<h4 id="LSTM-层"><a href="#LSTM-层" class="headerlink" title="LSTM 层"></a><code>LSTM</code> 层</h4><p>在 <code>TensorFLow</code> 中同样有两种方式实现 <code>LSTM</code> 网络。既可以使用 <code>LSTMCell</code> 来手动完成时间戳上面的循环运算，也可以通过 <code>LSTM</code> 层方式一步完成前向计算。</p>
+<h5 id="LSTMCell"><a href="#LSTMCell" class="headerlink" title="LSTMCell"></a><code>LSTMCell</code></h5><p>新建一个状态向量长度为 <code>64</code> 的 <code>LSTMCell</code>，其中状态向量 $c_t$ 和输出向量 $h_t$ 的长度均为 <code>h</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x = tf.random.normal([<span class="number">2</span>,<span class="number">80</span>,<span class="number">100</span>])</span><br><span class="line">xt = x[:, <span class="number">0</span>, :] <span class="comment"># 得到第一个时间戳的输入</span></span><br><span class="line">cell = layers.LSTMCell(<span class="number">64</span>) <span class="comment"># 创建 LSTMCell</span></span><br><span class="line">state = [tf.zeros([<span class="number">2</span>,<span class="number">64</span>]), tf.zeros([<span class="number">2</span>,<span class="number">64</span>])] <span class="comment"># 初始化状态和输出list</span></span><br><span class="line">out, state = cell(xt, state) <span class="comment"># 前向计算</span></span><br><span class="line"><span class="built_in">id</span>(out), <span class="built_in">id</span>(state[<span class="number">0</span>]), <span class="built_in">id</span>(state[<span class="number">1</span>]) <span class="comment"># out 和 list 的第一个元素的 id 相同</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过在时间戳上展开循环运算，即可完成一次层的前向传播</span></span><br><span class="line"><span class="keyword">for</span> xt <span class="keyword">in</span> tf.unstack(x, axis=<span class="number">1</span>):</span><br><span class="line">    out, state = cell(xt, state) <span class="comment"># 前向计算</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/lstmcell_1.jpg" alt="lstmcell_1"></p>
+<h5 id="LSTM-1"><a href="#LSTM-1" class="headerlink" title="LSTM"></a><code>LSTM</code></h5><p>通过 <code>layers.LSTM</code> 层可以方便地一次完成整个序列的运算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">layer = layers.LSTM(<span class="number">64</span>) <span class="comment"># 创建一层 LSTM 层，内存向量长度为 64</span></span><br><span class="line">out = layer(x) <span class="comment"># 序列通过 LSTM 层，默认返回最后一个时间戳的输出 h</span></span><br><span class="line">out.shape <span class="comment"># [[2, 64]]</span></span><br></pre></td></tr></table></figure>
+
+<p><small>默认返回最后一个时间戳的输出，如果需要返回所有时间戳的输出，需要设置 <code>return_sequences=True</code> 标志</small></p>
+<p>对于多层神经网络，可以通过 <code>Sequential</code> 容器包裹多层 <code>LSTM</code> 层，并设置所有非模型网络 <code>return_sequences=True</code>，这是因为非末层需要上一层在所有时间戳的输出作为输入。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">net = Sequential([</span><br><span class="line">    layers.LSTM(<span class="number">64</span>, return_sequences=<span class="literal">True</span>), <span class="comment"># 非末层需要返回所有时间戳输出</span></span><br><span class="line">    layers.LSTM(<span class="number">64</span>)</span><br><span class="line">])</span><br><span class="line">out = net(x)</span><br><span class="line">out.shape <span class="comment"># [2, 64]</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="GRU"><a href="#GRU" class="headerlink" title="GRU"></a><code>GRU</code></h3><p><code>LSTM</code> 由于其门控机制可以在大部分序列任务取得较好的性能表现，但<em>结构相对复杂</em>、<em>计算代价高</em>、<em>模型参数量较大</em>等问题则有了<strong>门控循环网络（<code>Gated Recurrent Unit, GRU</code>）</strong>，其可以理解为是 <code>LSTM</code> 的简化版本。<br><code>GRU</code> 通过将内部状态向量和输出向量合并，统一为状态向量 <code>h</code>，同时门控数量也减少到两个：</p>
+<ul>
+<li><strong>复位门（<code>Reset Gate</code>）</strong></li>
+<li><strong>更新门（<code>Update Gate</code>）</strong></li>
+</ul>
+<h4 id="复位门"><a href="#复位门" class="headerlink" title="复位门"></a>复位门</h4><p>复位门用于控制上一个时间戳的状态 $h_{t-1}$ 进入 <code>GRU</code> 的量。<br>门控向量 $g_r$ 由当前时间戳的输入 $x_t$ 和上一个时间戳状态 $h_{t-1}$ 变换而得<br>$$g_r&#x3D;\sigma(W_r[h_{t-1}, x_t] + b_r)$$</p>
+<p><small>其中 $W_r$ 和 $b_r$ 为复位门的参数，由反向传播算法自动优化，$\sigma$ 为激活函数，一般使用 <code>Sigmoid</code> 函数。</small></p>
+<p>门控向量 $g_r$ 仅控制状态 $h_{t-1}$，而不会控制输入 $x_t$<br>$$\hat{h_t} &#x3D; tanh(W_h[g_r h_{t-1}, x_t] + b_h)$$</p>
+<ul>
+<li>当 $g_r&#x3D;0$ 时，新输入 $\hat{h_t}$ 全部来源于输入 $x_t$，不接受 $h_{t-1}$，此时相当于复位。</li>
+<li>当 $g_r&#x3D;1$ 时，$h_{t-1}$ 和 $x_t$ 共同作用产生新输入 $\hat{h_t}$。</li>
+</ul>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/gru_1.jpg" alt="gru_1"></p>
+<h4 id="更新门"><a href="#更新门" class="headerlink" title="更新门"></a>更新门</h4><p>更新门控制上一个时间戳转台 $h_{t-1}$ 和新输入 $\hat{h_t}$ 对新状态向量 $h_t$ 的影响程度。更新门控向量 $g_z$<br>$$g_z &#x3D; \sigma(W_z[h_{t-1}, x_t] + b_z)$$</p>
+<p><small>其中 $W_z$ 和 $b_z$ 为更新门的参数，由反向传播算法自动优化，$\sigma$ 为激活函数，一般使用 <code>Sigmoid</code> 函数。</small></p>
+<p>$g_z$ 用于控制新输入 $\hat{h_t}$，$1-g_z$ 用于控制状态 $h_{t-1}$：<br>$$ h_t &#x3D; (1-g_z) * h_{t-1} + g_z * \hat{h_t} $$</p>
+<p><small>由上面可以看出 $h_{t-1}$ 与 $\hat{h_t}$ 处于此消彼长的状态，相互竞争。</small></p>
+<ul>
+<li>当更新门 $g_z&#x3D;0$ 时，$h_t$ 全部来自上一个时间戳状态 $h_{t-1}$。</li>
+<li>当更新门 $g_z&#x3D;1$ 时，$h_t$ 全部来自新输入 $\hat{h_t}$。</li>
+</ul>
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/gru_2.jpg" alt="gru_2"></p>
+<h4 id="GRU-层"><a href="#GRU-层" class="headerlink" title="GRU 层"></a><code>GRU</code> 层</h4><h5 id="GRUCell"><a href="#GRUCell" class="headerlink" title="GRUCell"></a><code>GRUCell</code></h5><p>同样地也有 <code>Cell</code> 方式和层方式实现 <code>GRU</code> 网络。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">h = [tf.zeros([<span class="number">2</span>,<span class="number">64</span>])] <span class="comment"># 初始化状态向量，GRU 只有一个</span></span><br><span class="line">cell = layers.GRUCell(<span class="number">64</span>) <span class="comment"># 新建 GRUCell，向量长度64</span></span><br><span class="line"><span class="keyword">for</span> xt <span class="keyword">in</span> tf.unstack(x, axis=<span class="number">1</span>):</span><br><span class="line">    out, h = cell(xt, h)</span><br><span class="line">out.shape <span class="comment"># [2,64]</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="GRU-1"><a href="#GRU-1" class="headerlink" title="GRU"></a><code>GRU</code></h5><p>使用 <code>Sequential</code> 容器堆叠多层 <code>GRU</code> 层的网络。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">net = Sequential([</span><br><span class="line">    layers.GRU(<span class="number">64</span>, return_sequences=<span class="literal">True</span>),</span><br><span class="line">    layers.GRU(<span class="number">64</span>)</span><br><span class="line">])</span><br><span class="line">out = net(x)</span><br><span class="line">out.shape <span class="comment"># [2,64]</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><p>本次实践使用最基础的 <code>RNN</code> 来实现情感分类。<br><code>RNN</code> 网络共两层，循环提取序列信号的语义特征，利用第二层 <code>RNN</code> 层的最后时间戳的状态向量 $h_s$ 作为句子的全局语义特征表示，之后送入全连接层构成的分类网络，得到样本为 $x$ 为积极情感的概率 $P$。</p>
+<h4 id="SimpleRNN-模型"><a href="#SimpleRNN-模型" class="headerlink" title="SimpleRNN 模型"></a><code>SimpleRNN</code> 模型</h4><h5 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> layers, optimizers, losses, Sequential</span><br></pre></td></tr></table></figure>
+
+<h5 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据集</span></span><br><span class="line">batchsz = <span class="number">128</span> <span class="comment"># 批量大小</span></span><br><span class="line">total_words = <span class="number">10000</span> <span class="comment"># 词汇表大小</span></span><br><span class="line">max_review_len = <span class="number">80</span> <span class="comment"># 句子最大长度s</span></span><br><span class="line">embedding_len = <span class="number">100</span> <span class="comment"># 词向量特征长度n</span></span><br><span class="line"></span><br><span class="line">(x_train, y_train), (x_test, y_test) = keras.datasets.imdb.load_data(num_words=total_words)</span><br><span class="line"><span class="built_in">print</span>(x_train.shape, <span class="built_in">len</span>(x_train[<span class="number">0</span>]), y_train.shape)</span><br><span class="line"><span class="built_in">print</span>(x_test.shape, <span class="built_in">len</span>(x_test[<span class="number">0</span>]), y_test.shape)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_1.jpg" alt="p_1"></p>
+<h5 id="预处理数据"><a href="#预处理数据" class="headerlink" title="预处理数据"></a>预处理数据</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数字编码表</span></span><br><span class="line">word_index = keras.datasets.imdb.get_word_index()</span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> word_index.items():</span><br><span class="line">    <span class="built_in">print</span>(k,v) <span class="comment"># 输出编码表的单词和对应的数字</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加标志位ID</span></span><br><span class="line">word_index = &#123;k:(v+<span class="number">3</span>) <span class="keyword">for</span> k,v <span class="keyword">in</span> word_index.items()&#125;</span><br><span class="line">word_index[<span class="string">&#x27;&lt;PAD&gt;&#x27;</span>] = <span class="number">0</span> <span class="comment"># 填充标志</span></span><br><span class="line">word_index[<span class="string">&#x27;&lt;START&gt;&#x27;</span>] = <span class="number">1</span> <span class="comment"># 起始标志</span></span><br><span class="line">word_index[<span class="string">&#x27;&lt;UNK&gt;&#x27;</span>] = <span class="number">2</span> <span class="comment"># 未知单词的标志</span></span><br><span class="line">word_index[<span class="string">&#x27;&lt;UNUSED&gt;&#x27;</span>] = <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 翻转码表</span></span><br><span class="line">reverse_word_index = <span class="built_in">dict</span>([(value, key) <span class="keyword">for</span> (key, value) <span class="keyword">in</span> word_index.items()])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义函数，将数字转换为字符串</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decode_review</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>.join([reverse_word_index.get(i, <span class="string">&#x27;?&#x27;</span>) <span class="keyword">for</span> i <span class="keyword">in</span> text])</span><br><span class="line">decode_review(x_train[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对于长度参差不齐的句子进行截断、填充处理</span></span><br><span class="line">x_train = keras.preprocessing.sequence.pad_sequences(x_train, maxlen=max_review_len)</span><br><span class="line">x_test = keras.preprocessing.sequence.pad_sequences(x_test, maxlen=max_review_len)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 截断或填充等长句子后，通过 Dataset 类包裹成数据集对象</span></span><br><span class="line">db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train))</span><br><span class="line">db_train = db_train.shuffle(<span class="number">1000</span>).batch(batchsz, drop_remainder=<span class="literal">True</span>) <span class="comment"># drop_remainder 参数设置丢弃最后一个 Batch</span></span><br><span class="line">db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test))</span><br><span class="line">db_test = db_test.shuffle(<span class="number">1000</span>).batch(batchsz, drop_remainder=<span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(x_train.shape, tf.reduce_max(y_train), tf.reduce_min(y_train))</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_2.jpg" alt="p_2"></p>
+<h5 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络模型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyRNN</span>(keras.Model):</span><br><span class="line">    <span class="comment"># Cell 方式构建多层网络</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, units</span>):</span><br><span class="line">        <span class="built_in">super</span>(MyRNN, self).__init__()</span><br><span class="line">        <span class="comment"># [b,64] 构建 Cell 初始化状态向量</span></span><br><span class="line">        self.state0 = [tf.zeros([batchsz, units])]</span><br><span class="line">        self.state1 = [tf.zeros([batchsz, units])]</span><br><span class="line">        <span class="comment"># 词向量编码 [b,80] -&gt; [b,80,100]</span></span><br><span class="line">        self.embedding = layers.Embedding(total_words, embedding_len, input_length=max_review_len)</span><br><span class="line">        <span class="comment"># 构建两个 Cell，使用 Dropout 防止过拟合</span></span><br><span class="line">        self.cell0 = layers.SimpleRNNCell(units, dropout=<span class="number">0.5</span>)</span><br><span class="line">        self.cell1 = layers.SimpleRNNCell(units, dropout=<span class="number">0.5</span>)</span><br><span class="line">        <span class="comment"># 构建分类网络，用于将 Cell 的输出特征进行分类 [b, 80, 100] -&gt; [b, 64] -&gt; [b, 1]</span></span><br><span class="line">        self.outlayer = Sequential([</span><br><span class="line">            layers.Dense(units),</span><br><span class="line">            layers.Dropout(rate=<span class="number">0.5</span>),</span><br><span class="line">            layers.ReLU(),</span><br><span class="line">            layers.Dense(<span class="number">1</span>)</span><br><span class="line">        ])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call</span>(<span class="params">self, inputs, training=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># [b,80]</span></span><br><span class="line">        x = inputs</span><br><span class="line">        <span class="comment"># 获取词向量 [b,80] -&gt; [b,80,100]</span></span><br><span class="line">        x = self.embedding(x)</span><br><span class="line">        <span class="comment"># 通过两个 Cell [b,80,100] -&gt; [b,64]</span></span><br><span class="line">        state0 = self.state0</span><br><span class="line">        state1 = self.state1</span><br><span class="line">        <span class="comment"># word: [b,100]</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> tf.unstack(x, axis=<span class="number">1</span>):</span><br><span class="line">            out0, state0 = self.cell0(word, state0, training)</span><br><span class="line">            out1, state1 = self.cell1(out0, state1, training)</span><br><span class="line">        <span class="comment"># 末层最后一个输出作为分类网络的输入 [b,64] -&gt; [b,1]</span></span><br><span class="line">        x = self.outlayer(out1, training)</span><br><span class="line">        <span class="comment"># 激活函数</span></span><br><span class="line">        prob = tf.sigmoid(x)</span><br><span class="line">        <span class="keyword">return</span> prob</span><br></pre></td></tr></table></figure>
+
+<h5 id="训练模型并计算准确率"><a href="#训练模型并计算准确率" class="headerlink" title="训练模型并计算准确率"></a>训练模型并计算准确率</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 训练与测试</span></span><br><span class="line">units = <span class="number">64</span> <span class="comment"># RNN 状态向量长度</span></span><br><span class="line">epochs = <span class="number">20</span> <span class="comment"># 训练epochs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建模型</span></span><br><span class="line">model = MyRNN(units)</span><br><span class="line"><span class="comment"># 装配</span></span><br><span class="line">model.<span class="built_in">compile</span>(optimizer=optimizers.Adam(<span class="number">0.001</span>), loss=losses.BinaryCrossentropy(), metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"><span class="comment"># 训练与验证</span></span><br><span class="line">model.fit(db_train, epochs=epochs, validation_data=db_test)</span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">model.evaluate(db_test)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_3.jpg" alt="p_3"></p>
+<p>在经历 <code>20</code> 轮次训练后，其在测试集上的准确率可以轻松达到 <code>79.02%</code>。</p>
+<h4 id="LSTM-GRU-模型"><a href="#LSTM-GRU-模型" class="headerlink" title="LSTM/GRU 模型"></a><code>LSTM/GRU</code> 模型</h4><p>得益于 <code>TensorFlow</code> 在循环神经网络相关接口的统一，原有代码仅需修改少部分即可升级到 <code>LSTM</code> 模型或 <code>GRU</code> 模型。</p>
+<h5 id="LSTM-2"><a href="#LSTM-2" class="headerlink" title="LSTM"></a><code>LSTM</code></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络模型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyRNN</span>(keras.Model):</span><br><span class="line">    <span class="comment"># Cell 方式构建多层网络</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, units</span>):</span><br><span class="line">        <span class="built_in">super</span>(MyRNN, self).__init__()</span><br><span class="line">        <span class="comment"># [b,64] 构建 Cell 初始化状态向量</span></span><br><span class="line">        self.state0 = [tf.zeros([batchsz, units]), tf.zeros([batchsz, units])]</span><br><span class="line">        self.state1 = [tf.zeros([batchsz, units]), tf.zeros([batchsz, units])]</span><br><span class="line">        <span class="comment"># 词向量编码 [b,80] -&gt; [b,80,100]</span></span><br><span class="line">        self.embedding = layers.Embedding(total_words, embedding_len, input_length=max_review_len)</span><br><span class="line">        <span class="comment"># 构建两个 Cell，使用 Dropout 防止过拟合</span></span><br><span class="line">        self.cell0 = layers.LSTMCell(units, dropout=<span class="number">0.5</span>)</span><br><span class="line">        self.cell1 = layers.LSTMCell(units, dropout=<span class="number">0.5</span>)</span><br><span class="line">        <span class="comment"># 构建分类网络，用于将 Cell 的输出特征进行分类 [b, 80, 100] -&gt; [b, 64] -&gt; [b, 1]</span></span><br><span class="line">        self.outlayer = Sequential([</span><br><span class="line">            layers.Dense(units),</span><br><span class="line">            layers.Dropout(rate=<span class="number">0.5</span>),</span><br><span class="line">            layers.ReLU(),</span><br><span class="line">            layers.Dense(<span class="number">1</span>)</span><br><span class="line">        ])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call</span>(<span class="params">self, inputs, training=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># [b,80]</span></span><br><span class="line">        x = inputs</span><br><span class="line">        <span class="comment"># 获取词向量 [b,80] -&gt; [b,80,100]</span></span><br><span class="line">        x = self.embedding(x)</span><br><span class="line">        <span class="comment"># 通过两个 Cell [b,80,100] -&gt; [b,64]</span></span><br><span class="line">        state0 = self.state0</span><br><span class="line">        state1 = self.state1</span><br><span class="line">        <span class="comment"># word: [b,100]</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> tf.unstack(x, axis=<span class="number">1</span>):</span><br><span class="line">            out0, state0 = self.cell0(word, state0, training)</span><br><span class="line">            out1, state1 = self.cell1(out0, state1, training)</span><br><span class="line">        <span class="comment"># 末层最后一个输出作为分类网络的输入 [b,64] -&gt; [b,1]</span></span><br><span class="line">        x = self.outlayer(out1, training)</span><br><span class="line">        <span class="comment"># 激活函数</span></span><br><span class="line">        prob = tf.sigmoid(x)</span><br><span class="line">        <span class="keyword">return</span> prob</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_4.jpg" alt="p_4"></p>
+<h5 id="GRU-2"><a href="#GRU-2" class="headerlink" title="GRU"></a><code>GRU</code></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络模型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyRNN</span>(keras.Model):</span><br><span class="line">    <span class="comment"># Cell 方式构建多层网络</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, units</span>):</span><br><span class="line">        <span class="built_in">super</span>(MyRNN, self).__init__()</span><br><span class="line">        <span class="comment"># [b,64] 构建 Cell 初始化状态向量</span></span><br><span class="line">        self.state0 = [tf.zeros([batchsz, units])]</span><br><span class="line">        self.state1 = [tf.zeros([batchsz, units])]</span><br><span class="line">        <span class="comment"># 词向量编码 [b,80] -&gt; [b,80,100]</span></span><br><span class="line">        self.embedding = layers.Embedding(total_words, embedding_len, input_length=max_review_len)</span><br><span class="line">        <span class="comment"># 构建两个 Cell，使用 Dropout 防止过拟合</span></span><br><span class="line">        self.cell0 = layers.GRUCell(units, dropout=<span class="number">0.5</span>)</span><br><span class="line">        self.cell1 = layers.GRUCell(units, dropout=<span class="number">0.5</span>)</span><br><span class="line">        <span class="comment"># 构建分类网络，用于将 Cell 的输出特征进行分类 [b, 80, 100] -&gt; [b, 64] -&gt; [b, 1]</span></span><br><span class="line">        self.outlayer = Sequential([</span><br><span class="line">            layers.Dense(units),</span><br><span class="line">            layers.Dropout(rate=<span class="number">0.5</span>),</span><br><span class="line">            layers.ReLU(),</span><br><span class="line">            layers.Dense(<span class="number">1</span>)</span><br><span class="line">        ])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call</span>(<span class="params">self, inputs, training=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># [b,80]</span></span><br><span class="line">        x = inputs</span><br><span class="line">        <span class="comment"># 获取词向量 [b,80] -&gt; [b,80,100]</span></span><br><span class="line">        x = self.embedding(x)</span><br><span class="line">        <span class="comment"># 通过两个 Cell [b,80,100] -&gt; [b,64]</span></span><br><span class="line">        state0 = self.state0</span><br><span class="line">        state1 = self.state1</span><br><span class="line">        <span class="comment"># word: [b,100]</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> tf.unstack(x, axis=<span class="number">1</span>):</span><br><span class="line">            out0, state0 = self.cell0(word, state0, training)</span><br><span class="line">            out1, state1 = self.cell1(out0, state1, training)</span><br><span class="line">        <span class="comment"># 末层最后一个输出作为分类网络的输入 [b,64] -&gt; [b,1]</span></span><br><span class="line">        x = self.outlayer(out1, training)</span><br><span class="line">        <span class="comment"># 激活函数</span></span><br><span class="line">        prob = tf.sigmoid(x)</span><br><span class="line">        <span class="keyword">return</span> prob</span><br></pre></td></tr></table></figure>
+
+<p><img src="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/p_5.jpg" alt="p_5"></p>
+<p>对比 <code>RNN</code>、<code>LSTM</code>、<code>GRU</code> 三者在测试集上的准确率，可以发现每次技术上的优化都会带来实实在在的提升。</p>
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>所有事物都是基于已有旧事务之上优化、演进而来，对于计算机技术也是如此！</p>
+<p>最近新发布了 <a target="_blank" rel="noopener" href="https://github.com/test-time-training/ttt-lm-jax"><code>Test Time Training(TTT): RNNs with Expressive Hidden States</code></a>，有兴趣的可以去研究下。</p>
+<hr>
+
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p><strong>此博客内容均为作者学习《TensorFlow深度学习》所做笔记，侵删！</strong><br><strong>若转作其他用途，请注明来源！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DL/" rel="tag"># DL</a>
+              <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/DL-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CCNN%E5%AE%9E%E8%B7%B5/" rel="prev" title="DL-卷积神经网络CNN实践">
+      <i class="fa fa-chevron-left"></i> DL-卷积神经网络CNN实践
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">序列表示</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Embedding-%E5%B1%82"><span class="nav-number">2.1.</span> <span class="nav-text">Embedding 层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E8%AF%8D%E5%90%91%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">预训练词向量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">3.</span> <span class="nav-text">循环神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1"><span class="nav-number">3.2.</span> <span class="nav-text">循环神经网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%BC%A0%E6%92%AD"><span class="nav-number">3.3.</span> <span class="nav-text">梯度传播</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8%E5%92%8C%E6%A2%AF%E5%BA%A6%E5%BC%A5%E6%95%A3"><span class="nav-number">3.4.</span> <span class="nav-text">梯度爆炸和梯度弥散</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8"><span class="nav-number">3.4.1.</span> <span class="nav-text">梯度爆炸</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E5%BC%A5%E6%95%A3"><span class="nav-number">3.4.2.</span> <span class="nav-text">梯度弥散</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RNN-%E5%B1%82"><span class="nav-number">3.5.</span> <span class="nav-text">RNN 层</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SimpleRNNCell"><span class="nav-number">3.5.1.</span> <span class="nav-text">SimpleRNNCell</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E5%B1%82-SimpleRNNCell"><span class="nav-number">3.5.2.</span> <span class="nav-text">多层 SimpleRNNCell</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SimpleRNN"><span class="nav-number">3.5.3.</span> <span class="nav-text">SimpleRNN</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RNN-%E7%9F%AD%E6%97%B6%E8%AE%B0%E5%BF%86"><span class="nav-number">3.6.</span> <span class="nav-text">RNN 短时记忆</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM"><span class="nav-number">4.</span> <span class="nav-text">LSTM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%A8%E6%8E%A7%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">门控机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E9%97%A8"><span class="nav-number">4.1.1.</span> <span class="nav-text">输入门</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%81%97%E5%BF%98%E9%97%A8"><span class="nav-number">4.1.2.</span> <span class="nav-text">遗忘门</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E9%97%A8"><span class="nav-number">4.1.3.</span> <span class="nav-text">输出门</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%B7%E6%96%B0-Memory"><span class="nav-number">4.1.4.</span> <span class="nav-text">刷新 Memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.1.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LSTM-%E5%B1%82"><span class="nav-number">4.2.</span> <span class="nav-text">LSTM 层</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#LSTMCell"><span class="nav-number">4.2.1.</span> <span class="nav-text">LSTMCell</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LSTM-1"><span class="nav-number">4.2.2.</span> <span class="nav-text">LSTM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GRU"><span class="nav-number">5.</span> <span class="nav-text">GRU</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E4%BD%8D%E9%97%A8"><span class="nav-number">5.1.</span> <span class="nav-text">复位门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E9%97%A8"><span class="nav-number">5.2.</span> <span class="nav-text">更新门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GRU-%E5%B1%82"><span class="nav-number">5.3.</span> <span class="nav-text">GRU 层</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GRUCell"><span class="nav-number">5.3.1.</span> <span class="nav-text">GRUCell</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GRU-1"><span class="nav-number">5.3.2.</span> <span class="nav-text">GRU</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5"><span class="nav-number">6.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SimpleRNN-%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.1.</span> <span class="nav-text">SimpleRNN 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">6.1.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="nav-number">6.1.2.</span> <span class="nav-text">加载数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A2%84%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE"><span class="nav-number">6.1.3.</span> <span class="nav-text">预处理数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.1.4.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%AE%A1%E7%AE%97%E5%87%86%E7%A1%AE%E7%8E%87"><span class="nav-number">6.1.5.</span> <span class="nav-text">训练模型并计算准确率</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LSTM-GRU-%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.2.</span> <span class="nav-text">LSTM&#x2F;GRU 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#LSTM-2"><span class="nav-number">6.2.1.</span> <span class="nav-text">LSTM</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GRU-2"><span class="nav-number">6.2.2.</span> <span class="nav-text">GRU</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '8129650cb63d7951c23b0be54e34a2d5',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
