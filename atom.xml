@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2024-07-20T01:57:27.514Z</updated>
+  <updated>2024-11-01T15:04:25.780Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -17,14 +17,39 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Moto-摩旅日记3</title>
+    <link href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/"/>
+    <id>https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/</id>
+    <published>2024-10-18T12:11:14.000Z</published>
+    <updated>2024-11-01T15:04:25.780Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;启&quot;&gt;&lt;a href=&quot;#启&quot; class=&quot;headerlink&quot; title=&quot;启&quot;&gt;&lt;/a&gt;启&lt;/h3&gt;&lt;p&gt;距离今年国庆摩旅回来，距离今天已经 20 天，所以这是一篇“鸽”了很久的摩旅日记。各位勿急，且待我慢慢讲来。&lt;/p&gt;
+&lt;p&gt;真·多图来袭！！！&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Moto" scheme="https://blog.vgbhfive.com/tags/Moto/"/>
+    
+  </entry>
+  
+  <entry>
     <title>DL-循环神经网络RNN</title>
     <link href="https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/"/>
     <id>https://blog.vgbhfive.com/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/</id>
     <published>2024-07-07T03:42:58.000Z</published>
-    <updated>2024-07-20T01:57:27.514Z</updated>
+    <updated>2024-07-20T15:21:56.702Z</updated>
     
     
-    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;前面学习了&lt;strong&gt;卷积神经网络（&lt;code&gt;CNN&lt;/code&gt;）&lt;/strong&gt;，卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习&lt;strong&gt;循环神经网络（&lt;code&gt;RNN&lt;/code&gt;）&lt;/strong&gt;，循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。&lt;/p&gt;</summary>
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;前面学习了&lt;strong&gt;卷积神经网络（&lt;code&gt;CNN&lt;/code&gt;）&lt;/strong&gt;，卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习&lt;strong&gt;循环神经网络（&lt;code&gt;RNN&lt;/code&gt;）&lt;/strong&gt;，循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。&lt;/p&gt;
+&lt;p&gt;本节内容包含如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;基本原理&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;循环神经网络 &lt;code&gt;RNN&lt;/code&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;长短时记忆网络 &lt;code&gt;LSTM&lt;/code&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;门控循环网络 &lt;code&gt;GRU&lt;/code&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary>
     
     
     
@@ -104,7 +129,7 @@
     <link href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/"/>
     <id>https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/</id>
     <published>2024-05-05T09:01:15.000Z</published>
-    <updated>2024-05-06T13:57:46.184Z</updated>
+    <updated>2024-10-18T12:11:40.725Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;昨天长途奔袭，一路飞奔算是回到了北京，大致算了以下本次摩旅跑了将近 &lt;code&gt;1100&lt;/code&gt; 公里的路程。全程途径北京市、张家口市、乌兰察布市、大同市、保定市，最终回到我想念了四天的北京（主要是想念我的床，酒店的床非常不舒服😭）。&lt;/p&gt;</summary>
@@ -112,7 +137,7 @@
     
     
     
-    <category term="Moto" scheme="https://blog.vgbhfive.com/tags/Moto/"/>
+    <category term="Mot" scheme="https://blog.vgbhfive.com/tags/Mot/"/>
     
   </entry>
   
@@ -420,23 +445,6 @@
     
     
     <category term="Hadoop" scheme="https://blog.vgbhfive.com/tags/Hadoop/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>to_2023-05-15</title>
-    <link href="https://blog.vgbhfive.com/to-2023-05-15/"/>
-    <id>https://blog.vgbhfive.com/to-2023-05-15/</id>
-    <published>2023-05-15T13:02:52.000Z</published>
-    <updated>2023-06-21T14:57:29.330Z</updated>
-    
-    
-    <summary type="html">&lt;p&gt;今天是 &lt;code&gt;2023&lt;/code&gt; 年 &lt;code&gt;5&lt;/code&gt; 月 &lt;code&gt;15&lt;/code&gt; 日，距离我第一次来北京工作的时间刚好跨过了整整三年，关于这个时间我也是在跟朋友的闲聊中才发现原来我已经来北京北漂三年了。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Myx&amp;Lyl" scheme="https://blog.vgbhfive.com/tags/Myx-Lyl/"/>
     
   </entry>
   

@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="vgbhfive">
-<meta property="article:tag" content="vgbhfive、博客、Java、ClickHouse、Neo4j、Prometheus、MySQL、Redis">
+<meta property="article:tag" content="vgbhfive、博客、Java、ClickHouse、Neo4j、Prometheus、MySQL、Redis、风控、Risk">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://blog.vgbhfive.com/page/11/">
@@ -164,6 +164,88 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" class="post-title-link" itemprop="url">构建你自己的日志系统</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-24 16:40:14" itemprop="dateCreated datePublished" datetime="2019-12-24T16:40:14+08:00">2019-12-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-26 14:54:10" itemprop="dateModified" datetime="2020-02-26T14:54:10+08:00">2020-02-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>在我刚刚入职的时候，接手了一个距我入职有五年的一个系统代码，30w 行的java 再加上15w 行左右的jsp 页面，系统总行数在60w 行左右，而且还没有任何的文档，当初写这个项目的人已经离职了，只有一个还算是熟悉的人，但是出差了，也提供不了多大的帮助，就这样，我在60w 行的代码里开始了为期24天的遨游。</p>
+<p>控制台输出的东西多而杂，并且伴随着系统内部的运行输出内容，各种各样的东西，并且由于是分布式的系统，界面上还会输出关于RPC 相关的信息，那个日子真的是不能看。</p>
+<p>所以在我完成任务后，我找了这个时间来总结一把我的辛酸泪。</p>
+<p>主要的目的：</p>
+<ul>
+<li>了解日志的作用</li>
+<li>学习在什么时候为什么要打印日志</li>
+<li>日志的展示内容</li>
+<li>如何定位并说明日志所要表达的意义</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E6%9E%84%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -866,86 +948,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/" class="post-title-link" itemprop="url">SpringBoot-服务器Tomcat</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-08-15 10:56:17" itemprop="dateCreated datePublished" datetime="2019-08-15T10:56:17+08:00">2019-08-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:24:02" itemprop="dateModified" datetime="2020-02-05T14:24:02+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Java Web 目前最常用的三款服务器：</p>
-<ul>
-<li>Undettow</li>
-<li>Jetty</li>
-<li>Tomcat</li>
-</ul>
-<p>Tomcat 是Apache下的一款重量级的服务器，不用多说历史悠久，经得起实践的考验。<br>然而，现在当下微服务兴起，Spring boot、Spring cloud 越来越热的情况下，选择一款轻量级而性能优越的服务器是必要的选择。</p>
-<p>Jetty 和Undertow 都是基于NIO 实现的高并发轻量级的服务器，支持servlet3.1 和websocket 。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/SpringBoot-%E6%9C%8D%E5%8A%A1%E5%99%A8Tomcat/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1017,14 +1019,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-count">51</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1037,7 +1039,10 @@
         <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+        <a href="https://vgbhfive.com/" title="vgbhfive → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>vgbhfive</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.heywhale.com/home/user/profile/65485e27d1e715cc33e7f383" title="Heywhale → https:&#x2F;&#x2F;www.heywhale.com&#x2F;home&#x2F;user&#x2F;profile&#x2F;65485e27d1e715cc33e7f383" rel="noopener" target="_blank"><i class="fab fa-fish fa-fw"></i>Heywhale</a>
       </span>
   </div>
 

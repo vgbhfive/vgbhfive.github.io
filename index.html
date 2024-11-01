@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="Vgbhfive&#39;s Blog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="vgbhfive">
-<meta property="article:tag" content="vgbhfive、博客、Java、ClickHouse、Neo4j、Prometheus、MySQL、Redis">
+<meta property="article:tag" content="vgbhfive、博客、Java、ClickHouse、Neo4j、Prometheus、MySQL、Redis、风控、Risk">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://blog.vgbhfive.com/">
@@ -168,7 +168,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
@@ -182,7 +182,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/" class="post-title-link" itemprop="url">Moto-摩旅日记2</a>
+            <a href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/" class="post-title-link" itemprop="url">Moto-摩旅日记3</a>
         </h2>
 
         <div class="post-meta">
@@ -197,14 +197,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2024-05-05 17:01:15" itemprop="dateCreated datePublished" datetime="2024-05-05T17:01:15+08:00">2024-05-05</time>
+              <time title="Created: 2024-10-18 20:11:14" itemprop="dateCreated datePublished" datetime="2024-10-18T20:11:14+08:00">2024-10-18</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-05-06 21:57:46" itemprop="dateModified" datetime="2024-05-06T21:57:46+08:00">2024-05-06</time>
+                <time title="Modified: 2024-11-01 23:04:25" itemprop="dateModified" datetime="2024-11-01T23:04:25+08:00">2024-11-01</time>
               </span>
 
           
@@ -218,10 +218,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>昨天长途奔袭，一路飞奔算是回到了北京，大致算了以下本次摩旅跑了将近 <code>1100</code> 公里的路程。全程途径北京市、张家口市、乌兰察布市、大同市、保定市，最终回到我想念了四天的北京（主要是想念我的床，酒店的床非常不舒服😭）。</p>
+          <h3 id="启"><a href="#启" class="headerlink" title="启"></a>启</h3><p>距离今年国庆摩旅回来，距离今天已经 20 天，所以这是一篇“鸽”了很久的摩旅日记。各位勿急，且待我慢慢讲来。</p>
+<p>真·多图来袭！！！</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/#more" rel="contents">
+              <a class="btn" href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -277,7 +278,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-07-20 09:57:27" itemprop="dateModified" datetime="2024-07-20T09:57:27+08:00">2024-07-20</time>
+                <time title="Modified: 2024-07-20 23:21:56" itemprop="dateModified" datetime="2024-07-20T23:21:56+08:00">2024-07-20</time>
               </span>
 
           
@@ -292,6 +293,13 @@
 
       
           <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>前面学习了<strong>卷积神经网络（<code>CNN</code>）</strong>，卷积神经网络适合图片这类具有空间局部相关性的数据，而在新的一节中开始学习<strong>循环神经网络（<code>RNN</code>）</strong>，循环神经网络适合具有时间序列的数据，如股票、语音对话、阅读的文本等。</p>
+<p>本节内容包含如下：</p>
+<ul>
+<li><strong>基本原理</strong></li>
+<li><strong>循环神经网络 <code>RNN</code></strong></li>
+<li><strong>长短时记忆网络 <code>LSTM</code></strong></li>
+<li><strong>门控循环网络 <code>GRU</code></strong></li>
+</ul>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/DL-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/#more" rel="contents">
@@ -521,6 +529,79 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/DL-TensorFlow%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/" class="post-title-link" itemprop="url">Moto-摩旅日记2</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-05-05 17:01:15" itemprop="dateCreated datePublished" datetime="2024-05-05T17:01:15+08:00">2024-05-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-10-18 20:11:40" itemprop="dateModified" datetime="2024-10-18T20:11:40+08:00">2024-10-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>昨天长途奔袭，一路飞奔算是回到了北京，大致算了以下本次摩旅跑了将近 <code>1100</code> 公里的路程。全程途径北京市、张家口市、乌兰察布市、大同市、保定市，最终回到我想念了四天的北京（主要是想念我的床，酒店的床非常不舒服😭）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -870,73 +951,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">Linux-nc使用指南</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-11-02 22:59:32 / Modified: 23:02:03" itemprop="dateCreated datePublished" datetime="2023-11-02T22:59:32+08:00">2023-11-02</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><code>NetCat</code> 是一款调试 <code>TCP/UDP</code> 网络连接的利器，被称作是网络调试的瑞士军刀，可见其功能强大。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1008,14 +1022,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-count">51</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1028,7 +1042,10 @@
         <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://vgbhfive.com/" title="Web-Site → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>Web-Site</a>
+        <a href="https://vgbhfive.com/" title="vgbhfive → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>vgbhfive</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.heywhale.com/home/user/profile/65485e27d1e715cc33e7f383" title="Heywhale → https:&#x2F;&#x2F;www.heywhale.com&#x2F;home&#x2F;user&#x2F;profile&#x2F;65485e27d1e715cc33e7f383" rel="noopener" target="_blank"><i class="fab fa-fish fa-fw"></i>Heywhale</a>
       </span>
   </div>
 
