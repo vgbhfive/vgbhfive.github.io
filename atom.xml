@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2025-02-23T03:51:40.637Z</updated>
+  <updated>2025-03-11T15:06:11.605Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -17,11 +17,59 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>游记-北灵山</title>
+    <link href="https://blog.vgbhfive.com/%E6%B8%B8%E8%AE%B0-%E5%8C%97%E7%81%B5%E5%B1%B1/"/>
+    <id>https://blog.vgbhfive.com/%E6%B8%B8%E8%AE%B0-%E5%8C%97%E7%81%B5%E5%B1%B1/</id>
+    <published>2025-03-09T13:44:57.000Z</published>
+    <updated>2025-03-11T15:06:11.605Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;北灵山&quot;&gt;&lt;a href=&quot;#北灵山&quot; class=&quot;headerlink&quot; title=&quot;北灵山&quot;&gt;&lt;/a&gt;北灵山&lt;/h3&gt;&lt;p&gt;城市的三月已经开始慢慢变暖，而北灵山上依旧有点冷，地面上还有未化的雪，为许久之前就计划好的徒步之旅平增些许乐趣。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Foot" scheme="https://blog.vgbhfive.com/tags/Foot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ML-TabNet浅析</title>
+    <link href="https://blog.vgbhfive.com/ML-TabNet%E6%B5%85%E6%9E%90/"/>
+    <id>https://blog.vgbhfive.com/ML-TabNet%E6%B5%85%E6%9E%90/</id>
+    <published>2025-03-08T17:26:19.000Z</published>
+    <updated>2025-03-18T14:54:36.807Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;随着机器学习与深度学习的发展，&lt;code&gt;DNN&lt;/code&gt; 在图像、语音和文本类型的数据上都有了广泛的应用，其优势如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;类似图像、文本，通过对其数据进行编码，从而得到一个表征表格数据。&lt;/li&gt;
+&lt;li&gt;减少对特征工程的依赖（参加过 &lt;code&gt;kaggle&lt;/code&gt; 竞赛的同学都知道特征在模型中的重要性）。&lt;/li&gt;
+&lt;li&gt;可通过 &lt;code&gt;online learning&lt;/code&gt; 的方式更新模型。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而在表格类数据的任务中，大部分都是由决策树模型成为标配，其优势如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以根据决策树回溯其推理过程，可解释性较强。&lt;/li&gt;
+&lt;li&gt;决策树的流形可以看作是超平面的边界，对于表格类数据的效果很好。&lt;/li&gt;
+&lt;li&gt;训练速度很快。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此如果有一种模型即吸收决策树模型的可解释性和稀疏特征选择优点，也具有 &lt;code&gt;DNN&lt;/code&gt; 的 &lt;code&gt;end-to-end&lt;/code&gt; 长处，那毫无疑问就是针对表格数据的利器 - &lt;strong&gt;&lt;code&gt;TabNet&lt;/code&gt;&lt;/strong&gt; 。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
+    
+    <category term="DL" scheme="https://blog.vgbhfive.com/tags/DL/"/>
+    
+  </entry>
+  
+  <entry>
     <title>SpringBoot-动态切换多数据源</title>
     <link href="https://blog.vgbhfive.com/SpringBoot-%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/"/>
     <id>https://blog.vgbhfive.com/SpringBoot-%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/</id>
     <published>2025-02-23T03:46:19.000Z</published>
-    <updated>2025-02-23T03:51:40.637Z</updated>
+    <updated>2025-03-08T17:27:29.584Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h3&gt;&lt;p&gt;在特征挖掘平台项目中，会遇到在不同的业务线间需要切换不同的数据库去查询原始数据来计算特征，因此需要对多个数据库进行实时切换，这里分享简单的思路及实现方案。&lt;/p&gt;</summary>
@@ -146,7 +194,7 @@
     <link href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/"/>
     <id>https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B02/</id>
     <published>2024-05-05T09:01:15.000Z</published>
-    <updated>2024-10-18T12:11:40.725Z</updated>
+    <updated>2025-03-09T13:46:04.163Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;昨天长途奔袭，一路飞奔算是回到了北京，大致算了以下本次摩旅跑了将近 &lt;code&gt;1100&lt;/code&gt; 公里的路程。全程途径北京市、张家口市、乌兰察布市、大同市、保定市，最终回到我想念了四天的北京（主要是想念我的床，酒店的床非常不舒服😭）。&lt;/p&gt;</summary>
@@ -154,7 +202,7 @@
     
     
     
-    <category term="Mot" scheme="https://blog.vgbhfive.com/tags/Mot/"/>
+    <category term="Moto" scheme="https://blog.vgbhfive.com/tags/Moto/"/>
     
   </entry>
   
@@ -398,52 +446,6 @@
     
     
     <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Docker install jupyter-notebook</title>
-    <link href="https://blog.vgbhfive.com/Docker-install-jupyter-notebook/"/>
-    <id>https://blog.vgbhfive.com/Docker-install-jupyter-notebook/</id>
-    <published>2023-06-23T03:31:59.000Z</published>
-    <updated>2023-06-23T04:13:23.268Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Jupyter Notebook&lt;/code&gt; 是一个开源的 &lt;code&gt;Web&lt;/code&gt; 应用程序，允许用户创建和共享包含代码、方程式、可视化和文本的文档。主要用于 &lt;strong&gt;数据清理和转换&lt;/strong&gt;、&lt;strong&gt;数值模拟&lt;/strong&gt;、&lt;strong&gt;统计建模&lt;/strong&gt;、&lt;strong&gt;数据可视化&lt;/strong&gt;、&lt;strong&gt;机器学习&lt;/strong&gt; 等等。&lt;br&gt;具有以下优势：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;可选择语言：支持超过 &lt;code&gt;40&lt;/code&gt; 种编程语言，包括 &lt;code&gt;Python&lt;/code&gt;、&lt;code&gt;R&lt;/code&gt;、&lt;code&gt;Julia&lt;/code&gt;、&lt;code&gt;Scala&lt;/code&gt; 等。&lt;/li&gt;
-&lt;li&gt;分享笔记本：可以使用电子邮件、&lt;code&gt;Dropbox&lt;/code&gt;、&lt;code&gt;GitHub&lt;/code&gt; 和 &lt;code&gt;Jupyter Notebook Viewer&lt;/code&gt; 与他人共享。&lt;/li&gt;
-&lt;li&gt;交互式输出：代码可以生成丰富的交互式输出，包括 &lt;code&gt;HTML&lt;/code&gt;、图像、视频、&lt;code&gt;LaTeX&lt;/code&gt; 等等。&lt;/li&gt;
-&lt;li&gt;大数据整合：通过 &lt;code&gt;Python&lt;/code&gt;、&lt;code&gt;R&lt;/code&gt;、&lt;code&gt;Scala&lt;/code&gt; 编程语言使用 &lt;code&gt;Apache Spark&lt;/code&gt; 等大数据框架工具。支持使用 &lt;code&gt;pandas&lt;/code&gt;、&lt;code&gt;scikit-learn&lt;/code&gt;、&lt;code&gt;ggplot2&lt;/code&gt;、&lt;code&gt;TensorFlow&lt;/code&gt; 来探索同一份数据。&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    
-    <category term="Docker" scheme="https://blog.vgbhfive.com/tags/Docker/"/>
-    
-    <category term="Day" scheme="https://blog.vgbhfive.com/tags/Day/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>北京同仁医院验光攻略</title>
-    <link href="https://blog.vgbhfive.com/%E5%8C%97%E4%BA%AC%E5%90%8C%E4%BB%81%E5%8C%BB%E9%99%A2%E9%AA%8C%E5%85%89%E6%94%BB%E7%95%A5/"/>
-    <id>https://blog.vgbhfive.com/%E5%8C%97%E4%BA%AC%E5%90%8C%E4%BB%81%E5%8C%BB%E9%99%A2%E9%AA%8C%E5%85%89%E6%94%BB%E7%95%A5/</id>
-    <published>2023-06-22T04:33:02.000Z</published>
-    <updated>2023-06-23T03:31:28.743Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;前要简介&quot;&gt;&lt;a href=&quot;#前要简介&quot; class=&quot;headerlink&quot; title=&quot;前要简介&quot;&gt;&lt;/a&gt;前要简介&lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;首都医科大学附属北京同仁医院始建于 &lt;code&gt;1886&lt;/code&gt; 年，是一所以眼科学、耳鼻咽喉科学为国家重点学科的大型综合三甲医院，对于眼科相关绝对是权威专业。&lt;/li&gt;
-&lt;li&gt;一般的眼镜店对于只验光不配镜的顾客有多多少少的抵触。&lt;/li&gt;
-&lt;li&gt;镜片和镜框需要单独在网上购买，接着找眼镜店帮忙组装，可以最大化保证钱花在刀刃上。&lt;/li&gt;
-&lt;/ol&gt;</summary>
-    
-    
-    
-    
-    <category term="Day" scheme="https://blog.vgbhfive.com/tags/Day/"/>
     
   </entry>
   
