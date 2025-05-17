@@ -163,6 +163,85 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/151-suggestions-for-improving-java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/151-suggestions-for-improving-java/" class="post-title-link" itemprop="url">151-suggestions-for-improving-java</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-06-16 17:08:10" itemprop="dateCreated datePublished" datetime="2019-06-16T17:08:10+08:00">2019-06-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-09 15:54:10" itemprop="dateModified" datetime="2023-09-09T15:54:10+08:00">2023-09-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="不要在常量和变量中出现易混淆的字母"><a href="#不要在常量和变量中出现易混淆的字母" class="headerlink" title="不要在常量和变量中出现易混淆的字母"></a>不要在常量和变量中出现易混淆的字母</h3><p>包名全小写，类名首字母全大写，常量全部大写并用下划线分隔，变量采用<strong>驼峰命名法(Camel Case)</strong> 命名等，这些都是最基本的Java 编码规范，是每个Javaer 都应熟知的规则，但是在变量的声明中要注意不要引入容易混淆的字母。</p>
+<p>尝试阅读如下代码，思考一下打印出的i等于多少：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1l</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;i的两倍是：&quot;</span> + (i+i));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>肯定有人会说：这么简单的例子还能出错？运行结果肯定是22！</p>
+<p>实践是检验真理的唯一标准，将其拷贝到Eclipse 中，然后Run 一下看看，或许你会很奇怪，结果是2，而不是22，难道是Eclipse 的显示有问题，少了个“2”？<br>因为赋给变量i 的数字就是“1”，只是后面加了长整型变量的标示字母“l” 而已。别说是我挖坑让你跳，如果有类似程序出现在项目中，当你试图通过阅读代码来理解作者的思想时，此情此景就有可能会出现。<br>所以，为了让您的程序更容易理解，字母“l”（还包括大写字母“O”）尽量不要和数字混用，以免使阅读者的理解与程序意图产生偏差。<br>如果字母和数字必须混合使用，字母“l”务必大写，字母“O”则增加注释。</p>
+<p><small><strong>字母“l”作为长整型标志时务必大写。</strong></small></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/151-suggestions-for-improving-java/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Java-ThreadLocal%E4%B9%8B%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -835,86 +914,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/APlusB-Solution/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/APlusB-Solution/" class="post-title-link" itemprop="url">APlusB Solution</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-03-20 14:59:26" itemprop="dateCreated datePublished" datetime="2019-03-20T14:59:26+08:00">2019-03-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:27:28" itemprop="dateModified" datetime="2020-02-05T14:27:28+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="A-B问题"><a href="#A-B问题" class="headerlink" title="A + B问题"></a>A + B问题</h3><p>这是我在LintCode上看见的一道题目，我觉得很有意思，就决定写了博客记录一下。</p>
-<p>题目：<br>给出两个整数 a 和 b , 求他们的和。</p>
-<p>要求：</p>
-<ol>
-<li>不允许使用 + 。</li>
-<li>使用运算符。</li>
-<li>a和b都是32位的整数。</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/APlusB-Solution/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -986,7 +985,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

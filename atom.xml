@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2025-03-11T15:06:11.605Z</updated>
+  <updated>2025-05-17T09:36:54.316Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,23 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>to-2025-05-15</title>
+    <link href="https://blog.vgbhfive.com/to-2025-05-15/"/>
+    <id>https://blog.vgbhfive.com/to-2025-05-15/</id>
+    <published>2025-05-15T03:07:04.000Z</published>
+    <updated>2025-05-17T09:36:54.316Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;又到了这个特殊的时刻，掐指算算在北京已经五年了，这时间貌似过的有点快，快的我依旧能清晰感受到第一次到北京时的感觉。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Myx&amp;Lyl" scheme="https://blog.vgbhfive.com/tags/Myx-Lyl/"/>
+    
+  </entry>
   
   <entry>
     <title>游记-北灵山</title>
@@ -69,7 +86,7 @@
     <link href="https://blog.vgbhfive.com/SpringBoot-%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/"/>
     <id>https://blog.vgbhfive.com/SpringBoot-%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/</id>
     <published>2025-02-23T03:46:19.000Z</published>
-    <updated>2025-03-08T17:27:29.584Z</updated>
+    <updated>2025-04-09T15:35:39.848Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h3&gt;&lt;p&gt;在特征挖掘平台项目中，会遇到在不同的业务线间需要切换不同的数据库去查询原始数据来计算特征，因此需要对多个数据库进行实时切换，这里分享简单的思路及实现方案。&lt;/p&gt;</summary>
@@ -424,23 +441,6 @@
 &lt;li&gt;&lt;strong&gt;决策树的生成&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;决策树的修剪&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;</summary>
-    
-    
-    
-    
-    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ML实践-Pima 数据集</title>
-    <link href="https://blog.vgbhfive.com/ML%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/"/>
-    <id>https://blog.vgbhfive.com/ML%E5%AE%9E%E8%B7%B5-Pima-%E6%95%B0%E6%8D%AE%E9%9B%86/</id>
-    <published>2023-07-17T15:30:07.000Z</published>
-    <updated>2023-09-09T07:49:13.562Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;数据简介&quot;&gt;&lt;a href=&quot;#数据简介&quot; class=&quot;headerlink&quot; title=&quot;数据简介&quot;&gt;&lt;/a&gt;数据简介&lt;/h3&gt;&lt;p&gt;该数据集最初来自糖尿病&amp;#x2F;消化&amp;#x2F;肾脏疾病研究所，此&lt;a href=&quot;https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database&quot;&gt;数据集&lt;/a&gt;的目标是基于数据集中包含的某些身体指标来诊断性的预测患者是否患有糖尿病。&lt;br&gt;数据集由多个医学指标和一个目标变量 &lt;code&gt;Outcome&lt;/code&gt; 组成，医学指标包含患者的怀孕次数、&lt;code&gt;BMI&lt;/code&gt; 指数、胰岛素水平、年龄、血压等。&lt;/p&gt;</summary>
     
     
     
