@@ -163,6 +163,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="post-title-link" itemprop="url">Zookeeper-分布式锁</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-06-23 16:00:38" itemprop="dateCreated datePublished" datetime="2019-06-23T16:00:38+08:00">2019-06-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-05 14:25:50" itemprop="dateModified" datetime="2020-02-05T14:25:50+08:00">2020-02-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="分布式锁简介"><a href="#分布式锁简介" class="headerlink" title="分布式锁简介"></a>分布式锁简介</h3><h4 id="分布式锁的实现有哪些？"><a href="#分布式锁的实现有哪些？" class="headerlink" title="分布式锁的实现有哪些？"></a>分布式锁的实现有哪些？</h4><ul>
+<li>Memcached 分布式锁<br> 利用Memcached 的<strong>add 命令</strong>。此命令是原子性操作，只有在key 不存在的情况下，才能add 成功，也就意味着线程得到了锁。</li>
+<li>Redis 分布式锁<br> 和Memcached 的方式类似，利用Redis 的<strong>setnx 命令</strong>。此命令同样是原子性操作，只有在key 不存在的情况下，才能set 成功。（setnx命令并不完善，后续会介绍替代方案）</li>
+<li>Zookeeper 分布式锁<br> 利用Zookeeper 的<strong>顺序临时节点</strong>，来实现分布式锁和等待队列。Zookeeper 设计的初衷，就是为了实现分布式锁服务的。</li>
+<li>Chubby<br> Google 公司实现的粗粒度分布式锁服务，底层利用了<strong>Paxos 一致性算法</strong>。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/151-suggestions-for-improving-java/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -839,81 +917,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/" class="post-title-link" itemprop="url">No serializer found for class org.hibernate.proxy.pojo.javassist.Javassist?</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-04-19 08:56:14" itemprop="dateCreated datePublished" datetime="2019-04-19T08:56:14+08:00">2019-04-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-05 14:27:06" itemprop="dateModified" datetime="2020-02-05T14:27:06+08:00">2020-02-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p> 话不多说，先看异常：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 HTTP Status 500 - Could not write content: No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: java.util.ArrayList[0]-&gt;com.agen.entity.User[&quot;positionchanges&quot;]-&gt;org.hibernate.collection.internal.PersistentSet[0]-&gt;com.agen.entity.Positionchange[&quot;position&quot;]-&gt;com.agen.entity.Position_$$_jvst714_7[&quot;handler&quot;]); nested exception is com.fasterxml.jackson.databind.JsonMappingException: No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: java.util.ArrayList[0]-&gt;com.agen.entity.User[&quot;positionchanges&quot;]-&gt;org.hibernate.collection.internal.PersistentSet[0]-&gt;com.agen.entity.Positionchange[&quot;position&quot;]-&gt;com.agen.entity.Position_$$_jvst714_7[&quot;handler&quot;])</span><br></pre></td></tr></table></figure>
-<p> 网上找到的解决办法说是因为，hibernate会给每一个被管理的对象加上hibernateLayInitializer属性，同时structs-jsonplugin或者其他的jsonplugin都是。<br>因为jsonplugin用的是java的”内审机制”，hibernate会给被管理的pojo加入一个hibernateLayInitializer属性，jsonplugin通过java的反射机制将pojo解析为json时，<br>同时hibernateLazyInitializer属性也进行反射操作，但是hibernateLazyIniyializer无法由反射得到，所以就抛出了异常。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/No-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-Javassist/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -985,7 +988,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">153</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

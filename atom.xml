@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2025-05-17T09:36:54.316Z</updated>
+  <updated>2025-09-16T13:50:56.795Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Day-菠萝的一天（工作日版）</title>
+    <link href="https://blog.vgbhfive.com/Day-%E8%8F%A0%E8%90%9D%E7%9A%84%E4%B8%80%E5%A4%A9%EF%BC%88%E5%B7%A5%E4%BD%9C%E6%97%A5%E7%89%88%EF%BC%89/"/>
+    <id>https://blog.vgbhfive.com/Day-%E8%8F%A0%E8%90%9D%E7%9A%84%E4%B8%80%E5%A4%A9%EF%BC%88%E5%B7%A5%E4%BD%9C%E6%97%A5%E7%89%88%EF%BC%89/</id>
+    <published>2025-09-16T13:28:14.000Z</published>
+    <updated>2025-09-16T13:50:56.795Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;早晨&quot;&gt;&lt;a href=&quot;#早晨&quot; class=&quot;headerlink&quot; title=&quot;早晨&quot;&gt;&lt;/a&gt;早晨&lt;/h3&gt;&lt;p&gt;&lt;code&gt;3:00~6:00&lt;/code&gt; 睡觉、巡视领地&lt;br&gt;&lt;code&gt;6:00~6:30&lt;/code&gt;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Day" scheme="https://blog.vgbhfive.com/tags/Day/"/>
+    
+  </entry>
   
   <entry>
     <title>to-2025-05-15</title>
@@ -420,30 +443,6 @@
     
     
     <category term="TODO" scheme="https://blog.vgbhfive.com/tags/TODO/"/>
-    
-    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ML-决策树</title>
-    <link href="https://blog.vgbhfive.com/ML-%E5%86%B3%E7%AD%96%E6%A0%91/"/>
-    <id>https://blog.vgbhfive.com/ML-%E5%86%B3%E7%AD%96%E6%A0%91/</id>
-    <published>2023-08-02T13:48:52.000Z</published>
-    <updated>2023-08-13T13:05:17.498Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;概要&quot;&gt;&lt;a href=&quot;#概要&quot; class=&quot;headerlink&quot; title=&quot;概要&quot;&gt;&lt;/a&gt;概要&lt;/h3&gt;&lt;p&gt;决策树（&lt;code&gt;decision tree&lt;/code&gt;）是一种基本的&lt;strong&gt;分类和回归方法&lt;/strong&gt;。其主要呈现为&lt;strong&gt;树状结构&lt;/strong&gt;，在分类问题中，表示基于特征对实例进行分类的过程，可以被认为是 &lt;strong&gt;&lt;code&gt;if-then&lt;/code&gt; 的规则集合&lt;/strong&gt;，也可以被认为是定义在&lt;strong&gt;特征空间与类空间上的条件概率分布&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;其优点主要有分类速度快、模型具有可读性，在学习时利用训练数据根据&lt;strong&gt;损失函数最小化&lt;/strong&gt;的原则建立决策树模型；而在预测时对新的数据利用&lt;strong&gt;决策树模型&lt;/strong&gt;进行分类。&lt;/p&gt;
-&lt;p&gt;决策树模型主要包含以下步骤：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;特征选择&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;决策树的生成&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;决策树的修剪&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
     
     <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
     
