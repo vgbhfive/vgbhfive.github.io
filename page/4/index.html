@@ -163,6 +163,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Hadoop-Spark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Hadoop-Spark/" class="post-title-link" itemprop="url">Hadoop-Spark</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-03-12 11:06:30" itemprop="dateCreated datePublished" datetime="2023-03-12T11:06:30+08:00">2023-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-04-18 22:06:05" itemprop="dateModified" datetime="2023-04-18T22:06:05+08:00">2023-04-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p><code>Spark</code> 是用于<strong>处理大数据的集群计算框架</strong> ，与其他大多数数据处理框架不同之处在于 <code>Spark</code> 没有以 <code>MapReduce</code> 作为执行引擎，而是使用它自己的<strong>分布式运行环境</strong>在集群上执行工作。另外 <code>Spark</code> 与 <code>Hadoop</code> 又紧密集成，<code>Spark</code> 可以在 <code>YARN</code> 上运行，并支持 <code>Hadoop</code> 文件格式及其存储后端（例如 <code>HDFS</code>）。</p>
+<p><code>Spark</code> 最突出的表现在于其能将 <strong>作业与作业之间的大规模的工作数据集存储在内存中</strong>。这种能力使得在性能上远超 <code>MapReduce</code> 好几个数量级，原因就在于 <code>MapReduce</code> 数据都是从磁盘上加载。根据 <code>Spark</code> 的处理模型有两类应用获益最大，分别是 <strong>迭代算法（即对一个数据集重复应用某个函数，直至满足退出条件）</strong>和 <strong>交互式分析（用户向数据集发出一系列专用的探索性查询）</strong> 。<br>另外 <code>Spark</code> 还因为其具有的 <strong><code>DAG</code> 引擎</strong>更具吸引力，原因在于 <code>DAG</code> 引擎可以处理任意操作流水线，并为用户将其转化为单个任务。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Hadoop-Spark/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/MySQL-mysqldump-warning-GTID/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -818,79 +892,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/ClickHouse-%E5%88%86%E5%B8%83%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
-      <meta itemprop="name" content="vgbhfive">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vgbhfive's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/ClickHouse-%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-title-link" itemprop="url">ClickHouse-分布式</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-09-10 20:18:11" itemprop="dateCreated datePublished" datetime="2022-09-10T20:18:11+08:00">2022-09-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-01 23:46:36" itemprop="dateModified" datetime="2023-01-01T23:46:36+08:00">2023-01-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>随着业务线数据量的突飞猛进、服务器的意外宕机，这些都是底层基础服务会遇到的问题，因此 <code>ClickHouse</code> 就设计了<strong>集群</strong>、<strong>副本</strong>和<strong>分片</strong>这三个帮手来帮忙。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/ClickHouse-%E5%88%86%E5%B8%83%E5%BC%8F/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -962,7 +963,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

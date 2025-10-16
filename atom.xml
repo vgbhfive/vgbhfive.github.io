@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2025-09-16T13:55:47.920Z</updated>
+  <updated>2025-10-16T14:42:07.597Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Moto-摩旅日记4-赤峰</title>
+    <link href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B04-%E8%B5%A4%E5%B3%B0/"/>
+    <id>https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B04-%E8%B5%A4%E5%B3%B0/</id>
+    <published>2025-10-14T15:55:30.000Z</published>
+    <updated>2025-10-16T14:42:07.597Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;启&quot;&gt;&lt;a href=&quot;#启&quot; class=&quot;headerlink&quot; title=&quot;启&quot;&gt;&lt;/a&gt;启&lt;/h3&gt;&lt;p&gt;一年一度的国庆摩旅如期而至，这次的目的地是北京以北的赤峰。一路穿越丰宁、围场、赤峰、承德，最终返回北京。总体来说好吃的、好玩的全都体验了一遍，是一次很不错的摩旅。&lt;/p&gt;
+&lt;p&gt;这里特别推荐&lt;strong&gt;塞罕坝国家森林公园&lt;/strong&gt;，看见高大的松树，非常令人震撼！不过路上遇上大堵车也是真的……幸好我骑的是摩托车，无所畏惧，哈哈哈哈&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Moto" scheme="https://blog.vgbhfive.com/tags/Moto/"/>
+    
+  </entry>
   
   <entry>
     <title>Day-菠萝的一天（工作日版）</title>
@@ -120,7 +138,7 @@
     <link href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/"/>
     <id>https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B03/</id>
     <published>2024-10-18T12:11:14.000Z</published>
-    <updated>2024-11-01T15:04:25.780Z</updated>
+    <updated>2025-10-16T14:44:19.533Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;启&quot;&gt;&lt;a href=&quot;#启&quot; class=&quot;headerlink&quot; title=&quot;启&quot;&gt;&lt;/a&gt;启&lt;/h3&gt;&lt;p&gt;距离今年国庆摩旅回来，距离今天已经 20 天，所以这是一篇“鸽”了很久的摩旅日记。各位勿急，且待我慢慢讲来。&lt;/p&gt;
@@ -416,27 +434,6 @@
     
     
     
-    
-    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ML-支持向量机</title>
-    <link href="https://blog.vgbhfive.com/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/"/>
-    <id>https://blog.vgbhfive.com/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/</id>
-    <published>2023-08-27T12:19:19.000Z</published>
-    <updated>2023-09-09T07:40:55.868Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;小故事&quot;&gt;&lt;a href=&quot;#小故事&quot; class=&quot;headerlink&quot; title=&quot;小故事&quot;&gt;&lt;/a&gt;小故事&lt;/h3&gt;&lt;p&gt;每个人小时候最讨厌的事情就是吃药了，但不幸的是有一天你得了感冒，妈妈给你买了药，你拿到药后打开了包装纸。在药包里有两种药片，一种是白色的另一种是黑色的，白色的看起来比较甜，而黑色的一看就很苦；因此你决定先吃白色的药片，那么如何一把抓住所有的药片呢？你可以找一个勺子这么把药划分出来&lt;br&gt;&lt;img src=&quot;/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/svm_1.jpeg&quot; alt=&quot;svm_1.jpg&quot;&gt;&lt;/p&gt;
-&lt;p&gt;那么如果药包里的药片是这样排布的呢？&lt;br&gt;&lt;img src=&quot;/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/svm_2.jpeg&quot; alt=&quot;svm_2.jpg&quot;&gt;&lt;/p&gt;
-&lt;p&gt;此时你心里想着终于可以祭出我的绝世神功了！哼哈…充满内力的手一拍桌子，药片就飞到了半空中，此时无影手技能发动，你就用一张纸接住了黑色的药片，哈哈哈哈哈哈…&lt;br&gt;&lt;img src=&quot;/ML-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/svm_3.jpeg&quot; alt=&quot;svm_3.jpg&quot;&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="TODO" scheme="https://blog.vgbhfive.com/tags/TODO/"/>
     
     <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
     
