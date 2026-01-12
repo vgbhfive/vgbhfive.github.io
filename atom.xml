@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2025-10-16T14:42:07.597Z</updated>
+  <updated>2026-01-12T14:57:52.543Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,23 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Day-out of online</title>
+    <link href="https://blog.vgbhfive.com/Day-out-of-online/"/>
+    <id>https://blog.vgbhfive.com/Day-out-of-online/</id>
+    <published>2026-01-12T14:56:02.000Z</published>
+    <updated>2026-01-12T14:57:52.543Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;窗外明媚的天空下，无风、隔壁楼栋反射过来的阳光、周五、蓝色的天空，这些都让今天有点开心。不太开心的一点就是我的手机因为套外流量问题被停机。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Day" scheme="https://blog.vgbhfive.com/tags/Day/"/>
+    
+  </entry>
   
   <entry>
     <title>Moto-摩旅日记4-赤峰</title>
@@ -110,9 +127,9 @@
     
     
     
-    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
-    
     <category term="DL" scheme="https://blog.vgbhfive.com/tags/DL/"/>
+    
+    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
     
   </entry>
   
@@ -419,23 +436,6 @@
     
     
     <category term="Utils" scheme="https://blog.vgbhfive.com/tags/Utils/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ML-逻辑回归</title>
-    <link href="https://blog.vgbhfive.com/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/"/>
-    <id>https://blog.vgbhfive.com/ML-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</id>
-    <published>2023-09-21T13:59:51.511Z</published>
-    <updated>2023-09-28T17:02:56.860Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;基础&quot;&gt;&lt;a href=&quot;#基础&quot; class=&quot;headerlink&quot; title=&quot;基础&quot;&gt;&lt;/a&gt;基础&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;逻辑回归（&lt;code&gt;logistic regression&lt;/code&gt;）&lt;/strong&gt;是统计学习中的经典分类方法，虽然被称为回归，但其实是个分类模型。其本质是假设某个数据服从逻辑分布，就可以使用极大似然法估计出其线性回归的参数，之后再使用 &lt;code&gt;Sigmoid&lt;/code&gt; 逻辑函数对其分类。&lt;br&gt;&lt;small&gt;面试的时候千万不要说你很了解 &lt;code&gt;LR&lt;/code&gt;，因为细节真的太多了😂&lt;/small&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
     
   </entry>
   
