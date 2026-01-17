@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2026-01-12T14:57:52.543Z</updated>
+  <updated>2026-01-17T16:05:44.228Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,45 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>国内及海外现金贷业务分析</title>
+    <link href="https://blog.vgbhfive.com/%E5%9B%BD%E5%86%85%E5%8F%8A%E6%B5%B7%E5%A4%96%E7%8E%B0%E9%87%91%E8%B4%B7%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90/"/>
+    <id>https://blog.vgbhfive.com/%E5%9B%BD%E5%86%85%E5%8F%8A%E6%B5%B7%E5%A4%96%E7%8E%B0%E9%87%91%E8%B4%B7%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90/</id>
+    <published>2026-01-17T15:59:49.000Z</published>
+    <updated>2026-01-17T16:05:44.228Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;核心生存逻辑&quot;&gt;&lt;a href=&quot;#核心生存逻辑&quot; class=&quot;headerlink&quot; title=&quot;核心生存逻辑&quot;&gt;&lt;/a&gt;核心生存逻辑&lt;/h2&gt;&lt;p&gt;国内外现金贷业务的底层博弈逻辑存在本质区别：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;国内现金贷&lt;/strong&gt;：拼的是 &lt;strong&gt;“谁命长”&lt;/strong&gt; 。侧重合规性、资本韧性及在严监管下的长期生存能力。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;海外现金贷&lt;/strong&gt;：拼的是 &lt;strong&gt;“谁跑得快”&lt;/strong&gt; 。侧重对市场窗口期的捕捉、流量红利的快速套现及灵活性。&lt;/li&gt;
+&lt;/ol&gt;</summary>
+    
+    
+    
+    
+    <category term="Risk Control" scheme="https://blog.vgbhfive.com/tags/Risk-Control/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Day-断网的通勤路</title>
+    <link href="https://blog.vgbhfive.com/Day-%E6%96%AD%E7%BD%91%E7%9A%84%E9%80%9A%E5%8B%A4%E8%B7%AF/"/>
+    <id>https://blog.vgbhfive.com/Day-%E6%96%AD%E7%BD%91%E7%9A%84%E9%80%9A%E5%8B%A4%E8%B7%AF/</id>
+    <published>2026-01-14T15:14:28.000Z</published>
+    <updated>2026-01-17T16:05:40.856Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;前些天因为移动套外流量的事情，导致我好几天都是手机断网的状态，不过在于客服一番拉扯之后话费已经退还，不过悲惨的是流量并没有被解封。&lt;br&gt;那么就有了一个新的问题 - 通勤路上我该如何使用一个没有流量的手机来消磨时光。&lt;/p&gt;
+&lt;p&gt;在今天的下班路上，我突然冒出来一个想法：看看我在手机没有流量的情况下能坚持多久的通勤。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Day" scheme="https://blog.vgbhfive.com/tags/Day/"/>
+    
+  </entry>
   
   <entry>
     <title>Day-out of online</title>
@@ -401,41 +440,6 @@
     
     
     <category term="Linux" scheme="https://blog.vgbhfive.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Moto-摩旅日记</title>
-    <link href="https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B0/"/>
-    <id>https://blog.vgbhfive.com/Moto-%E6%91%A9%E6%97%85%E6%97%A5%E8%AE%B0/</id>
-    <published>2023-10-03T03:20:11.195Z</published>
-    <updated>2024-05-06T16:38:19.530Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;回忆&quot;&gt;&lt;a href=&quot;#回忆&quot; class=&quot;headerlink&quot; title=&quot;回忆&quot;&gt;&lt;/a&gt;回忆&lt;/h3&gt;&lt;p&gt;记得第一次出去骑车还是在大二的时候，记得路线是从学校去兴平，全程 &lt;code&gt;75&lt;/code&gt; 公里，下午四点钟多到达酒店，酒店的那个阿姨人很好，她还允许我把我的自行车带到楼梯间锁起来，短暂休息后就去了杨贵妃墓，在市区里吃了烧烤和鸡蛋醪糟，第二天早早骑车又回了学校。&lt;br&gt;现在回想起来，当时简直就是无所畏惧，一个人带着手机骑着山地车就出发了🤦‍♂️&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;多图警告！！！&lt;/strong&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Moto" scheme="https://blog.vgbhfive.com/tags/Moto/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MathJax语法指南</title>
-    <link href="https://blog.vgbhfive.com/MathJax%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/"/>
-    <id>https://blog.vgbhfive.com/MathJax%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/</id>
-    <published>2023-09-27T15:43:21.000Z</published>
-    <updated>2024-02-20T13:55:49.038Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;MathJax&lt;/code&gt;&lt;/strong&gt; 是一个 &lt;code&gt;JavaScript&lt;/code&gt; 库，可以让你直接用 &lt;code&gt;Latex&lt;/code&gt; 语法来写复杂数学公式，使用十分方便。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Utils" scheme="https://blog.vgbhfive.com/tags/Utils/"/>
     
   </entry>
   
