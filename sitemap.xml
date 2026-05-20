@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.vgbhfive.com/about/index.html</loc>
+    
+    <lastmod>2026-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.vgbhfive.com/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/</loc>
     
     <lastmod>2026-05-20</lastmod>
@@ -21,15 +30,6 @@
   
   <url>
     <loc>https://blog.vgbhfive.com/pictures/index.html</loc>
-    
-    <lastmod>2026-04-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.vgbhfive.com/about/index.html</loc>
     
     <lastmod>2026-04-18</lastmod>
     
