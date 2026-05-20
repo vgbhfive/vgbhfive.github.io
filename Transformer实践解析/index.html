@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+  <meta name="baidu-site-verification" content="codeva-K7aZhBcBPm">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介Transformer 的核心思想是利用自注意力机制（self-attention） - 能注意到输入序列的不同位置以计算该序列的表示的能力。基于多头注意力机制，每个单词会被转化为 Token （词元）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer实践解析">
+<meta property="og:url" content="https://blog.vgbhfive.com/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介Transformer 的核心思想是利用自注意力机制（self-attention） - 能注意到输入序列的不同位置以计算该序列的表示的能力。基于多头注意力机制，每个单词会被转化为 Token （词元）。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-20T16:07:14.000Z">
+<meta property="article:modified_time" content="2026-05-20T16:27:29.822Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.vgbhfive.com/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Transformer实践解析 | Vgbhfive's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QBK8PCQC9B"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QBK8PCQC9B');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?05f3a513cf1bc0e9d29d533367e5c33f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Transformer实践解析
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-05-21 00:07:14 / Modified: 00:27:29" itemprop="dateCreated datePublished" datetime="2026-05-21T00:07:14+08:00">2026-05-21</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><code>Transformer</code> 的核心思想是利用<strong>自注意力机制（<code>self-attention</code>）</strong> - 能注意到输入序列的不同位置以计算该序列的表示的能力。基于多头注意力机制，每个单词会被转化为 <strong><code>Token</code> （词元）</strong>。</p>
+<span id="more"></span>
+
+<hr>
+
+<h3 id="核心机制"><a href="#核心机制" class="headerlink" title="核心机制"></a>核心机制</h3><h4 id="位置编码"><a href="#位置编码" class="headerlink" title="位置编码"></a>位置编码</h4><p><code>Transformer</code> 中不包含任何的循环或卷积，因此添加了<strong>位置编码</strong>，为模型提供一些关于单词在句子中相对位置的信息。</p>
+<p>位置编码向量被加到嵌入（<code>embedding</code>）向量中。嵌入表示一个 <code>d</code> 维空间的标记，在 <code>d</code> 维空间中有着相似含义的标记会离彼此更近。但嵌入并没有对在一句话中的词的相对位置进行编码，因此当加上位置编码后，单词将基于他们含义的相似度以及他们在句子中的位置，在 <code>d</code> 维空间中离彼此更近。</p>
+<h4 id="点积注意力"><a href="#点积注意力" class="headerlink" title="点积注意力"></a>点积注意力</h4><p><code>Transformer</code> 使用的注意力函数共有三个输入：<code>Q</code> 请求、<code>K</code> 主键、<code>V</code> 数值。</p>
+<p>点积注意力被缩小深度的平方根倍，这样做是因为对于较大的深度值，点积的大小会成倍增大，从而推动 <code>softmax</code> 函数往仅有很小的梯度的方向靠拢，导致 <code>hard</code> 的 <code>softmax</code>。</p>
+<h4 id="多头注意力"><a href="#多头注意力" class="headerlink" title="多头注意力"></a>多头注意力</h4><p><strong>多头注意力</strong>由四部分组成：</p>
+<ul>
+<li>线性层并拆分为多头。</li>
+<li>按比例缩放点积注意力。</li>
+<li>多头及联。</li>
+<li>最后一层线性层。</li>
+</ul>
+<p>每个多头注意力块有三个输入：<code>Q</code> 请求、<code>K</code> 主键、<code>V</code> 数值。这些输入经过线行（<code>Dense</code>）层，并会被拆分为多头。</p>
+<blockquote>
+<p><code>Q</code>、<code>K</code>、<code>V</code> 被拆分为多头，而不是单头，因为多头允许模型共同注意来自不同表示空间的不同位置的信息。在拆分后每个头部的维度减少，因此总的计算成本与有全部维度的单个注意力头相同。</p>
+</blockquote>
+<h4 id="掩码"><a href="#掩码" class="headerlink" title="掩码"></a>掩码</h4><p>掩码一批序列中所有的填充标记，其确保模型不会将填充物作为输入。该 <code>mask</code> 表示填充值 <code>0</code> 出现的位置：这些位置输出 <code>1</code>，否则输出 <code>0</code>。</p>
+<h4 id="点式前馈网络"><a href="#点式前馈网络" class="headerlink" title="点式前馈网络"></a>点式前馈网络</h4><p>点式前馈网络由两个全连接层组成，两层之间插入一个 <code>ReLU</code> 激活函数。</p>
+<h4 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h4><p><strong>编码器</strong>包含以下部分：</p>
+<ul>
+<li><p>输入嵌入（<code>Input Embedding</code>）。</p>
+</li>
+<li><p>位置编码（<code>Positional Encoding</code>）。</p>
+</li>
+<li><p><code>N</code> 个<strong>编码器层（<code>encoder layers</code>）</strong>，每个编码器层包含以下子层：</p>
+<ul>
+<li>多头注意力（有填充掩码）。</li>
+<li>点式前馈网络。</li>
+</ul>
+<p>  每个子层在其周围有一个残差连接，然后进行层归一化。归一化是在 <code>d_model</code> 最后一个维度完成的。残差连接是为了避免深度网络中的梯度消失问题。<br>  每个子层的输出是 <code>LayerNorm(x + Sublayer(x))</code>。</p>
+</li>
+</ul>
+<p>输入通过嵌入（<code>embedding</code>）后，该嵌入与位置编码相加。该加法结果的输出会作为编码器层的输入。编码器的输出即解码器的输入。</p>
+<h4 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h4><p><strong>解码器</strong>包含以下部分：</p>
+<ul>
+<li><p>输出嵌入（<code>Output Embedding</code>）。</p>
+</li>
+<li><p>位置编码（<code>Positionak Encoding</code>）。</p>
+</li>
+<li><p><code>N</code> 个<strong>编码器层（<code>decoder layers</code>）</strong>，每个解码器层包含以下子层：</p>
+<ul>
+<li>掩码的多头注意力。</li>
+<li>多头注意力（用填充掩码），<code>V</code> 数值和 <code>K</code> 主键接收编码器输出作为输入，<code>Q</code> 接收掩码的多头注意力子层的输出。</li>
+<li>点式前馈网络。</li>
+</ul>
+<p> 每个子层在其周围有一个残差连接，然后进行层归一化。每个子层的输出是 <code>LayerNorm(x + Sublayer(x))</code>。归一化是在 <code>d_model</code> 最后一个维度完成的。<br> 当 <code>Q</code> 接收到解码器的第一个注意力块的输出，并且 <code>K</code> 接收到编码器的输出时，注意力权重表示根据编码器的输出赋予解码器输入的重要性。换句话说，解码器通过查看编码器的输出和对其自身输出的自注意力，来预测下一个词。</p>
+</li>
+</ul>
+<p>目标经过一个嵌入后，该嵌入与位置编码相加，该加法结果就是解码器层的输入。解码器的输出是最后线性层的输入。	</p>
+<hr>
+
+<p><small>本文是基于《用Transformers处理自然语言》一书的简要学习记录，并没有很详细的方案，有兴趣的话可以阅读原文。</small></p>
+<hr>
+
+<h3 id="文本分类"><a href="#文本分类" class="headerlink" title="文本分类"></a>文本分类</h3><p>文本分类是NLP中最常见的任务之一。另一种常见的文本分类是情感分析，其目的是识别特定文本的倾向性。</p>
+<p>数据集标记化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(tokenize(emotions[<span class="string">&quot;train&quot;</span>][:<span class="number">2</span>]))</span><br><span class="line">&#123;<span class="string">&#x27;input_ids&#x27;</span>: [[<span class="number">101</span>, <span class="number">1045</span>, <span class="number">2134</span>, <span class="number">2102</span>, <span class="number">2514</span>, <span class="number">26608</span>, <span class="number">102</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">101</span>, <span class="number">1045</span>, <span class="number">2064</span>, <span class="number">2175</span>, <span class="number">2013</span>, <span class="number">3110</span>, <span class="number">2061</span>, <span class="number">20625</span>, <span class="number">2000</span>, <span class="number">2061</span>, <span class="number">9636</span>, <span class="number">17772</span>, <span class="number">2074</span>, <span class="number">2013</span>, <span class="number">2108</span>, <span class="number">2105</span>, <span class="number">2619</span>, <span class="number">2040</span>, <span class="number">14977</span>, <span class="number">1998</span>, <span class="number">2003</span>, <span class="number">8300</span>, <span class="number">102</span>]], <span class="string">&#x27;attention_mask&#x27;</span>: [[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>,,,,],[,,,,,,,,,,,,,,,,,,,, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>训练文本分类器</p>
+<p><code>Tranformer</code> 提取特征</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用预训练分类器</span></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModel</span><br><span class="line">model_ckpt = <span class="string">&quot;distilbert-base-uncased&quot;</span></span><br><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">model = AutoModel.from_pretrained(model_ckpt).to(device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取最后一层隐藏状态</span></span><br><span class="line">inputs = &#123;k:v.to(device) <span class="keyword">for</span> k,v <span class="keyword">in</span> inputs.items()&#125;</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">	outputs = model(**inputs)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(outputs)</span><br><span class="line"><span class="comment"># BaseModelOutput(last_hidden_state=tensor([[[-0.1565, -0.1862, 0.0528, ..., -0.1188, 0.0662, 0.5470], [-0.3575, -0.6484, -0.0618, ..., -0.3040, 0.3508, 0.5221], [-0.2772, -0.4459, 0.1818, ..., -0.0948, -0.0076, 0.9958], [-0.2841, -0.3917, 0.3753, ..., -0.2151, -0.1173, 1.0526], [ 0.2661, -0.5094, -0.3180, ..., -0.4203, 0.0144, -0.2149], [ 0.9441, 0.0112, -0.4714, ..., 0.1439, -0.7288, -0.1619]]], device=&#x27;cuda:0&#x27;), hidden_states=None, attentions=None)</span></span><br><span class="line">outputs.last_hidden_state.size()</span><br><span class="line"><span class="comment"># torch.Size([1, 6, 768]) 形状是 [batch_size, n_tokens, hidden_dim] 即六个输入标记中的每一个都会返回一个768 维的向量</span></span><br></pre></td></tr></table></figure>
+
+<p>特征矩阵</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">extract_hidden_states</span>(<span class="params">batch</span>):</span><br><span class="line">	<span class="comment"># 将前面的步骤包裹在一个处理函数中</span></span><br><span class="line">	inputs = &#123; k:v.to(device) <span class="keyword">for</span> k,v <span class="keyword">in</span> batch.items() <span class="keyword">if</span> k <span class="keyword">in</span> tokenizer.model_input_names &#125; <span class="comment"># Extract last hidden states</span></span><br><span class="line">	<span class="keyword">with</span> torch.no_grad():</span><br><span class="line">		last_hidden_state = model(**inputs).last_hidden_state <span class="comment"># Return vector for [CLS] token</span></span><br><span class="line">	<span class="keyword">return</span> &#123;<span class="string">&quot;hidden_state&quot;</span>: last_hidden_state[:,<span class="number">0</span>].cpu().numpy()&#125;</span><br><span class="line"></span><br><span class="line">emotions_hidden = emotions_encoded.<span class="built_in">map</span>(extract_hidden_states, batched=<span class="literal">True</span>) <span class="comment"># 一次性提取所有分片的隐藏状态</span></span><br><span class="line">emotions_hidden[<span class="string">&quot;train&quot;</span>].column_names</span><br><span class="line"><span class="comment"># [&#x27;attention_mask&#x27;, &#x27;hidden_state&#x27;, &#x27;input_ids&#x27;, &#x27;label&#x27;, &#x27;text&#x27;]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">X_train = np.array(emotions_hidden[<span class="string">&quot;train&quot;</span>][<span class="string">&quot;hidden_state&quot;</span>])</span><br><span class="line">X_valid = np.array(emotions_hidden[<span class="string">&quot;validation&quot;</span>][<span class="string">&quot;hidden_state&quot;</span>])</span><br><span class="line">y_train = np.array(emotions_hidden[<span class="string">&quot;train&quot;</span>][<span class="string">&quot;label&quot;</span>]</span><br><span class="line">y_valid = np.array(emotions_hidden[<span class="string">&quot;validation&quot;</span>][<span class="string">&quot;label&quot;</span>])</span><br><span class="line">X_train.shape, X_valid.shape <span class="comment"># ((16000, 768), (2000, 768))</span></span><br></pre></td></tr></table></figure>
+
+<p>可视化训练集 使用强大的 <code>UMAP</code> 算法将向量向下投射到二维。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> umap <span class="keyword">import</span> UMAP</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler <span class="comment"># Scale features to [0,1] range</span></span><br><span class="line"></span><br><span class="line">X_scaled = MinMaxScaler().fit_transform(X_train)</span><br><span class="line"><span class="comment"># Initialize and fit UMAP</span></span><br><span class="line">mapper = UMAP(n_components=<span class="number">2</span>, metric=<span class="string">&quot;cosine&quot;</span>).fit(X_scaled)</span><br><span class="line"><span class="comment"># Create a DataFrame of 2D embeddings</span></span><br><span class="line">df_emb = pd.DataFrame(mapper.embedding_, columns=[<span class="string">&quot;X&quot;</span>, <span class="string">&quot;Y&quot;</span>])</span><br><span class="line">df_emb[<span class="string">&quot;label&quot;</span>] = y_train</span><br><span class="line">df_emb.head()</span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(<span class="number">2</span>, <span class="number">3</span>, figsize=(<span class="number">7</span>,<span class="number">5</span>))</span><br><span class="line">axes = axes.flatten()</span><br><span class="line">cmaps = [<span class="string">&quot;Greys&quot;</span>, <span class="string">&quot;Blues&quot;</span>, <span class="string">&quot;Oranges&quot;</span>, <span class="string">&quot;Reds&quot;</span>, <span class="string">&quot;Purples&quot;</span>, <span class="string">&quot;Greens&quot;</span>]</span><br><span class="line">labels = emotions[<span class="string">&quot;train&quot;</span>].features[<span class="string">&quot;label&quot;</span>].names</span><br><span class="line"><span class="keyword">for</span> i, (label, cmap) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(labels, cmaps)):</span><br><span class="line">df_emb_sub = df_emb.query(<span class="string">f&quot;label == <span class="subst">&#123;i&#125;</span>&quot;</span>)</span><br><span class="line">axes[i].hexbin(df_emb_sub[<span class="string">&quot;X&quot;</span>], df_emb_sub[<span class="string">&quot;Y&quot;</span>], cmap=cmap, gridsize=<span class="number">20</span>, linewidths=(<span class="number">0</span>,))</span><br><span class="line">axes[i].set_title(label)</span><br><span class="line">axes[i].set_xticks([]), axes[i].set_yticks([])</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>微调 <code>Transformer</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载预训练模型</span></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForSequenceClassification</span><br><span class="line">num_labels = <span class="number">6</span></span><br><span class="line">model = (AutoModelForSequenceClassification .from_pretrained(model_ckpt,</span><br><span class="line">num_labels=num_labels) .to(device))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义训练指标</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score, f1_score</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">compute_metrics</span>(<span class="params">pred</span>):</span><br><span class="line">	labels = pred.label_ids</span><br><span class="line">	preds = pred.predictions.argmax(-<span class="number">1</span>)</span><br><span class="line">	f1 = f1_score(labels, preds, average=<span class="string">&quot;weighted&quot;</span>)</span><br><span class="line">	acc = accuracy_score(labels, preds)</span><br><span class="line">	<span class="keyword">return</span> &#123;<span class="string">&quot;accuracy&quot;</span>: acc, <span class="string">&quot;f1&quot;</span>: f1&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练模型</span></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> Trainer, TrainingArguments</span><br><span class="line">batch_size = <span class="number">64</span></span><br><span class="line">logging_steps = <span class="built_in">len</span>(emotions_encoded[<span class="string">&quot;train&quot;</span>]) <span class="comment"># batch_size</span></span><br><span class="line">model_name = <span class="string">f&quot;<span class="subst">&#123;model_ckpt&#125;</span>-finetuned-emotion&quot;</span></span><br><span class="line">training_args = TrainingArguments(output_dir=model_name, num_train_epochs=<span class="number">2</span>, learning_rate=<span class="number">2e-5</span>, per_device_train_batch_size=batch_size, per_device_eval_batch_size=batch_size, weight_decay=<span class="number">0.01</span>, evaluation_strategy=<span class="string">&quot;epoch&quot;</span>, disable_tqdm=<span class="literal">False</span>, logging_steps=logging_steps, push_to_hub=<span class="literal">True</span>, log_level=<span class="string">&quot;error&quot;</span>)</span><br><span class="line"></span><br><span class="line">trainer = Trainer(model=model, args=training_args,</span><br><span class="line">compute_metrics=compute_metrics, train_dataset=emotions_encoded[<span class="string">&quot;train&quot;</span>],</span><br><span class="line">eval_dataset=emotions_encoded[<span class="string">&quot;validation&quot;</span>], tokenizer=tokenizer)</span><br><span class="line">trainer.train()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 回测</span></span><br><span class="line">preds_output = trainer.predict(emotions_encoded[<span class="string">&quot;validation&quot;</span>])</span><br><span class="line">preds_output.metrics</span><br><span class="line">&#123;<span class="string">&#x27;test_loss&#x27;</span>: <span class="number">0.22047173976898193</span>, <span class="string">&#x27;test_accuracy&#x27;</span>: <span class="number">0.9225</span>, <span class="string">&#x27;test_f1&#x27;</span>: <span class="number">0.9225500751072866</span>, <span class="string">&#x27;test_runtime&#x27;</span>: <span class="number">1.6357</span>, <span class="string">&#x27;test_samples_per_second&#x27;</span>: <span class="number">1222.725</span>, <span class="string">&#x27;test_steps_per_second&#x27;</span>: <span class="number">19.564</span>&#125;</span><br><span class="line"></span><br><span class="line">y_preds = np.argmax(preds_output.predictions, axis=<span class="number">1</span>)</span><br><span class="line">plot_confusion_matrix(y_preds, y_valid, labels)</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="文本摘要"><a href="#文本摘要" class="headerlink" title="文本摘要"></a>文本摘要</h3><p>某一时刻可能需要对一份报告、研究文章、财务报告进行摘要，摘要是一个经典的序列到序列（<code>seq2seq</code>）任务，有一个输入文本和一个目标文本。这也是 <code>Transformer</code> 编码器-解码器的优势所在。</p>
+<p><code>CNN/DailyMail</code> 数据集大约有 <code>30w</code> 条新闻文章及对应的摘录组成，这些摘要由 <code>CNN</code> 和 <code>DailyMail</code> 在其文章中附加的要点组成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据概况</span></span><br><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line">dataset = load_dataset(<span class="string">&quot;cnn_dailymail&quot;</span>, version=<span class="string">&quot;3.0.0&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Features: <span class="subst">&#123;dataset[<span class="string">&#x27;train&#x27;</span>].column_names&#125;</span>&quot;</span>)</span><br><span class="line">Features: [<span class="string">&#x27;article&#x27;</span>, <span class="string">&#x27;highlights&#x27;</span>, <span class="string">&#x27;id&#x27;</span>] <span class="comment"># 文章，其中包含新闻文章，亮点与摘要，以及唯一标识每篇文章的ID</span></span><br></pre></td></tr></table></figure>
+
+<p>文本摘要流水线：</p>
+<ul>
+<li><code>GPT-2</code></li>
+<li><code>T5</code></li>
+<li><code>BART</code></li>
+<li><code>PEGASUS</code></li>
+</ul>
+<p>摘要评比：</p>
+<ul>
+<li><code>BLEU -&gt; SacreBLEU</code></li>
+<li><code>ROUGE</code></li>
+</ul>
+<hr>
+
+<h3 id="问答系统"><a href="#问答系统" class="headerlink" title="问答系统"></a>问答系统</h3><p>在某个时刻你可能需要在海量数据中寻找所需要的信息，搜索引擎会首先检索文件，然欧进行一个额外的处理步骤，提取带有相应段落和网页的答案片段。<br>这种技术背后的方法被称为问题回答 <code>QA</code>。最常见的是提取式 <code>QA</code>，问题的答案被识别为文档中的一段文字，首先检索文档，然后从中提取答案。</p>
+<h4 id="基于评论的问答系统"><a href="#基于评论的问答系统" class="headerlink" title="基于评论的问答系统"></a>基于评论的问答系统</h4><p><code>SubjQA</code> 由超过 <code>1w</code> 条英文的顾客评论组成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> get_dataset_config_names</span><br><span class="line">domains = get_dataset_config_names(<span class="string">&quot;subjqa&quot;</span>)</span><br><span class="line">domains [<span class="string">&#x27;books&#x27;</span>, <span class="string">&#x27;electronics&#x27;</span>, <span class="string">&#x27;grocery&#x27;</span>, <span class="string">&#x27;movies&#x27;</span>, <span class="string">&#x27;restaurants&#x27;</span>, <span class="string">&#x27;tripadvisor&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<h4 id="文本中提取答案"><a href="#文本中提取答案" class="headerlink" title="文本中提取答案"></a>文本中提取答案</h4><p>从文本中提取答案的最常见的方法是把问题看作一个跨度分类任务，其中答案跨度的开始和结束符号作为模型需要预测的标签。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer</span><br><span class="line">model_ckpt = <span class="string">&quot;deepset/minilm-uncased-squad2&quot;</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_ckpt)</span><br><span class="line"></span><br><span class="line">uestion = <span class="string">&quot;How much music can this hold?&quot;</span> <span class="comment"># 问题</span></span><br><span class="line">context = <span class="string">&quot;&quot;&quot;An MP3 is about 1 MB/minute, so about 6000 hours depending on file size.&quot;&quot;&quot;</span> <span class="comment"># 语境</span></span><br><span class="line">inputs = tokenizer(question, context, return_tensors=<span class="string">&quot;pt&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(tokenizer.decode(inputs[<span class="string">&quot;input_ids&quot;</span>][<span class="number">0</span>]))</span><br><span class="line"><span class="comment"># [CLS] how much music can this hold? [SEP] an mp3 is about 1 mb / minute, so about 6000 hours depending on file size. [SEP]</span></span><br><span class="line"><span class="comment"># 输出格式 [CLS] question tokens [SEP] context tokens [SEP]</span></span><br></pre></td></tr></table></figure>
+
+<p>文本已经被标记化，现在需要用一个 <code>QA</code> 头来实例化这个模型，并通过前向传递来运行输入:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForQuestionAnswering</span><br><span class="line">model = AutoModelForQuestionAnswering.from_pretrained(model_ckpt)</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">	outputs = model(**inputs)</span><br><span class="line">	<span class="built_in">print</span>(outputs)</span><br><span class="line"><span class="comment"># QuestionAnsweringModelOutput(loss=None, start_logits=tensor([[-0.9862, -4.7750, -5.4025, -5.2378, -5.2863, -5.5117, -4.9819, -6.1880, -0.9862, 0.2596, -0.2144, -1.7136, 3.7806, 4.8561, -1.0546, -3.9097, -1.7374, -4.5944, -1.4278, 3.9949, 5.0390, -0.2018, -3.0193, -4.8549, -2.3107, -3.5110, -3.5713, -0.9862]]), end_logits=tensor([[-0.9623, -5.4733, -5.0326, -5.1639, -5.4278, -5.5151, -5.1749, -4.6233, -0.9623, -3.7855, -0.8715, -3.7745, -3.0161, -1.1780, 0.1758, -2.7365, 4.8934, 0.3046, -3.1761, -3.2762, 0.8937, 5.6606, -0.3623, -4.9554, -3.2531, -0.0914, 1.6211, -0.9623]]), hidden_states=None, attentions=None)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将输出转换为答案跨度，首先需要得到开始和结束标记的对数</span></span><br><span class="line">start_logits = outputs.start_logits</span><br><span class="line">end_logits = outputs.end_logits</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Input IDs shape: <span class="subst">&#123;inputs.input_ids.size()&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Start logits shape: <span class="subst">&#123;start_logits.size()&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;End logits shape: <span class="subst">&#123;end_logits.size()&#125;</span>&quot;</span>)</span><br><span class="line"><span class="comment"># Input IDs shape: torch.Size([1, 28])</span></span><br><span class="line"><span class="comment"># Start logits shape: torch.Size([1, 28])</span></span><br><span class="line"><span class="comment"># End logits shape: torch.Size([1, 28])</span></span><br></pre></td></tr></table></figure>
+
+<p>为了得到最终的答案，可以计算开始和结束标记对数的 <code>argmax</code>，然后从输入中切出跨度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">start_idx = torch.argmax(start_logits)</span><br><span class="line">end_idx = torch.argmax(end_logits) + <span class="number">1</span></span><br><span class="line">answer_span = inputs[<span class="string">&quot;input_ids&quot;</span>][<span class="number">0</span>][start_idx:end_idx]</span><br><span class="line">answer = tokenizer.decode(answer_span)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Question: <span class="subst">&#123;question&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Answer: <span class="subst">&#123;answer&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Question: How much music can this hold?</span></span><br><span class="line"><span class="comment"># Answer: 6000 hours</span></span><br></pre></td></tr></table></figure>
+
+<p>很好，它成功了!</p>
+<h4 id="处理长段落文本"><a href="#处理长段落文本" class="headerlink" title="处理长段落文本"></a>处理长段落文本</h4><p>在 <code>tokenizer</code> 中设置 <code>return_overflowing_tokens=True</code> 参数启用滑动窗口（<code>Transformer</code> 训练预提取后的短信特征）。</p>
+<h4 id="检索器类型"><a href="#检索器类型" class="headerlink" title="检索器类型"></a>检索器类型</h4><ul>
+<li><code>TF-IDF</code></li>
+<li><code>BM25</code></li>
+<li><code>Embedding</code></li>
+<li><code>DPR</code></li>
+</ul>
+<p>评估检索器</p>
+<ul>
+<li>使用检索器内置的 <code>eval()</code> 方法。</li>
+<li>构建一个自定义流水线，将检索器与 <code>EvalRetriever</code> 类结合起来。</li>
+</ul>
+<p>评估阅读器</p>
+<ul>
+<li>完全匹配（<code>EM</code>）</li>
+<li><code>F1-score</code></li>
+</ul>
+<hr>
+
+<h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3><p>探讨四种互补的技术：知识蒸馏、量化、剪枝、开放网络神经交换（<code>ONNX</code>）格式及 <code>ONNXRuntime</code>（<code>ORT</code>）进行图的优化。</p>
+<h4 id="知识蒸馏"><a href="#知识蒸馏" class="headerlink" title="知识蒸馏"></a>知识蒸馏</h4><p>知识蒸馏是一种通用的方法，用于训练一个较小的学生模型来模仿一个较慢的、较大的、但表现较好的教师模型的行为。</p>
+<p><code>Optuna</code> 超参数优化框架。</p>
+<h4 id="量化"><a href="#量化" class="headerlink" title="量化"></a>量化</h4><p>量化采取了一种不同的方法；它不是减少计算的数量，而是通过用 <code>8</code> 位整数（<code>INT8</code>）而不是通常的 <code>32</code> 位浮点（<code>FP32</code>）这样的低精度数据类型来表示权重和激活，从而使它们更有效率。<br>减少比特数意味着所产生的模型需要更少的内存存储，而且像矩阵乘法这样的操作可以通过整数运算更快地进行。</p>
+<p>量化的基本思想是，我们可以将每个张量中的浮点值 <code>f</code> “离散化”，将其范围[<code>fmax</code>, <code>fmin</code>]映射到一个更小的[<code>qmax</code>]的定点数字 <code>q</code> 中。定点数字 <code>q</code> 的范围[<code>qmax</code>, <code>qmin</code>]，并对两者之间的所有数值进行线性分配。</p>
+<p>对于深度神经网络，通常主要有以下三种量化方法：</p>
+<ul>
+<li>动态量化。当使用动态量化时，在训练过程中没有任何变化，只有在推理过程中才会进行调整。这种方法是动态的，量化是即时进行的，其意味着所有的矩阵乘法都可以用高度优化的 <code>INT8</code> 函数来计算。</li>
+<li>静态量化。静态量化是通过在推理时间之前观察数据的代表性样本的激活模式来实现的。</li>
+<li>量化训练。量化训练中不使用 <code>INT8</code> 值，而是对 <code>FP32</code> 值进行四舍五入，以模拟量化的效果。</li>
+</ul>
+<h4 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h4><p>权重修剪模型使得更加稀疏 <code>top-K</code>。</p>
+<h4 id="ONNX"><a href="#ONNX" class="headerlink" title="ONNX"></a><code>ONNX</code></h4><p><code>ONNX</code> 是一个开放的标准，它定义了一套通用的运算符和通用的文件格式，以表示各种框架的深度学习模型，包括 <code>PyTorch</code> 和 <code>TensorFlow</code>。当一个模型被导出到 <code>ONNX</code> 格式时，这些运算符被用来构建一个计算图（通常称为中间表示法），表示数据在神经网络中的流动。</p>
+<hr>
+
+<h3 id="从头开始训练一个-Transformer"><a href="#从头开始训练一个-Transformer" class="headerlink" title="从头开始训练一个 Transformer"></a>从头开始训练一个 <code>Transformer</code></h3><p>在这部分将决定哪种架构最适合这项任务，初始化一个没有预训练权重的新模型，设置一个自定义数据加载类，并创建一个可扩展的训练循环。</p>
+<h4 id="创建Transformer"><a href="#创建Transformer" class="headerlink" title="创建Transformer"></a>创建Transformer</h4><p>加载 <code>gpt2-xl</code> 的配置，使用相同的超参数，只为新的标记器调整词汇量大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoConfig, AutoModelForCausalLM, AutoTokenizer</span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_ckpt)</span><br><span class="line">config = AutoConfig.from_pretrained(<span class="string">&quot;gpt2&quot;</span>, vocab_size=<span class="built_in">len</span>(tokenizer))</span><br><span class="line">model = AutoModelForCausalLM.from_config(config)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;GPT-2 size: <span class="subst">&#123;model_size(model)/<span class="number">1000</span>**<span class="number">2</span>:<span class="number">.1</span>f&#125;</span>M parameters&#x27;</span>) <span class="comment"># 模型大小</span></span><br><span class="line"><span class="comment"># GPT-2 size: 110.0M parameters</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="配置超参数"><a href="#配置超参数" class="headerlink" title="配置超参数"></a>配置超参数</h4><p>设置训练用的超参数，将其封装在一个命名空间中，便于访问。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> argparse <span class="keyword">import</span> Namespace</span><br><span class="line"><span class="comment"># Commented parameters correspond to the small model</span></span><br><span class="line">config = &#123;</span><br><span class="line">	<span class="string">&quot;train_batch_size&quot;</span>: <span class="number">2</span>, <span class="comment"># 12</span></span><br><span class="line">	<span class="string">&quot;valid_batch_size&quot;</span>: <span class="number">2</span>, <span class="comment"># 12</span></span><br><span class="line">	<span class="string">&quot;weight_decay&quot;</span>: <span class="number">0.1</span>, </span><br><span class="line">	<span class="string">&quot;shuffle_buffer&quot;</span>: <span class="number">1000</span>, </span><br><span class="line">	<span class="string">&quot;learning_rate&quot;</span>: <span class="number">2e-4</span>, <span class="comment"># 5e-4</span></span><br><span class="line">	<span class="string">&quot;lr_scheduler_type&quot;</span>: <span class="string">&quot;cosine&quot;</span>, </span><br><span class="line">	<span class="string">&quot;num_warmup_steps&quot;</span>: <span class="number">750</span>, <span class="comment"># 2000</span></span><br><span class="line">	<span class="string">&quot;gradient_accumulation_steps&quot;</span>: <span class="number">16</span>, <span class="comment"># 1 </span></span><br><span class="line">	<span class="string">&quot;max_train_steps&quot;</span>: <span class="number">50000</span>, <span class="comment"># 150000</span></span><br><span class="line">	<span class="string">&quot;max_eval_steps&quot;</span>: -<span class="number">1</span>, </span><br><span class="line">	<span class="string">&quot;seq_length&quot;</span>: <span class="number">1024</span>, </span><br><span class="line">	<span class="string">&quot;seed&quot;</span>: <span class="number">1</span>,</span><br><span class="line">	<span class="string">&quot;save_checkpoint_steps&quot;</span>: <span class="number">50000</span> <span class="comment"># 15000</span></span><br><span class="line">&#125;</span><br><span class="line">args = Namespace(**config)</span><br></pre></td></tr></table></figure>
+
+<h4 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">no_decay = [<span class="string">&quot;bias&quot;</span>, <span class="string">&quot;LayerNorm.weight&quot;</span>, <span class="string">&quot;ln_1.weight&quot;</span>, <span class="string">&quot;ln_2.weight&quot;</span>, <span class="string">&quot;ln_f.weight&quot;</span>]</span><br><span class="line">optimizer_grouped_parameters = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;params&quot;</span>: [p <span class="keyword">for</span> n, p <span class="keyword">in</span> model.named_parameters() <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">any</span>(nd <span class="keyword">in</span> n <span class="keyword">for</span> nd <span class="keyword">in</span> no_decay)],</span><br><span class="line">        <span class="string">&quot;weight_decay&quot;</span>: args.weight_decay,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;params&quot;</span>: [p <span class="keyword">for</span> n, p <span class="keyword">in</span> model.named_parameters() <span class="keyword">if</span> <span class="built_in">any</span>(nd <span class="keyword">in</span> n <span class="keyword">for</span> nd <span class="keyword">in</span> no_decay)],</span><br><span class="line">        <span class="string">&quot;weight_decay&quot;</span>: <span class="number">0.0</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.AdamW(optimizer_grouped_parameters, lr=args.learning_rate)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置学习率调度器（Learning Rate Scheduler）</span></span><br><span class="line">lr_scheduler = get_scheduler(</span><br><span class="line">    name=args.lr_scheduler_type,</span><br><span class="line">    optimizer=optimizer,</span><br><span class="line">    num_warmup_steps=args.num_warmup_steps,</span><br><span class="line">    num_training_steps=args.max_train_steps,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h4 id="损失函数与指标"><a href="#损失函数与指标" class="headerlink" title="损失函数与指标"></a>损失函数与指标</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">evaluate</span>(<span class="params">model, eval_dataloader, max_eval_steps=-<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;评估函数：计算验证集上的平均损失和困惑度&quot;&quot;&quot;</span></span><br><span class="line">    model.<span class="built_in">eval</span>()</span><br><span class="line">    losses = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> step, batch <span class="keyword">in</span> <span class="built_in">enumerate</span>(eval_dataloader):</span><br><span class="line">            <span class="comment"># 将数据移动到设备上 (假设 batch 是一个字典，包含 input_ids 和 labels)</span></span><br><span class="line">            inputs = &#123;k: v.to(device) <span class="keyword">for</span> k, v <span class="keyword">in</span> batch.items()&#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># GPT-2 如果输入了 labels，会自动在内部计算并返回 loss</span></span><br><span class="line">            outputs = model(**inputs)</span><br><span class="line">            loss = outputs.loss</span><br><span class="line">            losses.append(loss.repeat(inputs[<span class="string">&quot;input_ids&quot;</span>].size(<span class="number">0</span>)))</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> max_eval_steps &gt; <span class="number">0</span> <span class="keyword">and</span> step &gt;= max_eval_steps:</span><br><span class="line">                <span class="keyword">break</span>    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        mean_loss = torch.cat(losses).mean().item()</span><br><span class="line">        perplexity = math.exp(mean_loss)</span><br><span class="line">    <span class="keyword">except</span> OverflowError:</span><br><span class="line">        perplexity = <span class="built_in">float</span>(<span class="string">&quot;inf&quot;</span>)</span><br><span class="line">        </span><br><span class="line">    model.train()</span><br><span class="line">    <span class="keyword">return</span> mean_loss, perplexity</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="训练与检查点"><a href="#训练与检查点" class="headerlink" title="训练与检查点"></a>训练与检查点</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">model.train()</span><br><span class="line"></span><br><span class="line">progress_bar = tqdm(<span class="built_in">range</span>(args.max_train_steps))</span><br><span class="line">completed_steps = <span class="number">0</span></span><br><span class="line">total_loss = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用自动混合精度（AMP）来加速训练并节省显存</span></span><br><span class="line">scaler = torch.amp.GradScaler(<span class="string">&quot;cuda&quot;</span>) <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用无限循环来模拟流式或多 epoch 数据读取，直到达到 max_train_steps</span></span><br><span class="line"><span class="keyword">while</span> completed_steps &lt; args.max_train_steps:</span><br><span class="line">    <span class="keyword">for</span> step, batch <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_dataloader):</span><br><span class="line">        inputs = &#123;k: v.to(device) <span class="keyword">for</span> k, v <span class="keyword">in</span> batch.items()&#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 1. 前向传播（混合精度）</span></span><br><span class="line">        <span class="keyword">if</span> scaler <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">with</span> torch.amp.autocast(<span class="string">&quot;cuda&quot;</span>):</span><br><span class="line">                outputs = model(**inputs)</span><br><span class="line">                loss = outputs.loss</span><br><span class="line">            <span class="comment"># 损失缩放（应对梯度累积）</span></span><br><span class="line">            loss = loss / args.gradient_accumulation_steps</span><br><span class="line">            scaler.scale(loss).backward()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            outputs = model(**inputs)</span><br><span class="line">            loss = outputs.loss / args.gradient_accumulation_steps</span><br><span class="line">            loss.backward()</span><br><span class="line">            </span><br><span class="line">        total_loss += loss.item()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 梯度累积步检查</span></span><br><span class="line">        <span class="keyword">if</span> (step + <span class="number">1</span>) % args.gradient_accumulation_steps == <span class="number">0</span> <span class="keyword">or</span> (step + <span class="number">1</span>) == <span class="built_in">len</span>(train_dataloader):</span><br><span class="line">            <span class="comment"># 梯度裁剪，防止因长序列导致梯度爆炸</span></span><br><span class="line">            <span class="keyword">if</span> scaler <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                scaler.unscale_(optimizer)</span><br><span class="line">                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="number">1.0</span>)</span><br><span class="line">                scaler.step(optimizer)</span><br><span class="line">                scaler.update()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="number">1.0</span>)</span><br><span class="line">                optimizer.step()</span><br><span class="line">                </span><br><span class="line">            lr_scheduler.step()</span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新全局训练步数</span></span><br><span class="line">            completed_steps += <span class="number">1</span></span><br><span class="line">            progress_bar.update(<span class="number">1</span>)</span><br><span class="line">            progress_bar.set_description(<span class="string">f&quot;Steps: <span class="subst">&#123;completed_steps&#125;</span>/<span class="subst">&#123;args.max_train_steps&#125;</span> | Loss: <span class="subst">&#123;total_loss:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 3. 触发定时评估与检查点保存</span></span><br><span class="line">            <span class="keyword">if</span> completed_steps % args.save_checkpoint_steps == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 评估</span></span><br><span class="line">                eval_loss, eval_ppl = evaluate(model, eval_dataloader, args.max_eval_steps)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;\n[Step <span class="subst">&#123;completed_steps&#125;</span>] 验证集 Loss: <span class="subst">&#123;eval_loss:<span class="number">.4</span>f&#125;</span> | 困惑度 (PPL): <span class="subst">&#123;eval_ppl:<span class="number">.2</span>f&#125;</span>&quot;</span>)</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 保存检查点（同时保存模型、权重和优化器状态，方便中断后恢复）</span></span><br><span class="line">                output_dir = <span class="string">f&quot;checkpoint-<span class="subst">&#123;completed_steps&#125;</span>&quot;</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(output_dir):</span><br><span class="line">                    os.makedirs(output_dir)</span><br><span class="line">                    </span><br><span class="line">                <span class="comment"># Hugging Face 专属的安全保存方式</span></span><br><span class="line">                model.save_pretrained(output_dir)</span><br><span class="line">                tokenizer.save_pretrained(output_dir)</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 保存额外的训练状态</span></span><br><span class="line">                torch.save(&#123;</span><br><span class="line">                    <span class="string">&quot;optimizer_state_dict&quot;</span>: optimizer.state_dict(),</span><br><span class="line">                    <span class="string">&quot;lr_scheduler_state_dict&quot;</span>: lr_scheduler.state_dict(),</span><br><span class="line">                    <span class="string">&quot;args&quot;</span>: args,</span><br><span class="line">                    <span class="string">&quot;completed_steps&quot;</span>: completed_steps</span><br><span class="line">                &#125;, os.path.join(output_dir, <span class="string">&quot;training_state.pt&quot;</span>))</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;检查点已成功保存至 <span class="subst">&#123;output_dir&#125;</span>&quot;</span>)</span><br><span class="line">                </span><br><span class="line">            total_loss = <span class="number">0.0</span> <span class="comment"># 重置计数</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> completed_steps &gt;= args.max_train_steps:</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p>有兴趣的话可以去研究下 <a target="_blank" rel="noopener" href="https://github.com/jingyaogong/minimind"><code>minimind</code></a> ，是一篇很好的入门学习教程。</p>
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当你在实践中遇到问题时，不妨静下心来去看看底层原理，也许问题就自而然就解决方案了。</p>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p>此博客内容均为作者学习《Transformers》所做笔记，侵删！<br>若转作其他用途，请注明来源！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%9B%BD%E5%86%85%E5%8F%8A%E6%B5%B7%E5%A4%96%E7%8E%B0%E9%87%91%E8%B4%B7%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90/" rel="prev" title="国内及海外现金贷业务分析">
+      <i class="fa fa-chevron-left"></i> 国内及海外现金贷业务分析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">核心机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">位置编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">2.2.</span> <span class="nav-text">点积注意力</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">2.3.</span> <span class="nav-text">多头注意力</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A9%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">掩码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E5%BC%8F%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C"><span class="nav-number">2.5.</span> <span class="nav-text">点式前馈网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">2.6.</span> <span class="nav-text">编码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">2.7.</span> <span class="nav-text">解码器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">文本分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%91%98%E8%A6%81"><span class="nav-number">4.</span> <span class="nav-text">文本摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F"><span class="nav-number">5.</span> <span class="nav-text">问答系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E8%AF%84%E8%AE%BA%E7%9A%84%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F"><span class="nav-number">5.1.</span> <span class="nav-text">基于评论的问答系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E4%B8%AD%E6%8F%90%E5%8F%96%E7%AD%94%E6%A1%88"><span class="nav-number">5.2.</span> <span class="nav-text">文本中提取答案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E9%95%BF%E6%AE%B5%E8%90%BD%E6%96%87%E6%9C%AC"><span class="nav-number">5.3.</span> <span class="nav-text">处理长段落文本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E7%B4%A2%E5%99%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.4.</span> <span class="nav-text">检索器类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">6.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F"><span class="nav-number">6.1.</span> <span class="nav-text">知识蒸馏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8F%E5%8C%96"><span class="nav-number">6.2.</span> <span class="nav-text">量化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D"><span class="nav-number">6.3.</span> <span class="nav-text">剪枝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ONNX"><span class="nav-number">6.4.</span> <span class="nav-text">ONNX</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%A4%B4%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AA-Transformer"><span class="nav-number">7.</span> <span class="nav-text">从头开始训练一个 Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BATransformer"><span class="nav-number">7.1.</span> <span class="nav-text">创建Transformer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%B6%85%E5%8F%82%E6%95%B0"><span class="nav-number">7.2.</span> <span class="nav-text">配置超参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">7.3.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E4%B8%8E%E6%8C%87%E6%A0%87"><span class="nav-number">7.4.</span> <span class="nav-text">损失函数与指标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%A3%80%E6%9F%A5%E7%82%B9"><span class="nav-number">7.5.</span> <span class="nav-text">训练与检查点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">9.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">159</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="vgbhfive → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>vgbhfive</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.heywhale.com/home/user/profile/65485e27d1e715cc33e7f383" title="Heywhale → https:&#x2F;&#x2F;www.heywhale.com&#x2F;home&#x2F;user&#x2F;profile&#x2F;65485e27d1e715cc33e7f383" rel="noopener" target="_blank"><i class="fab fa-fish fa-fw"></i>Heywhale</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '9e40c08faf8f5b000a231a3423b4a107',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2026-01-17T16:05:44.228Z</updated>
+  <updated>2026-05-20T16:27:29.822Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -17,11 +17,28 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Transformer实践解析</title>
+    <link href="https://blog.vgbhfive.com/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/"/>
+    <id>https://blog.vgbhfive.com/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/</id>
+    <published>2026-05-20T16:07:14.000Z</published>
+    <updated>2026-05-20T16:27:29.822Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Transformer&lt;/code&gt; 的核心思想是利用&lt;strong&gt;自注意力机制（&lt;code&gt;self-attention&lt;/code&gt;）&lt;/strong&gt; - 能注意到输入序列的不同位置以计算该序列的表示的能力。基于多头注意力机制，每个单词会被转化为 &lt;strong&gt;&lt;code&gt;Token&lt;/code&gt; （词元）&lt;/strong&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Transformer" scheme="https://blog.vgbhfive.com/tags/Transformer/"/>
+    
+  </entry>
+  
+  <entry>
     <title>国内及海外现金贷业务分析</title>
     <link href="https://blog.vgbhfive.com/%E5%9B%BD%E5%86%85%E5%8F%8A%E6%B5%B7%E5%A4%96%E7%8E%B0%E9%87%91%E8%B4%B7%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90/"/>
     <id>https://blog.vgbhfive.com/%E5%9B%BD%E5%86%85%E5%8F%8A%E6%B5%B7%E5%A4%96%E7%8E%B0%E9%87%91%E8%B4%B7%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90/</id>
     <published>2026-01-17T15:59:49.000Z</published>
-    <updated>2026-01-17T16:05:44.228Z</updated>
+    <updated>2026-04-18T17:01:38.931Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;核心生存逻辑&quot;&gt;&lt;a href=&quot;#核心生存逻辑&quot; class=&quot;headerlink&quot; title=&quot;核心生存逻辑&quot;&gt;&lt;/a&gt;核心生存逻辑&lt;/h2&gt;&lt;p&gt;国内外现金贷业务的底层博弈逻辑存在本质区别：&lt;/p&gt;
@@ -42,7 +59,7 @@
     <link href="https://blog.vgbhfive.com/Day-%E6%96%AD%E7%BD%91%E7%9A%84%E9%80%9A%E5%8B%A4%E8%B7%AF/"/>
     <id>https://blog.vgbhfive.com/Day-%E6%96%AD%E7%BD%91%E7%9A%84%E9%80%9A%E5%8B%A4%E8%B7%AF/</id>
     <published>2026-01-14T15:14:28.000Z</published>
-    <updated>2026-01-17T16:05:40.856Z</updated>
+    <updated>2026-01-26T03:33:28.502Z</updated>
     
     
     <summary type="html">&lt;p&gt;前些天因为移动套外流量的事情，导致我好几天都是手机断网的状态，不过在于客服一番拉扯之后话费已经退还，不过悲惨的是流量并没有被解封。&lt;br&gt;那么就有了一个新的问题 - 通勤路上我该如何使用一个没有流量的手机来消磨时光。&lt;/p&gt;
@@ -129,7 +146,7 @@
     <link href="https://blog.vgbhfive.com/%E6%B8%B8%E8%AE%B0-%E5%8C%97%E7%81%B5%E5%B1%B1/"/>
     <id>https://blog.vgbhfive.com/%E6%B8%B8%E8%AE%B0-%E5%8C%97%E7%81%B5%E5%B1%B1/</id>
     <published>2025-03-09T13:44:57.000Z</published>
-    <updated>2025-03-11T15:06:11.605Z</updated>
+    <updated>2026-01-17T16:11:40.199Z</updated>
     
     
     <summary type="html">&lt;h3 id=&quot;北灵山&quot;&gt;&lt;a href=&quot;#北灵山&quot; class=&quot;headerlink&quot; title=&quot;北灵山&quot;&gt;&lt;/a&gt;北灵山&lt;/h3&gt;&lt;p&gt;城市的三月已经开始慢慢变暖，而北灵山上依旧有点冷，地面上还有未化的雪，为许久之前就计划好的徒步之旅平增些许乐趣。&lt;/p&gt;</summary>
@@ -137,7 +154,7 @@
     
     
     
-    <category term="Foot" scheme="https://blog.vgbhfive.com/tags/Foot/"/>
+    <category term="Day" scheme="https://blog.vgbhfive.com/tags/Day/"/>
     
   </entry>
   
@@ -423,23 +440,6 @@
     
     
     <category term="Python" scheme="https://blog.vgbhfive.com/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux-nc使用指南</title>
-    <link href="https://blog.vgbhfive.com/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/"/>
-    <id>https://blog.vgbhfive.com/Linux-nc%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</id>
-    <published>2023-11-02T14:59:32.000Z</published>
-    <updated>2023-11-02T15:02:03.124Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;code&gt;NetCat&lt;/code&gt; 是一款调试 &lt;code&gt;TCP/UDP&lt;/code&gt; 网络连接的利器，被称作是网络调试的瑞士军刀，可见其功能强大。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Linux" scheme="https://blog.vgbhfive.com/tags/Linux/"/>
     
   </entry>
   
