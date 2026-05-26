@@ -6,7 +6,7 @@
   <link href="https://blog.vgbhfive.com/atom.xml" rel="self"/>
   
   <link href="https://blog.vgbhfive.com/"/>
-  <updated>2026-05-20T16:27:29.822Z</updated>
+  <updated>2026-05-26T14:20:06.859Z</updated>
   <id>https://blog.vgbhfive.com/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MCP协议解析</title>
+    <link href="https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/"/>
+    <id>https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/</id>
+    <published>2026-05-23T18:58:42.000Z</published>
+    <updated>2026-05-26T14:20:06.859Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;MCP&lt;/code&gt; （&lt;code&gt;Model Context Protocol&lt;/code&gt; 模型上下文协议）&lt;/strong&gt;，最初由 &lt;code&gt;Anthropic&lt;/code&gt; 推出的一种开放标准，旨在统一大模型与外部数据源和工具之间的通信协议。其目的在于解决当前 &lt;code&gt;AI&lt;/code&gt; 大模型因数据孤岛限制而无法充分发挥潜力的难题，&lt;code&gt;MCP&lt;/code&gt; 使得 &lt;code&gt;AI&lt;/code&gt; 应用能够安全地访问和操作本地及远程数据，为 &lt;code&gt;AI&lt;/code&gt; 应用提供连接万物的接口。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;Function Calling&lt;/code&gt; 是 &lt;code&gt;AI&lt;/code&gt; 模型调用函数的机制，而 &lt;code&gt;AI agent&lt;/code&gt; 是一个自主运行的智能系统，利用 &lt;code&gt;Function Calling&lt;/code&gt; 和 &lt;code&gt;MCP&lt;/code&gt; 来分析和执行任务，实现特定目标。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Transformer实践解析</title>
@@ -423,23 +441,6 @@
     <category term="ML" scheme="https://blog.vgbhfive.com/tags/ML/"/>
     
     <category term="Quantum" scheme="https://blog.vgbhfive.com/tags/Quantum/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Selenium-使用教程</title>
-    <link href="https://blog.vgbhfive.com/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
-    <id>https://blog.vgbhfive.com/Selenium-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</id>
-    <published>2023-12-21T15:17:39.000Z</published>
-    <updated>2023-12-26T14:10:31.098Z</updated>
-    
-    
-    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;Selenium&lt;/code&gt;&lt;/strong&gt; 最初是一个用于网站的自动化测试工具，支持各种 &lt;code&gt;Chrome&lt;/code&gt;、&lt;code&gt;Firefox&lt;/code&gt;、&lt;code&gt;Safari&lt;/code&gt; 等主流浏览器，同时也支持 &lt;code&gt;phantomJS&lt;/code&gt; 无界面浏览器。不过其更通常的使用在于爬虫中使用，其主要是用于解决 &lt;code&gt;requests&lt;/code&gt; 无法直接执行 &lt;code&gt;JavaScript&lt;/code&gt; 代码的问题，不过用于解析 &lt;code&gt;Dom&lt;/code&gt; 元素更有其妙用之处。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://blog.vgbhfive.com/tags/Python/"/>
     
   </entry>
   

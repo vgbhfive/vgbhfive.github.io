@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="G-QBK8PCQC9B">
+  <meta name="baidu-site-verification" content="codeva-K7aZhBcBPm">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.vgbhfive.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介MCP （Model Context Protocol 模型上下文协议），最初由 Anthropic 推出的一种开放标准，旨在统一大模型与外部数据源和工具之间的通信协议。其目的在于解决当前 AI 大模型因数据孤岛限制而无法充分发挥潜力的难题，MCP 使得 AI 应用能够安全地访问和操作本地及远程数据，为 AI 应用提供连接万物的接口。  Function Calling 是 AI 模型调用函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MCP协议解析">
+<meta property="og:url" content="https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Vgbhfive&#39;s Blog">
+<meta property="og:description" content="简介MCP （Model Context Protocol 模型上下文协议），最初由 Anthropic 推出的一种开放标准，旨在统一大模型与外部数据源和工具之间的通信协议。其目的在于解决当前 AI 大模型因数据孤岛限制而无法充分发挥潜力的难题，MCP 使得 AI 应用能够安全地访问和操作本地及远程数据，为 AI 应用提供连接万物的接口。  Function Calling 是 AI 模型调用函数">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/1.png">
+<meta property="article:published_time" content="2026-05-23T18:58:42.000Z">
+<meta property="article:modified_time" content="2026-05-26T14:20:06.859Z">
+<meta property="article:author" content="vgbhfive">
+<meta property="article:tag" content="vgbhfive、博客、Java、ClickHouse、Neo4j、Prometheus、MySQL、Redis、风控、Risk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/1.png">
+
+<link rel="canonical" href="https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>MCP协议解析 | Vgbhfive's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QBK8PCQC9B"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QBK8PCQC9B');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?05f3a513cf1bc0e9d29d533367e5c33f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Vgbhfive's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Vgbhfive's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-pictures">
+
+    <a href="/pictures/" rel="section"><i class="fa fa-th fa-fw"></i>Pictures</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/vgbhfive" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.vgbhfive.com/MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+      <meta itemprop="name" content="vgbhfive">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vgbhfive's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MCP协议解析
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-05-24 02:58:42" itemprop="dateCreated datePublished" datetime="2026-05-24T02:58:42+08:00">2026-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-05-26 22:20:06" itemprop="dateModified" datetime="2026-05-26T22:20:06+08:00">2026-05-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><strong><code>MCP</code> （<code>Model Context Protocol</code> 模型上下文协议）</strong>，最初由 <code>Anthropic</code> 推出的一种开放标准，旨在统一大模型与外部数据源和工具之间的通信协议。其目的在于解决当前 <code>AI</code> 大模型因数据孤岛限制而无法充分发挥潜力的难题，<code>MCP</code> 使得 <code>AI</code> 应用能够安全地访问和操作本地及远程数据，为 <code>AI</code> 应用提供连接万物的接口。</p>
+<blockquote>
+<p><code>Function Calling</code> 是 <code>AI</code> 模型调用函数的机制，而 <code>AI agent</code> 是一个自主运行的智能系统，利用 <code>Function Calling</code> 和 <code>MCP</code> 来分析和执行任务，实现特定目标。</p>
+</blockquote>
+<span id="more"></span>
+
+<p><code>Function Calling</code> 与 <code>MCP</code> 的区别</p>
+<ul>
+<li><code>MCP</code> <code>Model Context Protocol</code> 模型上下文协议。</li>
+<li><code>Function Calling</code> 函数调用。</li>
+</ul>
+<p>这两种技术都旨在增强 <code>AI</code> 模型与外部数据的交互能力，但 <code>MCP</code> 不止可以增强 <code>AI</code> 模型，还可以连接其他的应用系统。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th><code>MCP</code> <code>Model Context Protocol</code></th>
+<th><code>Function Calling</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>性质</td>
+<td>协议</td>
+<td>功能</td>
+</tr>
+<tr>
+<td>范围</td>
+<td>通用（多数据源、多功能）</td>
+<td>特定场景（单一数据源或功能）</td>
+</tr>
+<tr>
+<td>目标</td>
+<td>统一接口，实现互操作</td>
+<td>扩展模型能力</td>
+</tr>
+<tr>
+<td>实现</td>
+<td>基于标准协议</td>
+<td>依赖于特定模型实现</td>
+</tr>
+<tr>
+<td>开发复杂度</td>
+<td>低：通过统一协议实现多源兼容</td>
+<td>高：需要为每个任务单独开发函数</td>
+</tr>
+<tr>
+<td>复用性</td>
+<td>高：一次开发，可多场景使用</td>
+<td>低：函数通常为特定任务设计</td>
+</tr>
+<tr>
+<td>灵活性</td>
+<td>高：支持动态适配和扩展</td>
+<td>低：功能扩展需要额外开发</td>
+</tr>
+<tr>
+<td>常见场景</td>
+<td>复杂场景，如跨平台数据访问与整合</td>
+<td>简单任务，如天气查询等</td>
+</tr>
+</tbody></table>
+<hr>
+
+<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><p><code>MCP</code> 遵循客户端-服务器架构，其中包含以下几个核心概念：</p>
+<ul>
+<li><code>MCP</code> 主机（<code>Host</code>）：发起请求的 <code>LLM</code> 应用程序。（例如 <code>Claude Desktop</code>、<code>IDE</code> 或 <code>AI</code> 工具）</li>
+<li><code>MCP</code> 客户端（<code>MCP Client</code>）：在主机程序内部，与 <code>MCP server</code> 保持 <code>1:1</code> 的连接。</li>
+<li><code>MCP</code> 服务器（<code>MCP Server</code>）：为 <code>MCP </code> 客户端提供上下文、工具和 <code>prompt</code> 信息。</li>
+<li>本地资源（<code>Local Resource</code>）：本地计算机中可供 <code>MCP</code> 服务器安全访问的资源。（例如文件、数据库）</li>
+<li>远程资源（<code>Remote Resource</code>）：<code>MCP</code> 服务器可以连接到的远程资源。（例如通过 <code>API</code>）</li>
+</ul>
+<p>MCP 的基本工作流程：<br><img src="/./MCP%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/1.png" alt="1.png"></p>
+<p>通信机制：<br><code>MCP</code> 协议目前主要支持两种主要的通信机制：基于标准输入输出的本地通信和基于 <code>SSE</code> （<code>Server-Sent Events</code>）的远程通信。<br>这两种通信机制都使用 <code>JSON-RPC 2.0</code> 格式进行消息传输，确保了通信的标准化和可扩展性。</p>
+<ul>
+<li>本地通信。通过 <code>stdio</code> 传输数据，适用于在同一台机器上运行的客户端和服务器之间的通信。</li>
+<li>远程通信。利用 <code>SSE</code> 和 <code>HTTP</code> 结合，实现跨网络的实时数据传输，适用于需要访问远程资源和分布式部署的场景。</li>
+</ul>
+<hr>
+
+<h3 id="功能与应用"><a href="#功能与应用" class="headerlink" title="功能与应用"></a>功能与应用</h3><p>官方 <code>MCP Server</code> 支持列表：</p>
+<ul>
+<li>数据与文件系统：<ul>
+<li>文件系统</li>
+<li><code>PostgreSQL</code></li>
+<li><code>SQLite</code></li>
+<li><code>Google Drive</code></li>
+</ul>
+</li>
+<li>开发工具<ul>
+<li><code>Git</code></li>
+<li><code>Github</code></li>
+<li><code>Gitlab</code></li>
+<li><code>Sentry</code></li>
+</ul>
+</li>
+<li>网络与浏览器自动化<ul>
+<li><code>Brave Search</code>：利用 <code>Brave</code> 的搜索 <code>API</code> 进行网络和本地搜索。</li>
+<li><code>Fetch</code>：为 <code>LLM</code> 优化的网络内容获取和转换。</li>
+<li><code>Puppeteer</code>：提供浏览器自动化和网页抓取功能。</li>
+</ul>
+</li>
+<li>生产力和通信<ul>
+<li><code>Slack</code></li>
+<li><code>Google Maps</code></li>
+<li><code>Memory</code></li>
+</ul>
+</li>
+<li>专业工具<ul>
+<li><code>EverArt</code>：使用多种模型进行 <code>AI</code> 图像生成。</li>
+<li><code>Sequential Thinking</code>：通过思维序列进行动态问题解决。</li>
+<li><code>AWS KB Retrieval</code>：使用 <code>Bedrock Agent Runtime</code> 从 <code>AWS</code> 知识库检索。</li>
+</ul>
+</li>
+</ul>
+<p>目前还有一些<a target="_blank" rel="noopener" href="https://github.com/modelcontextprotocol/servers">三方公司维护的的列表</a>，有兴趣的可以自行了解。</p>
+<hr>
+
+
+<h3 id="如何开发-MCP-Server"><a href="#如何开发-MCP-Server" class="headerlink" title="如何开发 MCP Server"></a>如何开发 <code>MCP Server</code></h3><p>基于官方教程的核心内容，聚焦最小可用实现。</p>
+<h4 id="系统要求"><a href="#系统要求" class="headerlink" title="系统要求"></a>系统要求</h4><ul>
+<li><code>Python</code> 较新版本</li>
+<li><code>maxOS</code> 或 <code>Windows</code></li>
+<li><code>uv</code></li>
+</ul>
+<h4 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建项目目录</span></span><br><span class="line">uv init mcp-client</span><br><span class="line">cd mcp-client</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建虚拟环境</span></span><br><span class="line">uv venv</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">激活虚拟环境（macOS/Linux）</span></span><br><span class="line">source .venv/bin/activate</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装依赖</span></span><br><span class="line">uv add mcp anthropic python-dotenv</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">清理样板并新建主文件</span></span><br><span class="line">rm main.py</span><br><span class="line">touch client.py</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置-API-Key"><a href="#配置-API-Key" class="headerlink" title="配置 API Key"></a>配置 <code>API Key</code></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;ANTHROPIC_API_KEY=&lt;your key here&gt;&quot; &gt; .env</span><br><span class="line">echo &quot;.env&quot; &gt;&gt; .gitignore</span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span></span><br><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> AsyncExitStack</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> mcp <span class="keyword">import</span> ClientSession, StdioServerParameters</span><br><span class="line"><span class="keyword">from</span> mcp.client.stdio <span class="keyword">import</span> stdio_client</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> anthropic <span class="keyword">import</span> Anthropic</span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"></span><br><span class="line">load_dotenv()  <span class="comment"># load environment variables from .env</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MCPClient</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># Initialize session and client objects</span></span><br><span class="line">        self.session: <span class="type">Optional</span>[ClientSession] = <span class="literal">None</span></span><br><span class="line">        self.exit_stack = AsyncExitStack()</span><br><span class="line">        self.anthropic = Anthropic()</span><br><span class="line">    <span class="comment"># methods will go here</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">connect_to_server</span>(<span class="params">self, server_script_path: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Connect to an MCP server</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        server_script_path: Path to the server script (.py or .js)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    is_python = server_script_path.endswith(<span class="string">&#x27;.py&#x27;</span>)</span><br><span class="line">    is_js = server_script_path.endswith(<span class="string">&#x27;.js&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> (is_python <span class="keyword">or</span> is_js):</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">&quot;Server script must be a .py or .js file&quot;</span>)</span><br><span class="line"></span><br><span class="line">    command = <span class="string">&quot;python&quot;</span> <span class="keyword">if</span> is_python <span class="keyword">else</span> <span class="string">&quot;node&quot;</span></span><br><span class="line">    server_params = StdioServerParameters(</span><br><span class="line">        command=command,</span><br><span class="line">        args=[server_script_path],</span><br><span class="line">        env=<span class="literal">None</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    stdio_transport = <span class="keyword">await</span> self.exit_stack.enter_async_context(stdio_client(server_params))</span><br><span class="line">    self.stdio, self.write = stdio_transport</span><br><span class="line">    self.session = <span class="keyword">await</span> self.exit_stack.enter_async_context(ClientSession(self.stdio, self.write))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">await</span> self.session.initialize()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># List available tools</span></span><br><span class="line">    response = <span class="keyword">await</span> self.session.list_tools()</span><br><span class="line">    tools = response.tools</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\nConnected to server with tools:&quot;</span>, [tool.name <span class="keyword">for</span> tool <span class="keyword">in</span> tools])</span><br></pre></td></tr></table></figure>
+
+<h4 id="主流程"><a href="#主流程" class="headerlink" title="主流程"></a>主流程</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">process_query</span>(<span class="params">self, query: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Process a query using Claude and available tools&quot;&quot;&quot;</span></span><br><span class="line">    messages = [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,</span><br><span class="line">            <span class="string">&quot;content&quot;</span>: query</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    response = <span class="keyword">await</span> self.session.list_tools()</span><br><span class="line">    available_tools = [&#123;</span><br><span class="line">        <span class="string">&quot;name&quot;</span>: tool.name,</span><br><span class="line">        <span class="string">&quot;description&quot;</span>: tool.description,</span><br><span class="line">        <span class="string">&quot;input_schema&quot;</span>: tool.inputSchema</span><br><span class="line">    &#125; <span class="keyword">for</span> tool <span class="keyword">in</span> response.tools]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initial Claude API call</span></span><br><span class="line">    response = self.anthropic.messages.create(</span><br><span class="line">        model=<span class="string">&quot;claude-3-5-sonnet-20241022&quot;</span>,</span><br><span class="line">        max_tokens=<span class="number">1000</span>,</span><br><span class="line">        messages=messages,</span><br><span class="line">        tools=available_tools</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 后续：解析响应、工具调用编排、聚合最终结果（参见官方教程完整代码）</span></span><br></pre></td></tr></table></figure>
+
+<p><small>有兴趣的话可以去研究下 <code>larksuite</code> 开源的 <code>Agent</code>，应该会给你一些开发思路。</small></p>
+<hr>
+
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>示例服务器作为配置参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">基于 TypeScript 的服务器可以直接使用 npx</span></span><br><span class="line">npx -y @modelcontextprotocol/server-memory </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">基于 Python 的服务器可以直接使用 uvx 或者 pip</span></span><br><span class="line">uvx mcp-server-git # Using uvx</span><br><span class="line">pip install mcp-server-git # Using pip</span><br><span class="line">python -m mcp_server_git</span><br></pre></td></tr></table></figure>
+
+<p>配置 <code>Claude</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;mcpServers&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;memory&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npx&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;-y&quot;</span><span class="punctuation">,</span> <span class="string">&quot;@modelcontextprotocol/server-memory&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;filesystem&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npx&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;-y&quot;</span><span class="punctuation">,</span> <span class="string">&quot;@modelcontextprotocol/server-filesystem&quot;</span><span class="punctuation">,</span> <span class="string">&quot;/path/to/allowed/files&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;github&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npx&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;-y&quot;</span><span class="punctuation">,</span> <span class="string">&quot;@modelcontextprotocol/server-github&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;GITHUB_PERSONAL_ACCESS_TOKEN&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;YOUR_TOKEN&gt;&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>MCP</code> 协议是为模型服务，在开发过程中需要着重维护以下几点：</p>
+<ul>
+<li>标准化的 <code>Tool</code> 信息和描述文档。</li>
+<li>持续改进 <code>prompt</code> 信息。</li>
+</ul>
+<hr>
+
+<h3 id="个人备注"><a href="#个人备注" class="headerlink" title="个人备注"></a>个人备注</h3><p>此博客内容均为作者学习所做笔记，侵删！<br>若转作其他用途，请注明来源！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Transformer%E5%AE%9E%E8%B7%B5%E8%A7%A3%E6%9E%90/" rel="prev" title="Transformer实践解析">
+      <i class="fa fa-chevron-left"></i> Transformer实践解析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">核心架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">功能与应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91-MCP-Server"><span class="nav-number">4.</span> <span class="nav-text">如何开发 MCP Server</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82"><span class="nav-number">4.1.</span> <span class="nav-text">系统要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">4.2.</span> <span class="nav-text">项目初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-API-Key"><span class="nav-number">4.3.</span> <span class="nav-text">配置 API Key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">4.4.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">4.5.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">4.6.</span> <span class="nav-text">主流程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%A4%87%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">个人备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vgbhfive"
+      src="https://i.loli.net/2019/12/10/JF3dKDSkZoPz7h6.jpg">
+  <p class="site-author-name" itemprop="name">vgbhfive</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vgbhfive" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vgbhfive" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vgbhfive@foxmail.com" title="E-Mail → mailto:vgbhfive@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://vgbhfive.com/" title="vgbhfive → https:&#x2F;&#x2F;vgbhfive.com" rel="noopener" target="_blank"><i class="fab fa-chrome fa-fw"></i>vgbhfive</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.heywhale.com/home/user/profile/65485e27d1e715cc33e7f383" title="Heywhale → https:&#x2F;&#x2F;www.heywhale.com&#x2F;home&#x2F;user&#x2F;profile&#x2F;65485e27d1e715cc33e7f383" rel="noopener" target="_blank"><i class="fab fa-fish fa-fw"></i>Heywhale</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">陕ICP备20002937号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vgbhfive</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '2ff0dea213e4c7c0bbcc',
+      clientSecret: '7f3d808240b513b00a1dbf20d725809acc316b67',
+      repo        : 'vgbhfive.github.io',
+      owner       : 'vgbhfive',
+      admin       : ['vgbhfive'],
+      id          : '9de68221009586d885c2bff110ff63b9',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
